@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.manami.gui.controller.NewEntryController">
+   <center>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <bottom>
+        <BorderPane prefHeight="30.0" prefWidth="474.0">
+          <right>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT">
+              <Button id="btnCancel" fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#close"
+                      text="Cancel">
+                <HBox.margin>
+                  <Insets bottom="10.0" right="15.0" top="30.0"/>
+                </HBox.margin>
+              </Button>
+              <Button fx:id="btnAdd" defaultButton="true" mnemonicParsing="false" onAction="#add" text="Add">
+                <HBox.margin>
+                  <Insets bottom="10.0" right="30.0" top="30.0"/>
+                </HBox.margin>
+              </Button>
+            </HBox>
+          </right>
+        </BorderPane>
+      </bottom>
+      <center>
+        <GridPane>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="50.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="106.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="304.0" minWidth="10.0" prefWidth="258.0"/>
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+          </rowConstraints>
+          <BorderPane.margin>
+            <Insets left="30.0" right="30.0"/>
+          </BorderPane.margin>
+          <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <font>
+              <Font size="11.0"/>
+            </font>
+          </Label>
+          <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <columnConstraints>
+              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="252.0" minWidth="10.0"
+                                 prefWidth="151.0"/>
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="178.0" minWidth="10.0" prefWidth="143.0"/>
+            </columnConstraints>
+            <rowConstraints>
+              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <Label text="Episodes:" textAlignment="LEFT" GridPane.columnIndex="0" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="0" GridPane.valignment="CENTER">
+              <GridPane.margin>
+                <Insets right="10.0"/>
+              </GridPane.margin>
+            </Label>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="10.0" prefWidth="121.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="73.0" minWidth="10.0" prefWidth="26.0"/>
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+              </rowConstraints>
+              <TextField fx:id="txtEpisodes" prefWidth="82.0" text="1" GridPane.columnIndex="0"
+                         GridPane.rowIndex="0"/>
+              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                    GridPane.rowIndex="0">
+                <Button id="btnUp" fx:id="btnEpisodeUp" cancelButton="false" mnemonicParsing="false"
+                        onAction="#increaseEpisodes" text="▲" wrapText="false">
+                  <font>
+                    <Font size="8.0" fx:id="x1"/>
+                  </font>
+                </Button>
+                <Button fx:id="btnEpisodeDown" disable="true" font="$x1" mnemonicParsing="false"
+                        onAction="#decreaseEpisodes" text="▼"/>
+              </VBox>
+            </GridPane>
+          </GridPane>
+          <Label text="Info link:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+          <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+          <GridPane prefHeight="52.0" prefWidth="102.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <columnConstraints>
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="127.0" minWidth="0.0" prefWidth="81.0"/>
+              <ColumnConstraints hgrow="SOMETIMES" maxWidth="59.0" minWidth="0.0" prefWidth="25.0"/>
+            </columnConstraints>
+            <rowConstraints>
+              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <TextField fx:id="txtType" disable="true" editable="false" prefWidth="-1.0" text=""
+                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                  GridPane.rowIndex="0">
+              <Button id="btnUp" fx:id="btnTypeUp" cancelButton="false" disable="true" font="$x1"
+                      mnemonicParsing="false" onAction="#typeUp" text="▲" wrapText="false"/>
+              <Button id="btnEpisodeDown" fx:id="btnTypeDown" font="$x1" mnemonicParsing="false"
+                      onAction="#typeDown" text="▼"/>
+            </VBox>
+          </GridPane>
+          <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+          <TextField fx:id="txtTitle" promptText="Title" GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                     GridPane.rowIndex="0"/>
+          <TextField fx:id="txtInfoLink" promptText="Link for additional information" GridPane.columnIndex="1"
+                     GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
+          <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+            <TextField fx:id="txtLocation" promptText="Location on your hdd" GridPane.columnIndex="1"
+                       GridPane.columnSpan="2" GridPane.rowIndex="3" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnBrowse" mnemonicParsing="false" onAction="#browse" text="Browse">
+              <HBox.margin>
+                <Insets left="5.0"/>
+              </HBox.margin>
+            </Button>
+          </HBox>
+        </GridPane>
+      </center>
+      </BorderPane>
+   </center>
+</BorderPane>
