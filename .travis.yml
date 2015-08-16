@@ -4,3 +4,10 @@ cache:
 	directories:
 		- .autoconf
 		- $HOME/.m2
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "gui/target/manami.jar"
+  skip_cleanup: true
+  on:
+    tags: true

@@ -1,17 +1,20 @@
 package io.github.manami.cache.extractor.plugins.mal;
 
-import com.google.common.collect.Lists;
 import io.github.manami.cache.extractor.anime.AbstractAnimeSitePlugin;
 import io.github.manami.cache.extractor.anime.Extractor;
 import io.github.manami.dto.AnimeType;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.inject.Named;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.collect.Lists;
 
 /**
  * Class to gather information from myanimelist.net automatically.
@@ -61,7 +64,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
             if (matcher.find()) {
                 title = matcher.group();
-                title = title.replace("</div>", "").replace("</h1>", "");
+                title = title.replace("</div>", "").replace("</h1>", "").replace("<span itemprop=\"name\">", "").replace("</span>", "");
                 title = title.trim();
             }
         }
