@@ -8,8 +8,8 @@ cache:
     - $HOME/.m2
 deploy:
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
-  file: "/home/travis/build/manami-project/manami/gui/target/manami.jar"
+  api_key: $GH_TOKEN
+  file: $TRAVIS_BUILD_DIR/gui/target/manami.jar"
   skip_cleanup: true
   on:
     tags: true
