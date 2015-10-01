@@ -6,10 +6,3 @@ cache:
   directories:
     - .autoconf
     - $HOME/.m2
-deploy:
-  provider: releases
-  api_key: $GH_TOKEN
-  file: $TRAVIS_BUILD_DIR/gui/target/manami.jar"
-  skip_cleanup: true
-  on:
-    tags: true
