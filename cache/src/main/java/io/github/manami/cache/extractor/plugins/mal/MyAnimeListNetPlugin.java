@@ -52,21 +52,15 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
     @Override
     protected String extractTitle() {
-        pattern = Pattern.compile("<h1>.+</h1>");
+        pattern = Pattern.compile("<h1 class=\"h1\">.+</h1>");
         matcher = pattern.matcher(siteContent);
         String title = null;
 
         if (matcher.find()) {
             title = matcher.group();
 
-            pattern = Pattern.compile("</div>(.*?)</h1>");
-            matcher = pattern.matcher(title);
-
-            if (matcher.find()) {
-                title = matcher.group();
-                title = title.replace("</div>", "").replace("</h1>", "").replace("<span itemprop=\"name\">", "").replace("</span>", "");
-                title = title.trim();
-            }
+            title = title.replace("<h1 class=\"h1\"><span itemprop=\"name\">", "").replace("</span></h1>", "");
+            title = title.trim();
         }
 
         return title;

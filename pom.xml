@@ -73,7 +73,7 @@
   
   <properties>
   	<java.target.version>1.8</java.target.version>
-  	<manami.version>2.8.3</manami.version>
+  	<manami.version>2.8.4</manami.version>
   </properties>
   
   <build>

@@ -1,9 +1,5 @@
 package io.github.manami.core.services;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.HeadlessBrowser;
 import io.github.manami.cache.extractor.anime.AnimeExtractor;
@@ -12,14 +8,26 @@ import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Observer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -84,7 +92,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     private void getRecommendations(final String url) {
         final String recomUrl = String.format("%s/Death_Note/userrecs", url);
         String recomSite = (recomUrl.startsWith("http")) ? browser.pageAsString(recomUrl) : null;
-        final String delimiter = "Make a recommendation for";
+        final String delimiter = "Make a recommendation";
         final String animeUrlDelimiter = "/anime/";
         final String recomFlag = "Recommended by";
         recomSite = StringUtils.normalizeSpace(recomSite);
@@ -104,7 +112,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
                     final String sub = StringUtils.substring(recomSite, 0, nextAnime);
 
                     if (StringUtils.containsIgnoreCase(sub, recomFlag)) {
-                        int numberOfRecoms = StringUtils.countMatches(sub, recomFlag);
+                        final int numberOfRecoms = StringUtils.countMatches(sub, recomFlag);
                         addRecom(curAnime, numberOfRecoms);
                         recomSite = StringUtils.substring(recomSite, nextAnime - 1);
                     } else {

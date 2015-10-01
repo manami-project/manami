@@ -3,11 +3,12 @@ package io.github.manami.cache.extractor.anime;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
+
+import java.util.List;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-
-import java.util.List;
 
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility
@@ -72,10 +73,7 @@ public abstract class AbstractAnimeSitePlugin implements AnimeExtractor {
 
         // get rid of newlines and doubled whitespaces
         siteContent = siteContent.replaceAll("(\r\n|\n\r|\r|\n|\t)", "");
-
-        while (siteContent.contains("  ")) {
-            siteContent = siteContent.replaceAll("  ", " ");
-        }
+        siteContent = StringUtils.normalizeSpace(siteContent);
     }
 
 
