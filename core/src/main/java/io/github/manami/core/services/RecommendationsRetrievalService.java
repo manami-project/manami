@@ -19,9 +19,6 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,15 +74,30 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
 
     @Override
-    public void start() {
-
-        reset();
+    public List<Anime> execute() {
         app.fetchAnimeList().forEach(entry -> {
             if (StringUtils.isNotBlank(entry.getInfoLink())) {
                 urlList.add(entry.getInfoLink());
             }
         });
-        createAndStartService();
+
+        for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
+            LOG.debug("Getting recommendations for {}", urlList.get(i));
+            getRecommendations(urlList.get(i));
+            setChanged();
+            notifyObservers(new ProgressState(i + 1, urlList.size()));
+        }
+
+        if (!isInterrupt()) {
+            finalizeRecommendations();
+        }
+
+        for (int i = 0; i < userRecomList.size() && !isInterrupt(); i++) {
+            setChanged();
+            notifyObservers(new AdvancedProgressState(i + 1, userRecomList.size(), cache.fetchAnime(userRecomList.get(i))));
+        }
+
+        return resultList;
     }
 
 
@@ -138,44 +150,6 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
                 recommendationsAll.put(normalizedUrl, amount);
             }
         }
-    }
-
-
-    private void createAndStartService() {
-        service = new Service<List<Anime>>() {
-
-            @Override
-            protected Task<List<Anime>> createTask() {
-                return new Task<List<Anime>>() {
-
-                    @Override
-                    protected List<Anime> call() throws Exception {
-                        for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
-                            LOG.debug("Getting recommendations for {}", urlList.get(i));
-                            getRecommendations(urlList.get(i));
-                            setChanged();
-                            notifyObservers(new ProgressState(i + 1, urlList.size()));
-                        }
-
-                        if (!isInterrupt()) {
-                            finalizeRecommendations();
-                        }
-
-                        for (int i = 0; i < userRecomList.size() && !isInterrupt(); i++) {
-                            setChanged();
-                            notifyObservers(new AdvancedProgressState(i + 1, userRecomList.size(), cache.fetchAnime(userRecomList.get(i))));
-                        }
-
-                        return resultList;
-                    }
-                };
-            }
-        };
-
-        service.setOnCancelled(getFailureEvent());
-        service.setOnFailed(getFailureEvent());
-        service.setOnSucceeded(getSuccessEvent());
-        service.start();
     }
 
 

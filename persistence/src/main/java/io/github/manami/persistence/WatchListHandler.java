@@ -1,9 +1,9 @@
 package io.github.manami.persistence;
 
-import java.util.List;
-
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
+
+import java.util.List;
 
 /**
  * @author manami project
@@ -21,4 +21,12 @@ public interface WatchListHandler {
 
 
     boolean removeFromWatchList(String url);
+
+
+    /**
+     * @since 2.9.0
+     * @param entry
+     *            Entry which is supposed to be updated or created.
+     */
+    void updateOrCreate(WatchListEntry entry);
 }

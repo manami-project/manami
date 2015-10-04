@@ -1,16 +1,5 @@
 package io.github.manami.gui.controller;
 
-import com.google.common.collect.Lists;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Font;
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
@@ -22,14 +11,28 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+
+import java.awt.Desktop;
+import java.net.URI;
+import java.text.Collator;
+import java.util.List;
+
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Font;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.awt.*;
-import java.net.URI;
-import java.text.Collator;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 /**
  * Abstract class if an anime result list. The list entries can be customized by
@@ -62,6 +65,7 @@ public abstract class AbstractAnimeListController {
     public AbstractAnimeListController() {
         componentList = Lists.newCopyOnWriteArrayList();
     }
+
 
     /**
      * Gets the {@link GridPane} from the implementing class.
@@ -118,7 +122,8 @@ public abstract class AbstractAnimeListController {
 
     /**
      * @since 2.8.0
-     * @return List of {@link MinimalEntry}s which is represented as a list of GUI components.
+     * @return List of {@link MinimalEntry}s which is represented as a list of
+     *         GUI components.
      */
     protected abstract List<? extends MinimalEntry> getEntryList();
 
@@ -127,19 +132,40 @@ public abstract class AbstractAnimeListController {
      * @since 2.8.0
      */
     protected void updateChildren() {
+        getEntryList().forEach(this::updateComponentIfNecessary);
+    }
+
+
+    private void updateComponentIfNecessary(final MinimalEntry entry) {
+        boolean isAlreadyShown = false;
+        MinimalEntry componentEntry = null;
+        int componentEntryIndex = -1;
+
+        if (entry == null) {
+            return;
+        }
+
         // search for entries which are missing
-        getEntryList().forEach(entry -> {
-            boolean isAlreadyShown = false;
-            for (final AnimeGuiComponentsListEntry component : getComponentList()) {
-                if (entry.getInfoLink().equalsIgnoreCase(component.getAnime().getInfoLink())) {
-                    isAlreadyShown = true;
-                    break;
-                }
+        for (int index = 0; index < getComponentList().size(); index++) {
+            componentEntry = getComponentList().get(index).getAnime();
+            if (entry.getInfoLink().equalsIgnoreCase(componentEntry.getInfoLink())) {
+                isAlreadyShown = true;
+                componentEntryIndex = index;
+                break;
             }
-            if (!isAlreadyShown) {
-                addEntryToGui(entry);
-            }
-        });
+        }
+
+        if (!isAlreadyShown) {
+            addEntryToGui(entry);
+            return;
+        }
+
+        // Did the thumbnail change?
+        if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getThumbnail())) {
+            getComponentList().remove(componentEntryIndex);
+            addEntryToGui(entry);
+            return;
+        }
 
         // search for entries which are meant to be removed
         for (int index = 0; index < getComponentList().size(); index++) {
@@ -153,8 +179,10 @@ public abstract class AbstractAnimeListController {
 
     /**
      * @since 2.8.0
-     * @param infoLink URL of the info link.
-     * @return true if the entry represented by it's info link is already in the list.
+     * @param infoLink
+     *            URL of the info link.
+     * @return true if the entry represented by it's info link is already in the
+     *         list.
      */
     abstract boolean isInList(String infoLink);
 

@@ -1,15 +1,5 @@
 package io.github.manami.gui.controller;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -21,11 +11,23 @@ import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-import org.controlsfx.control.Notifications;
 
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+
+import org.controlsfx.control.Notifications;
 
 /**
  * @author manami project
@@ -213,14 +215,14 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
     @Override
     protected List<? extends MinimalEntry> getEntryList() {
-        // TODO Auto-generated method stub
+        // not needed for this controller
         return null;
     }
 
 
     @Override
     boolean isInList(final String infoLink) {
-        // TODO Auto-generated method stub
+        // not needed for this controller
         return false;
     }
 

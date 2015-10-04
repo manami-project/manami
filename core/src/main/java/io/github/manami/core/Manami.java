@@ -1,20 +1,11 @@
 package io.github.manami.core;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.parsers.ParserConfigurationException;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
-import io.github.manami.core.services.BackloadService;
 import io.github.manami.core.services.CacheInitializationService;
 import io.github.manami.core.services.ServiceRepository;
+import io.github.manami.core.services.ThumbnailBackloadService;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
@@ -28,6 +19,15 @@ import io.github.manami.persistence.importer.csv.CsvImporter;
 import io.github.manami.persistence.importer.json.JsonImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter.XmlStrategy;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +120,7 @@ public class Manami implements ApplicationPersistence {
         persistence.clearAll();
         new XmlImporter(XmlStrategy.MANAMI, persistence).importFile(file);
         config.setFile(file);
-        serviceRepo.startService(new BackloadService(cache, persistence));
+        serviceRepo.startService(new ThumbnailBackloadService(cache, persistence));
         serviceRepo.startService(new CacheInitializationService(cache, persistence.fetchAnimeList()));
     }
 
@@ -262,5 +262,29 @@ public class Manami implements ApplicationPersistence {
     @Override
     public boolean removeAnime(final UUID id) {
         return persistence.removeAnime(id);
+    }
+
+
+    @Override
+    public void updateOrCreate(final Anime anime) {
+        persistence.updateOrCreate(anime);
+    }
+
+
+    @Override
+    public void updateOrCreate(final WatchListEntry entry) {
+        persistence.updateOrCreate(entry);
+    }
+
+
+    @Override
+    public void updateOrCreate(final FilterEntry entry) {
+        persistence.updateOrCreate(entry);
+    }
+
+
+    @Override
+    public void updateOrCreate(final MinimalEntry entry) {
+        persistence.updateOrCreate(entry);
     }
 }

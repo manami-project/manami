@@ -1,5 +1,11 @@
 package io.github.manami.core.services;
 
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Observer;
@@ -7,13 +13,6 @@ import java.util.Stack;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,9 +85,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
 
     @Override
-    public void start() {
-        reset();
-
+    public Map<String, Anime> execute() {
         list.forEach(entry -> {
             final String url = entry.getInfoLink();
             if (StringUtils.isNotBlank(url)) {
@@ -104,8 +101,16 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
         }
         animesToCheck = sortedStack;
 
-        // start service
-        createAndStartService();
+        while (!animesToCheck.empty() && !isInterrupt()) {
+            final String entry = animesToCheck.pop();
+
+            if (!checkedAnimes.contains(entry)) {
+                LOG.debug("Checking {} for related animes.", entry);
+                checkAnime(entry);
+            }
+        }
+
+        return relatedAnime;
     }
 
 
@@ -120,72 +125,42 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
     }
 
 
-    /**
-     * Creates and starts the service instance.
-     *
-     * @since 2.3.0
-     */
-    private void createAndStartService() {
-        service = new Service<Map<String, Anime>>() {
+    private void checkAnime(final String url) {
+        final List<Anime> showAnimeList = Lists.newArrayList();
+        final Anime cachedAnime = cache.fetchAnime(url);
 
-            @Override
-            protected Task<Map<String, Anime>> createTask() {
-                return new Task<Map<String, Anime>>() {
+        if (cachedAnime == null) {
+            return;
+        }
 
-                    @Override
-                    protected Map<String, Anime> call() throws Exception {
+        final List<String> relatedAnimeList = cachedAnime.getRelatedAnimes();
 
-                        while (!animesToCheck.empty() && !isInterrupt()) {
-                            final String entry = animesToCheck.pop();
+        for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
+            final String element = relatedAnimeList.get(index);
 
-                            if (!checkedAnimes.contains(entry)) {
-                                LOG.debug("Checking {} for related animes.", entry);
-                                checkAnime(entry);
-                            }
-                        }
+            if (StringUtils.isNotBlank(element)) {
 
-                        return relatedAnime;
-                    }
+                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
+                    animesToCheck.push(element);
+                }
 
-
-                    private void checkAnime(final String url) {
-                        final List<Anime> showAnimeList = Lists.newArrayList();
-                        final Anime cachedAnime = cache.fetchAnime(url);
-
-                        if (cachedAnime == null) {
-                            return;
-                        }
-
-                        final List<String> relatedAnimeList = cachedAnime.getRelatedAnimes();
-
-                        for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
-                            final String element = relatedAnimeList.get(index);
-
-                            if (StringUtils.isNotBlank(element)) {
-
-                                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
-                                    animesToCheck.push(element);
-                                }
-
-                                if (!relatedAnime.containsKey(element) && !app.animeEntryExists(element) && !app.watchListEntryExists(element) && !app.filterEntryExists(element)) {
-                                    final Anime curAnime = cache.fetchAnime(element);
-                                    relatedAnime.put(element, curAnime);
-                                    showAnimeList.add(curAnime);
-                                }
-                            }
-                        }
-
-                        setChanged();
-                        notifyObservers(showAnimeList);
-                        checkedAnimes.add(url);
-                    }
-                };
+                if (!relatedAnime.containsKey(element) && !app.animeEntryExists(element) && !app.watchListEntryExists(element) && !app.filterEntryExists(element)) {
+                    final Anime curAnime = cache.fetchAnime(element);
+                    relatedAnime.put(element, curAnime);
+                    showAnimeList.add(curAnime);
+                }
             }
-        };
+        }
 
-        service.setOnCancelled(getFailureEvent());
-        service.setOnFailed(getFailureEvent());
-        service.setOnSucceeded(getSuccessEvent());
-        service.start();
+        setChanged();
+
+        if (!showAnimeList.isEmpty()) {
+            LOG.trace("\n\n---------------- Extracted animes for [{}] ----------------", url);
+            showAnimeList.forEach(e -> LOG.trace("{} : {}", e.getTitle(), e.getInfoLink()));
+            LOG.trace("-----------------------------------------------------------\n\n");
+        }
+
+        notifyObservers(showAnimeList);
+        checkedAnimes.add(url);
     }
 }

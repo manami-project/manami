@@ -68,12 +68,17 @@
 	  		<artifactId>guava</artifactId>
 	  		<version>18.0</version>
 	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.apache.httpcomponents</groupId>
+	  		<artifactId>httpclient</artifactId>
+	  		<version>4.5.1</version>
+	  	</dependency>
 	  </dependencies>
   </dependencyManagement>
   
   <properties>
   	<java.target.version>1.8</java.target.version>
-  	<manami.version>2.8.4</manami.version>
+  	<manami.version>2.9.0</manami.version>
   </properties>
   
   <build>

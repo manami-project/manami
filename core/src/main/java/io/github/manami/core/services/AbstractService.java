@@ -3,6 +3,7 @@ package io.github.manami.core.services;
 import java.util.Observable;
 
 import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
@@ -73,4 +74,38 @@ public abstract class AbstractService<E> extends Observable implements Backgroun
     public boolean isInterrupt() {
         return interrupt;
     }
+
+
+    /**
+     * @since 2.9.0
+     */
+    @Override
+    public void start() {
+        reset();
+
+        service = new Service<E>() {
+
+            @Override
+            protected Task<E> createTask() {
+                return new Task<E>() {
+
+                    @Override
+                    protected E call() throws Exception {
+                        return execute();
+                    }
+                };
+            }
+        };
+
+        service.setOnCancelled(getFailureEvent());
+        service.setOnFailed(getFailureEvent());
+        service.setOnSucceeded(getSuccessEvent());
+        service.start();
+    }
+
+
+    /**
+     * @since 2.9.0
+     */
+    abstract protected E execute();
 }

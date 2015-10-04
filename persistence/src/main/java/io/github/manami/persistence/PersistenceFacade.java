@@ -1,16 +1,16 @@
 package io.github.manami.persistence;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.AnimeListChangedEvent;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -207,6 +207,34 @@ public class PersistenceFacade implements PersistenceHandler {
     @Override
     public void addWatchList(final List<? extends MinimalEntry> list) {
         strategy.addWatchList(list);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final Anime anime) {
+        strategy.updateOrCreate(anime);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final WatchListEntry entry) {
+        strategy.updateOrCreate(entry);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final FilterEntry entry) {
+        strategy.updateOrCreate(entry);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final MinimalEntry entry) {
+        strategy.updateOrCreate(entry);
         eventBus.post(new AnimeListChangedEvent());
     }
 }

@@ -1,28 +1,36 @@
 package io.github.manami.core.services;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
 import io.github.manami.core.config.CheckListConfig;
 import io.github.manami.core.services.events.AbstractEvent.EventType;
-import io.github.manami.core.services.events.*;
+import io.github.manami.core.services.events.CrcEvent;
+import io.github.manami.core.services.events.EpisodesDifferEvent;
+import io.github.manami.core.services.events.LocationEvent;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.core.services.events.TitleDifferEvent;
+import io.github.manami.core.services.events.TypeDifferEvent;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * @author manami project
@@ -65,12 +73,24 @@ public class CheckListService extends AbstractService<Void> {
 
 
     @Override
-    public void start() {
+    public Void execute() {
         Assert.notNull(list, "List of animes cannot be null");
 
-        reset();
         countProgressMax();
-        createAndStartService();
+
+        if (config.isCheckLocations()) {
+            checkLocations();
+        }
+
+        if (config.isCheckCrc()) {
+            checkCrc();
+        }
+
+        if (config.isCheckMetaData()) {
+            checkMetaData();
+        }
+
+        return null;
     }
 
 
@@ -108,39 +128,6 @@ public class CheckListService extends AbstractService<Void> {
         if (config.isCheckMetaData()) {
             progressMax += list.size();
         }
-    }
-
-
-    private void createAndStartService() {
-        service = new Service<Void>() {
-
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-
-                    @Override
-                    protected Void call() throws Exception {
-                        if (config.isCheckLocations()) {
-                            checkLocations();
-                        }
-
-                        if (config.isCheckCrc()) {
-                            checkCrc();
-                        }
-
-                        if (config.isCheckMetaData()) {
-                            checkMetaData();
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-
-        service.setOnCancelled(getFailureEvent());
-        service.setOnFailed(getFailureEvent());
-        service.setOnSucceeded(getSuccessEvent());
-        service.start();
     }
 
 
@@ -303,7 +290,7 @@ public class CheckListService extends AbstractService<Void> {
                     final String crcSum = Long.toHexString(crc.getValue());
 
                     if (matcher.find()) {
-                        String titleCrc = matcher.group().replace("[", "").replace("]", "");
+                        final String titleCrc = matcher.group().replace("[", "").replace("]", "");
 
                         if (!titleCrc.equalsIgnoreCase(crcSum)) {
                             fireCrcSumsDifferEvent(path);

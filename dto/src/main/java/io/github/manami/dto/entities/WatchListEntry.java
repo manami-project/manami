@@ -11,7 +11,6 @@ public class WatchListEntry extends AbstractMinimalEntry {
      * @param title
      * @param infoLink
      */
-    @SuppressWarnings("JavaDoc")
     public WatchListEntry(final String title, final String thumbnail, final String infoLink) {
         super.setTitle(title);
         super.setThumbnail(thumbnail);
@@ -24,7 +23,6 @@ public class WatchListEntry extends AbstractMinimalEntry {
      * @param title
      * @param infoLink
      */
-    @SuppressWarnings("JavaDoc")
     public WatchListEntry(final String title, final String infoLink) {
         super.setTitle(title);
         super.setInfoLink(infoLink);
@@ -35,7 +33,6 @@ public class WatchListEntry extends AbstractMinimalEntry {
      * @since 2.7.0
      * @param anime
      */
-    @SuppressWarnings("JavaDoc")
     public static WatchListEntry valueOf(final MinimalEntry anime) {
         return new WatchListEntry(anime.getTitle(), anime.getThumbnail(), anime.getInfoLink());
     }

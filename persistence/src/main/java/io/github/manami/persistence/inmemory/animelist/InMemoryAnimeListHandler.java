@@ -1,19 +1,22 @@
 package io.github.manami.persistence.inmemory.animelist;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.persistence.AnimeListHandler;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * @author manami project
@@ -98,5 +101,13 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
      */
     public void clear() {
         animeList.clear();
+    }
+
+
+    @Override
+    public void updateOrCreate(final Anime anime) {
+        if (anime != null && anime.getId() != null) {
+            animeList.put(anime.getId(), anime);
+        }
     }
 }

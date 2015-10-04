@@ -1,17 +1,24 @@
 package io.github.manami.persistence.inmemory.filterlist;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.*;
+import io.github.manami.dto.entities.AbstractMinimalEntry;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.FilterListHandler;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * @author manami project
@@ -80,5 +87,13 @@ public class InMemoryFilterListHandler implements FilterListHandler {
      */
     public void clear() {
         filterList.clear();
+    }
+
+
+    @Override
+    public void updateOrCreate(final FilterEntry entry) {
+        if (entry != null && StringUtils.isNotBlank(entry.getInfoLink())) {
+            filterList.put(entry.getInfoLink(), entry);
+        }
     }
 }

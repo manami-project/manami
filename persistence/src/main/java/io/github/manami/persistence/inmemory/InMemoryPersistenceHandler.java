@@ -9,10 +9,11 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.List;
 import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author manami project
@@ -139,5 +140,33 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     @Override
     public void addWatchList(final List<? extends MinimalEntry> list) {
         list.forEach(watchListHandler::watchAnime);
+    }
+
+
+    @Override
+    public void updateOrCreate(final Anime anime) {
+        animeListHandler.updateOrCreate(anime);
+    }
+
+
+    @Override
+    public void updateOrCreate(final FilterEntry entry) {
+        filterListHandler.updateOrCreate(entry);
+    }
+
+
+    @Override
+    public void updateOrCreate(final WatchListEntry entry) {
+        watchListHandler.updateOrCreate(entry);
+    }
+
+
+    @Override
+    public void updateOrCreate(final MinimalEntry entry) {
+        if (entry instanceof FilterEntry) {
+            filterListHandler.updateOrCreate((FilterEntry) entry);
+        } else if (entry instanceof WatchListEntry) {
+            watchListHandler.updateOrCreate((WatchListEntry) entry);
+        }
     }
 }
