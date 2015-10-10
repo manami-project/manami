@@ -1,12 +1,14 @@
 package io.github.manami.dto.entities;
 
-import com.google.common.collect.Lists;
 import io.github.manami.dto.AnimeType;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.google.common.collect.Lists;
 
 /**
  * Represents an Anime with all it's saved meta information.
@@ -105,8 +107,11 @@ public class Anime extends AbstractMinimalEntry {
      * Fills every attribute in target which null.
      *
      * @since 2.7.0
-     * @param source {@link Anime} which is being copied.
-     * @param target Instance of an {@link Anime} to which the attributes are copied to.
+     * @param source
+     *            {@link Anime} which is being copied.
+     * @param target
+     *            Instance of an {@link Anime} to which the attributes are
+     *            copied to.
      */
     public static void copyNullTarget(final Anime source, final Anime target) {
         if (target.getEpisodes() == 0) {
@@ -137,8 +142,11 @@ public class Anime extends AbstractMinimalEntry {
      * Copies every attribute of an anime which is not null.
      *
      * @since 2.6.2
-     * @param source {@link Anime} which is being copied.
-     * @param target Instance of an {@link Anime} to which the attributes are copied to.
+     * @param source
+     *            {@link Anime} which is being copied.
+     * @param target
+     *            Instance of an {@link Anime} to which the attributes are
+     *            copied to.
      */
     public static void copyNonNullSource(final Anime source, final Anime target) {
         if (source.getEpisodes() > 0) {
@@ -169,8 +177,11 @@ public class Anime extends AbstractMinimalEntry {
      * Copies every attribute of an anime.
      *
      * @since 2.6.2
-     * @param source {@link Anime} which is being copied.
-     * @param target Instance of an {@link Anime} to which the attributes are copied to.
+     * @param source
+     *            {@link Anime} which is being copied.
+     * @param target
+     *            Instance of an {@link Anime} to which the attributes are
+     *            copied to.
      */
     public static void copyAnime(final Anime source, final Anime target) {
         target.setEpisodes(source.getEpisodes());
@@ -282,6 +293,13 @@ public class Anime extends AbstractMinimalEntry {
      */
     public List<String> getRelatedAnimes() {
         return relatedAnimes;
+    }
+
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("Anime [type=").append(type).append(", episodes=").append(episodes).append(", location=").append(location).append(", picture=").append(picture).append(", relatedAnimes=").append(relatedAnimes).append("]")
+                .toString();
     }
 
 

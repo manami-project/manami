@@ -1,17 +1,5 @@
 package io.github.manami.gui.controller;
 
-import com.google.common.collect.Lists;
-import com.sun.javafx.collections.ObservableListWrapper;
-import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.util.Duration;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
@@ -28,11 +16,6 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.Notifications;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -41,6 +24,31 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.util.Duration;
+
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import com.google.common.collect.Lists;
+import com.sun.javafx.collections.ObservableListWrapper;
+
 /**
  * Controller for adding and removing entries to the filter list.
  *
@@ -48,6 +56,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2.1.0
  */
 public class FilterListController extends AbstractAnimeListController implements Observer {
+
+    public final static String FILTER_LIST_TITLE = "Filter List";
 
     /** Instance of the application. */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
@@ -63,8 +73,6 @@ public class FilterListController extends AbstractAnimeListController implements
 
     /** Instance of the main application. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
-
-    public final static String FILTER_LIST_TITLE = "Filter List";
 
     private RecommendationFilterListController recomController;
 

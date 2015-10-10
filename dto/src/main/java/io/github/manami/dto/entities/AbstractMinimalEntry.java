@@ -75,4 +75,10 @@ public abstract class AbstractMinimalEntry implements MinimalEntry {
     public void setInfoLink(final String infoLink) {
         this.infoLink = infoLink;
     }
+
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("AbstractMinimalEntry [title=").append(title).append(", thumbnail=").append(thumbnail).append(", infoLink=").append(infoLink).append("]").toString();
+    }
 }

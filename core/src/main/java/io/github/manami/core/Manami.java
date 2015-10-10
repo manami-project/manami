@@ -4,6 +4,7 @@ import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
 import io.github.manami.core.services.CacheInitializationService;
+import io.github.manami.core.services.SearchService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.ThumbnailBackloadService;
 import io.github.manami.dto.entities.Anime;
@@ -29,9 +30,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+
+import com.google.common.eventbus.EventBus;
 
 /**
  * Main access to the features of the application. This class has got delegation
@@ -61,6 +65,9 @@ public class Manami implements ApplicationPersistence {
     /** Instance of the cache. */
     private final Cache cache;
 
+    /** Instance of the event bus. */
+    final EventBus eventBus;
+
 
     /**
      * Constructor
@@ -77,12 +84,13 @@ public class Manami implements ApplicationPersistence {
      *            service repository.
      */
     @Inject
-    public Manami(final Cache cache, final CommandService cmdService, final Config config, final PersistenceFacade persistence, final ServiceRepository serviceRepo) {
+    public Manami(final Cache cache, final CommandService cmdService, final Config config, final PersistenceFacade persistence, final ServiceRepository serviceRepo, final EventBus eventBus) {
         this.cache = cache;
         this.cmdService = cmdService;
         this.config = config;
         this.persistence = persistence;
         this.serviceRepo = serviceRepo;
+        this.eventBus = eventBus;
     }
 
 
@@ -286,5 +294,20 @@ public class Manami implements ApplicationPersistence {
     @Override
     public void updateOrCreate(final MinimalEntry entry) {
         persistence.updateOrCreate(entry);
+    }
+
+
+    /**
+     * Searches for a specific string and fires an event with the search
+     * results.
+     *
+     * @since 2.9.0
+     * @param searchString
+     */
+    public void search(final String searchString) {
+        if (StringUtils.isNotBlank(searchString)) {
+            LOG.info("Initiated seach for [{}]", searchString);
+            serviceRepo.startService(new SearchService(searchString, persistence, eventBus));
+        }
     }
 }

@@ -1,20 +1,15 @@
 package io.github.manami.gui.controller;
 
-import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.Text;
-import javafx.util.Callback;
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
-import io.github.manami.core.commands.*;
+import io.github.manami.core.commands.CmdChangeEpisodes;
+import io.github.manami.core.commands.CmdChangeInfoLink;
+import io.github.manami.core.commands.CmdChangeLocation;
+import io.github.manami.core.commands.CmdChangeTitle;
+import io.github.manami.core.commands.CmdChangeType;
+import io.github.manami.core.commands.CmdDeleteAnime;
+import io.github.manami.core.commands.CommandService;
+import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.core.config.Config;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.AnimeType;
@@ -25,9 +20,14 @@ import io.github.manami.gui.controller.callbacks.AnimeEpisodesCallback;
 import io.github.manami.gui.controller.callbacks.AnimeTypeCallback;
 import io.github.manami.gui.controller.callbacks.DefaultCallback;
 import io.github.manami.gui.controller.callbacks.RowCountCallback;
-import io.github.manami.gui.wrapper.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.manami.gui.wrapper.CheckListControllerWrapper;
+import io.github.manami.gui.wrapper.FilterListControllerWrapper;
+import io.github.manami.gui.wrapper.MainControllerWrapper;
+import io.github.manami.gui.wrapper.NewEntryControllerWrapper;
+import io.github.manami.gui.wrapper.RecommendationsControllerWrapper;
+import io.github.manami.gui.wrapper.RelatedAnimeControllerWrapper;
+import io.github.manami.gui.wrapper.SearchResultsControllerWrapper;
+import io.github.manami.gui.wrapper.WatchListControllerWrapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +35,29 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controller for the main stage.
@@ -70,6 +93,9 @@ public class MainController implements Observer {
 
     /** Tab for the check list. */
     private Tab checkListTab;
+
+    /** Tab for search results. */
+    private Tab searchResultTab;
 
     private FilterListControllerWrapper controllerWrapper;
 
@@ -184,6 +210,14 @@ public class MainController implements Observer {
     @FXML
     private MenuItem miAbout;
 
+    /** Textfield for searching an anime. */
+    @FXML
+    private TextField txtSearchString;
+
+    /** Button which starts the search. */
+    @FXML
+    private Button btnSearch;
+
 
     /**
      * Initializes the table view for the anime list. Including column mapping
@@ -283,6 +317,18 @@ public class MainController implements Observer {
             executeCommand(new CmdChangeLocation(oldValue, event.getNewValue(), app));
             selectedAnime.setLocation(event.getNewValue());
         });
+
+        btnSearch.setOnAction(event -> search());
+        txtSearchString.setOnAction(event -> search());
+    }
+
+
+    /**
+     * @since 2.9.0
+     */
+    private void search() {
+        app.search(txtSearchString.getText());
+        showSearchResultTab();
     }
 
 
@@ -855,5 +901,19 @@ public class MainController implements Observer {
         }
 
         return ret;
+    }
+
+
+    /**
+     * Opens the related anime tab.
+     *
+     * @since 2.9.0
+     */
+    public void showSearchResultTab() {
+        if (searchResultTab == null) {
+            searchResultTab = Main.CONTEXT.getBean(SearchResultsControllerWrapper.class).getSearchResultsTab();
+        }
+
+        focusActiveTab(searchResultTab);
     }
 }

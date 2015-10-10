@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.manami.gui.controller.SearchResultsController">
+   <children>
+       <ScrollPane id="scrollPane" fx:id="scrollPaneList" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <padding>
+               <Insets left="10.0" />
+           </padding>
+          <content>
+              <BorderPane prefHeight="-1.0" prefWidth="-1.0">
+                  <top>
+                      <Label text="Search Results">
+                          <font>
+                              <Font name="System Bold" size="16.0" />
+                          </font>
+                          <BorderPane.margin>
+                              <Insets bottom="25.0" right="10.0" top="10.0" />
+                          </BorderPane.margin>
+                      </Label>
+                  </top>
+                  <bottom>
+                      <Accordion BorderPane.alignment="CENTER">
+                          <panes>
+                        <TitledPane fx:id="animeListTitledPane" layoutX="10.0" layoutY="10.0" text="Search results from: anime list">
+                           <content>
+                              <GridPane fx:id="animeListGridPane">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                                 </rowConstraints>
+                              </GridPane>
+                           </content>
+                        </TitledPane>
+                              <TitledPane fx:id="filterListTitledPane" text="Search results from: filter list">
+                           <content>
+                              <GridPane fx:id="filterListGridPane">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                                 </rowConstraints>
+                              </GridPane>
+                           </content>
+                              </TitledPane>
+                        <TitledPane fx:id="watchListTitledPane" layoutX="10.0" layoutY="32.0" text="Search results from: watch list">
+                           <content>
+                              <GridPane fx:id="watchListGridPane">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                                 </rowConstraints>
+                              </GridPane>
+                           </content>
+                        </TitledPane>
+                          </panes>
+                          <BorderPane.margin>
+                              <Insets bottom="150.0" top="50.0" />
+                          </BorderPane.margin>
+                      </Accordion>
+                  </bottom>
+              </BorderPane>
+          </content>
+       </ScrollPane>
+   </children>
+</AnchorPane>
