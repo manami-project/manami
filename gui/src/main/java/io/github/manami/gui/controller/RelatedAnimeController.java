@@ -30,7 +30,7 @@ import org.controlsfx.control.Notifications;
 /**
  * Controller for finding related animes. Opening as a new tab.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.3.0
  */
 public class RelatedAnimeController extends AbstractAnimeListController implements Observer {

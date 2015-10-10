@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.8.2
  */
 public class ThumbnailBackloadService extends AbstractService<Void> {

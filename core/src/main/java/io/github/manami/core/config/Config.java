@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  * Contains the path for all configuration files as well as the path for the
  * currently opened anime list file.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named

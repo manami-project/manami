@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 @Named

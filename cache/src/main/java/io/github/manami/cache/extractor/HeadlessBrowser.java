@@ -1,22 +1,24 @@
 package io.github.manami.cache.extractor;
 
+import java.io.IOException;
+
+import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.UrlFetchWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Named;
-import java.io.IOException;
 
 /**
  * A Browser which lets you download the various anime sites. It is necessary to
  * use this approach, because DDoS prevention services require the site be
  * rendered.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named
@@ -67,7 +69,7 @@ public class HeadlessBrowser {
         }
 
         try {
-            HtmlPage page = webClient.getPage(url);
+            final HtmlPage page = webClient.getPage(url);
             return page.getWebResponse().getContentAsString();
         } catch (FailingHttpStatusCodeException | IOException e) {
             LOG.error("Failed to download the following url: {}", url, e);

@@ -30,7 +30,7 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.Notifications;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.4.0
  */
 public class RecommendationsController extends AbstractAnimeListController implements Observer {

@@ -19,7 +19,7 @@ import org.xml.sax.XMLReader;
 /**
  * Importer for opening xml files which are specific for this application.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class XmlImporter implements Importer {
@@ -32,7 +32,7 @@ public class XmlImporter implements Importer {
     /**
      * Strategy for XML import.
      *
-     * @author manami project
+     * @author manami-project
      * @since 2.0.0
      */
     public enum XmlStrategy {

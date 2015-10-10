@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
  * Abstract class if an anime result list. The list entries can be customized by
  * overriding the creation methods.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.3.0
  */
 public abstract class AbstractAnimeListController {

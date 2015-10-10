@@ -5,7 +5,7 @@ import java.nio.file.Path;
 /**
  * Interface for an exporter.
  *
- * @author manami project
+ * @author manami-project
  * @version 2.0.0
  */
 public interface Exporter {

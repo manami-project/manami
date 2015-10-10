@@ -14,7 +14,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  * Abstract class for anime site plugins. Their task is to give the possibility
  * to extract information such as the title, episodes, type, etc.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public abstract class AbstractAnimeSitePlugin implements AnimeExtractor {

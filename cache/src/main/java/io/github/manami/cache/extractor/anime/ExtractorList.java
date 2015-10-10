@@ -8,7 +8,7 @@ import javax.inject.Named;
 /**
  * Contains a list of all [{@link AnimeExtractor}s.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.1.2
  */
 @Named

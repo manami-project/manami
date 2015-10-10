@@ -6,7 +6,7 @@ import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.6.0
  */
 public class TypeDifferEvent extends AbstractEvent implements ReversibleCommandEvent {

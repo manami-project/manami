@@ -11,7 +11,7 @@ import java.util.Stack;
  * Command service keeps track of actions and is responsible for knowing if a
  * file is dirty or not.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named

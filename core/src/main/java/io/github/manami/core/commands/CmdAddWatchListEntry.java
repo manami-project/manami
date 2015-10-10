@@ -4,7 +4,7 @@ import io.github.manami.core.Manami;
 import io.github.manami.dto.entities.WatchListEntry;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.8.0
  */
 public class CmdAddWatchListEntry extends AbstractReversibleCommand {

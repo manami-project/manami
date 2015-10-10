@@ -7,7 +7,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 /**
  * Configuration for the CSV import and export.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class CsvConfig {

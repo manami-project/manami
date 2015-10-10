@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  *
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
- * @author manami project
+ * @author manami-project
  * @since 2.2.0
  */
 public class CacheInitializationService extends AbstractService<Void> {

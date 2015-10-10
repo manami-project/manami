@@ -44,7 +44,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Controller for adding and removing entries to the filter list.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.1.0
  */
 public class FilterListController extends AbstractAnimeListController implements Observer {

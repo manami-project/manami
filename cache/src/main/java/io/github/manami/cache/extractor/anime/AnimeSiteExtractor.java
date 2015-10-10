@@ -5,7 +5,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Extracts an {@link Anime} from a given prior downloaded website.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public interface AnimeSiteExtractor {

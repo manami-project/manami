@@ -11,7 +11,7 @@ import io.github.manami.dto.entities.Anime;
  * Callback which is executed in case one of the simple {@link String} based
  * table cells has changed.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class DefaultCallback implements Callback<TableColumn<Anime, String>, TableCell<Anime, String>> {

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Contains the current tool version.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.1.0
  */
 public class ToolVersion {

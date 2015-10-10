@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 @Named("inMemoryStrategy")

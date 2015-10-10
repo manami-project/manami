@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.8.0
  */
 public class WatchListController extends AbstractAnimeListController {

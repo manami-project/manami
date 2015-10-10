@@ -1,7 +1,7 @@
 package io.github.manami.dto.entities;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 public class WatchListEntry extends AbstractMinimalEntry {

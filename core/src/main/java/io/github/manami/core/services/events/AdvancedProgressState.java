@@ -5,7 +5,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Contains the state as well as payload.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.4.0
  */
 public class AdvancedProgressState extends ProgressState {

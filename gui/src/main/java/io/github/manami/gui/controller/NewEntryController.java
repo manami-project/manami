@@ -26,7 +26,7 @@ import java.nio.file.Path;
 /**
  * Shows the window in which a new entry can be created.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class NewEntryController {

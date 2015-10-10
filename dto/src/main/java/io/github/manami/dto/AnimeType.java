@@ -3,7 +3,7 @@ package io.github.manami.dto;
 /**
  * Types of animes which are known.
  *
- * @author manami project
+ * @author manami-project
  * @version 2.0.0
  */
 public enum AnimeType {

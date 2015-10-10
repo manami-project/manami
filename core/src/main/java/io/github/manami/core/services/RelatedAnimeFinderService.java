@@ -27,7 +27,7 @@ import com.sun.javafx.collections.ObservableListWrapper;
  *
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
- * @author manami project
+ * @author manami-project
  * @since 2.3.0
  */
 public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime>> {

@@ -3,7 +3,7 @@ package io.github.manami.core.commands;
 /**
  * Interface for commands.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public interface Command {

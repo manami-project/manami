@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * Contains pre configured {@link FileChooser} dialogs.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class DialogLibrary {

@@ -31,7 +31,7 @@ import com.google.common.collect.Maps;
  *
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
- * @author manami project
+ * @author manami-project
  * @since 2.4.0
  */
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {

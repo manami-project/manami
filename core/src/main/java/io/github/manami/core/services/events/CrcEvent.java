@@ -3,7 +3,7 @@ package io.github.manami.core.services.events;
 import java.nio.file.Path;
 
 /**
- * @author manami project
+ * @author manami-project
  *
  */
 public class CrcEvent extends AbstractEvent {

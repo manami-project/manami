@@ -9,7 +9,7 @@ import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.dto.entities.Anime;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.6.0
  */
 public class TitleDifferEvent extends AbstractEvent implements ReversibleCommandEvent {

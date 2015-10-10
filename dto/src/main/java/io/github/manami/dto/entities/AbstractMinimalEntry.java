@@ -3,7 +3,7 @@ package io.github.manami.dto.entities;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.3
  */
 public abstract class AbstractMinimalEntry implements MinimalEntry {

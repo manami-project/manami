@@ -25,7 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class XmlExporter implements Exporter {

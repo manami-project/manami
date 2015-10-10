@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 /**
  * Class to gather information from myanimelist.net automatically.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named

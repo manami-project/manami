@@ -20,7 +20,7 @@ import com.google.common.eventbus.EventBus;
  * This is a facade which is used by the application to hide which strategy is
  * actually used.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named

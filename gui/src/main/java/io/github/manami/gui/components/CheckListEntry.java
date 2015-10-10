@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.6.0
  */
 public class CheckListEntry {

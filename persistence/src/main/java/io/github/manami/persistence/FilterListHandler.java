@@ -6,7 +6,7 @@ import io.github.manami.dto.entities.MinimalEntry;
 import java.util.List;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 public interface FilterListHandler {

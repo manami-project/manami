@@ -11,7 +11,7 @@ import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.5.0
  */
 public class RecommendationFilterListController extends AbstractAnimeListController {

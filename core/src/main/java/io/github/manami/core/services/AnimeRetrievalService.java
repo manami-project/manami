@@ -8,7 +8,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Retrieves an entity of an {@link Anime} by providing the info link URL.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.2.0
  */
 public class AnimeRetrievalService extends Service<Anime> {

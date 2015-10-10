@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Represents an Anime with all it's saved meta information.
  *
- * @author manami project
+ * @author manami-project
  * @since 1.0.0
  */
 public class Anime extends AbstractMinimalEntry {

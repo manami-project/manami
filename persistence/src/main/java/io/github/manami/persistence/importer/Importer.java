@@ -10,7 +10,7 @@ import org.xml.sax.SAXException;
 /**
  * Interface for an importer.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public interface Importer {

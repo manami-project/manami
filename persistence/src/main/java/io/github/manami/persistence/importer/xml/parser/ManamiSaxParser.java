@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.List;
 
 /**
- * @author manami project
+ * @author manami-project
  * @version 2.0.0
  */
 public class ManamiSaxParser extends DefaultHandler {

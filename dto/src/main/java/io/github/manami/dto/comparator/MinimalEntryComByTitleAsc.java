@@ -7,7 +7,7 @@ import io.github.manami.dto.entities.MinimalEntry;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.2
  */
 public class MinimalEntryComByTitleAsc implements Comparator<MinimalEntry> {

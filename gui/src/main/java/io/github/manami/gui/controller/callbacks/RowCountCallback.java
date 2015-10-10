@@ -8,7 +8,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Callback for the non-editable column which shows the current row number.
  * 
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class RowCountCallback implements Callback<TableColumn<Anime, Anime>, TableCell<Anime, Anime>> {

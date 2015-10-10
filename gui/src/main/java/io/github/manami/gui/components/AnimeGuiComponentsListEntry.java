@@ -11,7 +11,7 @@ import io.github.manami.dto.entities.MinimalEntry;
  * created so the lists don't need to render everything new whenever entries are
  * added or removed.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.1.3
  */
 public class AnimeGuiComponentsListEntry {

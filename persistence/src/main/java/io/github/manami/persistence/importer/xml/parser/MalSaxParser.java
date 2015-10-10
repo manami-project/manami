@@ -12,7 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.List;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class MalSaxParser extends DefaultHandler {

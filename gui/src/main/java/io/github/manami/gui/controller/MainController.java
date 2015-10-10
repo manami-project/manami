@@ -39,7 +39,7 @@ import java.util.Observer;
 /**
  * Controller for the main stage.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class MainController implements Observer {
@@ -690,7 +690,7 @@ public class MainController implements Observer {
      * list entries is being clicked.
      *
      * @since 2.5.1
-     * @author manami project
+     * @author manami-project
      */
     class RecommendedFilterListEntryNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -705,7 +705,7 @@ public class MainController implements Observer {
      * being clicked.
      *
      * @since 2.5.1
-     * @author manami project
+     * @author manami-project
      */
     class RelatedAnimeNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -720,7 +720,7 @@ public class MainController implements Observer {
      * being clicked.
      *
      * @since 2.5.1
-     * @author manami project
+     * @author manami-project
      */
     class RecommendationsNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -735,7 +735,7 @@ public class MainController implements Observer {
      * being clicked.
      *
      * @since 2.5.1
-     * @author manami project
+     * @author manami-project
      */
     class CheckListNotificationEventHandler implements EventHandler<ActionEvent> {
 

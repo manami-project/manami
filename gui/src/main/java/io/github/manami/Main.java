@@ -13,7 +13,7 @@ import com.google.common.eventbus.EventBus;
 /**
  * Entry point of the application.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class Main extends Application {

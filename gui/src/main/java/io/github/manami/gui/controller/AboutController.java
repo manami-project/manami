@@ -8,7 +8,7 @@ import javax.inject.Named;
 /**
  * Controller showing a window with application information.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 @Named

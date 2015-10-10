@@ -9,7 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.5.0
  */
 @Named

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 public interface AnimeListHandler {

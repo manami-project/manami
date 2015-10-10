@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Can extract links to related animes.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.3.0
  */
 public interface RelatedAnimeExtractor {

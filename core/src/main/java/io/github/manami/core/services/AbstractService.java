@@ -8,7 +8,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.5.0
  */
 public abstract class AbstractService<E> extends Observable implements BackgroundService {

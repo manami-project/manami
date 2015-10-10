@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * Main access to the features of the application. This class has got delegation
  * as well as operational functionality.
  *
- * @author manami project
+ * @author manami-project
  * @since 1.0.0
  */
 @Named

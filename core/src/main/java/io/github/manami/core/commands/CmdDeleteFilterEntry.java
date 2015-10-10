@@ -4,7 +4,7 @@ import io.github.manami.core.Manami;
 import io.github.manami.dto.entities.FilterEntry;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.0
  */
 public class CmdDeleteFilterEntry extends AbstractReversibleCommand {

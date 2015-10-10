@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Exports a list to valid json.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class JsonExporter implements Exporter {

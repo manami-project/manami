@@ -6,7 +6,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Command for adding an entry.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class CmdAddAnime extends AbstractReversibleCommand {

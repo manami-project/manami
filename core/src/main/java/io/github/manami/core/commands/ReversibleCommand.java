@@ -3,7 +3,7 @@ package io.github.manami.core.commands;
 /**
  * Interface for reversible commands.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public interface ReversibleCommand extends Command {

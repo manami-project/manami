@@ -7,7 +7,7 @@ import io.github.manami.dto.entities.Anime;
 /**
  * Command for changing the type.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class CmdChangeType extends AbstractReversibleCommand {

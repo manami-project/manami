@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Imports a list from a valid JSON file.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class JsonImporter implements Importer {

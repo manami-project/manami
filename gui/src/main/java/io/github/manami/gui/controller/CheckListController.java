@@ -41,7 +41,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.6.0
  */
 public class CheckListController implements Observer {

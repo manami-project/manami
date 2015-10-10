@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Exports a list to a csv file.
  *
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class CsvExporter implements Exporter {

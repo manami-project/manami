@@ -11,7 +11,7 @@ import io.github.manami.dto.entities.Anime;
  * Callback which is called whenever an episode was changes within the anime
  * list table.
  * 
- * @author manami project
+ * @author manami-project
  * @since 2.0.0
  */
 public class AnimeEpisodesCallback implements Callback<TableColumn<Anime, Integer>, TableCell<Anime, Integer>> {

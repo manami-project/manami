@@ -13,7 +13,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 /**
- * @author manami project
+ * @author manami-project
  * @since 2.7.2
  */
 @Named
