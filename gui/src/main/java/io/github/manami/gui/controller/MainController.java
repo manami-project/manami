@@ -363,14 +363,7 @@ public class MainController implements Observer {
      * @since 2.0.0
      */
     private void checkDirtyFlagAnimeListTab() {
-        final String title = "Anime List";
-        final String dirtyFlag = " *";
-
-        if (cmdService.isUnsaved()) {
-            Platform.runLater(() -> tabAnimeList.setText(title + dirtyFlag));
-        } else {
-            Platform.runLater(() -> tabAnimeList.setText(title));
-        }
+        Platform.runLater(() -> mainControllerWrapper.setDirty(cmdService.isUnsaved()));
     }
 
 

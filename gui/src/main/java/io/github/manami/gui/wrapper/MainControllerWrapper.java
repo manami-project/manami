@@ -1,7 +1,11 @@
 package io.github.manami.gui.wrapper;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
+import io.github.manami.core.config.Config;
+import io.github.manami.dto.events.AnimeListChangedEvent;
+import io.github.manami.dto.events.ApplicationContextStartedEvent;
+import io.github.manami.dto.events.OpenedFileChangedEvent;
+import io.github.manami.gui.DialogLibrary;
+import io.github.manami.gui.controller.MainController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,17 +13,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import io.github.manami.core.config.Config;
-import io.github.manami.dto.events.AnimeListChangedEvent;
-import io.github.manami.dto.events.ApplicationContextStartedEvent;
-import io.github.manami.dto.events.OpenedFileChangedEvent;
-import io.github.manami.gui.DialogLibrary;
-import io.github.manami.gui.controller.MainController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * @author manami-project
@@ -114,5 +116,26 @@ public class MainControllerWrapper {
      */
     public MainController getMainController() {
         return mainController;
+    }
+
+
+    /**
+     * @since 2.9.0
+     * @param isDirty
+     */
+    public void setDirty(final boolean isDirty) {
+        if (isDirty) {
+            if (config.getFile() != null) {
+                mainStage.setTitle(String.format("%s - %s *", MainControllerWrapper.APPNAME, config.getFile().toString()));
+            } else {
+                mainStage.setTitle(String.format("%s *", MainControllerWrapper.APPNAME));
+            }
+        } else {
+            if (config.getFile() != null) {
+                mainStage.setTitle(String.format("%s - %s", MainControllerWrapper.APPNAME, config.getFile().toString()));
+            } else {
+                mainStage.setTitle(String.format("%s", MainControllerWrapper.APPNAME));
+            }
+        }
     }
 }
