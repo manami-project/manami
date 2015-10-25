@@ -1,9 +1,5 @@
 package io.github.manami.gui.controller;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -15,13 +11,19 @@ import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
+
+import java.nio.file.Path;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
-
-import java.nio.file.Path;
 
 /**
  * Shows the window in which a new entry can be created.
@@ -228,11 +230,13 @@ public class NewEntryController {
      */
     private void checkTypeArrowButtons() {
         final int upperLimit = AnimeType.values().length - 1;
+
         if (typeIndex == 0 && !btnTypeUp.isDisabled()) {
             Platform.runLater(() -> btnTypeUp.setDisable(true));
         } else if (typeIndex > 0 && btnTypeUp.isDisabled()) {
             Platform.runLater(() -> btnTypeUp.setDisable(false));
         }
+
         if (typeIndex == upperLimit && !btnTypeDown.isDisabled()) {
             Platform.runLater(() -> btnTypeDown.setDisable(true));
         } else if (typeIndex < upperLimit && btnTypeDown.isDisabled()) {
@@ -248,6 +252,7 @@ public class NewEntryController {
      */
     private void checkEpisodeArrowButtons() {
         final int episodes = Integer.parseInt(txtEpisodes.getText());
+        btnEpisodeUp.setDisable(false);
 
         if (episodes > 1) {
             Platform.runLater(() -> btnEpisodeDown.setDisable(false));
@@ -300,8 +305,8 @@ public class NewEntryController {
                         txtEpisodes.setText(String.valueOf(anime.getEpisodes()));
                         txtInfoLink.setText(anime.getInfoLink());
                         setTextfieldType(anime.getTypeAsString());
+                        checkEpisodeArrowButtons();
                     });
-                    checkEpisodeArrowButtons();
                 }
                 setDisableAutoCompleteWidgets(false);
             });
@@ -333,9 +338,12 @@ public class NewEntryController {
             Platform.runLater(() -> {
                 btnTypeUp.setDisable(true);
                 btnTypeDown.setDisable(true);
+                btnEpisodeUp.setDisable(true);
+                btnEpisodeDown.setDisable(true);
             });
         } else {
             checkTypeArrowButtons();
+            checkEpisodeArrowButtons();
         }
     }
 
