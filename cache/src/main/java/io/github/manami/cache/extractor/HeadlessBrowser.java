@@ -1,6 +1,7 @@
 package io.github.manami.cache.extractor;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Named;
 
@@ -11,6 +12,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.UrlFetchWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
@@ -30,6 +32,8 @@ public class HeadlessBrowser {
     /** Instance of the {@link WebClient} which represents the Browser. */
     private final WebClient webClient;
 
+    private HtmlPage page;
+
 
     /**
      * Constructor.
@@ -37,7 +41,7 @@ public class HeadlessBrowser {
      * @since 2.0.0
      */
     public HeadlessBrowser() {
-        webClient = new WebClient(BrowserVersion.FIREFOX_31);
+        webClient = new WebClient(BrowserVersion.FIREFOX_38);
         webClient.getOptions().setActiveXNative(false);
         webClient.getOptions().setAppletEnabled(false);
         webClient.getOptions().setCssEnabled(false);
@@ -68,15 +72,37 @@ public class HeadlessBrowser {
             return null;
         }
 
+        String ret = null;
         try {
-            final HtmlPage page = webClient.getPage(url);
-            return page.getWebResponse().getContentAsString();
+            page = webClient.getPage(url);
+            ret = page.getWebResponse().getContentAsString();
+            closePageExplicitly();
         } catch (FailingHttpStatusCodeException | IOException e) {
             LOG.error("Failed to download the following url: {}", url, e);
-        } finally {
             webClient.close();
         }
 
-        return null;
+        return ret;
+    }
+
+
+    /**
+     * Needed in order to fix the out-of-memory problem. MAL probably introduced
+     * new heavy javascripts. Thus manami resulted in an out-of-memory. As a
+     * consequence it's necessary to clean up properly.
+     * 
+     * @since 2.9.1
+     */
+    private void closePageExplicitly() {
+        page.cleanUp();
+        final List<WebWindow> windows = webClient.getWebWindows();
+
+        for (final WebWindow wd : windows) {
+            wd.getJobManager().removeAllJobs();
+            webClient.deregisterWebWindow(wd);
+        }
+
+        page = null;
+        System.gc(); // FIXME: temp fix. test later without
     }
 }
