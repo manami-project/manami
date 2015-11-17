@@ -57,8 +57,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 /**
  * Controller for the main stage.
@@ -102,6 +106,8 @@ public class MainController implements Observer {
 
     /** Tab for the watch list. */
     private Tab watchListTab;
+
+    private AutoCompletionBinding<String> autoCompletionBinding;
 
     /** Table for anime list. */
     @FXML
@@ -541,6 +547,7 @@ public class MainController implements Observer {
                 try {
                     app.newList();
                     app.open(file);
+                    initAutoCompletion();
                     refreshEntriesInGui();
                     controllerWrapper.startRecommendedFilterEntrySearch();
                 } catch (final Exception e) {
@@ -549,6 +556,21 @@ public class MainController implements Observer {
                 }
             }, selectedFile);
         }
+    }
+
+
+    /**
+     * @since 2.9.1
+     */
+    private void initAutoCompletion() {
+        if (autoCompletionBinding != null) {
+            autoCompletionBinding.dispose();
+        }
+        final List<String> suggestions = Lists.newArrayList();
+        app.fetchAnimeList().forEach(e -> suggestions.add(e.getTitle()));
+        app.fetchFilterList().forEach(e -> suggestions.add(e.getTitle()));
+        app.fetchWatchList().forEach(e -> suggestions.add(e.getTitle()));
+        autoCompletionBinding = TextFields.bindAutoCompletion(txtSearchString, suggestions);
     }
 
 
