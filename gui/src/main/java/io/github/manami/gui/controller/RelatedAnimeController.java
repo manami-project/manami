@@ -9,6 +9,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -81,6 +83,9 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
      */
     public void initialize() {
         btnStart.setOnAction(event -> start());
+
+        btnCancel.setGraphic(Icons.createIconCancel());
+        btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
     }
 

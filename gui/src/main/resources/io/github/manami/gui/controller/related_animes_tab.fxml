@@ -1,73 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane id="AnchorPane" fx:id="anchor" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="io.github.manami.gui.controller.RelatedAnimeController">
-    <ScrollPane id="scrollPane" fx:id="scrollPaneList" prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <padding>
-            <Insets left="10.0"/>
-        </padding>
-        <BorderPane prefHeight="-1.0" prefWidth="-1.0">
-            <top>
-                <Label text="Related Animes">
-                    <font>
-                        <Font name="System Bold" size="16.0"/>
-                    </font>
-                    <BorderPane.margin>
-                        <Insets bottom="25.0" right="10.0" top="10.0"/>
-                    </BorderPane.margin>
-                </Label>
-            </top>
-            <center>
-                <VBox>
-                    <BorderPane.margin>
-                        <Insets/>
-                    </BorderPane.margin>
-                    <Label text="This list contains all animes which are related to those in the anime list. Not being shown are entries from the filter list.">
-                        <VBox.margin>
-                            <Insets bottom="30.0"/>
-                        </VBox.margin>
-                    </Label>
-                    <HBox alignment="CENTER">
-                        <Button fx:id="btnStart" defaultButton="true" mnemonicParsing="false"
-                                text="Start Search"/>
-                    </HBox>
-                    <VBox fx:id="vBoxProgress" alignment="CENTER" visible="false">
-                        <ProgressBar fx:id="progressBar" prefHeight="25.0" prefWidth="220.0"/>
-                        <Label fx:id="lblProgress" text="preparing">
-                            <font>
-                                <Font name="System Bold" size="11.0"/>
-                            </font>
-                        </Label>
-                        <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" text="cancel"
-                                visible="false">
-                            <VBox.margin>
-                                <Insets top="30.0"/>
-                            </VBox.margin>
-                        </Button>
-                    </VBox>
-                </VBox>
-            </center>
-            <bottom>
-                <GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
-                    </rowConstraints>
-                    <BorderPane.margin>
-                        <Insets top="40.0"/>
-                    </BorderPane.margin>
-                </GridPane>
-            </bottom>
-        </BorderPane>
-    </ScrollPane>
+
+<AnchorPane id="AnchorPane" fx:id="anchor" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.manami.gui.controller.RelatedAnimeController">
+   <children>
+       <ScrollPane id="scrollPane" fx:id="scrollPaneList" prefHeight="0.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <padding>
+               <Insets left="10.0" />
+           </padding>
+          <content>
+              <BorderPane prefHeight="-1.0" prefWidth="-1.0">
+                  <top>
+                      <Label text="Related Animes">
+                          <font>
+                              <Font name="System Bold" size="16.0" />
+                          </font>
+                          <BorderPane.margin>
+                              <Insets bottom="25.0" right="10.0" top="10.0" />
+                          </BorderPane.margin>
+                      </Label>
+                  </top>
+                  <center>
+                      <VBox>
+                          <BorderPane.margin>
+                              <Insets />
+                          </BorderPane.margin>
+                         <children>
+                             <Label text="This list contains all animes which are related to those in the anime list. Not being shown are entries from the filter list.">
+                                 <VBox.margin>
+                                     <Insets bottom="30.0" />
+                                 </VBox.margin>
+                             </Label>
+                             <HBox alignment="CENTER">
+                                <children>
+                                    <Button fx:id="btnStart" defaultButton="true" mnemonicParsing="false" text="Start Search" />
+                                </children>
+                             </HBox>
+                             <VBox fx:id="vBoxProgress" alignment="CENTER" visible="false">
+                                <children>
+                              <HBox alignment="TOP_CENTER">
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                                <ProgressBar fx:id="progressBar" prefHeight="25.0" prefWidth="220.0" />
+                                                <Label fx:id="lblProgress" text="preparing">
+                                                    <font>
+                                                        <Font name="System Bold" size="11.0" />
+                                                    </font>
+                                                </Label>
+                                       </children>
+                                    </VBox>
+                                          <Button fx:id="btnCancel" alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" visible="false">
+                                              <VBox.margin>
+                                                  <Insets top="30.0" />
+                                              </VBox.margin>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                          </Button>
+                                 </children>
+                              </HBox>
+                                </children>
+                             </VBox>
+                         </children>
+                      </VBox>
+                  </center>
+                  <bottom>
+                      <GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                          <BorderPane.margin>
+                              <Insets top="40.0" />
+                          </BorderPane.margin>
+                      </GridPane>
+                  </bottom>
+              </BorderPane>
+          </content>
+       </ScrollPane>
+   </children>
 </AnchorPane>

@@ -41,7 +41,7 @@ public class HeadlessBrowser {
      * @since 2.0.0
      */
     public HeadlessBrowser() {
-        webClient = new WebClient(BrowserVersion.FIREFOX_38);
+        webClient = new WebClient(BrowserVersion.CHROME);
         webClient.getOptions().setActiveXNative(false);
         webClient.getOptions().setAppletEnabled(false);
         webClient.getOptions().setCssEnabled(false);
@@ -90,7 +90,7 @@ public class HeadlessBrowser {
      * Needed in order to fix the out-of-memory problem. MAL probably introduced
      * new heavy javascripts. Thus manami resulted in an out-of-memory. As a
      * consequence it's necessary to clean up properly.
-     * 
+     *
      * @since 2.9.1
      */
     private void closePageExplicitly() {

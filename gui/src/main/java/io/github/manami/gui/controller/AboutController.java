@@ -1,7 +1,7 @@
 package io.github.manami.gui.controller;
 
-import javafx.scene.control.Alert;
 import io.github.manami.dto.ToolVersion;
+import javafx.scene.control.Alert;
 
 import javax.inject.Named;
 
@@ -15,9 +15,9 @@ import javax.inject.Named;
 public class AboutController {
 
     public void showAbout() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
-        alert.setHeaderText("Version: " + ToolVersion.getVersion());
+        alert.setHeaderText(String.format("Version: %s", ToolVersion.getVersion()));
         alert.setContentText("Free non-commercial software.");
         alert.showAndWait();
     }

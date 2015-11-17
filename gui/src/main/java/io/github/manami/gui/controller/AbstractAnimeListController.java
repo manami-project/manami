@@ -11,6 +11,7 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.components.Icons;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -21,6 +22,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -217,11 +219,12 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnDelete = new Button("Add to filter list");
+        final Button btnAddToFilterList = new Button("", Icons.createIconFilterList());
+        btnAddToFilterList.setTooltip(new Tooltip("add entry to filter list"));
 
-        componentListEntry.setAddToFilterListButton(btnDelete);
+        componentListEntry.setAddToFilterListButton(btnAddToFilterList);
 
-        btnDelete.setOnAction(event -> {
+        btnAddToFilterList.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
             getComponentList().remove(componentListEntry);
             showEntries();
@@ -242,11 +245,12 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnDelete = new Button("Add to watch list");
+        final Button btnAddToWatchlist = new Button("", Icons.createIconWatchList());
+        btnAddToWatchlist.setTooltip(new Tooltip("add to watch list"));
 
-        componentListEntry.setAddToWatchListButton(btnDelete);
+        componentListEntry.setAddToWatchListButton(btnAddToWatchlist);
 
-        btnDelete.setOnAction(event -> {
+        btnAddToWatchlist.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddWatchListEntry(WatchListEntry.valueOf(componentListEntry.getAnime()), app));
             getComponentList().remove(componentListEntry);
             showEntries();
@@ -265,7 +269,8 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button(" X ");
+        final Button removeButton = new Button("", Icons.createIconRemove());
+        removeButton.setTooltip(new Tooltip("remove"));
 
         componentListEntry.setRemoveButton(removeButton);
 

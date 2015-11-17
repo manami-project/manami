@@ -1,17 +1,5 @@
 package io.github.manami.gui.controller;
 
-import com.google.common.collect.Lists;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -27,11 +15,8 @@ import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.ReversibleCommandEvent;
 import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.CheckListEntry;
+import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.Notifications;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,6 +24,30 @@ import java.text.Collator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tab;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.Notifications;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author manami-project
@@ -109,6 +118,9 @@ public class CheckListController implements Observer {
     public void initialize() {
         componentList = Lists.newArrayList();
         btnStart.setOnAction(event -> start());
+
+        btnCancel.setGraphic(Icons.createIconCancel());
+        btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
     }
 
@@ -220,7 +232,9 @@ public class CheckListController implements Observer {
                     GridPane.setMargin(entry.getDeletionButton(), new Insets(0.0, 0.0, 10.0, 20.0));
                 }
 
-                final Button removeButton = new Button(" X ");
+                final Button removeButton = new Button("", Icons.createIconRemove());
+                removeButton.setTooltip(new Tooltip("remove"));
+
                 removeButton.setOnAction(event -> {
                     componentList.remove(entry);
                     showEntries();
@@ -259,7 +273,9 @@ public class CheckListController implements Observer {
 
 
     private void addReversibleCommandEventButton(final ReversibleCommandEvent event, final CheckListEntry componentListEntry) {
-        final Button button = new Button("Change");
+        final Button button = new Button("", Icons.createIconEdit());
+        button.setTooltip(new Tooltip("update"));
+
         button.setOnAction(trigger -> {
             cmdService.executeCommand(event.getCommand());
             componentList.remove(componentListEntry);
@@ -277,7 +293,10 @@ public class CheckListController implements Observer {
 
     private void addCrcEventButton(final CrcEvent event, final CheckListEntry componentListEntry) {
         if (event.getPath() != null) {
-            final Button button = new Button("Add CRC sum");
+
+            final Button button = new Button("", Icons.createIconEdit());
+            button.setTooltip(new Tooltip("add CRC sum"));
+
             button.setOnAction(trigger -> {
                 final Path file = event.getPath();
                 final String formattedCrcSum = String.format("_[%s]", event.getCrcSum());

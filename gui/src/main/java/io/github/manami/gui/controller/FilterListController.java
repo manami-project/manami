@@ -15,6 +15,7 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.text.Collator;
@@ -35,6 +36,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -42,6 +44,8 @@ import javafx.util.Duration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -114,6 +118,8 @@ public class FilterListController extends AbstractAnimeListController implements
     private final static int MAX_ENTRIES = 25;
 
     private ValidationSupport validationSupport;
+
+    private final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
 
     /**
@@ -319,7 +325,8 @@ public class FilterListController extends AbstractAnimeListController implements
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnDelete = new Button("Delete");
+        final Button btnDelete = new Button("", Icons.createIconDelete());
+        btnDelete.setTooltip(new Tooltip("delete from filter list"));
 
         componentListEntry.setRemoveButton(btnDelete);
 

@@ -16,6 +16,7 @@ import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.gui.DialogLibrary;
+import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.controller.callbacks.AnimeEpisodesCallback;
 import io.github.manami.gui.controller.callbacks.AnimeTypeCallback;
 import io.github.manami.gui.controller.callbacks.DefaultCallback;
@@ -227,6 +228,7 @@ public class MainController implements Observer {
      */
     public void initialize() {
         initFilterTab();
+        initMenuItemGlyphs();
 
         tabAnimeList.setOnSelectionChanged(event -> {
             if (tabAnimeList.isSelected()) {
@@ -320,6 +322,25 @@ public class MainController implements Observer {
 
         btnSearch.setOnAction(event -> search());
         txtSearchString.setOnAction(event -> search());
+    }
+
+
+    /**
+     * @since 2.9.1
+     */
+    private void initMenuItemGlyphs() {
+        miNewList.setGraphic(Icons.createIconFileText());
+        miNewEntry.setGraphic(Icons.createIconFile());
+        miOpen.setGraphic(Icons.createIconFolderOpen());
+        miSave.setGraphic(Icons.createIconSave());
+        miImport.setGraphic(Icons.createIconImport());
+        miExport.setGraphic(Icons.createIconExport());
+        miExit.setGraphic(Icons.createIconExit());
+        miUndo.setGraphic(Icons.createIconUndo());
+        miRedo.setGraphic(Icons.createIconRedo());
+        miDeleteEntry.setGraphic(Icons.createIconDelete());
+        miAbout.setGraphic(Icons.createIconQuestion());
+        cmiDeleteEntry.setGraphic(Icons.createIconDelete());
     }
 
 

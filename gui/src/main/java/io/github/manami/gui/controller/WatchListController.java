@@ -1,15 +1,5 @@
 package io.github.manami.gui.controller;
 
-import com.sun.javafx.collections.ObservableListWrapper;
-import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
@@ -23,13 +13,28 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.components.Icons;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
+
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.sun.javafx.collections.ObservableListWrapper;
 
 /**
  * @author manami-project
@@ -169,7 +174,8 @@ public class WatchListController extends AbstractAnimeListController {
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button("Remove");
+        final Button removeButton = new Button("", Icons.createIconDelete());
+        removeButton.setTooltip(new Tooltip("delete from watch list"));
 
         componentListEntry.setRemoveButton(removeButton);
 
