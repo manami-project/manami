@@ -257,6 +257,7 @@ public class CheckListController implements Observer {
 
         final Label lblMessage = new Label(event.getMessage());
         lblMessage.setFont((Font.font(11.5)));
+        lblMessage.setWrapText(true);
         componentListEntry.setMessageComponent(lblMessage);
 
         if (event instanceof CrcEvent) {

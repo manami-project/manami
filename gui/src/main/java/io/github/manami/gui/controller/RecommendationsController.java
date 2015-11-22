@@ -201,17 +201,17 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
                 if (entry.getAddToFilterListButton() != null) {
                     getGridPane().add(entry.getAddToFilterListButton(), 2, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
 
                 if (entry.getAddToWatchListButton() != null) {
                     getGridPane().add(entry.getAddToWatchListButton(), 3, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
 
                 if (entry.getRemoveButton() != null) {
                     getGridPane().add(entry.getRemoveButton(), 4, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
             }
         });

@@ -233,7 +233,7 @@ public class CheckListService extends AbstractService<Void> {
     private void fireTypeDiffersEvent(final Anime element, final AnimeType newValue) {
         final TypeDifferEvent event = new TypeDifferEvent(element, newValue, app);
         event.setType(EventType.WARNING);
-        event.setMessage(String.format("The local type is >>%s<< and the type from the info link is >>%s<<", element.getTypeAsString(), newValue));
+        event.setMessage(String.format("The local type is \"%s\"\nand the type from the info link is \"%s\"", element.getTypeAsString(), newValue));
         fire(event);
     }
 
@@ -241,7 +241,7 @@ public class CheckListService extends AbstractService<Void> {
     private void fireEpisodesDiffersEvent(final Anime element, final int newValue) {
         final EpisodesDifferEvent event = new EpisodesDifferEvent(element, newValue, app);
         event.setType(EventType.WARNING);
-        event.setMessage(String.format("The local number of episodes is >>%s<< and the amount from the info link is >>%s<<", element.getEpisodes(), newValue));
+        event.setMessage(String.format("The local number of episodes is \"%s\"\nand the amount from the info link is \"%s\"", element.getEpisodes(), newValue));
         fire(event);
     }
 
@@ -249,7 +249,7 @@ public class CheckListService extends AbstractService<Void> {
     private void fireTitleDiffersEvent(final Anime element, final String newValue) {
         final TitleDifferEvent event = new TitleDifferEvent(element, newValue, app);
         event.setType(EventType.WARNING);
-        event.setMessage(String.format("The local title is >>%s<< and title from the info link is >>%s<<", element.getTitle(), newValue));
+        event.setMessage(String.format("The local title is \"%s\"\nand title from the info link is \"%s\"", element.getTitle(), newValue));
         fire(event);
     }
 

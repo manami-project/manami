@@ -105,17 +105,17 @@ public abstract class AbstractAnimeListController {
 
                 if (entry.getAddToFilterListButton() != null) {
                     animeGuiComponentsGridPane.add(entry.getAddToFilterListButton(), 2, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
 
                 if (entry.getAddToWatchListButton() != null) {
                     animeGuiComponentsGridPane.add(entry.getAddToWatchListButton(), 3, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
 
                 if (entry.getRemoveButton() != null) {
                     animeGuiComponentsGridPane.add(entry.getRemoveButton(), 4, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 10.0));
                 }
             }
         });
