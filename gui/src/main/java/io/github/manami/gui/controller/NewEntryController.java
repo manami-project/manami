@@ -211,7 +211,7 @@ public class NewEntryController {
      * @since 2.0.0
      */
     public void add() {
-        final String title = txtTitle.getText();
+        final String title = txtTitle.getText().trim();
         final Integer episodes = Integer.valueOf(txtEpisodes.getText());
         final String infoLink = txtInfoLink.getText();
         final String location = txtLocation.getText();

@@ -277,9 +277,10 @@ public class MainController implements Observer {
         colAnimeListTitle.setOnEditCommit(event -> {
             final Anime selectedAnime = guiList.get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
+            final String newTitle = event.getNewValue().trim();
             Anime.copyAnime(selectedAnime, oldValue);
-            executeCommand(new CmdChangeTitle(oldValue, event.getNewValue(), app));
-            selectedAnime.setTitle(event.getNewValue());
+            executeCommand(new CmdChangeTitle(oldValue, newTitle, app));
+            selectedAnime.setTitle(newTitle);
         });
 
         // COLUMN: Type
