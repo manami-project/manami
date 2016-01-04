@@ -55,10 +55,10 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
         Assert.notNull(cache, "Cache cannot be null");
         Assert.notNull(persistence, "List of animes cannot be null");
 
+        httpclient = HttpClients.createDefault();
+
         persistence.fetchFilterList().forEach(this::loadThumbnailIfNotExists);
         persistence.fetchWatchList().forEach(this::loadThumbnailIfNotExists);
-
-        httpclient = HttpClients.createDefault();
 
         persistence.fetchFilterList().forEach(this::checkPictures);
         persistence.fetchWatchList().forEach(this::checkPictures);
@@ -85,6 +85,10 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void loadThumbnailIfNotExists(final MinimalEntry entry) {
+        if (isInterrupt()) {
+            return;
+        }
+
         if (entry != null && (StringUtils.isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
             final Anime cachedAnime = cache.fetchAnime(entry.getInfoLink());
             LOG.debug("Loading thumbnail for entry {}", entry.getInfoLink());
@@ -118,6 +122,10 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void checkPictures(final MinimalEntry entry) {
+        if (isInterrupt()) {
+            return;
+        }
+
         if (entry != null && StringUtils.isNotBlank(entry.getThumbnail())) {
             LOG.debug("Checking thumbnail for {}", entry.getInfoLink());
 
