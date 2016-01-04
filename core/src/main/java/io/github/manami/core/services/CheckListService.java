@@ -10,6 +10,7 @@ import io.github.manami.core.services.events.LocationEvent;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.TitleDifferEvent;
 import io.github.manami.core.services.events.TypeDifferEvent;
+import io.github.manami.core.utility.PathResolver;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 
@@ -19,9 +20,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -104,18 +105,18 @@ public class CheckListService extends AbstractService<Void> {
 
         if (config.isCheckCrc()) {
             for (final Anime entry : list) {
-                if (StringUtils.isNotBlank(entry.getLocation())) {
-                    Path dir = Paths.get(entry.getLocation());
-                    if (!Files.exists(dir) || !Files.isDirectory(dir)) { // absolute
-                        dir = createRelativePath(dir);
-                        if (!Files.exists(dir) || !Files.isDirectory(dir)) { // relative
-                            continue;
-                        }
+                final String location = entry.getLocation();
+
+                if (StringUtils.isNotBlank(location)) {
+                    final Optional<Path> optDir = PathResolver.buildPath(location, currentWorkingDir);
+
+                    if (!optDir.isPresent()) {
+                        continue;
                     }
 
                     long amount = 0L;
                     try {
-                        amount = Files.list(dir).filter(p -> Files.isRegularFile(p)).count();
+                        amount = Files.list(optDir.get()).filter(p -> Files.isRegularFile(p)).count();
                     } catch (final IOException e) {
                         LOG.error("An error occurred detecting the amount of files for {}: ", entry.getTitle(), e);
                     }
@@ -151,19 +152,16 @@ public class CheckListService extends AbstractService<Void> {
                 }
 
                 // 02 - Does location exist?
-                Path dir = Paths.get(anime.getLocation());
+                final Optional<Path> optDir = PathResolver.buildPath(anime.getLocation(), currentWorkingDir);
 
-                if (!Files.exists(dir) || !Files.isDirectory(dir)) { // absolute
-                    dir = createRelativePath(dir);
-                    if (!Files.exists(dir) || !Files.isDirectory(dir)) { // relative
-                        fireLocationNotFoundEvent(anime);
-                        continue;
-                    }
+                if (!optDir.isPresent()) {
+                    fireLocationNotFoundEvent(anime);
+                    continue;
                 }
 
                 // 03 - Contains at least one file / the exact same amount files
                 // as episodes
-                try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
+                try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(optDir.get())) {
                     int counter = 0;
                     for (final Path curPath : dirStream) {
                         if (Files.isRegularFile(curPath)) {
@@ -262,17 +260,13 @@ public class CheckListService extends AbstractService<Void> {
 
             LOG.debug("Checking CRC32 sum of {}", anime.getTitle());
 
-            Path dir = Paths.get(anime.getLocation());
+            final Optional<Path> optDir = PathResolver.buildPath(anime.getLocation(), currentWorkingDir);
 
-            // FIXME: in Refactoring for checklist: extract to method
-            if (!Files.exists(dir) || !Files.isDirectory(dir)) { // absolute
-                dir = createRelativePath(dir);
-                if (!Files.exists(dir) || !Files.isDirectory(dir)) { // relative
-                    continue;
-                }
+            if (!optDir.isPresent()) {
+                continue;
             }
 
-            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
+            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(optDir.get())) {
                 for (final Path path : dirStream) {
                     updateProgress();
                     if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
@@ -366,24 +360,5 @@ public class CheckListService extends AbstractService<Void> {
             setChanged();
             notifyObservers(event);
         }
-    }
-
-
-    /**
-     * Creates a relative path.
-     *
-     * @since 2.6.0
-     * @param dir
-     * @return
-     */
-    private Path createRelativePath(final Path dir) {
-        Path ret = null;
-        try {
-            ret = currentWorkingDir.getParent().resolve(dir);
-        } catch (final Exception e) {
-            LOG.error("An error occurred trying to create a relative Path: ", e);
-        }
-
-        return ret;
     }
 }

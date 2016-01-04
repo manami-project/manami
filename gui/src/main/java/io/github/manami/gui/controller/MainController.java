@@ -12,6 +12,7 @@ import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.core.config.Config;
 import io.github.manami.core.services.ServiceRepository;
+import io.github.manami.core.utility.PathResolver;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
@@ -57,6 +58,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
@@ -319,12 +321,17 @@ public class MainController implements Observer {
         // COLUMN: Location
         colAnimeListLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         colAnimeListLocation.setCellFactory(defaultCallback);
-        colAnimeListLocation.setOnEditCommit(event -> {
-            final Anime selectedAnime = guiList.get(event.getTablePosition().getRow());
-            final Anime oldValue = new Anime(selectedAnime.getId());
-            Anime.copyAnime(selectedAnime, oldValue);
-            executeCommand(new CmdChangeLocation(oldValue, event.getNewValue(), app));
-            selectedAnime.setLocation(event.getNewValue());
+        colAnimeListLocation.setOnEditStart(event -> {
+            final Path folder = DialogLibrary.showBrowseForFolderDialog(mainControllerWrapper.getMainStage());
+            final String newLocation = PathResolver.buildRelativizedPath(folder.toString(), config.getFile().getParent());
+
+            if (StringUtils.isNotBlank(newLocation)) {
+                final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
+                final Anime oldValue = new Anime(selectedAnime.getId());
+                Anime.copyAnime(selectedAnime, oldValue);
+                executeCommand(new CmdChangeLocation(oldValue, newLocation, app));
+                selectedAnime.setLocation(newLocation);
+            }
         });
 
         btnSearch.setOnAction(event -> search());
