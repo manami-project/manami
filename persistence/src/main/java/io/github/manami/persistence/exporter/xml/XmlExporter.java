@@ -6,9 +6,12 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.*;
+import io.github.manami.persistence.utility.PathResolver;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,16 +22,22 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @author manami-project
  * @since 2.0.0
  */
 public class XmlExporter implements Exporter {
+
+    private static final String RELATIVE_PATH_SEPARATOR = "/";
 
     /** Logger */
     private final static Logger LOG = LoggerFactory.getLogger(XmlExporter.class);
@@ -38,9 +47,6 @@ public class XmlExporter implements Exporter {
 
     /** File to save to. */
     private Path file;
-
-    /** Application config. */
-    private final String configFilesPath;
 
     private final ApplicationPersistence persistence;
 
@@ -52,8 +58,7 @@ public class XmlExporter implements Exporter {
      * @param configFilesPath
      *            Config for the application.
      */
-    public XmlExporter(final String configFilesPath, final ApplicationPersistence persistence) {
-        this.configFilesPath = configFilesPath;
+    public XmlExporter(final ApplicationPersistence persistence) {
         this.persistence = persistence;
     }
 
@@ -79,7 +84,7 @@ public class XmlExporter implements Exporter {
 
             // add doctype
             final DOMImplementation domImpl = doc.getImplementation();
-            final DocumentType doctype = domImpl.createDocumentType("animeList", "SYSTEM", configFilesPath + "/animelist.dtd");
+            final DocumentType doctype = domImpl.createDocumentType("animeList", "SYSTEM", createDtdPath());
             doc.appendChild(doctype);
         } catch (final ParserConfigurationException e) {
             LOG.error("An error occurred while trying to initialize the dom tree: ", e);
@@ -89,6 +94,51 @@ public class XmlExporter implements Exporter {
         createDomTree();
         prettyPrintXML2File();
         return true;
+    }
+
+
+    /**
+     * @since 2.10.0
+     * @return
+     */
+    private String createConfigFilePath() {
+        String appDir = XmlExporter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+        if (appDir.startsWith(RELATIVE_PATH_SEPARATOR)) {
+            appDir = appDir.substring(1, appDir.length());
+        }
+
+        return PathResolver.buildRelativizedPath(appDir, file.getParent());
+    }
+
+
+    /**
+     * @since 2.10.0
+     * @return
+     */
+    private String createDtdPath() {
+        String relativeConfigPath = createConfigFilePath();
+
+        if (!relativeConfigPath.endsWith(RELATIVE_PATH_SEPARATOR)) {
+            relativeConfigPath = relativeConfigPath.concat(RELATIVE_PATH_SEPARATOR);
+        }
+
+        return relativeConfigPath.concat("config/animelist.dtd");
+    }
+
+
+    /**
+     * @since 2.10.0
+     * @return
+     */
+    private String createXsltPath() {
+        String relativeConfigPath = createConfigFilePath();
+
+        if (!relativeConfigPath.endsWith(RELATIVE_PATH_SEPARATOR)) {
+            relativeConfigPath = relativeConfigPath.concat(RELATIVE_PATH_SEPARATOR);
+        }
+
+        return relativeConfigPath.concat("config/theme/animelist_transform.xsl");
     }
 
 
@@ -114,7 +164,7 @@ public class XmlExporter implements Exporter {
         doc.appendChild(root);
 
         // create transformation and css information
-        final Node xslt = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xml\" href=\"" + configFilesPath + "/theme/animelist_transform.xsl\"");
+        final Node xslt = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xml\" href=\"" + createXsltPath() + "\"");
         doc.insertBefore(xslt, root);
 
         return root;

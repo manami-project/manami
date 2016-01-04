@@ -1,4 +1,4 @@
-package io.github.manami.core.utility;
+package io.github.manami.persistence.utility;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

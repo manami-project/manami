@@ -12,7 +12,6 @@ import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.core.config.Config;
 import io.github.manami.core.services.ServiceRepository;
-import io.github.manami.core.utility.PathResolver;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
@@ -30,6 +29,7 @@ import io.github.manami.gui.wrapper.RecommendationsControllerWrapper;
 import io.github.manami.gui.wrapper.RelatedAnimeControllerWrapper;
 import io.github.manami.gui.wrapper.SearchResultsControllerWrapper;
 import io.github.manami.gui.wrapper.WatchListControllerWrapper;
+import io.github.manami.persistence.utility.PathResolver;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

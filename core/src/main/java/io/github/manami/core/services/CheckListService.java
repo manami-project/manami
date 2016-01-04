@@ -10,9 +10,9 @@ import io.github.manami.core.services.events.LocationEvent;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.TitleDifferEvent;
 import io.github.manami.core.services.events.TypeDifferEvent;
-import io.github.manami.core.utility.PathResolver;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.persistence.utility.PathResolver;
 
 import java.io.IOException;
 import java.io.InputStream;

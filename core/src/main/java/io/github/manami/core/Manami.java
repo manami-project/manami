@@ -177,7 +177,7 @@ public class Manami implements ApplicationPersistence {
      * @since 2.0.0
      */
     public void save() {
-        final XmlExporter xmlExporter = new XmlExporter(config.getConfigFilesPath(), persistence);
+        final XmlExporter xmlExporter = new XmlExporter(persistence);
         if (xmlExporter.exportList(config.getFile())) {
             cmdService.setUnsaved(false);
             cmdService.resetDirtyFlag();
