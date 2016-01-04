@@ -1,8 +1,8 @@
 package io.github.manami.gui.wrapper;
 
 import io.github.manami.dto.events.SearchResultEvent;
-import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.controller.SearchResultsController;
+import io.github.manami.gui.utility.DialogLibrary;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

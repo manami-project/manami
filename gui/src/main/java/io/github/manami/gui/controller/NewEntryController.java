@@ -9,7 +9,7 @@ import io.github.manami.core.config.Config;
 import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.gui.DialogLibrary;
+import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.nio.file.Path;

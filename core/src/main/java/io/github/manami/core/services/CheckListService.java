@@ -162,8 +162,7 @@ public class CheckListService extends AbstractService<Void> {
                 }
 
                 // 03 - Contains at least one file / the exact same amount files
-                // as
-                // episodes
+                // as episodes
                 try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
                     int counter = 0;
                     for (final Path curPath : dirStream) {
@@ -327,39 +326,37 @@ public class CheckListService extends AbstractService<Void> {
 
 
     private void fireNoLocationEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime.getTitle());
+        final LocationEvent event = createErrorEvent(anime);
         event.setMessage("Location is not set.");
         fire(event);
     }
 
 
     private void fireDifferentAmountOfEpisodesEvent(final Anime anime) {
-        final LocationEvent event = new LocationEvent();
+        final LocationEvent event = new LocationEvent(anime);
         event.setType(EventType.WARNING);
-        event.setTitle(anime.getTitle());
         event.setMessage("Amount of files differs from amount of episodes.");
         fire(event);
     }
 
 
     private void fireLocationEmptyEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime.getTitle());
+        final LocationEvent event = createErrorEvent(anime);
         event.setMessage("Location is empty.");
         fire(event);
     }
 
 
     private void fireLocationNotFoundEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime.getTitle());
+        final LocationEvent event = createErrorEvent(anime);
         event.setMessage("Location does not exist.");
         fire(event);
     }
 
 
-    private LocationEvent createErrorEvent(final String title) {
-        final LocationEvent event = new LocationEvent();
+    private LocationEvent createErrorEvent(final Anime anime) {
+        final LocationEvent event = new LocationEvent(anime);
         event.setType(EventType.ERROR);
-        event.setTitle(title);
         return event;
     }
 

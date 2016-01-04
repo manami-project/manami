@@ -10,6 +10,8 @@ public class AbstractEvent implements Event {
 
     private EventType type;
 
+    private Anime anime;
+
     private String title;
 
     private String message;
@@ -21,6 +23,7 @@ public class AbstractEvent implements Event {
 
     public AbstractEvent(final Anime anime) {
         type = EventType.INFO;
+        this.anime = anime;
         title = anime.getTitle();
     }
 
@@ -30,37 +33,18 @@ public class AbstractEvent implements Event {
     }
 
 
-    /**
-     * @return the type
-     */
     @Override
     public EventType getType() {
         return type;
     }
 
 
-    /**
-     * @return the title
-     */
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-
-    /**
-     * @return the message
-     */
     @Override
     public String getMessage() {
         return message;
     }
 
 
-    /**
-     * @param type
-     *            the type to set
-     */
     @Override
     public void setType(final EventType type) {
         this.type = type;
@@ -68,13 +52,31 @@ public class AbstractEvent implements Event {
 
 
     @Override
-    public void setTitle(final String title) {
-        this.title = title;
+    public void setMessage(final String message) {
+        this.message = message;
     }
 
 
     @Override
-    public void setMessage(final String message) {
-        this.message = message;
+    public Anime getAnime() {
+        return anime;
+    }
+
+
+    @Override
+    public void setAnime(final Anime anime) {
+        this.anime = anime;
+    }
+
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+
+    @Override
+    public void setTitle(final String title) {
+        this.title = title;
     }
 }

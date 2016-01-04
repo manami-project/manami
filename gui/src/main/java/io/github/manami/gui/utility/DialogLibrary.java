@@ -1,4 +1,4 @@
-package io.github.manami.gui;
+package io.github.manami.gui.utility;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;

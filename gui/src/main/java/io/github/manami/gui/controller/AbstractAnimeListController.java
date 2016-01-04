@@ -9,9 +9,10 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.components.Icons;
+import io.github.manami.gui.utility.DialogLibrary;
+import io.github.manami.gui.utility.HyperlinkBuilder;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -314,19 +315,8 @@ public abstract class AbstractAnimeListController {
      *         as target.
      */
     protected Hyperlink getTitleComponent(final MinimalEntry anime) {
-        final Hyperlink title = new Hyperlink(anime.getTitle());
+        final Hyperlink title = HyperlinkBuilder.buildFrom(anime.getTitle(), anime.getInfoLink());
         title.setFont(Font.font(24.0));
-        title.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                try {
-                    final Desktop desktop = java.awt.Desktop.getDesktop();
-                    desktop.browse(new URI(anime.getInfoLink()));
-                } catch (final Exception e) {
-                    LOG.error("An error occurred trying to open the infolink in the default browser: ", e);
-                    DialogLibrary.showExceptionDialog(e);
-                }
-            }
-        });
         return title;
     }
 

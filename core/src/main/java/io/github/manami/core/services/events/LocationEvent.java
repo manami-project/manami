@@ -1,5 +1,6 @@
 package io.github.manami.core.services.events;
 
+import io.github.manami.dto.entities.Anime;
 
 /**
  * @author manami-project
@@ -7,4 +8,7 @@ package io.github.manami.core.services.events;
  */
 public class LocationEvent extends AbstractEvent {
 
+    public LocationEvent(final Anime anime) {
+        super(anime);
+    }
 }

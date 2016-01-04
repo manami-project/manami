@@ -2,14 +2,16 @@ package io.github.manami.gui.wrapper;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import io.github.manami.dto.events.AnimeListChangedEvent;
 import io.github.manami.dto.events.OpenedFileChangedEvent;
-import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.controller.WatchListController;
+import io.github.manami.gui.utility.DialogLibrary;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

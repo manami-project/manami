@@ -6,7 +6,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import io.github.manami.gui.DialogLibrary;
+import io.github.manami.gui.utility.DialogLibrary;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,8 +2,8 @@ package io.github.manami.gui.controller;
 
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.events.SearchResultEvent;
-import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.utility.DialogLibrary;
 
 import java.awt.Desktop;
 import java.net.URI;

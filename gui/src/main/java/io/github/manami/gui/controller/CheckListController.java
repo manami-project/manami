@@ -13,9 +13,10 @@ import io.github.manami.core.services.events.CrcEvent;
 import io.github.manami.core.services.events.Event;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.ReversibleCommandEvent;
-import io.github.manami.gui.DialogLibrary;
 import io.github.manami.gui.components.CheckListEntry;
 import io.github.manami.gui.components.Icons;
+import io.github.manami.gui.utility.DialogLibrary;
+import io.github.manami.gui.utility.HyperlinkBuilder;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
@@ -251,9 +253,9 @@ public class CheckListController implements Observer {
         final CheckListEntry componentListEntry = new CheckListEntry();
         componentListEntry.setPictureComponent(createIcon(event.getType()));
 
-        final Label lblTitle = new Label(event.getTitle());
-        lblTitle.setFont((Font.font(null, FontWeight.BOLD, 11)));
-        componentListEntry.setTitleComponent(lblTitle);
+        final Hyperlink title = HyperlinkBuilder.buildFrom(event.getTitle(), event.getAnime().getInfoLink());
+        title.setFont((Font.font(null, FontWeight.BOLD, 11)));
+        componentListEntry.setTitleComponent(title);
 
         final Label lblMessage = new Label(event.getMessage());
         lblMessage.setFont((Font.font(11.5)));
