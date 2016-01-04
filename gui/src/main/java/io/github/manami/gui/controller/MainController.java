@@ -858,7 +858,7 @@ public class MainController implements Observer {
     public void refreshEntriesInGui() {
         Platform.runLater(() -> {
             tvAnimeList.getItems().clear();
-            app.fetchAnimeList().forEach(entry -> tvAnimeList.getItems().add(entry));
+            tvAnimeList.setItems(FXCollections.observableArrayList(app.fetchAnimeList()));
             autoSizeTableViewColumns();
         });
         checkGui();
