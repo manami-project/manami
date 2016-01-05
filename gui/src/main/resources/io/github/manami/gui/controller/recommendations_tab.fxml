@@ -9,9 +9,9 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchor" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.manami.gui.controller.RecommendationsController">
    <children>
-       <ScrollPane id="scrollPane" fx:id="scrollPaneList" prefHeight="36.0" prefWidth="36.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+       <ScrollPane id="scrollPane" fx:id="scrollPaneList" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <padding>
-               <Insets left="10.0" />
+               <Insets left="10.0" right="10.0" />
            </padding>
           <content>
               <BorderPane prefHeight="-1.0" prefWidth="-1.0">
@@ -71,9 +71,9 @@
                       </VBox>
                   </center>
                   <bottom>
-                      <GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
+                      <GridPane fx:id="gridPane" BorderPane.alignment="CENTER_LEFT">
                           <columnConstraints>
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="230.0" minWidth="10.0" prefWidth="230.0" />
                               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
                               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
                           </columnConstraints>

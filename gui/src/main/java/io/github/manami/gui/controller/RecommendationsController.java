@@ -9,7 +9,6 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
@@ -19,14 +18,12 @@ import java.util.Observer;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 import org.controlsfx.control.Notifications;
@@ -182,39 +179,8 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
 
     @Override
-    public void showEntries() {
-        Platform.runLater(() -> {
-            updateChildren();
-            checkGridPane();
-
-            getGridPane().getChildren().clear();
-
-            for (final AnimeGuiComponentsListEntry entry : getComponentList()) {
-                final RowConstraints row = new RowConstraints();
-                getGridPane().getRowConstraints().add(row);
-
-                getGridPane().add(entry.getPictureComponent(), 0, getGridPane().getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getPictureComponent(), new Insets(0.0, 0.0, 10.0, 0.0));
-
-                getGridPane().add(entry.getTitleComponent(), 1, getGridPane().getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getTitleComponent(), new Insets(0.0, 0.0, 10.0, 15.0));
-
-                if (entry.getAddToFilterListButton() != null) {
-                    getGridPane().add(entry.getAddToFilterListButton(), 2, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
-                }
-
-                if (entry.getAddToWatchListButton() != null) {
-                    getGridPane().add(entry.getAddToWatchListButton(), 3, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
-                }
-
-                if (entry.getRemoveButton() != null) {
-                    getGridPane().add(entry.getRemoveButton(), 4, getGridPane().getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 10.0));
-                }
-            }
-        });
+    protected void sortComponentEntries() {
+        // don't do anything here. we need the entries in the order they arrive.
     }
 
 

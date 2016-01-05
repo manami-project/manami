@@ -11,23 +11,20 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.components.Icons;
-import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.utility.HyperlinkBuilder;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.text.Collator;
 import java.util.List;
 
 import javafx.application.Platform;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 
@@ -90,36 +87,43 @@ public abstract class AbstractAnimeListController {
         Platform.runLater(() -> {
             updateChildren();
             checkGridPane();
-            componentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
-
+            sortComponentEntries();
             animeGuiComponentsGridPane.getChildren().clear();
 
             for (final AnimeGuiComponentsListEntry entry : componentList) {
-                final RowConstraints row = new RowConstraints();
-                animeGuiComponentsGridPane.getRowConstraints().add(row);
+                animeGuiComponentsGridPane.getRowConstraints().add(new RowConstraints());
+                final int currentRowNumber = animeGuiComponentsGridPane.getRowConstraints().size() - 1;
 
-                animeGuiComponentsGridPane.add(entry.getPictureComponent(), 0, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getPictureComponent(), new Insets(0.0, 0.0, 10.0, 0.0));
+                animeGuiComponentsGridPane.add(entry.getPictureComponent(), 0, currentRowNumber);
+                animeGuiComponentsGridPane.add(entry.getTitleComponent(), 1, currentRowNumber);
 
-                animeGuiComponentsGridPane.add(entry.getTitleComponent(), 1, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getTitleComponent(), new Insets(0.0, 0.0, 10.0, 15.0));
+                final HBox hbButtons = new HBox();
+                hbButtons.setSpacing(10.0);
+                hbButtons.setAlignment(Pos.CENTER);
 
                 if (entry.getAddToFilterListButton() != null) {
-                    animeGuiComponentsGridPane.add(entry.getAddToFilterListButton(), 2, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToFilterListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
+                    hbButtons.getChildren().add(entry.getAddToFilterListButton());
                 }
 
                 if (entry.getAddToWatchListButton() != null) {
-                    animeGuiComponentsGridPane.add(entry.getAddToWatchListButton(), 3, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getAddToWatchListButton(), new Insets(0.0, 0.0, 10.0, 10.0));
+                    hbButtons.getChildren().add(entry.getAddToWatchListButton());
                 }
 
                 if (entry.getRemoveButton() != null) {
-                    animeGuiComponentsGridPane.add(entry.getRemoveButton(), 4, animeGuiComponentsGridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 10.0));
+                    hbButtons.getChildren().add(entry.getRemoveButton());
                 }
+
+                animeGuiComponentsGridPane.add(hbButtons, 2, currentRowNumber);
             }
         });
+    }
+
+
+    /**
+     * @since 2.10.0
+     */
+    protected void sortComponentEntries() {
+        componentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
     }
 
 

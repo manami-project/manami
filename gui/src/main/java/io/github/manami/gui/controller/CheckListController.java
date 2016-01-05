@@ -39,6 +39,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -221,29 +222,30 @@ public class CheckListController implements Observer {
 
             gridPane.getChildren().clear();
             for (final CheckListEntry entry : componentList) {
-                final RowConstraints row = new RowConstraints();
-                gridPane.getRowConstraints().add(row);
-                gridPane.add(entry.getPictureComponent(), 0, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getPictureComponent(), new Insets(0.0, 0.0, 10.0, 0.0));
-                gridPane.add(entry.getTitleComponent(), 1, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getTitleComponent(), new Insets(0.0, 0.0, 10.0, 15.0));
-                gridPane.add(entry.getMessageComponent(), 2, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getMessageComponent(), new Insets(0.0, 0.0, 10.0, 15.0));
-                if (entry.getDeletionButton() != null) {
-                    gridPane.add(entry.getDeletionButton(), 3, gridPane.getRowConstraints().size() - 1);
-                    GridPane.setMargin(entry.getDeletionButton(), new Insets(0.0, 0.0, 10.0, 20.0));
+                gridPane.getRowConstraints().add(new RowConstraints());
+                final int rowNumber = gridPane.getRowConstraints().size() - 1;
+
+                gridPane.add(entry.getPictureComponent(), 0, rowNumber);
+                gridPane.add(entry.getTitleComponent(), 1, rowNumber);
+                gridPane.add(entry.getMessageComponent(), 2, rowNumber);
+
+                if (entry.getUpdateButton() != null) {
+                    final HBox hbox = new HBox(10);
+                    hbox.getChildren().add(entry.getUpdateButton());
+                    HBox.setMargin(hbox, new Insets(0.0, 0.0, 0.0, 10.0));
+
+                    gridPane.add(hbox, 3, rowNumber);
                 }
 
                 final Button removeButton = new Button("", Icons.createIconRemove());
                 removeButton.setTooltip(new Tooltip("remove"));
-
                 removeButton.setOnAction(event -> {
                     componentList.remove(entry);
                     showEntries();
                     updateTabTitle();
                 });
-                gridPane.add(removeButton, 4, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(removeButton, new Insets(0.0, 0.0, 10.0, 20.0));
+
+                gridPane.add(removeButton, 4, rowNumber);
             }
         });
     }
@@ -292,7 +294,7 @@ public class CheckListController implements Observer {
             showEntries();
             updateTabTitle();
         });
-        componentListEntry.setDeletionButton(button);
+        componentListEntry.setUpdateButton(button);
     }
 
 
@@ -322,7 +324,7 @@ public class CheckListController implements Observer {
                     DialogLibrary.showExceptionDialog(e);
                 }
             });
-            componentListEntry.setDeletionButton(button);
+            componentListEntry.setUpdateButton(button);
         }
     }
 

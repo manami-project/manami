@@ -19,8 +19,8 @@ public class CheckListEntry {
 
     private Label messageComponent;
 
-    /** Button to delete this entry. */
-    private Button deletionButton;
+    /** Button to update this entry. */
+    private Button updateButton;
 
 
     /**
@@ -75,18 +75,18 @@ public class CheckListEntry {
 
 
     /**
-     * @return the deletionButton
+     * @return the updateButton
      */
-    public Button getDeletionButton() {
-        return deletionButton;
+    public Button getUpdateButton() {
+        return updateButton;
     }
 
 
     /**
-     * @param deletionButton
+     * @param updateButton
      *            the deletionButton to set
      */
-    public void setDeletionButton(final Button deletionButton) {
-        this.deletionButton = deletionButton;
+    public void setUpdateButton(final Button updateButton) {
+        this.updateButton = updateButton;
     }
 }
