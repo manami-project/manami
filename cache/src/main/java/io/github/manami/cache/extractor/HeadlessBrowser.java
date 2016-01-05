@@ -41,7 +41,7 @@ public class HeadlessBrowser {
      * @since 2.0.0
      */
     public HeadlessBrowser() {
-        webClient = new WebClient(BrowserVersion.CHROME);
+        webClient = new WebClient(BrowserVersion.FIREFOX_38);
         webClient.getOptions().setActiveXNative(false);
         webClient.getOptions().setAppletEnabled(false);
         webClient.getOptions().setCssEnabled(false);
@@ -74,6 +74,7 @@ public class HeadlessBrowser {
 
         String ret = null;
         try {
+            webClient.getCookieManager().clearCookies();
             page = webClient.getPage(url);
             ret = page.getWebResponse().getContentAsString();
             closePageExplicitly();
@@ -103,6 +104,5 @@ public class HeadlessBrowser {
         }
 
         page = null;
-        System.gc(); // FIXME: temp fix. test later without
     }
 }

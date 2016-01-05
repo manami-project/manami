@@ -69,19 +69,20 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
     @Override
     protected AnimeType extractType() {
-        pattern = Pattern.compile("<span class=\"dark_text\">(.??)Type:(.??)</span>(.+?)</div>");
+        pattern = Pattern.compile("<span class=\"dark_text\">(.??)Type:(.??)</span>(.+?)</a>");
         matcher = pattern.matcher(siteContent);
         AnimeType type = null;
 
         if (matcher.find()) {
             String subStr = matcher.group();
 
-            pattern = Pattern.compile("</span>(.*?)</div>");
+            pattern = Pattern.compile("type=(.+?)\\\">(.*?)</a>");
             matcher = pattern.matcher(subStr);
 
             if (matcher.find()) {
                 subStr = matcher.group();
-                subStr = subStr.replace("</span>", "").replace("</div>", "");
+                subStr = subStr.replace("</a>", "");
+                subStr = subStr.substring(subStr.lastIndexOf(">")).replace(">", "");
                 subStr = subStr.trim();
                 type = AnimeType.findByName(subStr);
             }
