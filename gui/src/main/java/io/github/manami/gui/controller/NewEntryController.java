@@ -13,6 +13,8 @@ import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -290,6 +292,9 @@ public class NewEntryController {
      */
     private void autoFillForm() {
         AnimeRetrievalService retrievalService;
+
+        convertUrlIfNecessary();
+
         final String url = txtInfoLink.getText();
 
         if (StringUtils.isNotBlank(url)) {
@@ -313,6 +318,18 @@ public class NewEntryController {
             retrievalService.setOnCancelled(event -> setDisableAutoCompleteWidgets(false));
             retrievalService.setOnFailed(event -> setDisableAutoCompleteWidgets(false));
             retrievalService.start();
+        }
+    }
+
+
+    private void convertUrlIfNecessary() {
+        final Pattern pattern = Pattern.compile("anime\\.php\\?id=[0-9]*");
+        final Matcher matcher = pattern.matcher(txtInfoLink.getText());
+
+        if (matcher.find()) {
+            String id = matcher.group();
+            id = id.replace("anime.php?id=", "");
+            txtInfoLink.setText("http://myanimelist.net/anime/".concat(id));
         }
     }
 
