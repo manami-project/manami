@@ -211,13 +211,7 @@ public class Manami implements ApplicationPersistence {
 
     @Override
     public boolean addAnime(final Anime anime) {
-        if (anime != null) {
-            persistence.removeFromFilterList(anime.getInfoLink());
-            persistence.removeFromWatchList(anime.getInfoLink());
-            return persistence.addAnime(anime);
-        }
-
-        return false;
+        return persistence.addAnime(anime);
     }
 
 

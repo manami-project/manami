@@ -6,8 +6,9 @@ import io.github.manami.core.config.CheckListConfig;
 import io.github.manami.core.services.events.AbstractEvent.EventType;
 import io.github.manami.core.services.events.CrcEvent;
 import io.github.manami.core.services.events.EpisodesDifferEvent;
-import io.github.manami.core.services.events.LocationEvent;
 import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.core.services.events.RelativizeLocationEvent;
+import io.github.manami.core.services.events.SimpleLocationEvent;
 import io.github.manami.core.services.events.TitleDifferEvent;
 import io.github.manami.core.services.events.TypeDifferEvent;
 import io.github.manami.dto.AnimeType;
@@ -20,6 +21,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Observer;
 import java.util.Optional;
@@ -65,7 +67,7 @@ public class CheckListService extends AbstractService<Void> {
      */
     public CheckListService(final CheckListConfig config, final Path file, final Cache cache, final Manami app, final Observer observer) {
         this.config = config;
-        currentWorkingDir = file;
+        currentWorkingDir = file.getParent();
         this.cache = cache;
         this.app = app;
         list = app.fetchAnimeList();
@@ -176,6 +178,16 @@ public class CheckListService extends AbstractService<Void> {
                     }
                 } catch (final Exception e) {
                     LOG.error("An error occurred during file check: ", e);
+                }
+
+                /*
+                 * 04 conversion to relative path possible? At this point we
+                 * know the directory exists. If wen can access it directly it's
+                 * an absolute path.
+                 */
+                final Path dir = Paths.get(anime.getLocation());
+                if (Files.exists(dir) && Files.isDirectory(dir)) {
+                    fireRelativizePathEvent(anime);
                 }
             }
 
@@ -320,14 +332,14 @@ public class CheckListService extends AbstractService<Void> {
 
 
     private void fireNoLocationEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime);
+        final SimpleLocationEvent event = createErrorEvent(anime);
         event.setMessage("Location is not set.");
         fire(event);
     }
 
 
     private void fireDifferentAmountOfEpisodesEvent(final Anime anime) {
-        final LocationEvent event = new LocationEvent(anime);
+        final SimpleLocationEvent event = new SimpleLocationEvent(anime);
         event.setType(EventType.WARNING);
         event.setMessage("Amount of files differs from amount of episodes.");
         fire(event);
@@ -335,23 +347,37 @@ public class CheckListService extends AbstractService<Void> {
 
 
     private void fireLocationEmptyEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime);
+        final SimpleLocationEvent event = createErrorEvent(anime);
         event.setMessage("Location is empty.");
         fire(event);
     }
 
 
     private void fireLocationNotFoundEvent(final Anime anime) {
-        final LocationEvent event = createErrorEvent(anime);
+        final SimpleLocationEvent event = createErrorEvent(anime);
         event.setMessage("Location does not exist.");
         fire(event);
     }
 
 
-    private LocationEvent createErrorEvent(final Anime anime) {
-        final LocationEvent event = new LocationEvent(anime);
+    private SimpleLocationEvent createErrorEvent(final Anime anime) {
+        final SimpleLocationEvent event = new SimpleLocationEvent(anime);
         event.setType(EventType.ERROR);
         return event;
+    }
+
+
+    /**
+     * @since 2.10.0
+     * @param anime
+     */
+    private void fireRelativizePathEvent(final Anime anime) {
+        final String newValue = PathResolver.buildRelativizedPath(anime.getLocation(), currentWorkingDir);
+
+        final RelativizeLocationEvent event = new RelativizeLocationEvent(anime, newValue, app);
+        event.setType(EventType.INFO);
+        event.setMessage("This path can be converted to a relative path.");
+        fire(event);
     }
 
 

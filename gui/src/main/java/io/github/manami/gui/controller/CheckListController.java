@@ -181,7 +181,7 @@ public class CheckListController implements Observer {
         }
 
         if (object instanceof Event) {
-            addLocationEntry((Event) object);
+            addEventEntry((Event) object);
             updateTabTitle();
         }
 
@@ -211,8 +211,8 @@ public class CheckListController implements Observer {
     protected void showEntries() {
         Platform.runLater(() -> {
             componentList.sort((a, b) -> {
-                final String titleA = a.getTitleComponent().getText();
-                final String titleB = b.getTitleComponent().getText();
+                final String titleA = (a.getTitleComponent() instanceof Hyperlink) ? ((Hyperlink) a.getTitleComponent()).getText() : ((Label) a.getTitleComponent()).getText();
+                final String titleB = (b.getTitleComponent() instanceof Hyperlink) ? ((Hyperlink) b.getTitleComponent()).getText() : ((Label) b.getTitleComponent()).getText();
                 if (StringUtils.isNotBlank(titleA) && StringUtils.isNotBlank(titleB)) {
                     return Collator.getInstance().compare(titleA, titleB);
                 }
@@ -249,13 +249,20 @@ public class CheckListController implements Observer {
     }
 
 
-    private void addLocationEntry(final Event event) {
+    private void addEventEntry(final Event event) {
         final CheckListEntry componentListEntry = new CheckListEntry();
         componentListEntry.setPictureComponent(createIcon(event.getType()));
+        final Font titleFont = Font.font(null, FontWeight.BOLD, 11);
 
-        final Hyperlink title = HyperlinkBuilder.buildFrom(event.getTitle(), event.getAnime().getInfoLink());
-        title.setFont((Font.font(null, FontWeight.BOLD, 11)));
-        componentListEntry.setTitleComponent(title);
+        if (StringUtils.isNotBlank(event.getAnime().getInfoLink())) {
+            final Hyperlink title = HyperlinkBuilder.buildFrom(event.getTitle(), event.getAnime().getInfoLink());
+            title.setFont(titleFont);
+            componentListEntry.setTitleComponent(title);
+        } else {
+            final Label lblTitle = new Label(event.getTitle());
+            lblTitle.setFont(titleFont);
+            componentListEntry.setTitleComponent(lblTitle);
+        }
 
         final Label lblMessage = new Label(event.getMessage());
         lblMessage.setFont((Font.font(11.5)));

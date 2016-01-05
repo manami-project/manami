@@ -15,6 +15,8 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author manami-project
  * @since 2.7.0
@@ -43,8 +45,15 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean filterAnime(final MinimalEntry anime) {
-        watchListHandler.removeFromWatchList(anime.getInfoLink());
-        return filterListHandler.filterAnime(anime);
+        if (anime != null) {
+            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+                watchListHandler.removeFromWatchList(anime.getInfoLink());
+            }
+
+            return filterListHandler.filterAnime(anime);
+        }
+
+        return false;
     }
 
 
@@ -68,9 +77,14 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean addAnime(final Anime anime) {
-        filterListHandler.removeFromFilterList(anime.getInfoLink());
-        watchListHandler.removeFromWatchList(anime.getInfoLink());
-        return animeListHandler.addAnime(anime);
+        if (anime != null) {
+            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+                filterListHandler.removeFromFilterList(anime.getInfoLink());
+                watchListHandler.removeFromWatchList(anime.getInfoLink());
+            }
+            return animeListHandler.addAnime(anime);
+        }
+        return false;
     }
 
 
@@ -88,8 +102,14 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
-        filterListHandler.removeFromFilterList(anime.getInfoLink());
-        return watchListHandler.watchAnime(anime);
+        if (anime != null) {
+            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+                filterListHandler.removeFromFilterList(anime.getInfoLink());
+            }
+            return watchListHandler.watchAnime(anime);
+        }
+
+        return false;
     }
 
 

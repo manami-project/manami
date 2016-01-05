@@ -66,7 +66,7 @@ public class PathResolver {
     private static Path createRelativePath(final Path dir, final Path currentWorkingDir) {
         Path ret = null;
         try {
-            ret = currentWorkingDir.getParent().resolve(dir);
+            ret = currentWorkingDir.resolve(dir);
         } catch (final Exception e) {
             LOG.error("An error occurred trying to create a relative Path: ", e);
         }

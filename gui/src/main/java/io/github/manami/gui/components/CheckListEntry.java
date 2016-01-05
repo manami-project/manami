@@ -1,7 +1,7 @@
 package io.github.manami.gui.components;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
@@ -15,7 +15,7 @@ public class CheckListEntry {
     private ImageView pictureComponent;
 
     /** Link containing the title and the info link. */
-    private Hyperlink titleComponent;
+    private Node titleComponent;
 
     private Label messageComponent;
 
@@ -43,7 +43,7 @@ public class CheckListEntry {
     /**
      * @return the titleComponent
      */
-    public Hyperlink getTitleComponent() {
+    public Node getTitleComponent() {
         return titleComponent;
     }
 
@@ -52,7 +52,7 @@ public class CheckListEntry {
      * @param titleComponent
      *            the titleComponent to set
      */
-    public void setTitleComponent(final Hyperlink titleComponent) {
+    public void setTitleComponent(final Node titleComponent) {
         this.titleComponent = titleComponent;
     }
 

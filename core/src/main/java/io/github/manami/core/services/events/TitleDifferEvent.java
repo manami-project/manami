@@ -1,6 +1,3 @@
-/**
- *
- */
 package io.github.manami.core.services.events;
 
 import io.github.manami.core.Manami;

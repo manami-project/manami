@@ -6,9 +6,9 @@ import io.github.manami.dto.entities.Anime;
  * @author manami-project
  * @since 2.6.0
  */
-public class LocationEvent extends AbstractEvent {
+public class SimpleLocationEvent extends AbstractEvent {
 
-    public LocationEvent(final Anime anime) {
+    public SimpleLocationEvent(final Anime anime) {
         super(anime);
     }
 }

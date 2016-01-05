@@ -83,9 +83,7 @@ public class MainControllerWrapper {
     @Subscribe
     @AllowConcurrentEvents
     public void changeEvent(final AnimeListChangedEvent event) {
-        if (animeListTab.isSelected()) {
-            mainController.refreshEntriesInGui();
-        }
+        mainController.refreshEntriesInGui();
         mainController.checkGui();
     }
 
