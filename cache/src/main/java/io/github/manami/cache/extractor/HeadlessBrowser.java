@@ -41,7 +41,7 @@ public class HeadlessBrowser {
      * @since 2.0.0
      */
     public HeadlessBrowser() {
-        webClient = new WebClient(BrowserVersion.FIREFOX_38);
+        webClient = new WebClient(BrowserVersion.CHROME);
         webClient.getOptions().setActiveXNative(false);
         webClient.getOptions().setAppletEnabled(false);
         webClient.getOptions().setCssEnabled(false);
@@ -54,6 +54,7 @@ public class HeadlessBrowser {
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setUseInsecureSSL(false);
+        webClient.getOptions().setTimeout(10000);
         webClient.setWebConnection(new UrlFetchWebConnection(webClient)); // experimental
     }
 
@@ -68,7 +69,7 @@ public class HeadlessBrowser {
      */
     public String pageAsString(final String url) {
         if (!url.startsWith("http")) {
-            LOG.warn("Seems not be valid URL: {}", url);
+            LOG.warn("Seems not be a valid URL: {}", url);
             return null;
         }
 
