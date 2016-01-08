@@ -18,7 +18,7 @@ public class AboutController {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText(String.format("Version: %s", ToolVersion.getVersion()));
-        alert.setContentText("Free non-commercial software.");
+        alert.setContentText("Free non-commercial software. (AGPLv3)\n\nhttps://github.com/manami-project/manami");
         alert.showAndWait();
     }
 }
