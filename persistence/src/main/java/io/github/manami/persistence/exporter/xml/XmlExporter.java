@@ -104,8 +104,16 @@ public class XmlExporter implements Exporter {
     private String createConfigFilePath() {
         String appDir = XmlExporter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
+        int endOfString = appDir.lastIndexOf(RELATIVE_PATH_SEPARATOR);
+
+        if (endOfString == -1) {
+            endOfString = appDir.lastIndexOf("\\");
+        }
+
+        appDir = appDir.substring(0, endOfString);
+
         if (appDir.startsWith(RELATIVE_PATH_SEPARATOR)) {
-            appDir = appDir.substring(1, appDir.length());
+            appDir = appDir.substring(1);
         }
 
         return PathResolver.buildRelativizedPath(appDir, file.getParent());
