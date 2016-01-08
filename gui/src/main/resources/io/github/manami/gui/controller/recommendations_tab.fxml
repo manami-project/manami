@@ -15,16 +15,6 @@
            </padding>
           <content>
               <BorderPane prefHeight="-1.0" prefWidth="-1.0">
-                  <top>
-                      <Label text="Recommendations">
-                          <font>
-                              <Font name="System Bold" size="16.0" />
-                          </font>
-                          <BorderPane.margin>
-                              <Insets bottom="25.0" right="10.0" top="10.0" />
-                          </BorderPane.margin>
-                      </Label>
-                  </top>
                   <center>
                       <VBox>
                           <BorderPane.margin>
@@ -85,6 +75,23 @@
                           </BorderPane.margin>
                       </GridPane>
                   </bottom>
+               <top>
+                  <BorderPane BorderPane.alignment="CENTER">
+                     <left>
+                            <Label text="Recommendations" BorderPane.alignment="CENTER">
+                                <font>
+                                    <Font name="System Bold" size="16.0" />
+                                </font>
+                                <BorderPane.margin>
+                                    <Insets bottom="25.0" right="10.0" top="10.0" />
+                                </BorderPane.margin>
+                            </Label>
+                     </left>
+                     <right>
+                        <Button fx:id="btnExport" mnemonicParsing="false" text="export" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </top>
               </BorderPane>
           </content>
        </ScrollPane>

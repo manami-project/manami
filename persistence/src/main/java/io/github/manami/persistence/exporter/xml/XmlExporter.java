@@ -64,7 +64,7 @@ public class XmlExporter implements Exporter {
 
 
     @Override
-    public boolean exportList(final Path file) {
+    public boolean exportAll(final Path file) {
         this.file = file;
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);

@@ -142,9 +142,9 @@ public class Manami implements ApplicationPersistence {
      */
     public void export(final Path file) {
         if (file.toString().endsWith(".csv")) {
-            new CsvExporter(persistence).exportList(file);
+            new CsvExporter(persistence).exportAll(file);
         } else if (file.toString().endsWith(".json")) {
-            new JsonExporter(persistence).exportList(file);
+            new JsonExporter(persistence).exportAll(file);
         }
     }
 
@@ -178,7 +178,7 @@ public class Manami implements ApplicationPersistence {
      */
     public void save() {
         final XmlExporter xmlExporter = new XmlExporter(persistence);
-        if (xmlExporter.exportList(config.getFile())) {
+        if (xmlExporter.exportAll(config.getFile())) {
             cmdService.setUnsaved(false);
             cmdService.resetDirtyFlag();
         }
@@ -302,6 +302,16 @@ public class Manami implements ApplicationPersistence {
         if (StringUtils.isNotBlank(searchString)) {
             LOG.info("Initiated seach for [{}]", searchString);
             serviceRepo.startService(new SearchService(searchString, persistence, eventBus));
+        }
+    }
+
+
+    /**
+     * @since 2.10.0
+     */
+    public void exportList(final List<Anime> list, final Path file) {
+        if (file.toString().endsWith(".json")) {
+            new JsonExporter(persistence).exportList(list, file);
         }
     }
 }

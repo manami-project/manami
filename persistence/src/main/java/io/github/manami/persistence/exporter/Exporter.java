@@ -18,5 +18,5 @@ public interface Exporter {
      *            File
      * @return true if the export was successful and false if an error occurred.
      */
-    boolean exportList(final Path file);
+    boolean exportAll(final Path file);
 }

@@ -1,21 +1,23 @@
 package io.github.manami.persistence.exporter.csv;
 
-import com.google.common.collect.Lists;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 /**
  * Exports a list to a csv file.
@@ -48,7 +50,7 @@ public class CsvExporter implements Exporter {
 
 
     @Override
-    public boolean exportList(final Path file) {
+    public boolean exportAll(final Path file) {
 
         try {
             listWriter = new CsvListWriter(new FileWriter(file.toFile()), CsvPreference.STANDARD_PREFERENCE);
