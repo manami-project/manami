@@ -49,7 +49,11 @@ public class PathResolver {
         final Optional<Path> optDir = buildPath(path, currentWorkingDir);
 
         if (optDir.isPresent()) {
-            return currentWorkingDir.relativize(optDir.get()).toString().replace("\\", "/");
+            try {
+                return currentWorkingDir.relativize(optDir.get()).toString().replace("\\", "/");
+            } catch (final IllegalArgumentException e) {
+                return path;
+            }
         }
 
         return null;
