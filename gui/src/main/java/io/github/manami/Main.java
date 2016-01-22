@@ -1,9 +1,9 @@
 package io.github.manami;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
 import io.github.manami.core.config.ContextConfigurationBean;
 import io.github.manami.dto.events.ApplicationContextStartedEvent;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

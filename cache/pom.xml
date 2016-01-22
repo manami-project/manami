@@ -29,10 +29,6 @@
   		<artifactId>commons-lang3</artifactId>
   	</dependency>
   	<dependency>
-  		<groupId>net.sourceforge.htmlunit</groupId>
-  		<artifactId>htmlunit</artifactId>
-  	</dependency>
-  	<dependency>
   		<groupId>io.github.manami</groupId>
   		<artifactId>persistence</artifactId>
   		<version>${project.version}</version>
@@ -45,5 +41,9 @@
   		<groupId>com.google.guava</groupId>
   		<artifactId>guava</artifactId>
   	</dependency>
+  	<dependency>
+		<groupId>com.ui4j</groupId>
+		<artifactId>ui4j-all</artifactId>
+	</dependency>
   </dependencies>
 </project>

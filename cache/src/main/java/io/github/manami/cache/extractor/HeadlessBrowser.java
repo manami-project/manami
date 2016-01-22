@@ -1,19 +1,15 @@
 package io.github.manami.cache.extractor;
 
-import java.io.IOException;
-import java.util.List;
+import javafx.application.Platform;
 
 import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.UrlFetchWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebWindow;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.ui4j.api.browser.BrowserEngine;
+import com.ui4j.api.browser.BrowserFactory;
+import com.ui4j.api.browser.Page;
 
 /**
  * A Browser which lets you download the various anime sites. It is necessary to
@@ -29,33 +25,11 @@ public class HeadlessBrowser {
     /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger(HeadlessBrowser.class);
 
-    /** Instance of the {@link WebClient} which represents the Browser. */
-    private final WebClient webClient;
-
-    private HtmlPage page;
+    private BrowserEngine browserEngine;
 
 
-    /**
-     * Constructor.
-     *
-     * @since 2.0.0
-     */
     public HeadlessBrowser() {
-        webClient = new WebClient(BrowserVersion.CHROME);
-        webClient.getOptions().setActiveXNative(false);
-        webClient.getOptions().setAppletEnabled(false);
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setDoNotTrackEnabled(true);
-        webClient.getOptions().setGeolocationEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(true);
-        webClient.getOptions().setPopupBlockerEnabled(true);
-        webClient.getOptions().setPrintContentOnFailingStatusCode(false);
-        webClient.getOptions().setRedirectEnabled(true);
-        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        webClient.getOptions().setUseInsecureSSL(false);
-        webClient.getOptions().setTimeout(10000);
-        webClient.setWebConnection(new UrlFetchWebConnection(webClient)); // experimental
+        Platform.runLater(() -> browserEngine = BrowserFactory.getWebKit());
     }
 
 
@@ -74,36 +48,10 @@ public class HeadlessBrowser {
         }
 
         String ret = null;
-        try {
-            webClient.getCookieManager().clearCookies();
-            page = webClient.getPage(url);
-            ret = page.getWebResponse().getContentAsString();
-            closePageExplicitly();
-        } catch (FailingHttpStatusCodeException | IOException e) {
-            LOG.error("Failed to download the following url: {}", url, e);
-            webClient.close();
-        }
+
+        final Page page = browserEngine.navigate(url);
+        ret = page.getDocument().getBody().getInnerHTML();
 
         return ret;
-    }
-
-
-    /**
-     * Needed in order to fix the out-of-memory problem. MAL probably introduced
-     * new heavy javascripts. Thus manami resulted in an out-of-memory. As a
-     * consequence it's necessary to clean up properly.
-     *
-     * @since 2.9.1
-     */
-    private void closePageExplicitly() {
-        page.cleanUp();
-        final List<WebWindow> windows = webClient.getWebWindows();
-
-        for (final WebWindow wd : windows) {
-            wd.getJobManager().removeAllJobs();
-            webClient.deregisterWebWindow(wd);
-        }
-
-        page = null;
     }
 }
