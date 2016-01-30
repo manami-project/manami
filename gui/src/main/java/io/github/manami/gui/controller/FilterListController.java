@@ -20,6 +20,7 @@ import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -293,7 +294,9 @@ public class FilterListController extends AbstractAnimeListController implements
      * @since 2.7.0
      */
     public void startRecommendedFilterEntrySearch() {
-        serviceRepo.startService(new RelatedAnimeFinderService(cache, app, app.fetchFilterList(), this));
+        final List<FilterEntry> filterList = Lists.newArrayList(app.fetchFilterList());
+        Collections.shuffle(filterList);
+        serviceRepo.startService(new RelatedAnimeFinderService(cache, app, filterList, this));
     }
 
 
