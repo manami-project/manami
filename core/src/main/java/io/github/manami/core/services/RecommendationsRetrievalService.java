@@ -104,11 +104,9 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     private void getRecommendations(final String url) {
         final String recomUrl = String.format("%s/Death_Note/userrecs", url);
         String recomSite = (recomUrl.startsWith("http")) ? browser.pageAsString(recomUrl) : null;
-        final String delimiter = "Make a recommendation";
         final String animeUrlDelimiter = "/anime/";
         final String recomFlag = "Recommended by";
         recomSite = StringUtils.normalizeSpace(recomSite);
-        recomSite = StringUtils.substringBetween(recomSite, delimiter, "</html>");
 
         if (StringUtils.isNotBlank(recomSite)) {
             String curAnime = null;
