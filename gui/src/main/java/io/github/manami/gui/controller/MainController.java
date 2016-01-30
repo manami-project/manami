@@ -412,6 +412,7 @@ public class MainController implements Observer {
         checkDirtyFlagAnimeListTab();
         FXCollections.sort(tvAnimeList.getItems(), new MinimalEntryComByTitleAsc());
         refreshTableView();
+        updateAutoCompletion();
     }
 
 
@@ -553,7 +554,7 @@ public class MainController implements Observer {
                 try {
                     app.newList();
                     app.open(file);
-                    initAutoCompletion();
+                    updateAutoCompletion();
                     refreshEntriesInGui();
                     controllerWrapper.startRecommendedFilterEntrySearch();
                 } catch (final Exception e) {
@@ -568,7 +569,7 @@ public class MainController implements Observer {
     /**
      * @since 2.9.1
      */
-    private void initAutoCompletion() {
+    private void updateAutoCompletion() {
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
