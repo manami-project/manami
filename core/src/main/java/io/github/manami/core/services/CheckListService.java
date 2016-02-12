@@ -15,6 +15,8 @@ import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.persistence.utility.PathResolver;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -28,7 +30,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
+import java.util.zip.Checksum;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -285,14 +287,18 @@ public class CheckListService extends AbstractService<Void> {
                         continue;
                     }
 
-                    final CRC32 crc = new CRC32();
-                    final InputStream cis = new CheckedInputStream(Files.newInputStream(path), crc);
-                    while (cis.read() != -1) {
+                    int cnt;
+                    final Checksum crc = new CRC32();
+
+                    try (final InputStream inputStream = new BufferedInputStream(new FileInputStream(path.toString()))) {
+                        while ((cnt = inputStream.read()) != -1) {
+                            crc.update(cnt);
+                        }
                     }
 
+                    final String crcSum = Long.toHexString(crc.getValue());
                     final Pattern pattern = Pattern.compile("\\[.{8}\\]");
                     final Matcher matcher = pattern.matcher(path.getFileName().toString());
-                    final String crcSum = Long.toHexString(crc.getValue());
 
                     if (matcher.find()) {
                         final String titleCrc = matcher.group().replace("[", "").replace("]", "");
