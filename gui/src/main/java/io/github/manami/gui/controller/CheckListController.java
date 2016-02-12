@@ -256,7 +256,7 @@ public class CheckListController implements Observer {
         componentListEntry.setPictureComponent(createIcon(event.getType()));
         final Font titleFont = Font.font(null, FontWeight.BOLD, 11);
 
-        if (StringUtils.isNotBlank(event.getAnime().getInfoLink())) {
+        if (event.getAnime() != null && StringUtils.isNotBlank(event.getAnime().getInfoLink())) {
             final Hyperlink title = HyperlinkBuilder.buildFrom(event.getTitle(), event.getAnime().getInfoLink());
             title.setFont(titleFont);
             componentListEntry.setTitleComponent(title);
