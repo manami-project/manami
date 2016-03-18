@@ -1,5 +1,9 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.gui.components.Icons.createIconCancel;
+import static io.github.manami.gui.components.Icons.createIconEdit;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static org.slf4j.LoggerFactory.getLogger;
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -14,15 +18,12 @@ import io.github.manami.core.services.events.Event;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.ReversibleCommandEvent;
 import io.github.manami.gui.components.CheckListEntry;
-import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.utility.HyperlinkBuilder;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.Collator;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -48,9 +49,6 @@ import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.Notifications;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author manami-project
@@ -58,7 +56,7 @@ import com.google.common.collect.Lists;
  */
 public class CheckListController implements Observer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CheckListController.class);
+    private static final Logger LOG = getLogger(CheckListController.class);
 
     public static final String CHECK_LIST_TAB_TITLE = "Check List";
 
@@ -109,8 +107,7 @@ public class CheckListController implements Observer {
     /** Service instance. */
     private CheckListService service;
 
-    /** List of all GUI components. */
-    private List<CheckListEntry> componentList;
+    private int amountOfEntries = 0;
 
 
     /**
@@ -119,10 +116,9 @@ public class CheckListController implements Observer {
      * @since 2.4.0
      */
     public void initialize() {
-        componentList = Lists.newArrayList();
         btnStart.setOnAction(event -> start());
 
-        btnCancel.setGraphic(Icons.createIconCancel());
+        btnCancel.setGraphic(createIconCancel());
         btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
     }
@@ -138,9 +134,10 @@ public class CheckListController implements Observer {
 
 
     private void start() {
+        clear();
+
         if (cbLocations.isSelected() || cbCrc.isSelected() || cbMetaData.isSelected()) {
             showProgressControls(true);
-            componentList.clear();
             final CheckListConfig config = new CheckListConfig(cbLocations.isSelected(), cbCrc.isSelected(), cbMetaData.isSelected());
             service = new CheckListService(config, appConfig.getFile(), Main.CONTEXT.getBean(Cache.class), Main.CONTEXT.getBean(Manami.class), this);
             serviceRepo.startService(service);
@@ -157,8 +154,6 @@ public class CheckListController implements Observer {
         if (service != null) {
             service.cancel();
         }
-
-        clear();
     }
 
 
@@ -205,48 +200,53 @@ public class CheckListController implements Observer {
 
 
     /**
-     * Adds all {@link CheckListEntry}s to the {@link GridPane}.
-     *
-     * @since 2.1.3
+     * @param entry
      */
-    protected void showEntries() {
+    private void addComponentListEntryToGridPane(final CheckListEntry entry) {
         Platform.runLater(() -> {
-            componentList.sort((a, b) -> {
-                final String titleA = (a.getTitleComponent() instanceof Hyperlink) ? ((Hyperlink) a.getTitleComponent()).getText() : ((Label) a.getTitleComponent()).getText();
-                final String titleB = (b.getTitleComponent() instanceof Hyperlink) ? ((Hyperlink) b.getTitleComponent()).getText() : ((Label) b.getTitleComponent()).getText();
-                if (StringUtils.isNotBlank(titleA) && StringUtils.isNotBlank(titleB)) {
-                    return Collator.getInstance().compare(titleA, titleB);
-                }
-                return 0;
+            gridPane.getRowConstraints().add(new RowConstraints());
+            final int rowNumber = gridPane.getRowConstraints().size() - 1;
+
+            gridPane.add(entry.getPictureComponent(), 0, rowNumber);
+            gridPane.add(entry.getTitleComponent(), 1, rowNumber);
+            gridPane.add(entry.getMessageComponent(), 2, rowNumber);
+
+            final HBox hbox = new HBox(10);
+            if (entry.getUpdateButton() != null) {
+                hbox.getChildren().add(entry.getUpdateButton());
+                HBox.setMargin(hbox, new Insets(0.0, 0.0, 0.0, 10.0));
+                entry.setAdditionalButtons(hbox);
+
+                gridPane.add(hbox, 3, rowNumber);
+            }
+
+            final Button removeButton = new Button("", createIconRemove());
+            entry.setRemoveButton(removeButton);
+            removeButton.setTooltip(new Tooltip("remove"));
+            removeButton.setOnAction(event -> {
+                removeEntry(entry);
             });
 
-            gridPane.getChildren().clear();
-            for (final CheckListEntry entry : componentList) {
-                gridPane.getRowConstraints().add(new RowConstraints());
-                final int rowNumber = gridPane.getRowConstraints().size() - 1;
+            gridPane.add(removeButton, 4, rowNumber);
+            amountOfEntries++;
+        });
+    }
 
-                gridPane.add(entry.getPictureComponent(), 0, rowNumber);
-                gridPane.add(entry.getTitleComponent(), 1, rowNumber);
-                gridPane.add(entry.getMessageComponent(), 2, rowNumber);
 
-                if (entry.getUpdateButton() != null) {
-                    final HBox hbox = new HBox(10);
-                    hbox.getChildren().add(entry.getUpdateButton());
-                    HBox.setMargin(hbox, new Insets(0.0, 0.0, 0.0, 10.0));
-
-                    gridPane.add(hbox, 3, rowNumber);
-                }
-
-                final Button removeButton = new Button("", Icons.createIconRemove());
-                removeButton.setTooltip(new Tooltip("remove"));
-                removeButton.setOnAction(event -> {
-                    componentList.remove(entry);
-                    showEntries();
-                    updateTabTitle();
-                });
-
-                gridPane.add(removeButton, 4, rowNumber);
-            }
+    /**
+     * @param entry
+     * @param hbox
+     * @param removeButton
+     */
+    private void removeEntry(final CheckListEntry entry) {
+        Platform.runLater(() -> {
+            amountOfEntries--;
+            gridPane.getChildren().remove(entry.getPictureComponent());
+            gridPane.getChildren().remove(entry.getTitleComponent());
+            gridPane.getChildren().remove(entry.getMessageComponent());
+            gridPane.getChildren().remove(entry.getAdditionalButtons());
+            gridPane.getChildren().remove(entry.getRemoveButton());
+            updateTabTitle();
         });
     }
 
@@ -279,34 +279,31 @@ public class CheckListController implements Observer {
             addReversibleCommandEventButton((ReversibleCommandEvent) event, componentListEntry);
         }
 
-        componentList.add(componentListEntry);
-        showEntries();
+        addComponentListEntryToGridPane(componentListEntry);
     }
 
 
     private void addReversibleCommandEventButton(final ReversibleCommandEvent event, final CheckListEntry componentListEntry) {
-        final Button button = new Button("", Icons.createIconEdit());
+        final Button button = new Button("", createIconEdit());
         button.setTooltip(new Tooltip("update"));
 
         button.setOnAction(trigger -> {
             cmdService.executeCommand(event.getCommand());
-            componentList.remove(componentListEntry);
-            showEntries();
-            updateTabTitle();
+            removeEntry(componentListEntry);
         });
         componentListEntry.setUpdateButton(button);
     }
 
 
     private void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", CHECK_LIST_TAB_TITLE, componentList.size())));
+        Platform.runLater(() -> tab.setText(String.format("%s (%s)", CHECK_LIST_TAB_TITLE, amountOfEntries)));
     }
 
 
     private void addCrcEventButton(final CrcEvent event, final CheckListEntry componentListEntry) {
         if (event.getPath() != null) {
 
-            final Button button = new Button("", Icons.createIconEdit());
+            final Button button = new Button("", createIconEdit());
             button.setTooltip(new Tooltip("add CRC sum"));
 
             button.setOnAction(trigger -> {
@@ -316,9 +313,7 @@ public class CheckListController implements Observer {
                 strBuilder.insert(strBuilder.lastIndexOf("."), formattedCrcSum);
                 try {
                     Files.move(file, file.resolveSibling(strBuilder.toString()));
-                    componentList.remove(componentListEntry);
-                    showEntries();
-                    updateTabTitle();
+                    removeEntry(componentListEntry);
                 } catch (final Exception e) {
                     LOG.error("An error occurred during renaming of the file {}", file.getFileName().toString(), e);
                     DialogLibrary.showExceptionDialog(e);
@@ -341,10 +336,11 @@ public class CheckListController implements Observer {
         Platform.runLater(() -> {
             tab.setText(CHECK_LIST_TAB_TITLE);
             gridPane.getChildren().clear();
+            gridPane.getRowConstraints().clear();
             lblProgress.setText("");
             progressBar.setProgress(0.0);
+            amountOfEntries = 0;
         });
-        componentList.clear();
         showProgressControls(false);
     }
 }
