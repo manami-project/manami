@@ -29,7 +29,6 @@ import java.util.Observer;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
@@ -40,7 +39,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -210,15 +208,7 @@ public class CheckListController implements Observer {
             gridPane.add(entry.getPictureComponent(), 0, rowNumber);
             gridPane.add(entry.getTitleComponent(), 1, rowNumber);
             gridPane.add(entry.getMessageComponent(), 2, rowNumber);
-
-            final HBox hbox = new HBox(10);
-            if (entry.getUpdateButton() != null) {
-                hbox.getChildren().add(entry.getUpdateButton());
-                HBox.setMargin(hbox, new Insets(0.0, 0.0, 0.0, 10.0));
-                entry.setAdditionalButtons(hbox);
-
-                gridPane.add(hbox, 3, rowNumber);
-            }
+            gridPane.add(entry.getAdditionalButtons(), 3, rowNumber);
 
             final Button removeButton = new Button("", createIconRemove());
             entry.setRemoveButton(removeButton);
@@ -291,7 +281,7 @@ public class CheckListController implements Observer {
             cmdService.executeCommand(event.getCommand());
             removeEntry(componentListEntry);
         });
-        componentListEntry.setUpdateButton(button);
+        componentListEntry.addAdditionalButtons(button);
     }
 
 
@@ -319,7 +309,7 @@ public class CheckListController implements Observer {
                     DialogLibrary.showExceptionDialog(e);
                 }
             });
-            componentListEntry.setUpdateButton(button);
+            componentListEntry.addAdditionalButtons(button);
         }
     }
 

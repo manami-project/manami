@@ -1,5 +1,7 @@
 package io.github.manami.gui.components;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,13 +22,16 @@ public class CheckListEntry {
 
     private Label messageComponent;
 
-    /** Button to update this entry. */
-    private Button updateButton;
-
     /** HBox containing additional Buttons */
-    private HBox additionalButtons;
+    private final HBox additionalButtons;
 
     private Button removeButton;
+
+
+    public CheckListEntry() {
+        additionalButtons = new HBox(10);
+        additionalButtons.setAlignment(Pos.CENTER);
+    }
 
 
     public ImageView getPictureComponent() {
@@ -59,23 +64,16 @@ public class CheckListEntry {
     }
 
 
-    public Button getUpdateButton() {
-        return updateButton;
-    }
-
-
-    public void setUpdateButton(final Button updateButton) {
-        this.updateButton = updateButton;
-    }
-
-
     public HBox getAdditionalButtons() {
         return additionalButtons;
     }
 
 
-    public void setAdditionalButtons(final HBox additionalButtons) {
-        this.additionalButtons = additionalButtons;
+    public void addAdditionalButtons(final Button additionalButton) {
+        if (additionalButton != null) {
+            additionalButtons.getChildren().add(additionalButton);
+            HBox.setMargin(additionalButtons, new Insets(40.0, 0.0, 0.0, 10.0));
+        }
     }
 
 
