@@ -78,7 +78,7 @@
                       </VBox>
                   </center>
                   <bottom>
-                      <GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
+                      <GridPane fx:id="gridPane" vgap="10.0" BorderPane.alignment="CENTER">
                           <columnConstraints>
                               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="40.0" minWidth="10.0" prefWidth="40.0" />
                               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
