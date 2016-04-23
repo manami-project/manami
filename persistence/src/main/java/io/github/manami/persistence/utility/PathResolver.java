@@ -5,8 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class to create, check and resolve an absolute path to a relative path if
@@ -15,10 +14,8 @@ import org.slf4j.LoggerFactory;
  * @author manami-project
  * @since 2.10.0
  */
+@Slf4j
 public class PathResolver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PathResolver.class);
-
 
     /**
      * @since 2.10.0
@@ -72,7 +69,7 @@ public class PathResolver {
         try {
             ret = currentWorkingDir.resolve(dir);
         } catch (final Exception e) {
-            LOG.error("An error occurred trying to create a relative Path: ", e);
+            log.error("An error occurred trying to create a relative Path: ", e);
         }
 
         return ret;

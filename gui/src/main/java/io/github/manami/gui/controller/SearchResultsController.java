@@ -8,9 +8,6 @@ import java.net.URI;
 import java.text.Collator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
@@ -24,14 +21,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.9.0
  */
+@Slf4j
 public class SearchResultsController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SearchResultsController.class);
 
     public static final String SEARCH_RESULTS_TAB_TITLE = "Search Results";
     public static final String TITLED_TAB_PANE_TITLE = "Search results from:";
@@ -157,7 +154,7 @@ public class SearchResultsController {
                     final Desktop desktop = java.awt.Desktop.getDesktop();
                     desktop.browse(new URI(anime.getInfoLink()));
                 } catch (final Exception e) {
-                    LOG.error("An error occurred trying to open the infolink in the default browser: ", e);
+                    log.error("An error occurred trying to open the infolink in the default browser: ", e);
                     showExceptionDialog(e);
                 }
             }

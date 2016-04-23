@@ -1,6 +1,7 @@
 package io.github.manami.dto.events;
 
 import javafx.stage.Stage;
+import lombok.Getter;
 
 /**
  * @author manami-project
@@ -8,18 +9,11 @@ import javafx.stage.Stage;
  */
 public class ApplicationContextStartedEvent {
 
+    @Getter
     private final Stage stage;
 
 
     public ApplicationContextStartedEvent(final Stage stage) {
         this.stage = stage;
-    }
-
-
-    /**
-     * @return the stage
-     */
-    public Stage getStage() {
-        return stage;
     }
 }

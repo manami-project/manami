@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Observer;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.cache.Cache;
@@ -21,6 +18,7 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.MinimalEntry;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Finds related animes in info site links.
@@ -30,9 +28,8 @@ import javafx.collections.ObservableList;
  * @author manami-project
  * @since 2.3.0
  */
+@Slf4j
 public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime>> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RelatedAnimeFinderService.class);
 
     /** Contains all animes which are already in the anime list. */
     private final List<String> myAnimes;
@@ -105,7 +102,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
             final String entry = animesToCheck.pop();
 
             if (!checkedAnimes.contains(entry)) {
-                LOG.debug("Checking {} for related animes.", entry);
+                log.debug("Checking {} for related animes.", entry);
                 checkAnime(entry);
             }
         }
@@ -155,9 +152,9 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
         setChanged();
 
         if (!showAnimeList.isEmpty()) {
-            LOG.trace("\n\n---------------- Extracted animes for [{}] ----------------", url);
-            showAnimeList.forEach(e -> LOG.trace("{} : {}", e.getTitle(), e.getInfoLink()));
-            LOG.trace("-----------------------------------------------------------\n\n");
+            log.trace("\n\n---------------- Extracted animes for [{}] ----------------", url);
+            showAnimeList.forEach(e -> log.trace("{} : {}", e.getTitle(), e.getInfoLink()));
+            log.trace("-----------------------------------------------------------\n\n");
         }
 
         notifyObservers(showAnimeList);

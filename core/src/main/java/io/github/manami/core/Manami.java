@@ -11,8 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
@@ -37,6 +35,7 @@ import io.github.manami.persistence.importer.csv.CsvImporter;
 import io.github.manami.persistence.importer.json.JsonImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter.XmlStrategy;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Main access to the features of the application. This class has got delegation
@@ -46,10 +45,8 @@ import io.github.manami.persistence.importer.xml.XmlImporter.XmlStrategy;
  * @since 1.0.0
  */
 @Named
+@Slf4j
 public class Manami implements ApplicationPersistence {
-
-    /** Logger. */
-    private final static Logger LOG = LoggerFactory.getLogger(Manami.class);
 
     /** Instance of the command service. */
     private final CommandService cmdService;
@@ -167,7 +164,7 @@ public class Manami implements ApplicationPersistence {
                 new JsonImporter(persistence).importFile(file);
             }
         } catch (SAXException | ParserConfigurationException | IOException e) {
-            LOG.error("An error occurred trying to import {}:", file, e);
+            log.error("An error occurred trying to import {}:", file, e);
         }
     }
 
@@ -301,7 +298,7 @@ public class Manami implements ApplicationPersistence {
      */
     public void search(final String searchString) {
         if (isNotBlank(searchString)) {
-            LOG.info("Initiated seach for [{}]", searchString);
+            log.info("Initiated seach for [{}]", searchString);
             serviceRepo.startService(new SearchService(searchString, persistence, eventBus));
         }
     }

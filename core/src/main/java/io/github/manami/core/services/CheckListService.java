@@ -23,9 +23,6 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
 import io.github.manami.core.config.CheckListConfig;
@@ -40,15 +37,15 @@ import io.github.manami.core.services.events.TypeDifferEvent;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.6.0
  */
+@Slf4j
 public class CheckListService extends AbstractService<Void> {
 
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(CheckListService.class);
     private final Cache cache;
     private final List<Anime> list;
     private final CheckListConfig config;
@@ -126,7 +123,7 @@ public class CheckListService extends AbstractService<Void> {
                     try {
                         amount = Files.list(optDir.get()).filter(p -> isRegularFile(p)).count();
                     } catch (final IOException e) {
-                        LOG.error("An error occurred detecting the amount of files for {}: ", entry.getTitle(), e);
+                        log.error("An error occurred detecting the amount of files for {}: ", entry.getTitle(), e);
                     }
 
                     progressMax += (int) amount;
@@ -151,7 +148,7 @@ public class CheckListService extends AbstractService<Void> {
             for (int index = 0; index < list.size() && !isInterrupt(); index++) {
                 updateProgress();
                 final Anime anime = list.get(index);
-                LOG.debug("Checking location of {}", anime.getTitle());
+                log.debug("Checking location of {}", anime.getTitle());
 
                 // 01 - Is location set?
                 if (isBlank(anime.getLocation())) {
@@ -183,7 +180,7 @@ public class CheckListService extends AbstractService<Void> {
                         fireDifferentAmountOfEpisodesEvent(anime);
                     }
                 } catch (final Exception e) {
-                    LOG.error("An error occurred during file check: ", e);
+                    log.error("An error occurred during file check: ", e);
                 }
 
                 /*
@@ -276,7 +273,7 @@ public class CheckListService extends AbstractService<Void> {
                 continue;
             }
 
-            LOG.debug("Checking CRC32 sum of {}", anime.getTitle());
+            log.debug("Checking CRC32 sum of {}", anime.getTitle());
 
             final Optional<Path> optDir = PathResolver.buildPath(anime.getLocation(), currentWorkingDir);
 
@@ -315,7 +312,7 @@ public class CheckListService extends AbstractService<Void> {
                     }
                 }
             } catch (final Exception e) {
-                LOG.error("An error occurred during CRC sum check: ", e);
+                log.error("An error occurred during CRC sum check: ", e);
             }
         }
     }

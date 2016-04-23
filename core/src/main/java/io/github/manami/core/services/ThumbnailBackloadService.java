@@ -10,8 +10,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
@@ -20,15 +18,15 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.8.2
  */
+@Slf4j
 public class ThumbnailBackloadService extends AbstractService<Void> {
 
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(ThumbnailBackloadService.class);
     private static final int OK = 200;
     private static final int NOT_FOUND = 404;
     private final PersistenceFacade persistence;
@@ -68,7 +66,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
         try {
             httpclient.close();
         } catch (final IOException e) {
-            LOG.error("An error occured while trying to close http client: ", e);
+            log.error("An error occured while trying to close http client: ", e);
         }
 
         return null;
@@ -93,7 +91,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
 
         if (entry != null && (isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
             final Anime cachedAnime = cache.fetchAnime(entry.getInfoLink());
-            LOG.debug("Loading thumbnail for entry {}", entry.getInfoLink());
+            log.debug("Loading thumbnail for entry {}", entry.getInfoLink());
             if (cachedAnime != null) {
                 updateThumbnail(entry, cachedAnime);
             }
@@ -129,7 +127,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
         }
 
         if (entry != null && isNotBlank(entry.getThumbnail())) {
-            LOG.debug("Checking thumbnail for {}", entry.getInfoLink());
+            log.debug("Checking thumbnail for {}", entry.getInfoLink());
 
             int responseCodeThumbnail = NOT_FOUND;
 
@@ -137,13 +135,13 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
                 final CloseableHttpResponse response = httpclient.execute(RequestBuilder.head(entry.getThumbnail()).build());
                 responseCodeThumbnail = response.getStatusLine().getStatusCode();
             } catch (final IOException e) {
-                LOG.error("Could not retrieve picture link status: ", e);
+                log.error("Could not retrieve picture link status: ", e);
             }
 
             if (responseCodeThumbnail != OK) {
                 final Anime updatedAnime = cache.fetchAnime(entry.getInfoLink());
                 if (updatedAnime != null) {
-                    LOG.debug("Updating thumbnail for [{}]", entry.getInfoLink());
+                    log.debug("Updating thumbnail for [{}]", entry.getInfoLink());
                     updateThumbnail(entry, updatedAnime);
                 }
             }

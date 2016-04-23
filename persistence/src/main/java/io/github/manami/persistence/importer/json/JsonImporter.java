@@ -11,8 +11,6 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONTokener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
@@ -20,6 +18,7 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.importer.Importer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Imports a list from a valid JSON file.
@@ -27,10 +26,9 @@ import io.github.manami.persistence.importer.Importer;
  * @author manami-project
  * @since 2.0.0
  */
+@Slf4j
 public class JsonImporter implements Importer {
 
-    /** Logger */
-    private final static Logger LOG = LoggerFactory.getLogger(JsonImporter.class);
     private final PersistenceFacade persistence;
     private final List<Anime> animeListEntries;
     private final List<FilterEntry> filterListEntries;
@@ -65,7 +63,7 @@ public class JsonImporter implements Importer {
 
             br.close();
         } catch (final IOException e) {
-            LOG.error("An error occurred while trying to import JSON file: ", e);
+            log.error("An error occurred while trying to import JSON file: ", e);
         }
     }
 
@@ -88,7 +86,7 @@ public class JsonImporter implements Importer {
                 final Anime curAnime = new Anime(title, type, episodes, infoLink, location);
                 animeListEntries.add(curAnime);
             } else {
-                LOG.debug("Could not import '{}', because the type is unknown.", title);
+                log.debug("Could not import '{}', because the type is unknown.", title);
             }
         }
         persistence.addAnimeList(animeListEntries);
@@ -110,7 +108,7 @@ public class JsonImporter implements Importer {
             if (isNotBlank(title) && isNotBlank(infoLink)) {
                 watchListEntries.add(new WatchListEntry(title, thumbnail, infoLink));
             } else {
-                LOG.debug("Could not import '{}', because the type is unknown.", title);
+                log.debug("Could not import '{}', because the type is unknown.", title);
             }
         }
         persistence.addWatchList(watchListEntries);
@@ -132,7 +130,7 @@ public class JsonImporter implements Importer {
             if (isNotBlank(title) && isNotBlank(infoLink)) {
                 filterListEntries.add(new FilterEntry(title, thumbnail, infoLink));
             } else {
-                LOG.debug("Could not import '{}', because the type is unknown.", title);
+                log.debug("Could not import '{}', because the type is unknown.", title);
             }
         }
         persistence.addFilterList(filterListEntries);

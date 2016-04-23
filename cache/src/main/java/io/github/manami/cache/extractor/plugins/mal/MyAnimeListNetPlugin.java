@@ -9,12 +9,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.manami.cache.extractor.anime.AbstractAnimeSitePlugin;
 import io.github.manami.cache.extractor.anime.Extractor;
 import io.github.manami.dto.AnimeType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class to gather information from myanimelist.net automatically.
@@ -24,9 +22,8 @@ import io.github.manami.dto.AnimeType;
  */
 @Named
 @Extractor
+@Slf4j
 public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MyAnimeListNetPlugin.class);
 
     /** Regex Pattern. */
     private Pattern pattern;
@@ -89,7 +86,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
         }
 
         if (type == null) {
-            LOG.debug("Could not find any type in siteContent. Fallback: Setting type to TV");
+            log.debug("Could not find any type in siteContent. Fallback: Setting type to TV");
             type = AnimeType.TV;
         }
 

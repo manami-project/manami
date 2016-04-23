@@ -5,9 +5,6 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
@@ -18,16 +15,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.8.0
  */
 @Named
+@Slf4j
 public class WatchListControllerWrapper {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(WatchListControllerWrapper.class);
 
     private Tab watchListTab;
     private WatchListController watchListController;
@@ -51,7 +47,7 @@ public class WatchListControllerWrapper {
             watchListController = fxmlLoader.getController();
             watchListTab.setContent(pane);
         } catch (final Exception e) {
-            LOG.error("An error occurred while trying to initialize watch list tab: ", e);
+            log.error("An error occurred while trying to initialize watch list tab: ", e);
             showExceptionDialog(e);
         }
     }

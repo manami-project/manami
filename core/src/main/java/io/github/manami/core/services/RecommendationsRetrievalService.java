@@ -20,9 +20,6 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.HeadlessBrowser;
 import io.github.manami.cache.extractor.anime.AnimeExtractor;
@@ -31,6 +28,7 @@ import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -40,9 +38,8 @@ import io.github.manami.dto.entities.Anime;
  * @author manami-project
  * @since 2.4.0
  */
+@Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RecommendationsRetrievalService.class);
 
     private final HeadlessBrowser browser;
 
@@ -90,7 +87,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         });
 
         for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
-            LOG.debug("Getting recommendations for {}", urlList.get(i));
+            log.debug("Getting recommendations for {}", urlList.get(i));
             getRecommendations(urlList.get(i));
             setChanged();
             notifyObservers(new ProgressState(i + 1, urlList.size()));

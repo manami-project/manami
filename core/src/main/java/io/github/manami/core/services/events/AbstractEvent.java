@@ -1,6 +1,8 @@
 package io.github.manami.core.services.events;
 
 import io.github.manami.dto.entities.Anime;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author manami-project
@@ -8,12 +10,20 @@ import io.github.manami.dto.entities.Anime;
  */
 public class AbstractEvent implements Event {
 
+    @Getter
+    @Setter
     private EventType type;
 
+    @Getter
+    @Setter
     private Anime anime;
 
+    @Getter
+    @Setter
     private String title;
 
+    @Getter
+    @Setter
     private String message;
 
     public enum EventType {
@@ -30,53 +40,5 @@ public class AbstractEvent implements Event {
 
     public AbstractEvent() {
         type = EventType.INFO;
-    }
-
-
-    @Override
-    public EventType getType() {
-        return type;
-    }
-
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-
-    @Override
-    public void setType(final EventType type) {
-        this.type = type;
-    }
-
-
-    @Override
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-
-    @Override
-    public Anime getAnime() {
-        return anime;
-    }
-
-
-    @Override
-    public void setAnime(final Anime anime) {
-        this.anime = anime;
-    }
-
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-
-    @Override
-    public void setTitle(final String title) {
-        this.title = title;
     }
 }

@@ -31,8 +31,6 @@ import java.util.Observer;
 
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
@@ -80,6 +78,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller for the main stage.
@@ -87,10 +86,8 @@ import javafx.util.Callback;
  * @author manami-project
  * @since 2.0.0
  */
+@Slf4j
 public class MainController implements Observer {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
     /** Instance of the main application. */
     final private Manami app = Main.CONTEXT.getBean(Manami.class);
@@ -574,7 +571,7 @@ public class MainController implements Observer {
                     refreshEntriesInGui();
                     controllerWrapper.startRecommendedFilterEntrySearch();
                 } catch (final Exception e) {
-                    LOG.error("An error occurred while trying to open {}: ", file, e);
+                    log.error("An error occurred while trying to open {}: ", file, e);
                     showExceptionDialog(e);
                 }
             }, selectedFile);

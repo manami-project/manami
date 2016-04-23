@@ -6,7 +6,6 @@ import static io.github.manami.gui.components.Icons.createIconEdit;
 import static io.github.manami.gui.components.Icons.createIconRemove;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +13,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.controlsfx.control.Notifications;
-import org.slf4j.Logger;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -48,14 +46,14 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.6.0
  */
+@Slf4j
 public class CheckListController implements Observer {
-
-    private static final Logger LOG = getLogger(CheckListController.class);
 
     public static final String CHECK_LIST_TAB_TITLE = "Check List";
 
@@ -306,7 +304,7 @@ public class CheckListController implements Observer {
                     Files.move(file, file.resolveSibling(strBuilder.toString()));
                     removeEntry(componentListEntry);
                 } catch (final Exception e) {
-                    LOG.error("An error occurred during renaming of the file {}", file.getFileName().toString(), e);
+                    log.error("An error occurred during renaming of the file {}", file.getFileName().toString(), e);
                     showExceptionDialog(e);
                 }
             });

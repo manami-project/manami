@@ -8,11 +8,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import io.github.manami.dto.AnimeType;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Represents an Anime with all it's saved meta information.
@@ -20,24 +20,36 @@ import io.github.manami.dto.AnimeType;
  * @author manami-project
  * @since 1.0.0
  */
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Anime extends AbstractMinimalEntry {
 
     /** Internal identifier for this anime. */
+    @Getter
     private final UUID id;
 
     /** Type of the Anime (e.g.: TV, Special, OVA, ONA, etc.). */
+    @Getter
+    @Setter
     private AnimeType type;
 
     /** Number of Episodes. */
+    @Getter
+    @Setter
     private int episodes = 0;
 
     /** Location on the HDD. */
+    @Getter
+    @Setter
     private String location = "";
 
     /** Url for a picture. */
+    @Getter
+    @Setter
     private String picture = "";
 
     /** A list of related animes. */
+    @Getter
     private final List<String> relatedAnimes;
 
 
@@ -75,12 +87,12 @@ public class Anime extends AbstractMinimalEntry {
      *            Location on the HDD.
      */
     public Anime(final String title, final AnimeType type, final int episodes, final String infoLink, final String location) {
-        id = randomUUID();
         super.setTitle(title);
+        super.setInfoLink(infoLink);
         this.type = type;
         this.episodes = episodes;
-        super.setInfoLink(infoLink);
         this.location = location;
+        id = randomUUID();
         relatedAnimes = newArrayList();
     }
 
@@ -199,121 +211,10 @@ public class Anime extends AbstractMinimalEntry {
 
 
     /**
-     * @return the id
-     */
-    public UUID getId() {
-        return id;
-    }
-
-
-    /**
-     * @since 1.0.0
-     * @return the episodes
-     */
-    public int getEpisodes() {
-        return episodes;
-    }
-
-
-    /**
-     * @since 1.0.0
-     * @param episodes
-     *            the episodes to set
-     */
-    public void setEpisodes(final int episodes) {
-        this.episodes = episodes;
-    }
-
-
-    /**
-     * @since 1.0.0
-     * @return the location
-     */
-    public String getLocation() {
-        return location;
-    }
-
-
-    /**
-     * @since 1.0.0
-     * @param location
-     *            the location to set
-     */
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-
-    /**
-     * @since 2.0.0
-     * @return the type
-     */
-    public AnimeType getType() {
-        return type;
-    }
-
-
-    /**
-     * @since 2.0.0
-     * @param type
-     *            the type to set
-     */
-    public void setType(final AnimeType type) {
-        this.type = type;
-    }
-
-
-    /**
      * @since 2.0.0
      * @return the type
      */
     public String getTypeAsString() {
         return (type != null) ? type.getValue() : null;
-    }
-
-
-    /**
-     * @since 2.1.0
-     * @return the picture
-     */
-    public String getPicture() {
-        return picture;
-    }
-
-
-    /**
-     * @since 2.1.0
-     * @param picture
-     *            the picture to set
-     */
-    public void setPicture(final String picture) {
-        this.picture = picture;
-    }
-
-
-    /**
-     * @since 2.5.1
-     * @return the relatedAnimes
-     */
-    public List<String> getRelatedAnimes() {
-        return relatedAnimes;
-    }
-
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, false);
-    }
-
-
-    @Override
-    public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
     }
 }

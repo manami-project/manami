@@ -1,11 +1,15 @@
 package io.github.manami.core.commands;
 
-import com.google.common.eventbus.EventBus;
-import io.github.manami.dto.events.AnimeListChangedEvent;
+import java.util.Stack;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Stack;
+
+import com.google.common.eventbus.EventBus;
+
+import io.github.manami.dto.events.AnimeListChangedEvent;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Command service keeps track of actions and is responsible for knowing if a
@@ -18,6 +22,8 @@ import java.util.Stack;
 public class CommandService {
 
     /** Indicates whether the document is dirty or not. */
+    @Getter
+    @Setter
     private boolean isUnsaved = false;
 
     /** Stick with all undoable commands which have been made. */
@@ -150,28 +156,5 @@ public class CommandService {
      */
     public boolean isEmptyUndoneCommands() {
         return undone.isEmpty();
-    }
-
-
-    /**
-     * Sets the dirty flag.
-     *
-     * @since 2.0.0
-     * @param isUnsaved
-     *            the isUnsaved to set
-     */
-    public void setUnsaved(final boolean isUnsaved) {
-        this.isUnsaved = isUnsaved;
-    }
-
-
-    /**
-     * Checks whether there are unsaved changes.
-     *
-     * @since 2.0.0
-     * @return the isUnsaved
-     */
-    public boolean isUnsaved() {
-        return isUnsaved;
     }
 }

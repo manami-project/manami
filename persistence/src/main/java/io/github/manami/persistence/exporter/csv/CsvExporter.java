@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -18,6 +16,7 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Exports a list to a csv file.
@@ -25,10 +24,8 @@ import io.github.manami.persistence.exporter.Exporter;
  * @author manami-project
  * @since 2.0.0
  */
+@Slf4j
 public class CsvExporter implements Exporter {
-
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CsvExporter.class);
 
     /** Contains configurations for reading and writing csv files. */
     private final CsvConfig config;
@@ -64,7 +61,7 @@ public class CsvExporter implements Exporter {
 
             listWriter.close();
         } catch (final IOException e) {
-            LOG.error("An error occurred while trying to export the list to CSV: ", e);
+            log.error("An error occurred while trying to export the list to CSV: ", e);
             return false;
         }
 

@@ -5,9 +5,6 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.Subscribe;
 
 import io.github.manami.dto.events.SearchResultEvent;
@@ -17,15 +14,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.9.0
  */
 @Named
+@Slf4j
 public class SearchResultsControllerWrapper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SearchResultsControllerWrapper.class);
 
     private Tab searchResultTab;
     private SearchResultsController searchResultController;
@@ -43,7 +40,7 @@ public class SearchResultsControllerWrapper {
             searchResultTab.setContent(pane);
             searchResultController = fxmlLoader.getController();
         } catch (final Exception e) {
-            LOG.error("An error occurred while trying to initialize search result tab: ", e);
+            log.error("An error occurred while trying to initialize search result tab: ", e);
             showExceptionDialog(e);
         }
     }

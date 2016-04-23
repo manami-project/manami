@@ -17,8 +17,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -31,17 +29,16 @@ import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
 import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.0.0
  */
+@Slf4j
 public class XmlExporter implements Exporter {
 
     private static final String RELATIVE_PATH_SEPARATOR = "/";
-
-    /** Logger */
-    private final static Logger LOG = LoggerFactory.getLogger(XmlExporter.class);
 
     /** Document. */
     private Document doc = null;
@@ -78,7 +75,7 @@ public class XmlExporter implements Exporter {
                 try {
                     Files.createFile(file);
                 } catch (final IOException e) {
-                    LOG.error("Could not create XML file {}", file.getFileName(), e);
+                    log.error("Could not create XML file {}", file.getFileName(), e);
                 }
             }
             doc = builder.newDocument();
@@ -88,7 +85,7 @@ public class XmlExporter implements Exporter {
             final DocumentType doctype = domImpl.createDocumentType("animeList", "SYSTEM", createDtdPath());
             doc.appendChild(doctype);
         } catch (final ParserConfigurationException e) {
-            LOG.error("An error occurred while trying to initialize the dom tree: ", e);
+            log.error("An error occurred while trying to initialize the dom tree: ", e);
             return false;
         }
 
@@ -292,7 +289,7 @@ public class XmlExporter implements Exporter {
             output.close();
 
         } catch (TransformerException | IOException e) {
-            LOG.error("An error occurred while trying to export the list to a xml file: ", e);
+            log.error("An error occurred while trying to export the list to a xml file: ", e);
         }
     }
 }

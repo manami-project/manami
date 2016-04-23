@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
@@ -23,15 +21,14 @@ import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.exporter.csv.CsvConfig;
 import io.github.manami.persistence.importer.Importer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.0.0
  */
+@Slf4j
 public class CsvImporter implements Importer {
-
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CsvImporter.class);
 
     /** Configuration for CSV files. */
     private final CsvConfig csvConfig;
@@ -100,7 +97,7 @@ public class CsvImporter implements Importer {
             persistence.addFilterList(filterListEntries);
             persistence.addWatchList(watchListEntries);
         } catch (final IOException e) {
-            LOG.error("An error occurred trying to import the CSV file: ", e);
+            log.error("An error occurred trying to import the CSV file: ", e);
         }
     }
 }

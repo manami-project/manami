@@ -5,9 +5,6 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
@@ -22,24 +19,26 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.7.2
  */
 @Named
+@Slf4j
 public class MainControllerWrapper {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(MainControllerWrapper.class);
 
     /** The window's title. */
     public static final String APPNAME = "Manami";
 
+    @Getter
     private MainController mainController;
 
     private final Config config;
 
+    @Getter
     private Stage mainStage;
 
 
@@ -62,7 +61,7 @@ public class MainControllerWrapper {
             mainStage.setScene(new Scene(pane));
             mainController = fxmlLoader.getController();
         } catch (final Exception e) {
-            LOG.error("An error occurred while trying to initialize main controller: ", e);
+            log.error("An error occurred while trying to initialize main controller: ", e);
             showExceptionDialog(e);
         }
 
@@ -93,24 +92,6 @@ public class MainControllerWrapper {
             Platform.runLater(() -> mainStage.setTitle(APPNAME));
         }
         mainController.checkGui();
-    }
-
-
-    /**
-     * @since 2.7.2
-     * @return the mainStage
-     */
-    public Stage getMainStage() {
-        return mainStage;
-    }
-
-
-    /**
-     * @since 2.7.2
-     * @return the mainController
-     */
-    public MainController getMainController() {
-        return mainController;
     }
 
 

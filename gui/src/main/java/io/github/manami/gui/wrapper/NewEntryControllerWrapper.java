@@ -5,26 +5,21 @@ import static io.github.manami.gui.wrapper.MainControllerWrapper.APPNAME;
 
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.7.2
  */
 @Named
+@Slf4j
 public class NewEntryControllerWrapper {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(NewEntryControllerWrapper.class);
-
 
     /**
      * @since 2.7.2
@@ -43,7 +38,7 @@ public class NewEntryControllerWrapper {
             newEntryStage.setScene(new Scene(pane));
             newEntryStage.sizeToScene();
         } catch (final Exception e) {
-            LOG.error("An error occurred while trying to initialize new entry controller: ", e);
+            log.error("An error occurred while trying to initialize new entry controller: ", e);
             showExceptionDialog(e);
         }
 

@@ -2,8 +2,8 @@ package io.github.manami.core.services.events;
 
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdChangeTitle;
-import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.dto.entities.Anime;
+import lombok.Getter;
 
 /**
  * @author manami-project
@@ -11,17 +11,12 @@ import io.github.manami.dto.entities.Anime;
  */
 public class TitleDifferEvent extends AbstractEvent implements ReversibleCommandEvent {
 
-    private final CmdChangeTitle cmd;
+    @Getter
+    private final CmdChangeTitle command;
 
 
     public TitleDifferEvent(final Anime anime, final String newValue, final Manami app) {
         super(anime);
-        cmd = new CmdChangeTitle(anime, newValue, app);
-    }
-
-
-    @Override
-    public ReversibleCommand getCommand() {
-        return cmd;
+        command = new CmdChangeTitle(anime, newValue, app);
     }
 }

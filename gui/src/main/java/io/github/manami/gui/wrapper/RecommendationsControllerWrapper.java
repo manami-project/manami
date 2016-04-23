@@ -5,9 +5,6 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.Subscribe;
 
 import io.github.manami.dto.events.OpenedFileChangedEvent;
@@ -16,16 +13,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.7.2
  */
 @Named
+@Slf4j
 public class RecommendationsControllerWrapper {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(RecommendationsControllerWrapper.class);
 
     private Tab recommendationsTab;
     private RecommendationsController recommendationsController;
@@ -44,7 +40,7 @@ public class RecommendationsControllerWrapper {
             recommendationsController = fxmlLoader.getController();
             recommendationsController.setTab(recommendationsTab);
         } catch (final Exception e) {
-            LOG.error("An error occurred while trying to initialize recommendations tab: ", e);
+            log.error("An error occurred while trying to initialize recommendations tab: ", e);
             showExceptionDialog(e);
         }
     }

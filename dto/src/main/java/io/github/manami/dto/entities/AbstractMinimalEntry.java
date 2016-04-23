@@ -2,10 +2,15 @@ package io.github.manami.dto.entities;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author manami-project
  * @since 2.7.3
  */
+@ToString
 public abstract class AbstractMinimalEntry implements MinimalEntry {
 
     /** Placeholder image in case no image is available. */
@@ -14,29 +19,16 @@ public abstract class AbstractMinimalEntry implements MinimalEntry {
     /** Placeholder image in case no image is available, thumbnail size. */
     public static final String NO_IMG_THUMB = "http://cdn.myanimelist.net/images/qm_50.gif";
 
+    @Getter
+    @Setter
     private String title;
+
+    @Setter
     private String thumbnail;
+
+    @Getter
+    @Setter
     private String infoLink;
-
-
-    /**
-     * @since 2.7.0
-     * @return the title
-     */
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-
-    /**
-     * @since 2.7.0
-     * @param title
-     *            the title to set
-     */
-    public void setTitle(final String title) {
-        this.title = title;
-    }
 
 
     /**
@@ -45,40 +37,5 @@ public abstract class AbstractMinimalEntry implements MinimalEntry {
     @Override
     public String getThumbnail() {
         return isNotBlank(thumbnail) ? thumbnail : NO_IMG_THUMB;
-    }
-
-
-    /**
-     * @param thumbnail
-     *            the thumbnail to set
-     */
-    public void setThumbnail(final String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-
-    /**
-     * @since 2.7.0
-     * @return the infoLink
-     */
-    @Override
-    public String getInfoLink() {
-        return infoLink;
-    }
-
-
-    /**
-     * @since 2.7.0
-     * @param infoLink
-     *            the infoLink to set
-     */
-    public void setInfoLink(final String infoLink) {
-        this.infoLink = infoLink;
-    }
-
-
-    @Override
-    public String toString() {
-        return new StringBuilder().append("AbstractMinimalEntry [title=").append(title).append(", thumbnail=").append(thumbnail).append(", infoLink=").append(infoLink).append("]").toString();
     }
 }

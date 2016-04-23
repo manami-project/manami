@@ -3,8 +3,7 @@ package io.github.manami.dto;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains the current tool version.
@@ -12,10 +11,8 @@ import org.slf4j.LoggerFactory;
  * @author manami-project
  * @since 2.1.0
  */
+@Slf4j
 public class ToolVersion {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ToolVersion.class);
-
 
     /**
      * @since 2.7.0
@@ -30,7 +27,7 @@ public class ToolVersion {
 
             return properties.getProperty("version");
         } catch (final Exception e) {
-            LOG.error("Could not determine software version: ", e);
+            log.error("Could not determine software version: ", e);
         }
 
         return "unknown";

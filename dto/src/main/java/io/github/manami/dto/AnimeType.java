@@ -1,5 +1,7 @@
 package io.github.manami.dto;
 
+import lombok.Getter;
+
 /**
  * Types of animes which are known.
  *
@@ -33,7 +35,8 @@ public enum AnimeType {
     MUSIC("Music");
 
     /** String representation. */
-    private final String type;
+    @Getter
+    private final String value;
 
 
     /**
@@ -41,17 +44,8 @@ public enum AnimeType {
      * @param type
      *            Type as String value.
      */
-    AnimeType(final String type) {
-        this.type = type;
-    }
-
-
-    /**
-     * @since 2.0.0
-     * @return the type
-     */
-    public String getValue() {
-        return type;
+    AnimeType(final String value) {
+        this.value = value;
     }
 
 

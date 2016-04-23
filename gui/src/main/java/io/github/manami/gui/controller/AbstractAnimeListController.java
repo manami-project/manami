@@ -9,9 +9,6 @@ import static org.springframework.util.Assert.notNull;
 import java.text.Collator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
@@ -34,6 +31,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract class if an anime result list. The list entries can be customized by
@@ -42,10 +40,8 @@ import javafx.scene.text.Font;
  * @author manami-project
  * @since 2.3.0
  */
+@Slf4j
 public abstract class AbstractAnimeListController {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractAnimeListController.class);
 
     /** Application */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);

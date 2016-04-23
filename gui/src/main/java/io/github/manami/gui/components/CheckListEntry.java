@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author manami-project
@@ -15,16 +17,25 @@ import javafx.scene.layout.HBox;
 public class CheckListEntry {
 
     /** Image of the anime. */
+    @Getter
+    @Setter
     private ImageView pictureComponent;
 
     /** Link containing the title and the info link. */
+    @Getter
+    @Setter
     private Node titleComponent;
 
+    @Getter
+    @Setter
     private Label messageComponent;
 
     /** HBox containing additional Buttons */
+    @Getter
     private final HBox additionalButtons;
 
+    @Getter
+    @Setter
     private Button removeButton;
 
 
@@ -34,55 +45,10 @@ public class CheckListEntry {
     }
 
 
-    public ImageView getPictureComponent() {
-        return pictureComponent;
-    }
-
-
-    public void setPictureComponent(final ImageView pictureComponent) {
-        this.pictureComponent = pictureComponent;
-    }
-
-
-    public Node getTitleComponent() {
-        return titleComponent;
-    }
-
-
-    public void setTitleComponent(final Node titleComponent) {
-        this.titleComponent = titleComponent;
-    }
-
-
-    public Label getMessageComponent() {
-        return messageComponent;
-    }
-
-
-    public void setMessageComponent(final Label messageComponent) {
-        this.messageComponent = messageComponent;
-    }
-
-
-    public HBox getAdditionalButtons() {
-        return additionalButtons;
-    }
-
-
     public void addAdditionalButtons(final Button additionalButton) {
         if (additionalButton != null) {
             additionalButtons.getChildren().add(additionalButton);
             HBox.setMargin(additionalButtons, new Insets(40.0, 0.0, 0.0, 10.0));
         }
-    }
-
-
-    public Button getRemoveButton() {
-        return removeButton;
-    }
-
-
-    public void setRemoveButton(final Button removeButton) {
-        this.removeButton = removeButton;
     }
 }

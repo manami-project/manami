@@ -7,9 +7,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -18,6 +15,7 @@ import io.github.manami.cache.extractor.HeadlessBrowser;
 import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
 import io.github.manami.cache.extractor.anime.ExtractorList;
 import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class provides access to the anime meta data. The data are either taken
@@ -29,10 +27,8 @@ import io.github.manami.dto.entities.Anime;
  * @since 2.0.0
  */
 @Named
+@Slf4j
 public class MetaDataCache implements Cache {
-
-    /** Logger */
-    private final static Logger LOG = LoggerFactory.getLogger(MetaDataCache.class);
 
     /** Instance of a headless browser. */
     private final HeadlessBrowser browser;
@@ -72,7 +68,7 @@ public class MetaDataCache implements Cache {
             final Optional<Anime> optional = memCache.get(url);
             ret = optional.isPresent() ? optional.get() : null;
         } catch (final Exception e) {
-            LOG.error("Could not fetch entry {} from cache.", url, e);
+            log.error("Could not fetch entry {} from cache.", url, e);
         }
 
         return ret;

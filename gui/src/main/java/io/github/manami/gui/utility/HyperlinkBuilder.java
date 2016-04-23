@@ -6,20 +6,16 @@ import static java.awt.Desktop.getDesktop;
 import java.awt.Desktop;
 import java.net.URI;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseButton;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.10.0
  */
+@Slf4j
 public class HyperlinkBuilder {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HyperlinkBuilder.class);
-
 
     /**
      * @param title
@@ -35,7 +31,7 @@ public class HyperlinkBuilder {
                     final Desktop desktop = getDesktop();
                     desktop.browse(new URI(url));
                 } catch (final Exception e) {
-                    LOG.error("An error occurred trying to open the infolink in the default browser: ", e);
+                    log.error("An error occurred trying to open the infolink in the default browser: ", e);
                     showExceptionDialog(e);
                 }
             }

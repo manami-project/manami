@@ -7,14 +7,12 @@ import static org.springframework.util.Assert.notNull;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ImmutableList;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This service is called whenever a new list is opened. It creates cache
@@ -25,10 +23,8 @@ import io.github.manami.dto.entities.Anime;
  * @author manami-project
  * @since 2.2.0
  */
+@Slf4j
 public class CacheInitializationService extends AbstractService<Void> {
-
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(CacheInitializationService.class);
 
     /** Instance of the cache. */
     private final Cache cache;
@@ -65,7 +61,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             for (int index = 0; index < reversedList.size() && !isInterrupt(); index++) {
                 final Anime anime = reversedList.get(index);
                 if (isNotBlank(anime.getInfoLink())) {
-                    LOG.debug("Creating cache entry for {} if necessary.", anime.getInfoLink());
+                    log.debug("Creating cache entry for {} if necessary.", anime.getInfoLink());
                     cache.fetchAnime(anime.getInfoLink());
                 }
             }
