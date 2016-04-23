@@ -45,5 +45,13 @@
 		<groupId>com.ui4j</groupId>
 		<artifactId>ui4j-all</artifactId>
 	</dependency>
+  	<dependency>
+  		<groupId>org.hamcrest</groupId>
+  		<artifactId>hamcrest-all</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  	</dependency>
   </dependencies>
 </project>
