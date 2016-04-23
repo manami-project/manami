@@ -1,12 +1,6 @@
 package io.github.manami.persistence.exporter.xml;
 
-import io.github.manami.dto.ToolVersion;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.ApplicationPersistence;
-import io.github.manami.persistence.exporter.Exporter;
-import io.github.manami.persistence.utility.PathResolver;
+import static io.github.manami.dto.ToolVersion.getToolVersion;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,6 +24,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.ApplicationPersistence;
+import io.github.manami.persistence.exporter.Exporter;
+import io.github.manami.persistence.utility.PathResolver;
 
 /**
  * @author manami-project
@@ -168,7 +169,7 @@ public class XmlExporter implements Exporter {
      */
     private Element createRootElement() {
         final Element root = doc.createElement("manami");
-        root.setAttribute("version", ToolVersion.getVersion());
+        root.setAttribute("version", getToolVersion());
         doc.appendChild(root);
 
         // create transformation and css information

@@ -20,7 +20,7 @@ public class ToolVersion {
     /**
      * @since 2.7.0
      */
-    public static String getVersion() {
+    public static String getToolVersion() {
         final String propertiesPath = "/META-INF/maven/io.github.manami/persistence/pom.properties";
 
         try {

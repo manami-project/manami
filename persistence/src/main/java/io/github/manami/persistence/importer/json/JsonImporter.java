@@ -1,23 +1,25 @@
 package io.github.manami.persistence.importer.json;
 
-import com.google.common.collect.Lists;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.PersistenceFacade;
-import io.github.manami.persistence.importer.Importer;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONTokener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.PersistenceFacade;
+import io.github.manami.persistence.importer.Importer;
 
 /**
  * Imports a list from a valid JSON file.
@@ -37,9 +39,9 @@ public class JsonImporter implements Importer {
 
     public JsonImporter(final PersistenceFacade persistence) {
         this.persistence = persistence;
-        animeListEntries = Lists.newArrayList();
-        filterListEntries = Lists.newArrayList();
-        watchListEntries = Lists.newArrayList();
+        animeListEntries = newArrayList();
+        filterListEntries = newArrayList();
+        watchListEntries = newArrayList();
     }
 
 
@@ -82,7 +84,7 @@ public class JsonImporter implements Importer {
             final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
             final String location = animeListArr.getJSONObject(i).getString("location").trim();
 
-            if (StringUtils.isNotBlank(title) && type != null && episodes != null && StringUtils.isNotBlank(infoLink) && StringUtils.isNotBlank(location)) {
+            if (isNotBlank(title) && type != null && episodes != null && isNotBlank(infoLink) && isNotBlank(location)) {
                 final Anime curAnime = new Anime(title, type, episodes, infoLink, location);
                 animeListEntries.add(curAnime);
             } else {
@@ -105,7 +107,7 @@ public class JsonImporter implements Importer {
             final String title = animeListArr.getJSONObject(i).getString("title").trim();
             final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
 
-            if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(infoLink)) {
+            if (isNotBlank(title) && isNotBlank(infoLink)) {
                 watchListEntries.add(new WatchListEntry(title, thumbnail, infoLink));
             } else {
                 LOG.debug("Could not import '{}', because the type is unknown.", title);
@@ -127,7 +129,7 @@ public class JsonImporter implements Importer {
             final String title = animeListArr.getJSONObject(i).getString("title").trim();
             final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
 
-            if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(infoLink)) {
+            if (isNotBlank(title) && isNotBlank(infoLink)) {
                 filterListEntries.add(new FilterEntry(title, thumbnail, infoLink));
             } else {
                 LOG.debug("Could not import '{}', because the type is unknown.", title);

@@ -1,10 +1,10 @@
 package io.github.manami.dto.events;
 
-import io.github.manami.dto.entities.MinimalEntry;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
+import io.github.manami.dto.entities.MinimalEntry;
 
 /**
  * Contains a {@link List} of {@link MinimalEntry} for each list type.
@@ -23,9 +23,9 @@ public class SearchResultEvent {
      * @since 2.9.0
      */
     public SearchResultEvent() {
-        animeListSearchResultList = Lists.newArrayList();
-        filterListSearchResultList = Lists.newArrayList();
-        watchListSearchResultList = Lists.newArrayList();
+        animeListSearchResultList = newArrayList();
+        filterListSearchResultList = newArrayList();
+        watchListSearchResultList = newArrayList();
     }
 
 

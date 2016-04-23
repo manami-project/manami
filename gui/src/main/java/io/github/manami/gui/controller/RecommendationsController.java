@@ -1,24 +1,28 @@
 package io.github.manami.gui.controller;
 
-import io.github.manami.Main;
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.config.Config;
-import io.github.manami.core.services.RecommendationsRetrievalService;
-import io.github.manami.core.services.ServiceRepository;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.Icons;
-import io.github.manami.gui.utility.DialogLibrary;
-import io.github.manami.gui.wrapper.MainControllerWrapper;
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
+import static io.github.manami.gui.utility.DialogLibrary.JSON_FILTER;
+import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.controlsfx.control.Notifications;
+
+import io.github.manami.Main;
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.RecommendationsRetrievalService;
+import io.github.manami.core.services.ServiceRepository;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,10 +32,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
-import org.controlsfx.control.Notifications;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author manami-project
@@ -90,7 +90,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
     public void initialize() {
         btnStart.setOnAction(event -> start());
 
-        btnCancel.setGraphic(Icons.createIconCancel());
+        btnCancel.setGraphic(createIconCancel());
         btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
 
@@ -104,8 +104,8 @@ public class RecommendationsController extends AbstractAnimeListController imple
      * @return
      */
     private void exportRecommendations() {
-        final Path file = DialogLibrary.showExportDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage(), DialogLibrary.JSON_FILTER);
-        final List<Anime> exportList = Lists.newArrayList();
+        final Path file = showExportDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage(), JSON_FILTER);
+        final List<Anime> exportList = newArrayList();
 
         getComponentList().forEach(entry -> exportList.add((Anime) entry.getAnime()));
 
@@ -186,7 +186,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
         if (object instanceof Boolean) {
             showProgressControls(false);
-            Platform.runLater(() -> Notifications.create().title("Recommendations finished").text("Finished search for recommendations.").hideAfter(Config.NOTIFICATION_DURATION)
+            Platform.runLater(() -> Notifications.create().title("Recommendations finished").text("Finished search for recommendations.").hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RecommendationsNotificationEventHandler()).showInformation());
         }
     }

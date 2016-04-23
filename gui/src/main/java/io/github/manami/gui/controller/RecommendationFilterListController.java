@@ -1,14 +1,14 @@
 package io.github.manami.gui.controller;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import java.util.List;
 
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import javafx.application.Platform;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author manami-project
@@ -48,7 +48,7 @@ public class RecommendationFilterListController extends AbstractAnimeListControl
      * @return
      */
     public boolean containsEntry(final String url) {
-        if (StringUtils.isBlank(url)) {
+        if (isBlank(url)) {
             return false;
         }
 

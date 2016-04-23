@@ -1,8 +1,7 @@
 package io.github.manami.cache.extractor.plugins.mal;
 
-import io.github.manami.cache.extractor.anime.AbstractAnimeSitePlugin;
-import io.github.manami.cache.extractor.anime.Extractor;
-import io.github.manami.dto.AnimeType;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -10,11 +9,12 @@ import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
+import io.github.manami.cache.extractor.anime.AbstractAnimeSitePlugin;
+import io.github.manami.cache.extractor.anime.Extractor;
+import io.github.manami.dto.AnimeType;
 
 /**
  * Class to gather information from myanimelist.net automatically.
@@ -155,7 +155,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
         }
 
         // correct prefix
-        if (StringUtils.isNotBlank(ret) && !ret.startsWith(prefix)) {
+        if (isNotBlank(ret) && !ret.startsWith(prefix)) {
             pattern = Pattern.compile("/[0-9]+");
             matcher = pattern.matcher(url);
 
@@ -172,7 +172,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
     protected String extractThumbnail() {
         String picture = extractPictureLink();
 
-        if (StringUtils.isNotBlank(picture)) {
+        if (isNotBlank(picture)) {
             final StringBuilder strBuilder = new StringBuilder(picture);
             picture = strBuilder.insert(picture.length() - 4, "t").toString();
         }
@@ -183,7 +183,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
     @Override
     public List<String> extractRelatedAnimes() {
-        final List<String> raw = Lists.newArrayList();
+        final List<String> raw = newArrayList();
         String subStr = super.siteContent.trim();
 
         // get rid of all whitespaces
@@ -196,7 +196,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
             subStr = matcher.group();
         }
 
-        if (StringUtils.isNotBlank(subStr) && StringUtils.isNotBlank(super.siteContent) && !super.siteContent.startsWith(subStr.substring(0, 4))) {
+        if (isNotBlank(subStr) && isNotBlank(super.siteContent) && !super.siteContent.startsWith(subStr.substring(0, 4))) {
             pattern = Pattern.compile("/anime/[0-9]+");
             matcher = pattern.matcher(subStr);
 
@@ -205,7 +205,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
             }
         }
 
-        final List<String> ret = Lists.newArrayList();
+        final List<String> ret = newArrayList();
         if (raw.size() > 0) {
             raw.forEach(element -> {
                 final String relatedAnimeUrl = normalizeInfoLink(element);

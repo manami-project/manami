@@ -1,5 +1,17 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static io.github.manami.gui.components.Icons.createIconFilterList;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.components.Icons.createIconWatchList;
+import static org.springframework.util.Assert.notNull;
+
+import java.text.Collator;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
@@ -10,12 +22,7 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
-import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.utility.HyperlinkBuilder;
-
-import java.text.Collator;
-import java.util.List;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,12 +34,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
-import com.google.common.collect.Lists;
 
 /**
  * Abstract class if an anime result list. The list entries can be customized by
@@ -55,7 +56,9 @@ public abstract class AbstractAnimeListController {
     /** List of all GUI components. */
     private final List<AnimeGuiComponentsListEntry> componentList;
 
-    /** {@link GridPane} containing all the {@link AnimeGuiComponentsListEntry}s */
+    /**
+     * {@link GridPane} containing all the {@link AnimeGuiComponentsListEntry}s
+     */
     private GridPane animeGuiComponentsGridPane;
 
 
@@ -63,7 +66,7 @@ public abstract class AbstractAnimeListController {
      * Constructor.
      */
     public AbstractAnimeListController() {
-        componentList = Lists.newCopyOnWriteArrayList();
+        componentList = newCopyOnWriteArrayList();
     }
 
 
@@ -74,7 +77,7 @@ public abstract class AbstractAnimeListController {
         if (animeGuiComponentsGridPane == null) {
             animeGuiComponentsGridPane = getGridPane();
         }
-        Assert.notNull(animeGuiComponentsGridPane, "GridPane cannot be null");
+        notNull(animeGuiComponentsGridPane, "GridPane cannot be null");
     }
 
 
@@ -224,7 +227,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnAddToFilterList = new Button("", Icons.createIconFilterList());
+        final Button btnAddToFilterList = new Button("", createIconFilterList());
         btnAddToFilterList.setTooltip(new Tooltip("add entry to filter list"));
 
         componentListEntry.setAddToFilterListButton(btnAddToFilterList);
@@ -250,7 +253,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnAddToWatchlist = new Button("", Icons.createIconWatchList());
+        final Button btnAddToWatchlist = new Button("", createIconWatchList());
         btnAddToWatchlist.setTooltip(new Tooltip("add to watch list"));
 
         componentListEntry.setAddToWatchListButton(btnAddToWatchlist);
@@ -274,7 +277,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button("", Icons.createIconRemove());
+        final Button removeButton = new Button("", createIconRemove());
         removeButton.setTooltip(new Tooltip("remove"));
 
         componentListEntry.setRemoveButton(removeButton);

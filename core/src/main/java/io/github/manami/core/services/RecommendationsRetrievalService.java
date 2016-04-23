@@ -1,13 +1,14 @@
 package io.github.manami.core.services;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.HeadlessBrowser;
-import io.github.manami.cache.extractor.anime.AnimeExtractor;
-import io.github.manami.cache.extractor.plugins.mal.MyAnimeListNetPlugin;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.countMatches;
+import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.substring;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -19,12 +20,17 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import io.github.manami.cache.Cache;
+import io.github.manami.cache.extractor.HeadlessBrowser;
+import io.github.manami.cache.extractor.anime.AnimeExtractor;
+import io.github.manami.cache.extractor.plugins.mal.MyAnimeListNetPlugin;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -49,7 +55,9 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     /** All possible recommendations */
     private Map<String, Integer> recommendationsAll;
 
-    /** All recommendations that make 80% of all written user recommendations. */
+    /**
+     * All recommendations that make 80% of all written user recommendations.
+     */
     private List<String> userRecomList;
     private final AnimeExtractor extractor;
     private final Manami app;
@@ -65,8 +73,8 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     public RecommendationsRetrievalService(final Manami app, final Cache cache, final Observer observer) {
         browser = new HeadlessBrowser();
         extractor = new MyAnimeListNetPlugin();
-        urlList = Lists.newArrayList();
-        recommendationsAll = Maps.newHashMap();
+        urlList = newArrayList();
+        recommendationsAll = newHashMap();
         this.app = app;
         this.cache = cache;
         addObserver(observer);
@@ -76,7 +84,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     @Override
     public List<Anime> execute() {
         app.fetchAnimeList().forEach(entry -> {
-            if (StringUtils.isNotBlank(entry.getInfoLink())) {
+            if (isNotBlank(entry.getInfoLink())) {
                 urlList.add(entry.getInfoLink());
             }
         });
@@ -106,32 +114,32 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         String recomSite = (recomUrl.startsWith("http")) ? browser.pageAsString(recomUrl) : null;
         final String animeUrlDelimiter = "/anime/";
         final String recomFlag = "Recommended by";
-        recomSite = StringUtils.normalizeSpace(recomSite);
+        recomSite = normalizeSpace(recomSite);
 
-        if (StringUtils.isNotBlank(recomSite)) {
+        if (isNotBlank(recomSite)) {
             String curAnime = null;
 
             while (recomSite.length() > 0) {
-                if (curAnime == null && StringUtils.startsWithIgnoreCase(recomSite, animeUrlDelimiter)) {
+                if (curAnime == null && startsWithIgnoreCase(recomSite, animeUrlDelimiter)) {
                     final Pattern entryPattern = Pattern.compile("/anime/([0-9]*?)/");
                     final Matcher entryMatcher = entryPattern.matcher(recomSite);
                     curAnime = (entryMatcher.find()) ? entryMatcher.group() : null;
-                    recomSite = StringUtils.substring(recomSite, animeUrlDelimiter.length() - 1, recomSite.length());
-                } else if (curAnime != null && !StringUtils.startsWithIgnoreCase(recomSite, "/anime/")) {
-                    final int nextAnime = StringUtils.indexOfIgnoreCase(recomSite, animeUrlDelimiter);
-                    final String sub = StringUtils.substring(recomSite, 0, nextAnime);
+                    recomSite = substring(recomSite, animeUrlDelimiter.length() - 1, recomSite.length());
+                } else if (curAnime != null && !startsWithIgnoreCase(recomSite, "/anime/")) {
+                    final int nextAnime = indexOfIgnoreCase(recomSite, animeUrlDelimiter);
+                    final String sub = substring(recomSite, 0, nextAnime);
 
-                    if (StringUtils.containsIgnoreCase(sub, recomFlag)) {
-                        final int numberOfRecoms = StringUtils.countMatches(sub, recomFlag);
+                    if (containsIgnoreCase(sub, recomFlag)) {
+                        final int numberOfRecoms = countMatches(sub, recomFlag);
                         addRecom(curAnime, numberOfRecoms);
-                        recomSite = StringUtils.substring(recomSite, nextAnime - 1);
+                        recomSite = substring(recomSite, nextAnime - 1);
                     } else {
-                        recomSite = StringUtils.substring(recomSite, nextAnime);
+                        recomSite = substring(recomSite, nextAnime);
                     }
 
                     curAnime = null;
                 } else {
-                    recomSite = StringUtils.substring(recomSite, 1, recomSite.length());
+                    recomSite = substring(recomSite, 1, recomSite.length());
                 }
             }
         }
@@ -159,7 +167,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
             sumAll += entry.getValue();
         }
 
-        userRecomList = Lists.newArrayList();
+        userRecomList = newArrayList();
         int percentage = 0;
         int curSum = 0;
 
@@ -177,7 +185,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
     private static Map<String, Integer> sortMapByValue(final Map<String, Integer> unsortMap) {
         // Convert Map to List
-        final List<Map.Entry<String, Integer>> list = Lists.newArrayList(unsortMap.entrySet());
+        final List<Map.Entry<String, Integer>> list = newArrayList(unsortMap.entrySet());
 
         // Sort list with comparator, to compare the Map values
         Collections.sort(list, (o1, o2) -> (o1.getValue() > o2.getValue()) ? -1 : ((Objects.equals(o1.getValue(), o2.getValue())) ? 0 : 1));

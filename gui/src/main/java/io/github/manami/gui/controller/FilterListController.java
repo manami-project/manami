@@ -1,5 +1,27 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.gui.components.Icons.createIconDelete;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.controlsfx.control.Notifications;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import com.google.common.collect.Lists;
+import com.sun.javafx.collections.ObservableListWrapper;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
@@ -15,17 +37,7 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
-import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -42,17 +54,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
-
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.Notifications;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import com.google.common.collect.Lists;
-import com.sun.javafx.collections.ObservableListWrapper;
 
 /**
  * Controller for adding and removing entries to the filter list.
@@ -294,7 +295,7 @@ public class FilterListController extends AbstractAnimeListController implements
      * @since 2.7.0
      */
     public void startRecommendedFilterEntrySearch() {
-        final List<FilterEntry> filterList = Lists.newArrayList(app.fetchFilterList());
+        final List<FilterEntry> filterList = newArrayList(app.fetchFilterList());
         Collections.shuffle(filterList);
         serviceRepo.startService(new RelatedAnimeFinderService(cache, app, filterList, this));
     }
@@ -328,7 +329,7 @@ public class FilterListController extends AbstractAnimeListController implements
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnDelete = new Button("", Icons.createIconDelete());
+        final Button btnDelete = new Button("", createIconDelete());
         btnDelete.setTooltip(new Tooltip("delete from filter list"));
 
         componentListEntry.setRemoveButton(btnDelete);
@@ -351,6 +352,6 @@ public class FilterListController extends AbstractAnimeListController implements
 
     @Override
     boolean isInList(final String infoLink) {
-        return StringUtils.isNotBlank(infoLink) && app.filterEntryExists(infoLink);
+        return isNotBlank(infoLink) && app.filterEntryExists(infoLink);
     }
 }

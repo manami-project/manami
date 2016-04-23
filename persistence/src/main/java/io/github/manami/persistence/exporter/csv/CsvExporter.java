@@ -1,10 +1,6 @@
 package io.github.manami.persistence.exporter.csv;
 
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.ApplicationPersistence;
-import io.github.manami.persistence.exporter.Exporter;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,7 +13,11 @@ import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import com.google.common.collect.Lists;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.ApplicationPersistence;
+import io.github.manami.persistence.exporter.Exporter;
 
 /**
  * Exports a list to a csv file.
@@ -77,12 +77,12 @@ public class CsvExporter implements Exporter {
      * @throws IOException
      */
     private void writeAnimeList() throws IOException {
-        final List<List<String>> mappedEntryList = Lists.newArrayList();
+        final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
 
         // Map Anime Objects to a list
         for (final Anime entry : persistence.fetchAnimeList()) {
-            curEntry = Lists.newArrayList();
+            curEntry = newArrayList();
             curEntry.add(CsvConfig.ANIMELIST);
             curEntry.add(entry.getTitle());
             curEntry.add(entry.getTypeAsString());
@@ -103,12 +103,12 @@ public class CsvExporter implements Exporter {
      * @since 2.7.0
      */
     private void writeWatchList() throws IOException {
-        final List<List<String>> mappedEntryList = Lists.newArrayList();
+        final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
 
         // Map Anime Objects to a list
         for (final WatchListEntry entry : persistence.fetchWatchList()) {
-            curEntry = Lists.newArrayList();
+            curEntry = newArrayList();
             curEntry.add(CsvConfig.WATCHLIST);
             curEntry.add(entry.getTitle());
             curEntry.add("");
@@ -129,12 +129,12 @@ public class CsvExporter implements Exporter {
      * @since 2.7.0
      */
     private void writeFilterList() throws IOException {
-        final List<List<String>> mappedEntryList = Lists.newArrayList();
+        final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
 
         // Map Anime Objects to a list
         for (final FilterEntry entry : persistence.fetchFilterList()) {
-            curEntry = Lists.newArrayList();
+            curEntry = newArrayList();
             curEntry.add(CsvConfig.FILTERLIST);
             curEntry.add(entry.getTitle());
             curEntry.add("");

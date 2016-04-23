@@ -1,12 +1,15 @@
 package io.github.manami.core.services;
 
-import com.google.common.collect.Lists;
-import com.sun.javafx.collections.ObservableListWrapper;
-import javafx.collections.ObservableList;
+import static com.google.common.collect.Lists.newArrayList;
 
-import javax.inject.Named;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.inject.Named;
+
+import com.sun.javafx.collections.ObservableListWrapper;
+
+import javafx.collections.ObservableList;
 
 /**
  * @author manami-project
@@ -15,7 +18,8 @@ import java.util.Observer;
 @Named
 public class ServiceRepository implements Observer {
 
-    private final ObservableList<BackgroundService> runningServices = new ObservableListWrapper<>(Lists.newArrayList());
+    private final ObservableList<BackgroundService> runningServices = new ObservableListWrapper<>(newArrayList());
+
 
     public void startService(final BackgroundService service) {
         if (service == null) {

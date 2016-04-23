@@ -1,5 +1,22 @@
 package io.github.manami.core;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import com.google.common.eventbus.EventBus;
+
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
@@ -20,22 +37,6 @@ import io.github.manami.persistence.importer.csv.CsvImporter;
 import io.github.manami.persistence.importer.json.JsonImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter.XmlStrategy;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-import com.google.common.eventbus.EventBus;
 
 /**
  * Main access to the features of the application. This class has got delegation
@@ -299,7 +300,7 @@ public class Manami implements ApplicationPersistence {
      * @param searchString
      */
     public void search(final String searchString) {
-        if (StringUtils.isNotBlank(searchString)) {
+        if (isNotBlank(searchString)) {
             LOG.info("Initiated seach for [{}]", searchString);
             serviceRepo.startService(new SearchService(searchString, persistence, eventBus));
         }

@@ -1,6 +1,6 @@
 package io.github.manami.dto.entities;
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author manami-project
@@ -44,7 +44,7 @@ public abstract class AbstractMinimalEntry implements MinimalEntry {
      */
     @Override
     public String getThumbnail() {
-        return StringUtils.isNotBlank(thumbnail) ? thumbnail : NO_IMG_THUMB;
+        return isNotBlank(thumbnail) ? thumbnail : NO_IMG_THUMB;
     }
 
 

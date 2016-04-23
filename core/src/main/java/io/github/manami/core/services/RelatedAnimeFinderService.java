@@ -1,26 +1,26 @@
 package io.github.manami.core.services;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Observer;
 import java.util.Stack;
 
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sun.javafx.collections.ObservableListWrapper;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 /**
  * Finds related animes in info site links.
@@ -72,10 +72,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
         this.cache = cache;
         this.list = list;
         addObserver(observer);
-        myAnimes = Lists.newArrayList();
-        relatedAnime = Maps.newHashMap();
+        myAnimes = newArrayList();
+        relatedAnime = newHashMap();
         animesToCheck = new Stack<>();
-        checkedAnimes = new ObservableListWrapper<>(Lists.newArrayList());
+        checkedAnimes = new ObservableListWrapper<>(newArrayList());
         checkedAnimes.addListener((ListChangeListener<String>) event -> {
             setChanged();
             notifyObservers(new ProgressState(checkedAnimes.size(), animesToCheck.size()));
@@ -88,7 +88,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
     public Map<String, Anime> execute() {
         list.forEach(entry -> {
             final String url = entry.getInfoLink();
-            if (StringUtils.isNotBlank(url)) {
+            if (isNotBlank(url)) {
                 myAnimes.add(url);
                 animesToCheck.push(url);
             }
@@ -126,7 +126,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
 
     private void checkAnime(final String url) {
-        final List<Anime> showAnimeList = Lists.newArrayList();
+        final List<Anime> showAnimeList = newArrayList();
         final Anime cachedAnime = cache.fetchAnime(url);
 
         if (cachedAnime == null) {
@@ -138,7 +138,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
         for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
             final String element = relatedAnimeList.get(index);
 
-            if (StringUtils.isNotBlank(element)) {
+            if (isNotBlank(element)) {
 
                 if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
                     animesToCheck.push(element);

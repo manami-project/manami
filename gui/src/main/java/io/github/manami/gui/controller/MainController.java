@@ -1,5 +1,39 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.dto.entities.Anime.copyAnime;
+import static io.github.manami.gui.components.Icons.createIconDelete;
+import static io.github.manami.gui.components.Icons.createIconExit;
+import static io.github.manami.gui.components.Icons.createIconExport;
+import static io.github.manami.gui.components.Icons.createIconFile;
+import static io.github.manami.gui.components.Icons.createIconFileText;
+import static io.github.manami.gui.components.Icons.createIconFolderOpen;
+import static io.github.manami.gui.components.Icons.createIconImport;
+import static io.github.manami.gui.components.Icons.createIconQuestion;
+import static io.github.manami.gui.components.Icons.createIconRedo;
+import static io.github.manami.gui.components.Icons.createIconSave;
+import static io.github.manami.gui.components.Icons.createIconUndo;
+import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showImportFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showOpenFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showSaveAsFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showUnsavedChangesDialog;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdChangeEpisodes;
@@ -15,12 +49,10 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.gui.components.Icons;
 import io.github.manami.gui.controller.callbacks.AnimeEpisodesCallback;
 import io.github.manami.gui.controller.callbacks.AnimeTypeCallback;
 import io.github.manami.gui.controller.callbacks.DefaultCallback;
 import io.github.manami.gui.controller.callbacks.RowCountCallback;
-import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.wrapper.CheckListControllerWrapper;
 import io.github.manami.gui.wrapper.FilterListControllerWrapper;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
@@ -30,14 +62,6 @@ import io.github.manami.gui.wrapper.RelatedAnimeControllerWrapper;
 import io.github.manami.gui.wrapper.SearchResultsControllerWrapper;
 import io.github.manami.gui.wrapper.WatchListControllerWrapper;
 import io.github.manami.persistence.utility.PathResolver;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -56,14 +80,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 
 /**
  * Controller for the main stage.
@@ -278,7 +294,7 @@ public class MainController implements Observer {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
             final String newTitle = event.getNewValue().trim();
-            Anime.copyAnime(selectedAnime, oldValue);
+            copyAnime(selectedAnime, oldValue);
             executeCommand(new CmdChangeTitle(oldValue, newTitle, app));
             selectedAnime.setTitle(newTitle);
         });
@@ -289,7 +305,7 @@ public class MainController implements Observer {
         colAnimeListType.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
-            Anime.copyAnime(selectedAnime, oldValue);
+            copyAnime(selectedAnime, oldValue);
             executeCommand(new CmdChangeType(oldValue, AnimeType.findByName(event.getNewValue()), app));
             selectedAnime.setType(AnimeType.findByName(event.getNewValue()));
         });
@@ -300,7 +316,7 @@ public class MainController implements Observer {
         colAnimeListEpisodes.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
-            Anime.copyAnime(selectedAnime, oldValue);
+            copyAnime(selectedAnime, oldValue);
             executeCommand(new CmdChangeEpisodes(oldValue, event.getNewValue(), app));
             selectedAnime.setEpisodes(event.getNewValue());
         });
@@ -311,7 +327,7 @@ public class MainController implements Observer {
         colAnimeListLink.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
-            Anime.copyAnime(selectedAnime, oldValue);
+            copyAnime(selectedAnime, oldValue);
             executeCommand(new CmdChangeInfoLink(oldValue, event.getNewValue(), app));
             selectedAnime.setInfoLink(event.getNewValue());
         });
@@ -320,13 +336,13 @@ public class MainController implements Observer {
         colAnimeListLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         colAnimeListLocation.setCellFactory(defaultCallback);
         colAnimeListLocation.setOnEditStart(event -> {
-            final Path folder = DialogLibrary.showBrowseForFolderDialog(mainControllerWrapper.getMainStage());
+            final Path folder = showBrowseForFolderDialog(mainControllerWrapper.getMainStage());
             final String newLocation = PathResolver.buildRelativizedPath(folder.toString(), config.getFile().getParent());
 
-            if (StringUtils.isNotBlank(newLocation)) {
+            if (isNotBlank(newLocation)) {
                 final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
                 final Anime oldValue = new Anime(selectedAnime.getId());
-                Anime.copyAnime(selectedAnime, oldValue);
+                copyAnime(selectedAnime, oldValue);
                 executeCommand(new CmdChangeLocation(oldValue, newLocation, app));
                 selectedAnime.setLocation(newLocation);
             }
@@ -341,18 +357,18 @@ public class MainController implements Observer {
      * @since 2.9.1
      */
     private void initMenuItemGlyphs() {
-        miNewList.setGraphic(Icons.createIconFileText());
-        miNewEntry.setGraphic(Icons.createIconFile());
-        miOpen.setGraphic(Icons.createIconFolderOpen());
-        miSave.setGraphic(Icons.createIconSave());
-        miImport.setGraphic(Icons.createIconImport());
-        miExport.setGraphic(Icons.createIconExport());
-        miExit.setGraphic(Icons.createIconExit());
-        miUndo.setGraphic(Icons.createIconUndo());
-        miRedo.setGraphic(Icons.createIconRedo());
-        miDeleteEntry.setGraphic(Icons.createIconDelete());
-        miAbout.setGraphic(Icons.createIconQuestion());
-        cmiDeleteEntry.setGraphic(Icons.createIconDelete());
+        miNewList.setGraphic(createIconFileText());
+        miNewEntry.setGraphic(createIconFile());
+        miOpen.setGraphic(createIconFolderOpen());
+        miSave.setGraphic(createIconSave());
+        miImport.setGraphic(createIconImport());
+        miExport.setGraphic(createIconExport());
+        miExit.setGraphic(createIconExit());
+        miUndo.setGraphic(createIconUndo());
+        miRedo.setGraphic(createIconRedo());
+        miDeleteEntry.setGraphic(createIconDelete());
+        miAbout.setGraphic(createIconQuestion());
+        cmiDeleteEntry.setGraphic(createIconDelete());
     }
 
 
@@ -476,7 +492,7 @@ public class MainController implements Observer {
      * @since 2.0.0
      */
     public void export() {
-        final Path file = DialogLibrary.showExportDialog(mainControllerWrapper.getMainStage());
+        final Path file = showExportDialog(mainControllerWrapper.getMainStage());
 
         if (file != null) {
             app.export(file);
@@ -505,7 +521,7 @@ public class MainController implements Observer {
      *            File.
      */
     private void safelyExecuteMethod(final ExecutionContext execCtx, final Path file) {
-        final int userSelection = (cmdService.isUnsaved()) ? DialogLibrary.showUnsavedChangesDialog() : 0;
+        final int userSelection = (cmdService.isUnsaved()) ? showUnsavedChangesDialog() : 0;
 
         switch (userSelection) {
             case 1:
@@ -546,7 +562,7 @@ public class MainController implements Observer {
      * @since 2.0.0
      */
     public void open() {
-        final Path selectedFile = DialogLibrary.showOpenFileDialog(mainControllerWrapper.getMainStage());
+        final Path selectedFile = showOpenFileDialog(mainControllerWrapper.getMainStage());
 
         if (selectedFile != null && Files.exists(selectedFile)) {
             safelyExecuteMethod(file -> {
@@ -559,7 +575,7 @@ public class MainController implements Observer {
                     controllerWrapper.startRecommendedFilterEntrySearch();
                 } catch (final Exception e) {
                     LOG.error("An error occurred while trying to open {}: ", file, e);
-                    DialogLibrary.showExceptionDialog(e);
+                    showExceptionDialog(e);
                 }
             }, selectedFile);
         }
@@ -573,7 +589,7 @@ public class MainController implements Observer {
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
-        final List<String> suggestions = Lists.newArrayList();
+        final List<String> suggestions = newArrayList();
         app.fetchAnimeList().forEach(e -> suggestions.add(e.getTitle()));
         app.fetchFilterList().forEach(e -> suggestions.add(e.getTitle()));
         app.fetchWatchList().forEach(e -> suggestions.add(e.getTitle()));
@@ -587,7 +603,7 @@ public class MainController implements Observer {
      * @since 2.0.0
      */
     public void importFile() {
-        final Path selectedFile = DialogLibrary.showImportFileDialog(mainControllerWrapper.getMainStage());
+        final Path selectedFile = showImportFileDialog(mainControllerWrapper.getMainStage());
 
         if (selectedFile != null && Files.exists(selectedFile)) {
             safelyExecuteMethod(file -> {
@@ -623,7 +639,7 @@ public class MainController implements Observer {
      * @since 2.0.0
      */
     public void saveAs() {
-        Path file = DialogLibrary.showSaveAsFileDialog(mainControllerWrapper.getMainStage());
+        Path file = showSaveAsFileDialog(mainControllerWrapper.getMainStage());
         final String extension = ".xml";
 
         if (file != null) {

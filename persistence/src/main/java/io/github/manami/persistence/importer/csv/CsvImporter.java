@@ -1,14 +1,14 @@
 package io.github.manami.persistence.importer.csv;
 
-import com.google.common.collect.Lists;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.PersistenceFacade;
-import io.github.manami.persistence.exporter.csv.CsvConfig;
-import io.github.manami.persistence.importer.Importer;
-import org.apache.commons.lang3.StringUtils;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -16,10 +16,13 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.PersistenceFacade;
+import io.github.manami.persistence.exporter.csv.CsvConfig;
+import io.github.manami.persistence.importer.Importer;
 
 /**
  * @author manami-project
@@ -47,9 +50,9 @@ public class CsvImporter implements Importer {
     public CsvImporter(final PersistenceFacade persistence) {
         this.persistence = persistence;
         csvConfig = new CsvConfig();
-        animeListEntries = Lists.newArrayList();
-        filterListEntries = Lists.newArrayList();
-        watchListEntries = Lists.newArrayList();
+        animeListEntries = newArrayList();
+        filterListEntries = newArrayList();
+        watchListEntries = newArrayList();
     }
 
 
@@ -69,11 +72,11 @@ public class CsvImporter implements Importer {
                 String location = (String) objectList.get(5);
 
                 // prepare attributes
-                title = StringUtils.isNotBlank(title) ? title.trim() : null;
-                final AnimeType type = StringUtils.isNotBlank(typeStr) ? AnimeType.findByName(typeStr.trim()) : null;
-                final int episodes = StringUtils.isNotBlank(episodesStr) && StringUtils.isNumeric(episodesStr) ? Integer.parseInt(episodesStr) : 0;
-                infoLink = StringUtils.isNotBlank(infoLink) ? infoLink.trim() : null;
-                location = StringUtils.isNotBlank(location) ? location.trim() : null;
+                title = isNotBlank(title) ? title.trim() : null;
+                final AnimeType type = isNotBlank(typeStr) ? AnimeType.findByName(typeStr.trim()) : null;
+                final int episodes = isNotBlank(episodesStr) && isNumeric(episodesStr) ? Integer.parseInt(episodesStr) : 0;
+                infoLink = isNotBlank(infoLink) ? infoLink.trim() : null;
+                location = isNotBlank(location) ? location.trim() : null;
 
                 // create object by list type
                 switch ((String) objectList.get(0)) {

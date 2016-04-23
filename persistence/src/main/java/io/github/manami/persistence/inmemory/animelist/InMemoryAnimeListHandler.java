@@ -1,9 +1,8 @@
 package io.github.manami.persistence.inmemory.animelist;
 
-import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.persistence.AnimeListHandler;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,11 +11,12 @@ import java.util.UUID;
 
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+
+import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.persistence.AnimeListHandler;
 
 /**
  * @author manami-project
@@ -29,7 +29,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
 
     public InMemoryAnimeListHandler() {
-        animeList = Maps.newConcurrentMap();
+        animeList = newConcurrentMap();
     }
 
 
@@ -46,7 +46,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
     @Override
     public List<Anime> fetchAnimeList() {
-        final List<Anime> sortList = Lists.newArrayList(animeList.values());
+        final List<Anime> sortList = newArrayList(animeList.values());
         Collections.sort(sortList, new MinimalEntryComByTitleAsc());
         return ImmutableList.copyOf(sortList);
     }
@@ -74,7 +74,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
      * @return
      */
     private boolean isInList(final String url) {
-        if (StringUtils.isNotBlank(url)) {
+        if (isNotBlank(url)) {
             for (final MinimalEntry curEntry : animeList.values()) {
                 if (url.equalsIgnoreCase(curEntry.getInfoLink())) {
                     return true;

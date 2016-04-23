@@ -1,9 +1,21 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
 import static io.github.manami.gui.components.Icons.createIconCancel;
 import static io.github.manami.gui.components.Icons.createIconEdit;
 import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.controlsfx.control.Notifications;
+import org.slf4j.Logger;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -18,15 +30,8 @@ import io.github.manami.core.services.events.Event;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.core.services.events.ReversibleCommandEvent;
 import io.github.manami.gui.components.CheckListEntry;
-import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.utility.HyperlinkBuilder;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Observable;
-import java.util.Observer;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,10 +48,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.Notifications;
-import org.slf4j.Logger;
 
 /**
  * @author manami-project
@@ -181,7 +182,7 @@ public class CheckListController implements Observer {
 
         if (object instanceof Boolean) {
             showProgressControls(false);
-            Platform.runLater(() -> Notifications.create().title("Check List finished").text("Checking the list just finished.").hideAfter(Config.NOTIFICATION_DURATION)
+            Platform.runLater(() -> Notifications.create().title("Check List finished").text("Checking the list just finished.").hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new CheckListNotificationEventHandler()).showInformation());
         }
     }
@@ -246,7 +247,7 @@ public class CheckListController implements Observer {
         componentListEntry.setPictureComponent(createIcon(event.getType()));
         final Font titleFont = Font.font(null, FontWeight.BOLD, 11);
 
-        if (event.getAnime() != null && StringUtils.isNotBlank(event.getAnime().getInfoLink())) {
+        if (event.getAnime() != null && isNotBlank(event.getAnime().getInfoLink())) {
             final Hyperlink title = HyperlinkBuilder.buildFrom(event.getTitle(), event.getAnime().getInfoLink());
             title.setFont(titleFont);
             componentListEntry.setTitleComponent(title);
@@ -306,7 +307,7 @@ public class CheckListController implements Observer {
                     removeEntry(componentListEntry);
                 } catch (final Exception e) {
                     LOG.error("An error occurred during renaming of the file {}", file.getFileName().toString(), e);
-                    DialogLibrary.showExceptionDialog(e);
+                    showExceptionDialog(e);
                 }
             });
             componentListEntry.addAdditionalButtons(button);

@@ -1,5 +1,13 @@
 package io.github.manami.persistence.inmemory;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
@@ -8,14 +16,6 @@ import io.github.manami.persistence.PersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author manami-project
@@ -46,7 +46,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     @Override
     public boolean filterAnime(final MinimalEntry anime) {
         if (anime != null) {
-            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+            if (isNotBlank(anime.getInfoLink())) {
                 watchListHandler.removeFromWatchList(anime.getInfoLink());
             }
 
@@ -78,7 +78,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     @Override
     public boolean addAnime(final Anime anime) {
         if (anime != null) {
-            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+            if (isNotBlank(anime.getInfoLink())) {
                 filterListHandler.removeFromFilterList(anime.getInfoLink());
                 watchListHandler.removeFromWatchList(anime.getInfoLink());
             }
@@ -103,7 +103,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
         if (anime != null) {
-            if (StringUtils.isNotBlank(anime.getInfoLink())) {
+            if (isNotBlank(anime.getInfoLink())) {
                 filterListHandler.removeFromFilterList(anime.getInfoLink());
             }
             return watchListHandler.watchAnime(anime);

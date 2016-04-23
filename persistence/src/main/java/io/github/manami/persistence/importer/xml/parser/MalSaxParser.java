@@ -1,15 +1,17 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import com.google.common.collect.Lists;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.persistence.PersistenceFacade;
-import org.apache.commons.lang3.StringUtils;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.util.List;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.List;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.persistence.PersistenceFacade;
 
 /**
  * @author manami-project
@@ -40,9 +42,9 @@ public class MalSaxParser extends DefaultHandler {
      */
     public MalSaxParser(final PersistenceFacade persistence) {
         this.persistence = persistence;
-        animeListEntries = Lists.newArrayList();
-        filterListEntries = Lists.newArrayList();
-        watchListEntries = Lists.newArrayList();
+        animeListEntries = newArrayList();
+        filterListEntries = newArrayList();
+        watchListEntries = newArrayList();
     }
 
 
@@ -62,12 +64,12 @@ public class MalSaxParser extends DefaultHandler {
 
         switch (qName) {
             case "series_animedb_id":
-                if (StringUtils.isBlank(actAnime.getInfoLink())) {
+                if (isBlank(actAnime.getInfoLink())) {
                     actAnime.setInfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim());
                 }
                 break;
             case "series_title":
-                if (StringUtils.isBlank(actAnime.getTitle())) {
+                if (isBlank(actAnime.getTitle())) {
                     actAnime.setTitle(strBuilder.toString().trim());
                 }
                 break;

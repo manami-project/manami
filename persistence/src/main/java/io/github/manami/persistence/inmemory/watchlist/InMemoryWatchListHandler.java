@@ -1,12 +1,9 @@
 package io.github.manami.persistence.inmemory.watchlist;
 
-import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.AbstractMinimalEntry;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.WatchListHandler;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +11,15 @@ import java.util.Map;
 
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+
+import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
+import io.github.manami.dto.entities.AbstractMinimalEntry;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.WatchListHandler;
 
 /**
  * @author manami-project
@@ -31,13 +32,13 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
 
     public InMemoryWatchListHandler() {
-        watchList = Maps.newConcurrentMap();
+        watchList = newConcurrentMap();
     }
 
 
     @Override
     public List<WatchListEntry> fetchWatchList() {
-        final List<WatchListEntry> sortList = Lists.newArrayList(watchList.values());
+        final List<WatchListEntry> sortList = newArrayList(watchList.values());
         Collections.sort(sortList, new MinimalEntryComByTitleAsc());
         return ImmutableList.copyOf(sortList);
     }
@@ -51,7 +52,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
-        if (anime == null || StringUtils.isBlank(anime.getInfoLink()) || watchList.containsKey(anime.getInfoLink())) {
+        if (anime == null || isBlank(anime.getInfoLink()) || watchList.containsKey(anime.getInfoLink())) {
             return false;
         }
 
@@ -63,7 +64,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
             entry = (WatchListEntry) anime;
         }
 
-        if (entry != null && StringUtils.isBlank(entry.getThumbnail())) {
+        if (entry != null && isBlank(entry.getThumbnail())) {
             entry.setThumbnail(AbstractMinimalEntry.NO_IMG_THUMB);
         }
 
@@ -92,7 +93,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
     @Override
     public void updateOrCreate(final WatchListEntry entry) {
-        if (entry != null && StringUtils.isNotBlank(entry.getInfoLink())) {
+        if (entry != null && isNotBlank(entry.getInfoLink())) {
             watchList.put(entry.getInfoLink(), entry);
         }
     }

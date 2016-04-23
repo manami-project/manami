@@ -1,19 +1,10 @@
 package io.github.manami.core.services;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.config.CheckListConfig;
-import io.github.manami.core.services.events.AbstractEvent.EventType;
-import io.github.manami.core.services.events.CrcEvent;
-import io.github.manami.core.services.events.EpisodesDifferEvent;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.core.services.events.RelativizeLocationEvent;
-import io.github.manami.core.services.events.SimpleLocationEvent;
-import io.github.manami.core.services.events.TitleDifferEvent;
-import io.github.manami.core.services.events.TypeDifferEvent;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.persistence.utility.PathResolver;
+import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.newDirectoryStream;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -32,10 +23,23 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.config.CheckListConfig;
+import io.github.manami.core.services.events.AbstractEvent.EventType;
+import io.github.manami.core.services.events.CrcEvent;
+import io.github.manami.core.services.events.EpisodesDifferEvent;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.core.services.events.RelativizeLocationEvent;
+import io.github.manami.core.services.events.SimpleLocationEvent;
+import io.github.manami.core.services.events.TitleDifferEvent;
+import io.github.manami.core.services.events.TypeDifferEvent;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.persistence.utility.PathResolver;
 
 /**
  * @author manami-project
@@ -79,7 +83,7 @@ public class CheckListService extends AbstractService<Void> {
 
     @Override
     public Void execute() {
-        Assert.notNull(list, "List of animes cannot be null");
+        notNull(list, "List of animes cannot be null");
 
         countProgressMax();
 
@@ -111,7 +115,7 @@ public class CheckListService extends AbstractService<Void> {
             for (final Anime entry : list) {
                 final String location = entry.getLocation();
 
-                if (StringUtils.isNotBlank(location)) {
+                if (isNotBlank(location)) {
                     final Optional<Path> optDir = PathResolver.buildPath(location, currentWorkingDir);
 
                     if (!optDir.isPresent()) {
@@ -120,7 +124,7 @@ public class CheckListService extends AbstractService<Void> {
 
                     long amount = 0L;
                     try {
-                        amount = Files.list(optDir.get()).filter(p -> Files.isRegularFile(p)).count();
+                        amount = Files.list(optDir.get()).filter(p -> isRegularFile(p)).count();
                     } catch (final IOException e) {
                         LOG.error("An error occurred detecting the amount of files for {}: ", entry.getTitle(), e);
                     }
@@ -150,7 +154,7 @@ public class CheckListService extends AbstractService<Void> {
                 LOG.debug("Checking location of {}", anime.getTitle());
 
                 // 01 - Is location set?
-                if (StringUtils.isBlank(anime.getLocation())) {
+                if (isBlank(anime.getLocation())) {
                     fireNoLocationEvent(anime);
                     continue;
                 }
@@ -165,10 +169,10 @@ public class CheckListService extends AbstractService<Void> {
 
                 // 03 - Contains at least one file / the exact same amount files
                 // as episodes
-                try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(optDir.get())) {
+                try (DirectoryStream<Path> dirStream = newDirectoryStream(optDir.get())) {
                     int counter = 0;
                     for (final Path curPath : dirStream) {
-                        if (Files.isRegularFile(curPath)) {
+                        if (isRegularFile(curPath)) {
                             counter++;
                         }
                     }
@@ -214,7 +218,7 @@ public class CheckListService extends AbstractService<Void> {
             updateProgress();
             final Anime anime = list.get(index);
 
-            if (StringUtils.isBlank(anime.getInfoLink())) {
+            if (isBlank(anime.getInfoLink())) {
                 continue;
             }
 
@@ -268,7 +272,7 @@ public class CheckListService extends AbstractService<Void> {
     private void checkCrc() {
         for (int index = 0; index < list.size() && !isInterrupt(); index++) {
             final Anime anime = list.get(index);
-            if (StringUtils.isBlank(anime.getLocation())) {
+            if (isBlank(anime.getLocation())) {
                 continue;
             }
 
@@ -280,10 +284,10 @@ public class CheckListService extends AbstractService<Void> {
                 continue;
             }
 
-            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(optDir.get())) {
+            try (DirectoryStream<Path> dirStream = newDirectoryStream(optDir.get())) {
                 for (final Path path : dirStream) {
                     updateProgress();
-                    if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
+                    if (!isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
                         continue;
                     }
 

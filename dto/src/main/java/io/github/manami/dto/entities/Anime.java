@@ -1,14 +1,18 @@
 package io.github.manami.dto.entities;
 
-import io.github.manami.dto.AnimeType;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
+import io.github.manami.dto.AnimeType;
 
 /**
  * Represents an Anime with all it's saved meta information.
@@ -51,7 +55,7 @@ public class Anime extends AbstractMinimalEntry {
         episodes = anime.getEpisodes();
         super.setInfoLink(anime.getInfoLink());
         location = anime.getLocation();
-        relatedAnimes = Lists.newArrayList(anime.relatedAnimes);
+        relatedAnimes = newArrayList(anime.relatedAnimes);
     }
 
 
@@ -71,13 +75,13 @@ public class Anime extends AbstractMinimalEntry {
      *            Location on the HDD.
      */
     public Anime(final String title, final AnimeType type, final int episodes, final String infoLink, final String location) {
-        id = UUID.randomUUID();
+        id = randomUUID();
         super.setTitle(title);
         this.type = type;
         this.episodes = episodes;
         super.setInfoLink(infoLink);
         this.location = location;
-        relatedAnimes = Lists.newArrayList();
+        relatedAnimes = newArrayList();
     }
 
 
@@ -87,8 +91,8 @@ public class Anime extends AbstractMinimalEntry {
      * @since 1.0.0
      */
     public Anime() {
-        id = UUID.randomUUID();
-        relatedAnimes = Lists.newArrayList();
+        id = randomUUID();
+        relatedAnimes = newArrayList();
     }
 
 
@@ -99,12 +103,12 @@ public class Anime extends AbstractMinimalEntry {
      */
     public Anime(final UUID id) {
         this.id = id;
-        relatedAnimes = Lists.newArrayList();
+        relatedAnimes = newArrayList();
     }
 
 
     /**
-     * Fills every attribute in target which null.
+     * Fills every attribute in target with null.
      *
      * @since 2.7.0
      * @param source
@@ -117,19 +121,19 @@ public class Anime extends AbstractMinimalEntry {
         if (target.getEpisodes() == 0) {
             target.setEpisodes(source.getEpisodes());
         }
-        if (StringUtils.isBlank(target.getInfoLink())) {
+        if (isBlank(target.getInfoLink())) {
             target.setInfoLink(source.getInfoLink());
         }
-        if (StringUtils.isBlank(target.getLocation())) {
+        if (isBlank(target.getLocation())) {
             target.setLocation(source.getLocation());
         }
-        if (StringUtils.isBlank(target.getPicture())) {
+        if (isBlank(target.getPicture())) {
             target.setPicture(source.getPicture());
         }
-        if (StringUtils.isBlank(target.getThumbnail())) {
+        if (isBlank(target.getThumbnail())) {
             target.setThumbnail(source.getThumbnail());
         }
-        if (StringUtils.isBlank(target.getTitle())) {
+        if (isBlank(target.getTitle())) {
             target.setTitle(source.getTitle());
         }
         if (target.getType() == null) {
@@ -152,19 +156,19 @@ public class Anime extends AbstractMinimalEntry {
         if (source.getEpisodes() > 0) {
             target.setEpisodes(source.getEpisodes());
         }
-        if (StringUtils.isNotBlank(source.getInfoLink())) {
+        if (isNotBlank(source.getInfoLink())) {
             target.setInfoLink(source.getInfoLink());
         }
-        if (StringUtils.isNotBlank(source.getLocation())) {
+        if (isNotBlank(source.getLocation())) {
             target.setLocation(source.getLocation());
         }
-        if (StringUtils.isNotBlank(source.getPicture())) {
+        if (isNotBlank(source.getPicture())) {
             target.setPicture(source.getPicture());
         }
-        if (StringUtils.isNotBlank(source.getThumbnail())) {
+        if (isNotBlank(source.getThumbnail())) {
             target.setThumbnail(source.getThumbnail());
         }
-        if (StringUtils.isNotBlank(source.getTitle())) {
+        if (isNotBlank(source.getTitle())) {
             target.setTitle(source.getTitle());
         }
         if (source.getType() != null) {
@@ -298,74 +302,18 @@ public class Anime extends AbstractMinimalEntry {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Anime [type=").append(type).append(", episodes=").append(episodes).append(", location=").append(location).append(", picture=").append(picture).append(", relatedAnimes=").append(relatedAnimes).append("]")
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getTitle()).append(type).append(episodes).append(getInfoLink()).append(getThumbnail()).append(location).append(picture).append(relatedAnimes).toHashCode();
+        return HashCodeBuilder.reflectionHashCode(this, false);
     }
 
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Anime)) {
-            return false;
-        }
-        final Anime other = (Anime) obj;
-        if (episodes != other.episodes) {
-            return false;
-        }
-        if (getInfoLink() == null) {
-            if (other.getInfoLink() != null) {
-                return false;
-            }
-        } else if (!getInfoLink().equals(other.getInfoLink())) {
-            return false;
-        }
-        if (location == null) {
-            if (other.location != null) {
-                return false;
-            }
-        } else if (!location.equals(other.location)) {
-            return false;
-        }
-        if (picture == null) {
-            if (other.picture != null) {
-                return false;
-            }
-        } else if (!picture.equals(other.picture)) {
-            return false;
-        }
-        if (relatedAnimes == null) {
-            if (other.relatedAnimes != null) {
-                return false;
-            }
-        } else if (!relatedAnimes.equals(other.relatedAnimes)) {
-            return false;
-        }
-        if (getTitle() == null) {
-            if (other.getTitle() != null) {
-                return false;
-            }
-        } else if (!getTitle().equals(other.getTitle())) {
-            return false;
-        }
-        if (getThumbnail() == null) {
-            if (other.getThumbnail() != null) {
-                return false;
-            }
-        } else if (!getThumbnail().equals(other.getThumbnail())) {
-            return false;
-        }
-        return type == other.type;
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 }

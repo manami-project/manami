@@ -1,5 +1,18 @@
 package io.github.manami.core.services;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
+
+import java.io.IOException;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
@@ -7,17 +20,6 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
-
-import java.io.IOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 /**
  * @author manami-project
@@ -52,8 +54,8 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      */
     @Override
     protected Void execute() {
-        Assert.notNull(cache, "Cache cannot be null");
-        Assert.notNull(persistence, "List of animes cannot be null");
+        notNull(cache, "Cache cannot be null");
+        notNull(persistence, "List of animes cannot be null");
 
         httpclient = HttpClients.createDefault();
 
@@ -89,7 +91,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
             return;
         }
 
-        if (entry != null && (StringUtils.isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
+        if (entry != null && (isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
             final Anime cachedAnime = cache.fetchAnime(entry.getInfoLink());
             LOG.debug("Loading thumbnail for entry {}", entry.getInfoLink());
             if (cachedAnime != null) {
@@ -126,7 +128,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
             return;
         }
 
-        if (entry != null && StringUtils.isNotBlank(entry.getThumbnail())) {
+        if (entry != null && isNotBlank(entry.getThumbnail())) {
             LOG.debug("Checking thumbnail for {}", entry.getInfoLink());
 
             int responseCodeThumbnail = NOT_FOUND;

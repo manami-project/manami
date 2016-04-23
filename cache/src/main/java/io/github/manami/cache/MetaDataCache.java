@@ -1,22 +1,23 @@
 package io.github.manami.cache;
 
-import io.github.manami.cache.extractor.HeadlessBrowser;
-import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
-import io.github.manami.cache.extractor.anime.ExtractorList;
-import io.github.manami.dto.entities.Anime;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
+import io.github.manami.cache.extractor.HeadlessBrowser;
+import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
+import io.github.manami.cache.extractor.anime.ExtractorList;
+import io.github.manami.dto.entities.Anime;
 
 /**
  * This class provides access to the anime meta data. The data are either taken
@@ -107,7 +108,7 @@ public class MetaDataCache implements Cache {
             final String normalizedUrl = extractor.normalizeInfoLink(url);
 
             // the site is not cached
-            if (StringUtils.isNotBlank(normalizedUrl)) {
+            if (isNotBlank(normalizedUrl)) {
                 final String infoLinkSite = downloadSiteContent(normalizedUrl);
                 ret = extractor.extractAnimeEntry(normalizedUrl, infoLinkSite);
             }

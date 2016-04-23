@@ -1,22 +1,24 @@
 package io.github.manami.gui.controller;
 
-import io.github.manami.Main;
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.config.Config;
-import io.github.manami.core.services.RelatedAnimeFinderService;
-import io.github.manami.core.services.ServiceRepository;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.Icons;
-import io.github.manami.gui.wrapper.MainControllerWrapper;
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.controlsfx.control.Notifications;
+
+import io.github.manami.Main;
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.RelatedAnimeFinderService;
+import io.github.manami.core.services.ServiceRepository;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,8 +28,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
-import org.controlsfx.control.Notifications;
 
 /**
  * Controller for finding related animes. Opening as a new tab.
@@ -84,7 +84,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
     public void initialize() {
         btnStart.setOnAction(event -> start());
 
-        btnCancel.setGraphic(Icons.createIconCancel());
+        btnCancel.setGraphic(createIconCancel());
         btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
     }
@@ -166,7 +166,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
         // Processing is done
         if (object instanceof Boolean) {
             showProgressControls(false);
-            Platform.runLater(() -> Notifications.create().title("Search for related animes finished").text("Finished search for related animes.").hideAfter(Config.NOTIFICATION_DURATION)
+            Platform.runLater(() -> Notifications.create().title("Search for related animes finished").text("Finished search for related animes.").hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RelatedAnimeNotificationEventHandler()).showInformation());
         }
     }

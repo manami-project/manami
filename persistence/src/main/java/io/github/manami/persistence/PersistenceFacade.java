@@ -1,10 +1,6 @@
 package io.github.manami.persistence;
 
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.dto.events.AnimeListChangedEvent;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,9 +8,13 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.eventbus.EventBus;
+
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.dto.events.AnimeListChangedEvent;
 
 /**
  * This is a facade which is used by the application to hide which strategy is
@@ -168,8 +168,8 @@ public class PersistenceFacade implements PersistenceHandler {
         ret &= anime.getId() != null;
         ret &= anime.getType() != null;
         ret &= anime.getEpisodes() >= 0;
-        ret &= StringUtils.isNotBlank(anime.getTitle());
-        ret &= StringUtils.isNotBlank(anime.getLocation());
+        ret &= isNotBlank(anime.getTitle());
+        ret &= isNotBlank(anime.getLocation());
 
         return ret;
     }
@@ -183,8 +183,8 @@ public class PersistenceFacade implements PersistenceHandler {
      */
     private boolean isValid(final MinimalEntry anime) {
         boolean ret = anime != null;
-        ret &= StringUtils.isNotBlank(anime.getTitle());
-        ret &= StringUtils.isNotBlank(anime.getInfoLink());
+        ret &= isNotBlank(anime.getTitle());
+        ret &= isNotBlank(anime.getInfoLink());
 
         return ret;
     }

@@ -1,21 +1,23 @@
 package io.github.manami.gui.wrapper;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
+import static io.github.manami.gui.controller.WatchListController.WATCH_LIST_TITLE;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.Pane;
-import io.github.manami.dto.events.AnimeListChangedEvent;
-import io.github.manami.dto.events.OpenedFileChangedEvent;
-import io.github.manami.gui.controller.WatchListController;
-import io.github.manami.gui.utility.DialogLibrary;
+import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+
+import io.github.manami.dto.events.AnimeListChangedEvent;
+import io.github.manami.dto.events.OpenedFileChangedEvent;
+import io.github.manami.gui.controller.WatchListController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.Pane;
 
 /**
  * @author manami-project
@@ -35,7 +37,7 @@ public class WatchListControllerWrapper {
      * @since 2.7.2
      */
     private void init() {
-        watchListTab = new Tab(WatchListController.WATCH_LIST_TITLE);
+        watchListTab = new Tab(WATCH_LIST_TITLE);
         watchListTab.setOnSelectionChanged(event -> {
             if (watchListTab.isSelected()) {
                 watchListController.showEntries();
@@ -50,7 +52,7 @@ public class WatchListControllerWrapper {
             watchListTab.setContent(pane);
         } catch (final Exception e) {
             LOG.error("An error occurred while trying to initialize watch list tab: ", e);
-            DialogLibrary.showExceptionDialog(e);
+            showExceptionDialog(e);
         }
     }
 

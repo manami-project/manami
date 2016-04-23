@@ -1,17 +1,19 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import com.google.common.collect.Lists;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.List;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
-import org.apache.commons.lang3.StringUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.List;
 
 /**
  * @author manami-project
@@ -37,9 +39,9 @@ public class ManamiSaxParser extends DefaultHandler {
      */
     public ManamiSaxParser(final PersistenceFacade persistence) {
         this.persistence = persistence;
-        animeListEntries = Lists.newArrayList();
-        filterListEntries = Lists.newArrayList();
-        watchListEntries = Lists.newArrayList();
+        animeListEntries = newArrayList();
+        filterListEntries = newArrayList();
+        watchListEntries = newArrayList();
     }
 
 
@@ -81,7 +83,7 @@ public class ManamiSaxParser extends DefaultHandler {
         actAnime.setLocation(attributes.getValue("location").trim());
 
         final String infoLink = attributes.getValue("infoLink").trim();
-        if (StringUtils.isNotBlank(infoLink)) {
+        if (isNotBlank(infoLink)) {
             actAnime.setInfoLink(infoLink);
         }
         animeListEntries.add(actAnime);

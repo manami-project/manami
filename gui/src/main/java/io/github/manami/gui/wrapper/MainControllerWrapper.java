@@ -1,18 +1,6 @@
 package io.github.manami.gui.wrapper;
 
-import io.github.manami.core.config.Config;
-import io.github.manami.dto.events.AnimeListChangedEvent;
-import io.github.manami.dto.events.ApplicationContextStartedEvent;
-import io.github.manami.dto.events.OpenedFileChangedEvent;
-import io.github.manami.gui.controller.MainController;
-import io.github.manami.gui.utility.DialogLibrary;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,6 +10,18 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+
+import io.github.manami.core.config.Config;
+import io.github.manami.dto.events.AnimeListChangedEvent;
+import io.github.manami.dto.events.ApplicationContextStartedEvent;
+import io.github.manami.dto.events.OpenedFileChangedEvent;
+import io.github.manami.gui.controller.MainController;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * @author manami-project
@@ -37,8 +37,6 @@ public class MainControllerWrapper {
     public static final String APPNAME = "Manami";
 
     private MainController mainController;
-
-    private Tab animeListTab;
 
     private final Config config;
 
@@ -65,10 +63,9 @@ public class MainControllerWrapper {
             mainController = fxmlLoader.getController();
         } catch (final Exception e) {
             LOG.error("An error occurred while trying to initialize main controller: ", e);
-            DialogLibrary.showExceptionDialog(e);
+            showExceptionDialog(e);
         }
 
-        animeListTab = mainController.getTabAnimeList();
         mainStage.show();
     }
 
@@ -91,9 +88,9 @@ public class MainControllerWrapper {
     @Subscribe
     public void changeEvent(final OpenedFileChangedEvent event) {
         if (config.getFile() != null) {
-            Platform.runLater(() -> mainStage.setTitle(MainControllerWrapper.APPNAME + " - " + config.getFile().toString()));
+            Platform.runLater(() -> mainStage.setTitle(APPNAME + " - " + config.getFile().toString()));
         } else {
-            Platform.runLater(() -> mainStage.setTitle(MainControllerWrapper.APPNAME));
+            Platform.runLater(() -> mainStage.setTitle(APPNAME));
         }
         mainController.checkGui();
     }
@@ -124,15 +121,15 @@ public class MainControllerWrapper {
     public void setDirty(final boolean isDirty) {
         if (isDirty) {
             if (config.getFile() != null) {
-                mainStage.setTitle(String.format("%s - %s *", MainControllerWrapper.APPNAME, config.getFile().toString()));
+                mainStage.setTitle(String.format("%s - %s *", APPNAME, config.getFile().toString()));
             } else {
-                mainStage.setTitle(String.format("%s *", MainControllerWrapper.APPNAME));
+                mainStage.setTitle(String.format("%s *", APPNAME));
             }
         } else {
             if (config.getFile() != null) {
-                mainStage.setTitle(String.format("%s - %s", MainControllerWrapper.APPNAME, config.getFile().toString()));
+                mainStage.setTitle(String.format("%s - %s", APPNAME, config.getFile().toString()));
             } else {
-                mainStage.setTitle(String.format("%s", MainControllerWrapper.APPNAME));
+                mainStage.setTitle(String.format("%s", APPNAME));
             }
         }
     }

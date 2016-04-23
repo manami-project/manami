@@ -1,13 +1,7 @@
 package io.github.manami.gui.wrapper;
 
-import io.github.manami.dto.events.SearchResultEvent;
-import io.github.manami.gui.controller.SearchResultsController;
-import io.github.manami.gui.utility.DialogLibrary;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.Pane;
+import static io.github.manami.gui.controller.SearchResultsController.SEARCH_RESULTS_TAB_TITLE;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
@@ -15,6 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
+
+import io.github.manami.dto.events.SearchResultEvent;
+import io.github.manami.gui.controller.SearchResultsController;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.Pane;
 
 /**
  * @author manami-project
@@ -33,7 +35,7 @@ public class SearchResultsControllerWrapper {
      * @since 2.7.2
      */
     private void init() {
-        searchResultTab = new Tab(SearchResultsController.SEARCH_RESULTS_TAB_TITLE);
+        searchResultTab = new Tab(SEARCH_RESULTS_TAB_TITLE);
         Parent pane;
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(Thread.currentThread().getContextClassLoader().getResource("io/github/manami/gui/controller/search_results_tab.fxml"));
@@ -42,7 +44,7 @@ public class SearchResultsControllerWrapper {
             searchResultController = fxmlLoader.getController();
         } catch (final Exception e) {
             LOG.error("An error occurred while trying to initialize search result tab: ", e);
-            DialogLibrary.showExceptionDialog(e);
+            showExceptionDialog(e);
         }
     }
 

@@ -1,17 +1,19 @@
 package io.github.manami.gui.wrapper;
 
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static io.github.manami.gui.wrapper.MainControllerWrapper.APPNAME;
+
+import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import io.github.manami.gui.utility.DialogLibrary;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Named;
 
 /**
  * @author manami-project
@@ -33,7 +35,7 @@ public class NewEntryControllerWrapper {
         newEntryStage.initModality(Modality.APPLICATION_MODAL);
         newEntryStage.centerOnScreen();
         newEntryStage.initStyle(StageStyle.UTILITY);
-        newEntryStage.setTitle(MainControllerWrapper.APPNAME + " - Add new entry");
+        newEntryStage.setTitle(APPNAME + " - Add new entry");
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(Thread.currentThread().getContextClassLoader().getResource("io/github/manami/gui/controller/new_entry.fxml"));
@@ -42,7 +44,7 @@ public class NewEntryControllerWrapper {
             newEntryStage.sizeToScene();
         } catch (final Exception e) {
             LOG.error("An error occurred while trying to initialize new entry controller: ", e);
-            DialogLibrary.showExceptionDialog(e);
+            showExceptionDialog(e);
         }
 
         newEntryStage.show();

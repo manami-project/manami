@@ -1,15 +1,19 @@
 package io.github.manami.gui.controller;
 
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.dto.events.SearchResultEvent;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
-import io.github.manami.gui.utility.DialogLibrary;
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import java.awt.Desktop;
 import java.net.URI;
 import java.text.Collator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.events.SearchResultEvent;
+import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;
@@ -20,11 +24,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author manami-project
@@ -67,7 +66,7 @@ public class SearchResultsController {
         boolean isPaneAlreadyExpaned = false;
 
         // anime list entries
-        componentList = Lists.newArrayList();
+        componentList = newArrayList();
         event.getAnimeListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
         showEntries(animeListGridPane);
         animeListTitledPane.setText(String.format("%s anime list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
@@ -75,7 +74,7 @@ public class SearchResultsController {
         animeListTitledPane.setExpanded(isPaneAlreadyExpaned);
 
         // filter list entries
-        componentList = Lists.newArrayList();
+        componentList = newArrayList();
         event.getFilterListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
         showEntries(filterListGridPane);
         filterListTitledPane.setText(String.format("%s filter list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
@@ -89,7 +88,7 @@ public class SearchResultsController {
         filterListTitledPane.setExpanded(expandFilterListPane);
 
         // watch list entries
-        componentList = Lists.newArrayList();
+        componentList = newArrayList();
         event.getWatchListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
         showEntries(watchListGridPane);
         watchListTitledPane.setText(String.format("%s watch list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
@@ -159,7 +158,7 @@ public class SearchResultsController {
                     desktop.browse(new URI(anime.getInfoLink()));
                 } catch (final Exception e) {
                     LOG.error("An error occurred trying to open the infolink in the default browser: ", e);
-                    DialogLibrary.showExceptionDialog(e);
+                    showExceptionDialog(e);
                 }
             }
         });

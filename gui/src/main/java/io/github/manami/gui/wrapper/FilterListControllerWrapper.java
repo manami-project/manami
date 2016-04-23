@@ -1,21 +1,22 @@
 package io.github.manami.gui.wrapper;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.Pane;
-import io.github.manami.dto.events.AnimeListChangedEvent;
-import io.github.manami.dto.events.OpenedFileChangedEvent;
-import io.github.manami.gui.controller.FilterListController;
-import io.github.manami.gui.utility.DialogLibrary;
+import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+
+import io.github.manami.dto.events.AnimeListChangedEvent;
+import io.github.manami.dto.events.OpenedFileChangedEvent;
+import io.github.manami.gui.controller.FilterListController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.Pane;
 
 /**
  * @author manami-project
@@ -50,7 +51,7 @@ public class FilterListControllerWrapper {
             filterTab.setContent(pane);
         } catch (final Exception e) {
             LOG.error("An error occurred while trying to initialize filter list tab: ", e);
-            DialogLibrary.showExceptionDialog(e);
+            showExceptionDialog(e);
         }
     }
 

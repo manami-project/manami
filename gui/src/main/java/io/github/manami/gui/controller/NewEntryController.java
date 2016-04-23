@@ -1,5 +1,18 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -9,23 +22,11 @@ import io.github.manami.core.config.Config;
 import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.gui.utility.DialogLibrary;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
-
-import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 /**
  * Shows the window in which a new entry can be created.
@@ -106,7 +107,7 @@ public class NewEntryController {
         validationSupport.registerValidator(txtLocation, Validator.createEmptyValidator("Location is required"));
         validationSupport.registerValidator(txtInfoLink, (c, value) -> {
             final String str = (String) value;
-            if (StringUtils.isNotEmpty(str)) {
+            if (isNotEmpty(str)) {
                 if (!str.startsWith("http://")) {
                     if (!str.startsWith("https://")) {
                         return ValidationResult.fromError(txtInfoLink, "Info link must be a valid URL");
@@ -297,7 +298,7 @@ public class NewEntryController {
 
         final String url = txtInfoLink.getText();
 
-        if (StringUtils.isNotBlank(url)) {
+        if (isNotBlank(url)) {
             setDisableAutoCompleteWidgets(true);
 
             retrievalService = new AnimeRetrievalService(Main.CONTEXT.getBean(Cache.class), url);
@@ -366,7 +367,7 @@ public class NewEntryController {
 
 
     public void browse() {
-        final Path directory = DialogLibrary.showBrowseForFolderDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage());
+        final Path directory = showBrowseForFolderDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage());
         String location;
 
         if (directory != null) {

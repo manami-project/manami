@@ -1,5 +1,17 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.gui.components.Icons.createIconDelete;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import com.sun.javafx.collections.ObservableListWrapper;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
@@ -13,11 +25,6 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
-import io.github.manami.gui.components.Icons;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,13 +35,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import com.sun.javafx.collections.ObservableListWrapper;
 
 /**
  * @author manami-project
@@ -174,7 +174,7 @@ public class WatchListController extends AbstractAnimeListController {
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button("", Icons.createIconDelete());
+        final Button removeButton = new Button("", createIconDelete());
         removeButton.setTooltip(new Tooltip("delete from watch list"));
 
         componentListEntry.setRemoveButton(removeButton);
@@ -197,6 +197,6 @@ public class WatchListController extends AbstractAnimeListController {
 
     @Override
     boolean isInList(final String infoLink) {
-        return StringUtils.isNotBlank(infoLink) && app.watchListEntryExists(infoLink);
+        return isNotBlank(infoLink) && app.watchListEntryExists(infoLink);
     }
 }

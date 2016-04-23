@@ -1,15 +1,16 @@
 package io.github.manami.core.services;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
+
+import com.google.common.eventbus.EventBus;
+
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.persistence.PersistenceHandler;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.eventbus.EventBus;
 
 /**
  * @author manami-project
@@ -53,8 +54,8 @@ public class SearchService extends AbstractService<Void> {
      * @param entry
      */
     private void checkEntry(final MinimalEntry entry) {
-        final boolean isTitleNearlyEqual = StringUtils.getLevenshteinDistance(entry.getTitle().toLowerCase(), searchString.toLowerCase()) <= 2;
-        final boolean isInTitle = StringUtils.containsIgnoreCase(entry.getTitle(), searchString);
+        final boolean isTitleNearlyEqual = getLevenshteinDistance(entry.getTitle().toLowerCase(), searchString.toLowerCase()) <= 2;
+        final boolean isInTitle = containsIgnoreCase(entry.getTitle(), searchString);
         final boolean isInfoLinkEqual = searchString.equalsIgnoreCase(entry.getInfoLink());
 
         if (isTitleNearlyEqual || isInTitle || isInfoLinkEqual) {
