@@ -1,6 +1,9 @@
 package io.github.manami.persistence.exporter.csv;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.ANIMELIST;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.FILTERLIST;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.WATCHLIST;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -80,7 +83,7 @@ public class CsvExporter implements Exporter {
         // Map Anime Objects to a list
         for (final Anime entry : persistence.fetchAnimeList()) {
             curEntry = newArrayList();
-            curEntry.add(CsvConfig.ANIMELIST);
+            curEntry.add(ANIMELIST.getValue());
             curEntry.add(entry.getTitle());
             curEntry.add(entry.getTypeAsString());
             curEntry.add(String.valueOf(entry.getEpisodes()));
@@ -106,7 +109,7 @@ public class CsvExporter implements Exporter {
         // Map Anime Objects to a list
         for (final WatchListEntry entry : persistence.fetchWatchList()) {
             curEntry = newArrayList();
-            curEntry.add(CsvConfig.WATCHLIST);
+            curEntry.add(WATCHLIST.getValue());
             curEntry.add(entry.getTitle());
             curEntry.add("");
             curEntry.add("");
@@ -132,7 +135,7 @@ public class CsvExporter implements Exporter {
         // Map Anime Objects to a list
         for (final FilterEntry entry : persistence.fetchFilterList()) {
             curEntry = newArrayList();
-            curEntry.add(CsvConfig.FILTERLIST);
+            curEntry.add(FILTERLIST.getValue());
             curEntry.add(entry.getTitle());
             curEntry.add("");
             curEntry.add("");

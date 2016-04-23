@@ -20,6 +20,7 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.exporter.csv.CsvConfig;
+import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 import io.github.manami.persistence.importer.Importer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,14 +77,15 @@ public class CsvImporter implements Importer {
                 location = isNotBlank(location) ? location.trim() : null;
 
                 // create object by list type
-                switch ((String) objectList.get(0)) {
-                    case CsvConfig.ANIMELIST:
+                final CsvConfigType csvConfigType = CsvConfigType.findByName((String) objectList.get(0));
+                switch (csvConfigType) {
+                    case ANIMELIST:
                         animeListEntries.add(new Anime(title, type, episodes, infoLink, location));
                         break;
-                    case CsvConfig.WATCHLIST:
+                    case WATCHLIST:
                         watchListEntries.add(new WatchListEntry(title, infoLink));
                         break;
-                    case CsvConfig.FILTERLIST:
+                    case FILTERLIST:
                         filterListEntries.add(new FilterEntry(title, infoLink));
                         break;
 

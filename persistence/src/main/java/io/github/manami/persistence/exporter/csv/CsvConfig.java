@@ -4,6 +4,9 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Configuration for the CSV import and export.
  *
@@ -12,9 +15,23 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class CsvConfig {
 
-    public static final String ANIMELIST = "animeList";
-    public static final String WATCHLIST = "watchList";
-    public static final String FILTERLIST = "filterList";
+    @AllArgsConstructor
+    public enum CsvConfigType {
+        ANIMELIST("animeList"), WATCHLIST("watchList"), FILTERLIST("filterList");
+
+        @Getter
+        private final String value;
+
+
+        public static CsvConfigType findByName(final String name) {
+            for (final CsvConfigType type : values()) {
+                if (type.getValue().equalsIgnoreCase((name))) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
 
 
     /**
