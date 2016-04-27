@@ -4,6 +4,8 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
+import org.springframework.core.io.ClassPathResource;
+
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
@@ -24,66 +26,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FilterListControllerWrapper {
 
-    private Tab filterTab;
-    private FilterListController filterListController;
+	private Tab filterTab;
+	private FilterListController filterListController;
 
 
-    /**
-     * @since 2.7.2
-     */
-    private void init() {
-        filterTab = new Tab(FilterListController.FILTER_LIST_TITLE);
-        filterTab.setOnSelectionChanged(event -> {
-            if (filterTab.isSelected()) {
-                filterListController.showEntries();
-            }
-        });
+	/**
+	 * @since 2.7.2
+	 */
+	private void init() {
+		filterTab = new Tab(FilterListController.FILTER_LIST_TITLE);
+		filterTab.setOnSelectionChanged(event -> {
+			if (filterTab.isSelected()) {
+				filterListController.showEntries();
+			}
+		});
 
-        Parent pane;
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(Thread.currentThread().getContextClassLoader().getResource("io/github/manami/gui/controller/filter_list_tab.fxml"));
-            pane = (Pane) fxmlLoader.load();
-            filterListController = fxmlLoader.getController();
-            filterTab.setContent(pane);
-        } catch (final Exception e) {
-            log.error("An error occurred while trying to initialize filter list tab: ", e);
-            showExceptionDialog(e);
-        }
-    }
-
-
-    @Subscribe
-    public void changeEvent(final OpenedFileChangedEvent event) {
-        filterListController.clear();
-    }
+		Parent pane;
+		try {
+			final FXMLLoader fxmlLoader = new FXMLLoader(new ClassPathResource("io/github/manami/gui/controller/filter_list_tab.fxml").getURL());
+			pane = (Pane) fxmlLoader.load();
+			filterListController = fxmlLoader.getController();
+			filterTab.setContent(pane);
+		} catch (final Exception e) {
+			log.error("An error occurred while trying to initialize filter list tab: ", e);
+			showExceptionDialog(e);
+		}
+	}
 
 
-    @Subscribe
-    @AllowConcurrentEvents
-    public void changeEvent(final AnimeListChangedEvent event) {
-        if (filterTab.isSelected()) {
-            filterListController.showEntries();
-        }
-    }
+	@Subscribe
+	public void changeEvent(final OpenedFileChangedEvent event) {
+		filterListController.clear();
+	}
 
 
-    /**
-     * @since 2.7.2
-     */
-    public void startRecommendedFilterEntrySearch() {
-        filterListController.startRecommendedFilterEntrySearch();
-    }
+	@Subscribe
+	@AllowConcurrentEvents
+	public void changeEvent(final AnimeListChangedEvent event) {
+		if (filterTab.isSelected()) {
+			filterListController.showEntries();
+		}
+	}
 
 
-    /**
-     * @since 2.7.2
-     * @return the filterTab
-     */
-    public Tab getFilterTab() {
-        if (filterTab == null) {
-            init();
-        }
+	/**
+	 * @since 2.7.2
+	 */
+	public void startRecommendedFilterEntrySearch() {
+		filterListController.startRecommendedFilterEntrySearch();
+	}
 
-        return filterTab;
-    }
+
+	/**
+	 * @since 2.7.2
+	 * @return the filterTab
+	 */
+	public Tab getFilterTab() {
+		if (filterTab == null) {
+			init();
+		}
+
+		return filterTab;
+	}
 }

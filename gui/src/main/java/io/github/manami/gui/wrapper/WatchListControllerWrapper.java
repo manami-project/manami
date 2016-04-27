@@ -5,6 +5,8 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
+import org.springframework.core.io.ClassPathResource;
+
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
@@ -25,66 +27,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WatchListControllerWrapper {
 
-    private Tab watchListTab;
-    private WatchListController watchListController;
+	private Tab watchListTab;
+	private WatchListController watchListController;
 
 
-    /**
-     * @since 2.7.2
-     */
-    private void init() {
-        watchListTab = new Tab(WATCH_LIST_TITLE);
-        watchListTab.setOnSelectionChanged(event -> {
-            if (watchListTab.isSelected()) {
-                watchListController.showEntries();
-            }
-        });
+	/**
+	 * @since 2.7.2
+	 */
+	private void init() {
+		watchListTab = new Tab(WATCH_LIST_TITLE);
+		watchListTab.setOnSelectionChanged(event -> {
+			if (watchListTab.isSelected()) {
+				watchListController.showEntries();
+			}
+		});
 
-        Parent pane;
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(Thread.currentThread().getContextClassLoader().getResource("io/github/manami/gui/controller/watch_list_tab.fxml"));
-            pane = (Pane) fxmlLoader.load();
-            watchListController = fxmlLoader.getController();
-            watchListTab.setContent(pane);
-        } catch (final Exception e) {
-            log.error("An error occurred while trying to initialize watch list tab: ", e);
-            showExceptionDialog(e);
-        }
-    }
-
-
-    @Subscribe
-    public void changeEvent(final OpenedFileChangedEvent event) {
-        if (watchListController == null) {
-            init();
-        }
-
-        watchListController.clear();
-    }
+		Parent pane;
+		try {
+			final FXMLLoader fxmlLoader = new FXMLLoader(new ClassPathResource("io/github/manami/gui/controller/watch_list_tab.fxml").getURL());
+			pane = (Pane) fxmlLoader.load();
+			watchListController = fxmlLoader.getController();
+			watchListTab.setContent(pane);
+		} catch (final Exception e) {
+			log.error("An error occurred while trying to initialize watch list tab: ", e);
+			showExceptionDialog(e);
+		}
+	}
 
 
-    @Subscribe
-    @AllowConcurrentEvents
-    public void changeEvent(final AnimeListChangedEvent event) {
-        if (watchListController == null) {
-            init();
-        }
+	@Subscribe
+	public void changeEvent(final OpenedFileChangedEvent event) {
+		if (watchListController == null) {
+			init();
+		}
 
-        if (watchListTab.isSelected()) {
-            watchListController.showEntries();
-        }
-    }
+		watchListController.clear();
+	}
 
 
-    /**
-     * @since 2.7.2
-     * @return the filterTab
-     */
-    public Tab getWatchListTab() {
-        if (watchListTab == null) {
-            init();
-        }
+	@Subscribe
+	@AllowConcurrentEvents
+	public void changeEvent(final AnimeListChangedEvent event) {
+		if (watchListController == null) {
+			init();
+		}
 
-        return watchListTab;
-    }
+		if (watchListTab.isSelected()) {
+			watchListController.showEntries();
+		}
+	}
+
+
+	/**
+	 * @since 2.7.2
+	 * @return the filterTab
+	 */
+	public Tab getWatchListTab() {
+		if (watchListTab == null) {
+			init();
+		}
+
+		return watchListTab;
+	}
 }

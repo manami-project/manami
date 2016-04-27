@@ -5,6 +5,8 @@ import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
 
+import org.springframework.core.io.ClassPathResource;
+
 import com.google.common.eventbus.Subscribe;
 
 import io.github.manami.dto.events.OpenedFileChangedEvent;
@@ -23,53 +25,53 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckListControllerWrapper {
 
-    private Tab checkListTab;
-    private CheckListController checkListController;
+	private Tab checkListTab;
+	private CheckListController checkListController;
 
 
-    /**
-     * @since 2.7.2
-     */
-    private void init() {
-        checkListTab = new Tab(CHECK_LIST_TAB_TITLE);
-        Parent pane;
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(Thread.currentThread().getContextClassLoader().getResource("io/github/manami/gui/controller/check_list_tab.fxml"));
-            pane = (Pane) fxmlLoader.load();
-            checkListTab.setContent(pane);
-            checkListController = fxmlLoader.getController();
-            checkListController.setTab(checkListTab);
-        } catch (final Exception e) {
-            log.error("An error occurred while trying to initialize check list tab: ", e);
-            showExceptionDialog(e);
-        }
-    }
+	/**
+	 * @since 2.7.2
+	 */
+	private void init() {
+		checkListTab = new Tab(CHECK_LIST_TAB_TITLE);
+		Parent pane;
+		try {
+			final FXMLLoader fxmlLoader = new FXMLLoader(new ClassPathResource("io/github/manami/gui/controller/check_list_tab.fxml").getURL());
+			pane = (Pane) fxmlLoader.load();
+			checkListTab.setContent(pane);
+			checkListController = fxmlLoader.getController();
+			checkListController.setTab(checkListTab);
+		} catch (final Exception e) {
+			log.error("An error occurred while trying to initialize check list tab: ", e);
+			showExceptionDialog(e);
+		}
+	}
 
 
-    /**
-     * @since 2.7.2
-     * @return the checkListTab
-     */
-    public Tab getCheckListTab() {
-        if (checkListTab == null) {
-            init();
-        }
+	/**
+	 * @since 2.7.2
+	 * @return the checkListTab
+	 */
+	public Tab getCheckListTab() {
+		if (checkListTab == null) {
+			init();
+		}
 
-        return checkListTab;
-    }
+		return checkListTab;
+	}
 
 
-    /**
-     * @since 2.8.2
-     * @param event
-     *            Event which is fired when a file is opened.
-     */
-    @Subscribe
-    public void changeEvent(final OpenedFileChangedEvent event) {
-        if (checkListController == null) {
-            init();
-        }
+	/**
+	 * @since 2.8.2
+	 * @param event
+	 *            Event which is fired when a file is opened.
+	 */
+	@Subscribe
+	public void changeEvent(final OpenedFileChangedEvent event) {
+		if (checkListController == null) {
+			init();
+		}
 
-        checkListController.clear();
-    }
+		checkListController.clear();
+	}
 }
