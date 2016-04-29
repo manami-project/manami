@@ -16,7 +16,6 @@ import lombok.ToString;
 
 /**
  * Represents an Anime with all it's saved meta information.
- *
  * @author manami-project
  * @since 1.0.0
  */
@@ -54,37 +53,13 @@ public class Anime extends AbstractMinimalEntry {
 
 
     /**
-     * Copy Constructor
-     *
-     * @since 2.0.0
-     * @param anime
-     *            {@link Anime} which will be copied.
-     */
-    public Anime(final Anime anime) {
-        id = anime.getId();
-        super.setTitle(anime.getTitle());
-        type = AnimeType.findByName(anime.getType().getValue());
-        episodes = anime.getEpisodes();
-        super.setInfoLink(anime.getInfoLink());
-        location = anime.getLocation();
-        relatedAnimes = newArrayList(anime.relatedAnimes);
-    }
-
-
-    /**
      * Constructor awaiting all Attributes.
-     *
      * @since 2.0.0
-     * @param title
-     *            Title of the anime.
-     * @param type
-     *            Type.
-     * @param episodes
-     *            Number of episodes.
-     * @param infoLink
-     *            Link to a website with more information.
-     * @param location
-     *            Location on the HDD.
+     * @param title Title of the anime.
+     * @param type Type.
+     * @param episodes Number of episodes.
+     * @param infoLink Link to a website with more information.
+     * @param location Location on the HDD.
      */
     public Anime(final String title, final AnimeType type, final int episodes, final String infoLink, final String location) {
         super.setTitle(title);
@@ -99,7 +74,6 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Empty constructor.
-     *
      * @since 1.0.0
      */
     public Anime() {
@@ -110,7 +84,6 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Constructor.
-     *
      * @since 2.7.0
      */
     public Anime(final UUID id) {
@@ -121,13 +94,10 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Fills every attribute in target with null.
-     *
      * @since 2.7.0
-     * @param source
-     *            {@link Anime} which is being copied.
-     * @param target
-     *            Instance of an {@link Anime} to which the attributes are
-     *            copied to.
+     * @param source {@link Anime} which is being copied.
+     * @param target Instance of an {@link Anime} to which the attributes are
+     * copied to.
      */
     public static void copyNullTarget(final Anime source, final Anime target) {
         if (target.getEpisodes() == 0) {
@@ -156,13 +126,10 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Copies every attribute of an anime which is not null.
-     *
      * @since 2.6.2
-     * @param source
-     *            {@link Anime} which is being copied.
-     * @param target
-     *            Instance of an {@link Anime} to which the attributes are
-     *            copied to.
+     * @param source {@link Anime} which is being copied.
+     * @param target Instance of an {@link Anime} to which the attributes are
+     * copied to.
      */
     public static void copyNonNullSource(final Anime source, final Anime target) {
         if (source.getEpisodes() > 0) {
@@ -191,13 +158,10 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Copies every attribute of an anime.
-     *
      * @since 2.6.2
-     * @param source
-     *            {@link Anime} which is being copied.
-     * @param target
-     *            Instance of an {@link Anime} to which the attributes are
-     *            copied to.
+     * @param source {@link Anime} which is being copied.
+     * @param target Instance of an {@link Anime} to which the attributes are
+     * copied to.
      */
     public static void copyAnime(final Anime source, final Anime target) {
         target.setEpisodes(source.getEpisodes());
@@ -211,8 +175,7 @@ public class Anime extends AbstractMinimalEntry {
 
 
     /**
-     * @since 2.0.0
-     * @return the type
+     * @since 2.0.0 @return the type
      */
     public String getTypeAsString() {
         return (type != null) ? type.getValue() : null;
