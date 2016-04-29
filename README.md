@@ -1,6 +1,7 @@
 # Manami
 
-[![License: GNU Affero General Public License v3 (AGPLv3)](https://img.shields.io/badge/license-AGPLv3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0.de.html) [![Build Status](https://travis-ci.org/manami-project/manami.svg)](https://travis-ci.org/manami-project/manami)
+[![License: GNU Affero General Public License v3 (AGPLv3)](https://img.shields.io/badge/license-AGPLv3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0.de.html) [![Build Status](https://travis-ci.org/manami-project/manami.svg)](https://travis-ci.org/manami-project/manami) [![codecov](https://codecov.io/gh/manami-project/manami/branch/development/graph/badge.svg)](https://codecov.io/gh/manami-project/manami/branch/development)
+
 
 ## What does it do?
 Manami let's you create an index file for the animes that you already watched and stored on your hard drive. Additionally based on this list you can search for related animes and recommendations.

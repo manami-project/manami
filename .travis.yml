@@ -9,4 +9,6 @@ cache:
 addons:
   apt:
     packages:
-      - oracle-java8-installer    
+      - oracle-java8-installer
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
