@@ -32,72 +32,73 @@ import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
 public class XmlExporterTest {
 
-	@Rule
-	public TemporaryFolder testFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
-	private static final String TEST_ANIME_LIST_FILE = "test_anime_list.xml";
-	private static final String ANIME_LIST_EXPORT_FILE = "test_anime_list_export.xml";
-	private XmlExporter xmlExporter;
-	private File file;
-	private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-	private InMemoryFilterListHandler inMemoryFilterListHandler;
-	private InMemoryWatchListHandler inMemoryWatchListHandler;
-
-
-	@Before
-	public void setUp() throws IOException {
-		inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-		inMemoryFilterListHandler = new InMemoryFilterListHandler();
-		inMemoryWatchListHandler = new InMemoryWatchListHandler();
-		final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
-		final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
-		xmlExporter = new XmlExporter(persistenceFacade);
-		file = testFolder.newFile(ANIME_LIST_EXPORT_FILE);
-	}
-
-	@Test
-	public void testThatAnimeListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
-		// given
-		final Anime bokuDake = new Anime();
-		bokuDake.setEpisodes(12);
-		bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
-		bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
-		bokuDake.setTitle("Boku dake ga Inai Machi");
-		bokuDake.setType(AnimeType.TV);
-		inMemoryAnimeListHandler.addAnime(bokuDake);
-
-		final Anime rurouniKenshin = new Anime();
-		rurouniKenshin.setEpisodes(4);
-		rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
-		rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
-		rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
-		rurouniKenshin.setType(AnimeType.OVA);
-		inMemoryAnimeListHandler.addAnime(rurouniKenshin);
-
-		final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite","http://cdn.myanimelist.net/images/anime/13/8518t.jpg","http://myanimelist.net/anime/2994");
-		inMemoryWatchListHandler.watchAnime(deathNoteRewrite);
-
-		final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
-		inMemoryFilterListHandler.filterAnime(gintama);
-
-		final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
-		final StringBuilder expectedFileBuilder = new StringBuilder();
-		Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
-		final String expected = normalizeXml(expectedFileBuilder.toString());
+    private static final String TEST_ANIME_LIST_FILE = "test_anime_list.xml";
+    private static final String ANIME_LIST_EXPORT_FILE = "test_anime_list_export.xml";
+    private XmlExporter xmlExporter;
+    private File file;
+    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
+    private InMemoryFilterListHandler inMemoryFilterListHandler;
+    private InMemoryWatchListHandler inMemoryWatchListHandler;
 
 
-		// when
-		xmlExporter.exportAll(file.toPath());
+    @Before
+    public void setUp() throws IOException {
+        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
+        inMemoryFilterListHandler = new InMemoryFilterListHandler();
+        inMemoryWatchListHandler = new InMemoryWatchListHandler();
+        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
+        final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
+        xmlExporter = new XmlExporter(persistenceFacade);
+        file = testFolder.newFile(ANIME_LIST_EXPORT_FILE);
+    }
 
-		// then
-		final StringBuilder exportedFileBuilder = new StringBuilder();
-		Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
-		final String actual = normalizeXml(exportedFileBuilder.toString());
 
-		assertThat(expected, equalTo(actual));
-	}
+    @Test
+    public void testThatAnimeListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
+        // given
+        final Anime bokuDake = new Anime();
+        bokuDake.setEpisodes(12);
+        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
+        bokuDake.setTitle("Boku dake ga Inai Machi");
+        bokuDake.setType(AnimeType.TV);
+        inMemoryAnimeListHandler.addAnime(bokuDake);
 
-	private static String normalizeXml(final String xmlString) {
-		return xmlString.replaceAll("href=\\\"(.)*?animelist_transform.xsl\\\"", "href=\"\"").replaceAll("SYSTEM \\\"(.)*?animelist.dtd\\\"", "SYSTEM \"animelist.dtd\"");
-	}
+        final Anime rurouniKenshin = new Anime();
+        rurouniKenshin.setEpisodes(4);
+        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
+        rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+        rurouniKenshin.setType(AnimeType.OVA);
+        inMemoryAnimeListHandler.addAnime(rurouniKenshin);
+
+        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "http://cdn.myanimelist.net/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
+        inMemoryWatchListHandler.watchAnime(deathNoteRewrite);
+
+        final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
+        inMemoryFilterListHandler.filterAnime(gintama);
+
+        final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
+        final StringBuilder expectedFileBuilder = new StringBuilder();
+        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        final String expected = normalizeXml(expectedFileBuilder.toString());
+
+        // when
+        xmlExporter.exportAll(file.toPath());
+
+        // then
+        final StringBuilder exportedFileBuilder = new StringBuilder();
+        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        final String actual = normalizeXml(exportedFileBuilder.toString());
+
+        assertThat(expected, equalTo(actual));
+    }
+
+
+    private static String normalizeXml(final String xmlString) {
+        return xmlString.replaceAll("href=\\\"(.)*?animelist_transform.xsl\\\"", "href=\"\"").replaceAll("SYSTEM \\\"(.)*?animelist.dtd\\\"", "SYSTEM \"animelist.dtd\"").replaceAll("version=\\\"(.)*?\\\"", "version=\\\"\\\"");
+    }
 }

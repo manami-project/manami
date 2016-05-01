@@ -1,6 +1,8 @@
 package io.github.manami.persistence.exporter.xml;
 
 import static io.github.manami.dto.ToolVersion.getToolVersion;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,10 +53,9 @@ public class XmlExporter implements Exporter {
 
     /**
      * Constructor.
-     *
      * @since 2.0.0
      * @param configFilesPath
-     *            Config for the application.
+     * Config for the application.
      */
     public XmlExporter(final ApplicationPersistence persistence) {
         this.persistence = persistence;
@@ -102,6 +103,10 @@ public class XmlExporter implements Exporter {
     private String createConfigFilePath() {
         String appDir = XmlExporter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
+        if (isBlank(appDir)) {
+            return EMPTY;
+        }
+
         int endOfString = appDir.lastIndexOf(RELATIVE_PATH_SEPARATOR);
 
         if (endOfString == -1) {
@@ -125,6 +130,10 @@ public class XmlExporter implements Exporter {
     private String createDtdPath() {
         String relativeConfigPath = createConfigFilePath();
 
+        if (isBlank(relativeConfigPath)) {
+            relativeConfigPath = EMPTY;
+        }
+
         if (!relativeConfigPath.endsWith(RELATIVE_PATH_SEPARATOR)) {
             relativeConfigPath = relativeConfigPath.concat(RELATIVE_PATH_SEPARATOR);
         }
@@ -140,6 +149,10 @@ public class XmlExporter implements Exporter {
     private String createXsltPath() {
         String relativeConfigPath = createConfigFilePath();
 
+        if (isBlank(relativeConfigPath)) {
+            relativeConfigPath = EMPTY;
+        }
+
         if (!relativeConfigPath.endsWith(RELATIVE_PATH_SEPARATOR)) {
             relativeConfigPath = relativeConfigPath.concat(RELATIVE_PATH_SEPARATOR);
         }
@@ -150,7 +163,6 @@ public class XmlExporter implements Exporter {
 
     /**
      * Method to create the dom tree.
-     *
      * @since 2.0.0
      */
     private void createDomTree() {
@@ -267,7 +279,6 @@ public class XmlExporter implements Exporter {
 
     /**
      * Write the tree into the file and save it.
-     *
      * @since 2.0.0
      */
     private void prettyPrintXML2File() {
