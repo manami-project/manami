@@ -3,7 +3,6 @@ package io.github.manami.dto.entities;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.UUID;
@@ -93,7 +92,7 @@ public class Anime extends AbstractMinimalEntry {
 
 
     /**
-     * Fills every attribute in target with null.
+     * Fills every attribute in target which is null.
      * @since 2.7.0
      * @param source {@link Anime} which is being copied.
      * @param target Instance of an {@link Anime} to which the attributes are
@@ -119,38 +118,6 @@ public class Anime extends AbstractMinimalEntry {
             target.setTitle(source.getTitle());
         }
         if (target.getType() == null) {
-            target.setType(source.getType());
-        }
-    }
-
-
-    /**
-     * Copies every attribute of an anime which is not null.
-     * @since 2.6.2
-     * @param source {@link Anime} which is being copied.
-     * @param target Instance of an {@link Anime} to which the attributes are
-     * copied to.
-     */
-    public static void copyNonNullSource(final Anime source, final Anime target) {
-        if (source.getEpisodes() > 0) {
-            target.setEpisodes(source.getEpisodes());
-        }
-        if (isNotBlank(source.getInfoLink())) {
-            target.setInfoLink(source.getInfoLink());
-        }
-        if (isNotBlank(source.getLocation())) {
-            target.setLocation(source.getLocation());
-        }
-        if (isNotBlank(source.getPicture())) {
-            target.setPicture(source.getPicture());
-        }
-        if (isNotBlank(source.getThumbnail())) {
-            target.setThumbnail(source.getThumbnail());
-        }
-        if (isNotBlank(source.getTitle())) {
-            target.setTitle(source.getTitle());
-        }
-        if (source.getType() != null) {
             target.setType(source.getType());
         }
     }

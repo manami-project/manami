@@ -1,10 +1,12 @@
 package io.github.manami.dto.entities;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,5 +48,25 @@ public class AnimeTest {
         assertThat(target.getTitle(), equalTo(anime.getTitle()));
         assertThat(target.getType(), equalTo(anime.getType()));
         assertThat(target.getId(), not(anime.getId()));
+    }
+
+
+    @Test
+    public void testConstructorWithUUID() {
+        // given
+        final UUID uuid = UUID.randomUUID();
+
+        // when
+        final Anime result = new Anime(uuid);
+
+        // then
+        assertThat(result.getEpisodes(), equalTo(0));
+        assertThat(result.getPicture(), equalTo(EMPTY));
+        assertThat(result.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertThat(result.getInfoLink(), equalTo(null));
+        assertThat(result.getLocation(), equalTo(EMPTY));
+        assertThat(result.getTitle(), equalTo(null));
+        assertThat(result.getType(), equalTo(null));
+        assertThat(result.getId(), equalTo(uuid));
     }
 }
