@@ -1,5 +1,6 @@
 package io.github.manami.persistence.importer.xml.parser;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
@@ -31,9 +32,9 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
-public class ManamiSaxParserTest {
+public class MalSaxParserTest {
 
-    private static final String TEST_ANIME_LIST_FILE = "test_anime_list.xml";
+    private static final String MAL_EXPORT_FILE = "mal_export.xml";
     private XmlImporter xmlImporter;
     private Path file;
     private InMemoryAnimeListHandler inMemoryAnimeListHandler;
@@ -48,8 +49,8 @@ public class ManamiSaxParserTest {
         inMemoryWatchListHandler = new InMemoryWatchListHandler();
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
         final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
-        xmlImporter = new XmlImporter(XmlStrategy.MANAMI, persistenceFacade);
-        final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
+        xmlImporter = new XmlImporter(XmlStrategy.MAL, persistenceFacade);
+        final ClassPathResource resource = new ClassPathResource(MAL_EXPORT_FILE);
         file = resource.getFile().toPath();
     }
 
@@ -67,21 +68,21 @@ public class ManamiSaxParserTest {
         assertThat(fetchAnimeList.isEmpty(), equalTo(false));
         assertThat(fetchAnimeList.size(), equalTo(2));
 
-        final Anime bokuDake = fetchAnimeList.get(0);
-        assertThat(bokuDake, not(nullValue()));
-        assertThat(bokuDake.getEpisodes(), equalTo(12));
-        assertThat(bokuDake.getInfoLink(), equalTo("http://myanimelist.net/anime/31043"));
-        assertThat(bokuDake.getLocation(), equalTo("/anime/series/boku_dake_ga_inai_machi"));
-        assertThat(bokuDake.getTitle(), equalTo("Boku dake ga Inai Machi"));
-        assertThat(bokuDake.getType(), equalTo(AnimeType.TV));
+        final Anime deathNote = fetchAnimeList.get(0);
+        assertThat(deathNote, not(nullValue()));
+        assertThat(deathNote.getEpisodes(), equalTo(37));
+        assertThat(deathNote.getInfoLink(), equalTo("http://myanimelist.net/anime/1535"));
+        assertThat(deathNote.getLocation(), equalTo(EMPTY));
+        assertThat(deathNote.getTitle(), equalTo("Death Note"));
+        assertThat(deathNote.getType(), equalTo(AnimeType.TV));
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(4));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/44"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/anime/series/rurouni_kenshin"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.OVA));
+        assertThat(rurouniKenshin.getEpisodes(), equalTo(94));
+        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/45"));
+        assertThat(rurouniKenshin.getLocation(), equalTo(EMPTY));
+        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan"));
+        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.TV));
     }
 
 
@@ -96,13 +97,19 @@ public class ManamiSaxParserTest {
         final List<WatchListEntry> fetchWatchList = inMemoryWatchListHandler.fetchWatchList();
         assertThat(fetchWatchList, not(nullValue()));
         assertThat(fetchWatchList.isEmpty(), equalTo(false));
-        assertThat(fetchWatchList.size(), equalTo(1));
+        assertThat(fetchWatchList.size(), equalTo(2));
 
-        final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
-        assertThat(deathNoteRewrite, not(nullValue()));
-        assertThat(deathNoteRewrite.getInfoLink(), equalTo("http://myanimelist.net/anime/2994"));
-        assertThat(deathNoteRewrite.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/anime/13/8518t.jpg"));
-        assertThat(deathNoteRewrite.getTitle(), equalTo("Death Note Rewrite"));
+        final WatchListEntry akatsukiNoYona = fetchWatchList.get(0);
+        assertThat(akatsukiNoYona, not(nullValue()));
+        assertThat(akatsukiNoYona.getInfoLink(), equalTo("http://myanimelist.net/anime/25013"));
+        assertThat(akatsukiNoYona.getTitle(), equalTo("Akatsuki no Yona"));
+        assertThat(akatsukiNoYona.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+
+        final WatchListEntry rurouniKenshin = fetchWatchList.get(1);
+        assertThat(rurouniKenshin, not(nullValue()));
+        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/27655"));
+        assertThat(rurouniKenshin.getTitle(), equalTo("Aldnoah.Zero 2nd Season"));
+        assertThat(rurouniKenshin.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
     }
 
 
@@ -117,12 +124,18 @@ public class ManamiSaxParserTest {
         final List<FilterEntry> fetchFilterList = inMemoryFilterListHandler.fetchFilterList();
         assertThat(fetchFilterList, not(nullValue()));
         assertThat(fetchFilterList.isEmpty(), equalTo(false));
-        assertThat(fetchFilterList.size(), equalTo(1));
+        assertThat(fetchFilterList.size(), equalTo(2));
 
-        final FilterEntry gintama = fetchFilterList.get(0);
-        assertThat(gintama, not(nullValue()));
-        assertThat(gintama.getInfoLink(), equalTo("http://myanimelist.net/anime/918"));
-        assertThat(gintama.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/anime/2/10038t.jpg"));
-        assertThat(gintama.getTitle(), equalTo("Gintama"));
+        final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
+        assertThat(matanteiLokiRagnarok, not(nullValue()));
+        assertThat(matanteiLokiRagnarok.getInfoLink(), equalTo("http://myanimelist.net/anime/335"));
+        assertThat(matanteiLokiRagnarok.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertThat(matanteiLokiRagnarok.getTitle(), equalTo("Matantei Loki Ragnarok"));
+
+        final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
+        assertThat(saiunkokuMonogatari, not(nullValue()));
+        assertThat(saiunkokuMonogatari.getInfoLink(), equalTo("http://myanimelist.net/anime/957"));
+        assertThat(saiunkokuMonogatari.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertThat(saiunkokuMonogatari.getTitle(), equalTo("Saiunkoku Monogatari"));
     }
 }

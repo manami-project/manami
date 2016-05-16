@@ -40,13 +40,16 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Main access to the features of the application. This class has got delegation
  * as well as operational functionality.
- *
  * @author manami-project
  * @since 1.0.0
  */
 @Named
 @Slf4j
 public class Manami implements ApplicationPersistence {
+
+    private static final String XMFILE_SUFFIX_XML = ".xml";
+    private static final String FILE_SUFFIX_CSV = ".csv";
+    private static final String FILE_SUFFIX_JSON = ".json";
 
     /** Instance of the command service. */
     private final CommandService cmdService;
@@ -69,17 +72,16 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Constructor
-     *
      * @since 2.3.0
      * @param cmdService
-     *            Service for handling all commands.
+     * Service for handling all commands.
      * @param config
-     *            Config including the configurations paths and the currently
-     *            opened file.
+     * Config including the configurations paths and the currently
+     * opened file.
      * @param persistence
-     *            Facade for DB operations.
+     * Facade for DB operations.
      * @param serviceRepo
-     *            service repository.
+     * service repository.
      */
     @Inject
     public Manami(final Cache cache, final CommandService cmdService, final Config config, final PersistenceFacade persistence, final ServiceRepository serviceRepo, final EventBus eventBus) {
@@ -94,7 +96,6 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Creates a new empty List.
-     *
      * @since 2.0.0
      */
     public void newList() {
@@ -106,7 +107,6 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Clears the command stacks, the anime list and unsets the file.
-     *
      * @since 2.0.0
      */
     private void resetCommandHistory() {
@@ -117,10 +117,9 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Opens a file.
-     *
      * @since 2.0.0
      * @param file
-     *            File to open.
+     * File to open.
      */
     public void open(final Path file) throws SAXException, ParserConfigurationException, IOException {
         persistence.clearAll();
@@ -133,15 +132,14 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Exports the file.
-     *
      * @since 2.0.0
      * @param file
-     *            File to export to.
+     * File to export to.
      */
     public void export(final Path file) {
-        if (file.toString().endsWith(".csv")) {
+        if (file.toString().endsWith(FILE_SUFFIX_CSV)) {
             new CsvExporter(persistence).exportAll(file);
-        } else if (file.toString().endsWith(".json")) {
+        } else if (file.toString().endsWith(FILE_SUFFIX_JSON)) {
             new JsonExporter(persistence).exportAll(file);
         }
     }
@@ -149,18 +147,17 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Imports a file either XML (MAL List), JSON or CSV.
-     *
      * @since 2.0.0
      * @param file
-     *            File to import.
+     * File to import.
      */
     public void importFile(final Path file) {
         try {
-            if (file.toString().endsWith(".xml")) {
+            if (file.toString().endsWith(XMFILE_SUFFIX_XML)) {
                 new XmlImporter(XmlStrategy.MAL, persistence).importFile(file);
-            } else if (file.toString().endsWith(".csv")) {
+            } else if (file.toString().endsWith(FILE_SUFFIX_CSV)) {
                 new CsvImporter(persistence).importFile(file);
-            } else if (file.toString().endsWith(".json")) {
+            } else if (file.toString().endsWith(FILE_SUFFIX_JSON)) {
                 new JsonImporter(persistence).importFile(file);
             }
         } catch (SAXException | ParserConfigurationException | IOException e) {
@@ -171,7 +168,6 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Saves the opened file.
-     *
      * @since 2.0.0
      */
     public void save() {
@@ -215,7 +211,6 @@ public class Manami implements ApplicationPersistence {
 
     /**
      * Does everything needed before exiting.
-     *
      * @since 2.0.0
      */
     public void exit() {
@@ -292,7 +287,6 @@ public class Manami implements ApplicationPersistence {
     /**
      * Searches for a specific string and fires an event with the search
      * results.
-     *
      * @since 2.9.0
      * @param searchString
      */
@@ -308,7 +302,7 @@ public class Manami implements ApplicationPersistence {
      * @since 2.10.0
      */
     public void exportList(final List<Anime> list, final Path file) {
-        if (file.toString().endsWith(".json")) {
+        if (file.toString().endsWith(FILE_SUFFIX_JSON)) {
             new JsonExporter(persistence).exportList(list, file);
         }
     }
