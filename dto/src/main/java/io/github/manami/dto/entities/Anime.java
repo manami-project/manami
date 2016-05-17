@@ -33,7 +33,6 @@ public class Anime extends AbstractMinimalEntry {
 
     /** Number of Episodes. */
     @Getter
-    @Setter
     private int episodes = 0;
 
     /** Location on the HDD. */
@@ -146,5 +145,12 @@ public class Anime extends AbstractMinimalEntry {
      */
     public String getTypeAsString() {
         return (type != null) ? type.getValue() : null;
+    }
+
+
+    public void setEpisodes(final int episodes) {
+        if (episodes >= 0) {
+            this.episodes = episodes;
+        }
     }
 }

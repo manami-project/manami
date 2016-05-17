@@ -8,7 +8,6 @@ import com.google.common.eventbus.EventBus;
 
 /**
  * Configuration bean for the spring context.
- *
  * @author manami-project
  * @since 2.0.0
  */
@@ -24,6 +23,7 @@ public class ContextConfigurationBean {
         if (eventBus == null) {
             eventBus = new EventBus();
         }
+
         return eventBus;
     }
 }

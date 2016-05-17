@@ -88,7 +88,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
     @Override
     public boolean addAnime(final Anime anime) {
-        if (anime != null && isValid(anime)) {
+        if (isValid(anime)) {
             if (strategy.addAnime(anime)) {
                 eventBus.post(new AnimeListChangedEvent());
                 return true;
@@ -176,6 +176,11 @@ public class PersistenceFacade implements PersistenceHandler {
      */
     private boolean isValid(final Anime anime) {
         boolean ret = anime != null;
+
+        if (!ret) {
+            return ret;
+        }
+
         ret &= anime.getId() != null;
         ret &= anime.getType() != null;
         ret &= anime.getEpisodes() >= 0;
@@ -229,7 +234,9 @@ public class PersistenceFacade implements PersistenceHandler {
 
     @Override
     public void updateOrCreate(final MinimalEntry entry) {
-        strategy.updateOrCreate(entry);
-        eventBus.post(new AnimeListChangedEvent());
+        if (entry != null) {
+            strategy.updateOrCreate(entry);
+            eventBus.post(new AnimeListChangedEvent());
+        }
     }
 }

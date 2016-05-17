@@ -69,4 +69,32 @@ public class AnimeTest {
         assertThat(result.getType(), equalTo(null));
         assertThat(result.getId(), equalTo(uuid));
     }
+
+
+    @Test
+    public void testSetEpisodesDoesNotChangeToNegativeNumber() {
+        // given
+        final Anime anime = new Anime();
+
+        // when
+        anime.setEpisodes(-1);
+
+        // then
+        assertThat(anime.getEpisodes(), equalTo(0));
+    }
+
+
+    @Test
+    public void testSetEpisodesDoesNotChangeToNegativeNumberForNonDefaultValue() {
+        // given
+        final Anime anime = new Anime();
+        final int episodes = 4;
+        anime.setEpisodes(episodes);
+
+        // when
+        anime.setEpisodes(-1);
+
+        // then
+        assertThat(anime.getEpisodes(), equalTo(episodes));
+    }
 }

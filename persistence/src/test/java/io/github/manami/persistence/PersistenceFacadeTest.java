@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.google.common.eventbus.EventBus;
 
 import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -697,5 +698,202 @@ public class PersistenceFacadeTest {
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(persistenceFacade.fetchWatchList().size(), equalTo(list.size()));
+    }
+
+
+    @Test
+    public void testThatAddAnimeListWorks() {
+        // given
+        final List<Anime> list = newArrayList();
+
+        final Anime entry = new Anime();
+        entry.setEpisodes(37);
+        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setLocation("/death_note");
+        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setTitle("Death Note");
+        entry.setType(AnimeType.TV);
+        list.add(entry);
+
+        final Anime steinsGate = new Anime();
+        steinsGate.setEpisodes(24);
+        steinsGate.setInfoLink("http://myanimelist.net/anime/9253");
+        steinsGate.setLocation("/steins_gate");
+        steinsGate.setPicture("http://cdn.myanimelist.net/images/anime/5/73199.jpg");
+        steinsGate.setThumbnail("http://cdn.myanimelist.net/images/anime/5/73199t.jpg");
+        steinsGate.setTitle("Steins;Gate");
+        steinsGate.setType(AnimeType.TV);
+        list.add(steinsGate);
+
+        // when
+        persistenceFacade.addAnimeList(list);
+
+        // then
+        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(list.size()));
+    }
+
+
+    @Test
+    public void testAddAnimeListWithNull() {
+        // given
+
+        // when
+        persistenceFacade.addAnimeList(null);
+
+        // then
+        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList(), not(nullValue()));
+        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateWithNull() {
+        // given
+
+        // when
+        persistenceFacade.updateOrCreate(null);
+
+        // then
+        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForWithNull() {
+        // given
+
+        // when
+        persistenceFacade.updateOrCreate(null);
+
+        // then
+        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForNewAnimeEntry() {
+        // given
+        final Anime entry = new Anime();
+        entry.setEpisodes(37);
+        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setLocation("/death_note");
+        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setTitle("Death Note");
+        entry.setType(AnimeType.TV);
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchAnimeList().get(0), equalTo(entry));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForModifiedAnimeEntry() {
+        // given
+        final Anime entry = new Anime();
+        entry.setEpisodes(35);
+        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setLocation("/death_note");
+        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setTitle("Death Note");
+        entry.setType(AnimeType.TV);
+
+        persistenceFacade.addAnime(entry);
+
+        final int episodes = 37;
+        entry.setEpisodes(episodes);
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForNewFilterEntry() {
+        // given
+        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchFilterList().get(0), equalTo(entry));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForModifiedFilterEntry() {
+        // given
+        final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
+
+        persistenceFacade.filterAnime(entry);
+
+        final String thumbnail = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
+        entry.setThumbnail(thumbnail);
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchFilterList().get(0).getThumbnail(), equalTo(thumbnail));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForNewWatchListEntry() {
+        // given
+        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchWatchList().get(0), equalTo(entry));
+    }
+
+
+    @Test
+    public void testUpdateOrCreateForModifiedWatchListEntry() {
+        // given
+        final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
+
+        persistenceFacade.watchAnime(entry);
+
+        final String thumbnail = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
+        entry.setThumbnail(thumbnail);
+
+        // when
+        persistenceFacade.updateOrCreate(entry);
+
+        // then
+        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
+        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(false));
+        assertThat(persistenceFacade.fetchWatchList().get(0).getThumbnail(), equalTo(thumbnail));
     }
 }
