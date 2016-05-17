@@ -20,212 +20,237 @@ import io.github.manami.dto.events.AnimeListChangedEvent;
 /**
  * This is a facade which is used by the application to hide which strategy is
  * actually used.
- *
  * @author manami-project
  * @since 2.0.0
  */
 @Named
 public class PersistenceFacade implements PersistenceHandler {
 
-	/** Currently used db persistence strategy. */
-	private final PersistenceHandler strategy;
+    /** Currently used db persistence strategy. */
+    private final PersistenceHandler strategy;
 
-	/** Event bus. */
-	private final EventBus eventBus;
+    /** Event bus. */
+    private final EventBus eventBus;
 
-	/**
-	 * Constructor injecting the currently used strategy.
-	 *
-	 * @since 2.0.0
-	 * @param strategy
-	 *            Currently used strategy.
-	 */
-	@Inject
-	public PersistenceFacade(@Named("inMemoryStrategy") final PersistenceHandler strategy, final EventBus eventBus) {
-		this.strategy = strategy;
-		this.eventBus = eventBus;
-	}
 
-	@Override
-	public boolean filterAnime(final MinimalEntry anime) {
-		if (anime != null && isValid(anime)) {
-			if (strategy.filterAnime(anime)) {
-				eventBus.post(new AnimeListChangedEvent());
-				return true;
-			}
-		}
+    /**
+     * Constructor injecting the currently used strategy.
+     * @since 2.0.0
+     * @param strategy
+     * Currently used strategy.
+     */
+    @Inject
+    public PersistenceFacade(@Named("inMemoryStrategy") final PersistenceHandler strategy, final EventBus eventBus) {
+        this.strategy = strategy;
+        this.eventBus = eventBus;
+    }
 
-		return false;
-	}
 
-	@Override
-	public List<FilterEntry> fetchFilterList() {
-		return strategy.fetchFilterList();
-	}
+    @Override
+    public boolean filterAnime(final MinimalEntry anime) {
+        if (anime != null && isValid(anime)) {
+            if (strategy.filterAnime(anime)) {
+                eventBus.post(new AnimeListChangedEvent());
+                return true;
+            }
+        }
 
-	@Override
-	public boolean filterEntryExists(final String url) {
-		return strategy.filterEntryExists(url);
-	}
+        return false;
+    }
 
-	@Override
-	public boolean removeFromFilterList(final String url) {
-		if (isBlank(url)) {
-			return false;
-		}
 
-		if (strategy.removeFromFilterList(url)) {
-			eventBus.post(new AnimeListChangedEvent());
-			return true;
-		}
+    @Override
+    public List<FilterEntry> fetchFilterList() {
+        return strategy.fetchFilterList();
+    }
 
-		return false;
-	}
 
-	@Override
-	public boolean addAnime(final Anime anime) {
-		if (anime != null && isValid(anime)) {
-			if (strategy.addAnime(anime)) {
-				eventBus.post(new AnimeListChangedEvent());
-				return true;
-			}
-		}
+    @Override
+    public boolean filterEntryExists(final String url) {
+        return strategy.filterEntryExists(url);
+    }
 
-		return false;
-	}
 
-	@Override
-	public List<Anime> fetchAnimeList() {
-		return strategy.fetchAnimeList();
-	}
+    @Override
+    public boolean removeFromFilterList(final String url) {
+        if (isBlank(url)) {
+            return false;
+        }
 
-	@Override
-	public boolean animeEntryExists(final String url) {
-		return strategy.animeEntryExists(url);
-	}
+        if (strategy.removeFromFilterList(url)) {
+            eventBus.post(new AnimeListChangedEvent());
+            return true;
+        }
 
-	@Override
-	public List<WatchListEntry> fetchWatchList() {
-		return strategy.fetchWatchList();
-	}
+        return false;
+    }
 
-	@Override
-	public boolean watchListEntryExists(final String url) {
-		return strategy.watchListEntryExists(url);
-	}
 
-	@Override
-	public boolean watchAnime(final MinimalEntry anime) {
-		if (anime != null && isValid(anime)) {
-			if (strategy.watchAnime(anime)) {
-				eventBus.post(new AnimeListChangedEvent());
-				return true;
-			}
-		}
+    @Override
+    public boolean addAnime(final Anime anime) {
+        if (anime != null && isValid(anime)) {
+            if (strategy.addAnime(anime)) {
+                eventBus.post(new AnimeListChangedEvent());
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public boolean removeFromWatchList(final String url) {
-		if (isBlank(url)) {
-			return false;
-		}
 
-		if (strategy.removeFromWatchList(url)) {
-			eventBus.post(new AnimeListChangedEvent());
-			return true;
-		}
+    @Override
+    public List<Anime> fetchAnimeList() {
+        return strategy.fetchAnimeList();
+    }
 
-		return false;
-	}
 
-	@Override
-	public boolean removeAnime(final UUID id) {
-		if (strategy.removeAnime(id)) {
-			eventBus.post(new AnimeListChangedEvent());
-			return true;
-		}
+    @Override
+    public boolean animeEntryExists(final String url) {
+        return strategy.animeEntryExists(url);
+    }
 
-		return false;
-	}
 
-	@Override
-	public void clearAll() {
-		strategy.clearAll();
-		eventBus.post(new AnimeListChangedEvent());
-	}
+    @Override
+    public List<WatchListEntry> fetchWatchList() {
+        return strategy.fetchWatchList();
+    }
 
-	/**
-	 * Checks if an anime entry is valid.
-	 *
-	 * @param anime
-	 * @return
-	 */
-	private boolean isValid(final Anime anime) {
-		boolean ret = anime != null;
-		ret &= anime.getId() != null;
-		ret &= anime.getType() != null;
-		ret &= anime.getEpisodes() >= 0;
-		ret &= isNotBlank(anime.getTitle());
-		ret &= isNotBlank(anime.getLocation());
 
-		return ret;
-	}
+    @Override
+    public boolean watchListEntryExists(final String url) {
+        return strategy.watchListEntryExists(url);
+    }
 
-	/**
-	 * Checks if an anime entry is Valid
-	 *
-	 * @param anime
-	 * @return
-	 */
-	private boolean isValid(final MinimalEntry anime) {
-		boolean ret = anime != null;
-		ret &= isNotBlank(anime.getTitle());
-		ret &= isNotBlank(anime.getInfoLink());
 
-		return ret;
-	}
+    @Override
+    public boolean watchAnime(final MinimalEntry anime) {
+        if (anime != null && isValid(anime)) {
+            if (strategy.watchAnime(anime)) {
+                eventBus.post(new AnimeListChangedEvent());
+                return true;
+            }
+        }
 
-	@Override
-	public void addAnimeList(final List<Anime> list) {
-		strategy.addAnimeList(list);
-		eventBus.post(new AnimeListChangedEvent());
-	}
+        return false;
+    }
 
-	@Override
-	public void addFilterList(final List<? extends MinimalEntry> list) {
-		strategy.addFilterList(list);
-		eventBus.post(new AnimeListChangedEvent());
-	}
 
-	@Override
-	public void addWatchList(final List<? extends MinimalEntry> list) {
-		strategy.addWatchList(list);
-		eventBus.post(new AnimeListChangedEvent());
-	}
+    @Override
+    public boolean removeFromWatchList(final String url) {
+        if (isBlank(url)) {
+            return false;
+        }
 
-	@Override
-	public void updateOrCreate(final Anime anime) {
-		strategy.updateOrCreate(anime);
-		eventBus.post(new AnimeListChangedEvent());
-	}
+        if (strategy.removeFromWatchList(url)) {
+            eventBus.post(new AnimeListChangedEvent());
+            return true;
+        }
 
-	@Override
-	public void updateOrCreate(final WatchListEntry entry) {
-		strategy.updateOrCreate(entry);
-		eventBus.post(new AnimeListChangedEvent());
-	}
+        return false;
+    }
 
-	@Override
-	public void updateOrCreate(final FilterEntry entry) {
-		strategy.updateOrCreate(entry);
-		eventBus.post(new AnimeListChangedEvent());
-	}
 
-	@Override
-	public void updateOrCreate(final MinimalEntry entry) {
-		strategy.updateOrCreate(entry);
-		eventBus.post(new AnimeListChangedEvent());
-	}
+    @Override
+    public boolean removeAnime(final UUID id) {
+        if (strategy.removeAnime(id)) {
+            eventBus.post(new AnimeListChangedEvent());
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public void clearAll() {
+        strategy.clearAll();
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    /**
+     * Checks if an anime entry is valid.
+     * @param anime
+     * @return
+     */
+    private boolean isValid(final Anime anime) {
+        boolean ret = anime != null;
+        ret &= anime.getId() != null;
+        ret &= anime.getType() != null;
+        ret &= anime.getEpisodes() >= 0;
+        ret &= isNotBlank(anime.getTitle());
+        ret &= isNotBlank(anime.getLocation());
+
+        return ret;
+    }
+
+
+    /**
+     * Checks if an anime entry is Valid
+     * @param anime
+     * @return
+     */
+    private boolean isValid(final MinimalEntry anime) {
+        boolean ret = anime != null;
+        ret &= isNotBlank(anime.getTitle());
+        ret &= isNotBlank(anime.getInfoLink());
+
+        return ret;
+    }
+
+
+    @Override
+    public void addAnimeList(final List<Anime> list) {
+        if (list != null) {
+            strategy.addAnimeList(list);
+            eventBus.post(new AnimeListChangedEvent());
+        }
+    }
+
+
+    @Override
+    public void addFilterList(final List<? extends MinimalEntry> list) {
+        if (list != null) {
+            strategy.addFilterList(list);
+            eventBus.post(new AnimeListChangedEvent());
+        }
+    }
+
+
+    @Override
+    public void addWatchList(final List<? extends MinimalEntry> list) {
+        if (list != null) {
+            strategy.addWatchList(list);
+            eventBus.post(new AnimeListChangedEvent());
+        }
+    }
+
+
+    @Override
+    public void updateOrCreate(final Anime anime) {
+        strategy.updateOrCreate(anime);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final WatchListEntry entry) {
+        strategy.updateOrCreate(entry);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final FilterEntry entry) {
+        strategy.updateOrCreate(entry);
+        eventBus.post(new AnimeListChangedEvent());
+    }
+
+
+    @Override
+    public void updateOrCreate(final MinimalEntry entry) {
+        strategy.updateOrCreate(entry);
+        eventBus.post(new AnimeListChangedEvent());
+    }
 }
