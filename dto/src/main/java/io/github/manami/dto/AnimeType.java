@@ -4,7 +4,6 @@ import lombok.Getter;
 
 /**
  * Types of animes which are known.
- *
  * @author manami-project
  * @version 2.0.0
  */
@@ -42,19 +41,18 @@ public enum AnimeType {
     /**
      * @since 2.0.0
      * @param type
-     *            Type as String value.
+     * Type as String value.
      */
-    AnimeType(final String value) {
+    private AnimeType(final String value) {
         this.value = value;
     }
 
 
     /**
      * Returns a type by a String comparison. It's not case sensitive.
-     *
      * @since 2.0.0
      * @param name
-     *            Type as String value.
+     * Type as String value.
      * @return The corresponding AnimeType or null if no type matches.
      */
     public static AnimeType findByName(final String name) {

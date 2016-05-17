@@ -102,21 +102,27 @@ public class Anime extends AbstractMinimalEntry {
         if (target.getEpisodes() == 0) {
             target.setEpisodes(source.getEpisodes());
         }
+
         if (isBlank(target.getInfoLink())) {
             target.setInfoLink(source.getInfoLink());
         }
+
         if (isBlank(target.getLocation())) {
             target.setLocation(source.getLocation());
         }
+
         if (isBlank(target.getPicture())) {
             target.setPicture(source.getPicture());
         }
-        if (isBlank(target.getThumbnail())) {
+
+        if (AbstractMinimalEntry.NO_IMG_THUMB.equals(target.getThumbnail())) {
             target.setThumbnail(source.getThumbnail());
         }
+
         if (isBlank(target.getTitle())) {
             target.setTitle(source.getTitle());
         }
+
         if (target.getType() == null) {
             target.setType(source.getType());
         }

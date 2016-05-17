@@ -244,4 +244,69 @@ public class AnimeTest {
         // then
         assertThat(result, equalTo(type.getValue()));
     }
+
+
+    @Test
+    public void testCopyNullTarget() {
+        // given
+        final Anime target = new Anime();
+
+        final Anime anime = new Anime();
+        anime.setEpisodes(37);
+        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setLocation("/anime/series/death_note");
+        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setTitle("Death Note");
+        anime.setType(AnimeType.TV);
+
+        // when
+        Anime.copyNullTarget(anime, target);
+
+        // then
+        assertThat(target.getEpisodes(), equalTo(anime.getEpisodes()));
+        assertThat(target.getInfoLink(), equalTo(anime.getInfoLink()));
+        assertThat(target.getLocation(), equalTo(anime.getLocation()));
+        assertThat(target.getPicture(), equalTo(anime.getPicture()));
+        assertThat(target.getThumbnail(), equalTo(anime.getThumbnail()));
+        assertThat(target.getTitle(), equalTo(anime.getTitle()));
+        assertThat(target.getType(), equalTo(anime.getType()));
+        assertThat(target.getId(), not(anime.getId()));
+    }
+
+
+    @Test
+    public void testCopyNullTargetWithFilledTarget() {
+        // given
+        final Anime target = new Anime();
+        target.setEpisodes(4);
+        target.setInfoLink("http://myanimelist.net/anime/10863");
+        target.setLocation("/anime/series/steins_gate_special");
+        target.setPicture("http://cdn.myanimelist.net/images/anime/7/36531.jpg");
+        target.setThumbnail("http://cdn.myanimelist.net/images/anime/7/36531t.jpg");
+        target.setTitle("Steins;Gate: Oukoubakko no Poriomania");
+        target.setType(AnimeType.SPECIAL);
+
+        final Anime anime = new Anime();
+        anime.setEpisodes(37);
+        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setLocation("/anime/series/death_note");
+        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setTitle("Death Note");
+        anime.setType(AnimeType.TV);
+
+        // when
+        Anime.copyNullTarget(anime, target);
+
+        // then
+        assertThat(target.getEpisodes(), not(anime.getEpisodes()));
+        assertThat(target.getInfoLink(), not(anime.getInfoLink()));
+        assertThat(target.getLocation(), not(anime.getLocation()));
+        assertThat(target.getPicture(), not(anime.getPicture()));
+        assertThat(target.getThumbnail(), not(anime.getThumbnail()));
+        assertThat(target.getTitle(), not(anime.getTitle()));
+        assertThat(target.getType(), not(anime.getType()));
+        assertThat(target.getId(), not(anime.getId()));
+    }
 }
