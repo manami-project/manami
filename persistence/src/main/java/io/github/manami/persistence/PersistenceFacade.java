@@ -228,27 +228,6 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public void updateOrCreate(final Anime anime) {
-        strategy.updateOrCreate(anime);
-        eventBus.post(new AnimeListChangedEvent());
-    }
-
-
-    @Override
-    public void updateOrCreate(final WatchListEntry entry) {
-        strategy.updateOrCreate(entry);
-        eventBus.post(new AnimeListChangedEvent());
-    }
-
-
-    @Override
-    public void updateOrCreate(final FilterEntry entry) {
-        strategy.updateOrCreate(entry);
-        eventBus.post(new AnimeListChangedEvent());
-    }
-
-
-    @Override
     public void updateOrCreate(final MinimalEntry entry) {
         strategy.updateOrCreate(entry);
         eventBus.post(new AnimeListChangedEvent());

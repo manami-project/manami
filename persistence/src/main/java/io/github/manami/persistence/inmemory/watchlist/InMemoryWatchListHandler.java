@@ -91,7 +91,6 @@ public class InMemoryWatchListHandler implements WatchListHandler {
     }
 
 
-    @Override
     public void updateOrCreate(final WatchListEntry entry) {
         if (entry != null && isNotBlank(entry.getInfoLink())) {
             watchList.put(entry.getInfoLink(), entry);

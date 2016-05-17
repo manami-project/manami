@@ -261,24 +261,6 @@ public class Manami implements ApplicationPersistence {
 
 
     @Override
-    public void updateOrCreate(final Anime anime) {
-        persistence.updateOrCreate(anime);
-    }
-
-
-    @Override
-    public void updateOrCreate(final WatchListEntry entry) {
-        persistence.updateOrCreate(entry);
-    }
-
-
-    @Override
-    public void updateOrCreate(final FilterEntry entry) {
-        persistence.updateOrCreate(entry);
-    }
-
-
-    @Override
     public void updateOrCreate(final MinimalEntry entry) {
         persistence.updateOrCreate(entry);
     }

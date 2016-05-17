@@ -164,26 +164,14 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
 
     @Override
-    public void updateOrCreate(final Anime anime) {
-        animeListHandler.updateOrCreate(anime);
-    }
-
-
-    @Override
-    public void updateOrCreate(final FilterEntry entry) {
-        filterListHandler.updateOrCreate(entry);
-    }
-
-
-    @Override
-    public void updateOrCreate(final WatchListEntry entry) {
-        watchListHandler.updateOrCreate(entry);
-    }
-
-
-    @Override
     public void updateOrCreate(final MinimalEntry entry) {
-        if (entry instanceof FilterEntry) {
+        if (entry == null) {
+            return;
+        }
+
+        if (entry instanceof Anime) {
+            animeListHandler.updateOrCreate((Anime) entry);
+        } else if (entry instanceof FilterEntry) {
             filterListHandler.updateOrCreate((FilterEntry) entry);
         } else if (entry instanceof WatchListEntry) {
             watchListHandler.updateOrCreate((WatchListEntry) entry);

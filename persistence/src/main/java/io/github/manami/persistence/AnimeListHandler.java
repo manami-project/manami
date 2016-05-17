@@ -1,9 +1,9 @@
 package io.github.manami.persistence;
 
-import io.github.manami.dto.entities.Anime;
-
 import java.util.List;
 import java.util.UUID;
+
+import io.github.manami.dto.entities.Anime;
 
 /**
  * @author manami-project
@@ -13,10 +13,9 @@ public interface AnimeListHandler {
 
     /**
      * Adds an {@link Anime} if it is not already in the list.
-     *
      * @since 2.7.0
      * @param anime
-     *            Anime to add to the list of watched animes.
+     * Anime to add to the list of watched animes.
      * @return true if the anime was added.
      */
     boolean addAnime(Anime anime);
@@ -32,7 +31,7 @@ public interface AnimeListHandler {
     /**
      * @since 2.7.0
      * @param url
-     *            URL of the anime's infolink.
+     * URL of the anime's infolink.
      * @return true if an entry with this URL as infolink already exists.
      */
     boolean animeEntryExists(String url);
@@ -41,16 +40,8 @@ public interface AnimeListHandler {
     /**
      * @since 2.7.0
      * @param id
-     *            ID of the anime.
+     * ID of the anime.
      * @return true if an entry was removed.
      */
     boolean removeAnime(UUID id);
-
-
-    /**
-     * @since 2.9.0
-     * @param anime
-     *            Anime which is supposed to be created or updated.
-     */
-    void updateOrCreate(final Anime anime);
 }
