@@ -1,6 +1,5 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
@@ -72,7 +71,7 @@ public class MalSaxParserTest {
         assertThat(deathNote, not(nullValue()));
         assertThat(deathNote.getEpisodes(), equalTo(37));
         assertThat(deathNote.getInfoLink(), equalTo("http://myanimelist.net/anime/1535"));
-        assertThat(deathNote.getLocation(), equalTo(EMPTY));
+        assertThat(deathNote.getLocation(), equalTo("/"));
         assertThat(deathNote.getTitle(), equalTo("Death Note"));
         assertThat(deathNote.getType(), equalTo(AnimeType.TV));
 
@@ -80,7 +79,7 @@ public class MalSaxParserTest {
         assertThat(rurouniKenshin, not(nullValue()));
         assertThat(rurouniKenshin.getEpisodes(), equalTo(94));
         assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/45"));
-        assertThat(rurouniKenshin.getLocation(), equalTo(EMPTY));
+        assertThat(rurouniKenshin.getLocation(), equalTo("/"));
         assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan"));
         assertThat(rurouniKenshin.getType(), equalTo(AnimeType.TV));
     }

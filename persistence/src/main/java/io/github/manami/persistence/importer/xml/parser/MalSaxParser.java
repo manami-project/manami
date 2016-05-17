@@ -36,7 +36,6 @@ public class MalSaxParser extends DefaultHandler {
 
     /**
      * Constructor awaiting a list.
-     *
      * @since 2.0.0
      * @param persistence
      */
@@ -55,6 +54,7 @@ public class MalSaxParser extends DefaultHandler {
 
         if (qName.equals("anime")) {
             actAnime = new Anime();
+            actAnime.setLocation("/");
         }
     }
 

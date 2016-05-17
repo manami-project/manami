@@ -5,22 +5,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
-import java.io.IOException;
 import java.util.UUID;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import io.github.manami.dto.AnimeType;
 
 public class AnimeTest {
 
-    private Anime anime;
+    @Test
+    public void testCopyEmptyAnime() {
+        // given
+        final Anime target = new Anime();
 
-
-    @Before
-    public void setUp() throws IOException {
-        anime = new Anime();
+        final Anime anime = new Anime();
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
@@ -28,13 +26,6 @@ public class AnimeTest {
         anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
-    }
-
-
-    @Test
-    public void testCopyEmptyAnime() {
-        // given
-        final Anime target = new Anime();
 
         // when
         Anime.copyAnime(anime, target);
@@ -96,5 +87,161 @@ public class AnimeTest {
 
         // then
         assertThat(anime.getEpisodes(), equalTo(episodes));
+    }
+
+
+    @Test
+    public void testIsValidAnimeWithNull() {
+        // given
+
+        // when
+        final boolean result = Anime.isValidAnime(null);
+
+        // then
+        assertThat(result, equalTo(false));
+    }
+
+
+    @Test
+    public void testIsValidAnimeWithValidEntry() {
+        // given
+        final Anime anime = new Anime();
+        anime.setEpisodes(37);
+        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setLocation("/anime/series/death_note");
+        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setTitle("Death Note");
+        anime.setType(AnimeType.TV);
+
+        // when
+        final boolean result = Anime.isValidAnime(anime);
+
+        // then
+        assertThat(result, equalTo(true));
+    }
+
+
+    @Test
+    public void testIsValidAnimeWithTypeNull() {
+        // given
+        final Anime anime = new Anime();
+        anime.setEpisodes(37);
+        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setLocation("/anime/series/death_note");
+        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setTitle("Death Note");
+        anime.setType(null);
+
+        // when
+        final boolean result = Anime.isValidAnime(anime);
+
+        // then
+        assertThat(result, equalTo(false));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForNull() {
+        // given
+        final Anime anime = new Anime();
+        anime.setType(null);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(null));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForTv() {
+        // given
+        final AnimeType type = AnimeType.TV;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForMovie() {
+        // given
+        final AnimeType type = AnimeType.MOVIE;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForMusic() {
+        // given
+        final AnimeType type = AnimeType.MUSIC;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForOna() {
+        // given
+        final AnimeType type = AnimeType.ONA;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForOva() {
+        // given
+        final AnimeType type = AnimeType.OVA;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
+    }
+
+
+    @Test
+    public void testGetTypeAsStringForSpecial() {
+        // given
+        final AnimeType type = AnimeType.SPECIAL;
+        final Anime anime = new Anime();
+        anime.setType(type);
+
+        // when
+        final String result = anime.getTypeAsString();
+
+        // then
+        assertThat(result, equalTo(type.getValue()));
     }
 }

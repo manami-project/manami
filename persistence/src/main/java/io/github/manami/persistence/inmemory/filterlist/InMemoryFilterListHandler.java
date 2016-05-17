@@ -2,7 +2,7 @@ package io.github.manami.persistence.inmemory.filterlist;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
@@ -14,7 +14,6 @@ import javax.inject.Named;
 import com.google.common.collect.ImmutableList;
 
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
@@ -38,7 +37,7 @@ public class InMemoryFilterListHandler implements FilterListHandler {
 
     @Override
     public boolean filterAnime(final MinimalEntry anime) {
-        if (anime == null || isBlank(anime.getInfoLink()) || filterList.containsKey(anime.getInfoLink())) {
+        if (!isValidMinimalEntry(anime) || filterList.containsKey(anime.getInfoLink())) {
             return false;
         }
 
@@ -50,16 +49,8 @@ public class InMemoryFilterListHandler implements FilterListHandler {
             entry = (FilterEntry) anime;
         }
 
-        if (entry != null && isBlank(entry.getThumbnail())) {
-            entry.setThumbnail(AbstractMinimalEntry.NO_IMG_THUMB);
-        }
-
-        if (entry != null) {
-            filterList.put(entry.getInfoLink(), entry);
-            return true;
-        }
-
-        return false;
+        filterList.put(entry.getInfoLink(), entry);
+        return true;
     }
 
 
@@ -79,7 +70,11 @@ public class InMemoryFilterListHandler implements FilterListHandler {
 
     @Override
     public boolean removeFromFilterList(final String url) {
-        return filterList.remove(url) != null;
+        if (isNotBlank(url)) {
+            return filterList.remove(url) != null;
+        }
+
+        return false;
     }
 
 
@@ -92,7 +87,7 @@ public class InMemoryFilterListHandler implements FilterListHandler {
 
 
     public void updateOrCreate(final FilterEntry entry) {
-        if (entry != null && isNotBlank(entry.getInfoLink())) {
+        if (isValidMinimalEntry(entry)) {
             filterList.put(entry.getInfoLink(), entry);
         }
     }

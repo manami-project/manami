@@ -1,7 +1,8 @@
 package io.github.manami.persistence;
 
+import static io.github.manami.dto.entities.Anime.isValidAnime;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
     @Override
     public boolean filterAnime(final MinimalEntry anime) {
-        if (anime != null && isValid(anime)) {
+        if (isValidMinimalEntry(anime)) {
             if (strategy.filterAnime(anime)) {
                 eventBus.post(new AnimeListChangedEvent());
                 return true;
@@ -88,7 +89,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
     @Override
     public boolean addAnime(final Anime anime) {
-        if (isValid(anime)) {
+        if (isValidAnime(anime)) {
             if (strategy.addAnime(anime)) {
                 eventBus.post(new AnimeListChangedEvent());
                 return true;
@@ -125,7 +126,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
-        if (anime != null && isValid(anime)) {
+        if (isValidMinimalEntry(anime)) {
             if (strategy.watchAnime(anime)) {
                 eventBus.post(new AnimeListChangedEvent());
                 return true;
@@ -166,42 +167,6 @@ public class PersistenceFacade implements PersistenceHandler {
     public void clearAll() {
         strategy.clearAll();
         eventBus.post(new AnimeListChangedEvent());
-    }
-
-
-    /**
-     * Checks if an anime entry is valid.
-     * @param anime
-     * @return
-     */
-    private boolean isValid(final Anime anime) {
-        boolean ret = anime != null;
-
-        if (!ret) {
-            return ret;
-        }
-
-        ret &= anime.getId() != null;
-        ret &= anime.getType() != null;
-        ret &= anime.getEpisodes() >= 0;
-        ret &= isNotBlank(anime.getTitle());
-        ret &= isNotBlank(anime.getLocation());
-
-        return ret;
-    }
-
-
-    /**
-     * Checks if an anime entry is Valid
-     * @param anime
-     * @return
-     */
-    private boolean isValid(final MinimalEntry anime) {
-        boolean ret = anime != null;
-        ret &= isNotBlank(anime.getTitle());
-        ret &= isNotBlank(anime.getInfoLink());
-
-        return ret;
     }
 
 

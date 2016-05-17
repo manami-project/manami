@@ -2,6 +2,7 @@ package io.github.manami.persistence.inmemory.animelist;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
+import static io.github.manami.dto.entities.Anime.isValidAnime;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
     @Override
     public boolean addAnime(final Anime anime) {
-        if (isInList(anime)) {
+        if (!isValidAnime(anime) || isInList(anime)) {
             return false;
         }
 
@@ -105,7 +106,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
 
     public void updateOrCreate(final Anime anime) {
-        if (anime != null && anime.getId() != null) {
+        if (isValidAnime(anime)) {
             animeList.put(anime.getId(), anime);
         }
     }

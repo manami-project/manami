@@ -1,5 +1,7 @@
 package io.github.manami.persistence.inmemory;
 
+import static io.github.manami.dto.entities.Anime.isValidAnime;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
@@ -45,7 +47,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean filterAnime(final MinimalEntry anime) {
-        if (anime != null) {
+        if (isValidMinimalEntry(anime)) {
             if (isNotBlank(anime.getInfoLink())) {
                 watchListHandler.removeFromWatchList(anime.getInfoLink());
             }
@@ -71,13 +73,17 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean removeFromFilterList(final String url) {
-        return filterListHandler.removeFromFilterList(url);
+        if (isNotBlank(url)) {
+            return filterListHandler.removeFromFilterList(url);
+        }
+
+        return false;
     }
 
 
     @Override
     public boolean addAnime(final Anime anime) {
-        if (anime != null) {
+        if (isValidAnime(anime)) {
             if (isNotBlank(anime.getInfoLink())) {
                 filterListHandler.removeFromFilterList(anime.getInfoLink());
                 watchListHandler.removeFromWatchList(anime.getInfoLink());
@@ -102,7 +108,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
-        if (anime != null) {
+        if (isValidMinimalEntry(anime)) {
             if (isNotBlank(anime.getInfoLink())) {
                 filterListHandler.removeFromFilterList(anime.getInfoLink());
             }
@@ -115,7 +121,11 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public boolean removeFromWatchList(final String url) {
-        return watchListHandler.removeFromWatchList(url);
+        if (isNotBlank(url)) {
+            return watchListHandler.removeFromWatchList(url);
+        }
+
+        return false;
     }
 
 
@@ -147,19 +157,25 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
     @Override
     public void addAnimeList(final List<Anime> list) {
-        list.forEach(animeListHandler::addAnime);
+        if (list != null) {
+            list.forEach(animeListHandler::addAnime);
+        }
     }
 
 
     @Override
     public void addFilterList(final List<? extends MinimalEntry> list) {
-        list.forEach(filterListHandler::filterAnime);
+        if (list != null) {
+            list.forEach(filterListHandler::filterAnime);
+        }
     }
 
 
     @Override
     public void addWatchList(final List<? extends MinimalEntry> list) {
-        list.forEach(watchListHandler::watchAnime);
+        if (list != null) {
+            list.forEach(watchListHandler::watchAnime);
+        }
     }
 
 

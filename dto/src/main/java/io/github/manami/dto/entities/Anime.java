@@ -3,6 +3,7 @@ package io.github.manami.dto.entities;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
 import java.util.UUID;
@@ -152,5 +153,27 @@ public class Anime extends AbstractMinimalEntry {
         if (episodes >= 0) {
             this.episodes = episodes;
         }
+    }
+
+
+    /**
+     * Checks if an anime entry is valid.
+     * @param anime
+     * @return
+     */
+    public static boolean isValidAnime(final Anime anime) {
+        boolean ret = anime != null;
+
+        if (!ret) {
+            return ret;
+        }
+
+        ret &= anime.getId() != null;
+        ret &= anime.getType() != null;
+        ret &= anime.getEpisodes() >= 0;
+        ret &= isNotBlank(anime.getTitle());
+        ret &= isNotBlank(anime.getLocation());
+
+        return ret;
     }
 }

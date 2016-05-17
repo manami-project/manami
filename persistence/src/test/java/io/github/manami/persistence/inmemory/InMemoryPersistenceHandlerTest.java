@@ -1,14 +1,10 @@
-package io.github.manami.persistence;
+package io.github.manami.persistence.inmemory;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,26 +12,21 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.eventbus.EventBus;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.dto.events.AnimeListChangedEvent;
-import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
-public class PersistenceFacadeTest {
+public class InMemoryPersistenceHandlerTest {
 
     private InMemoryAnimeListHandler inMemoryAnimeListHandler;
     private InMemoryFilterListHandler inMemoryFilterListHandler;
     private InMemoryWatchListHandler inMemoryWatchListHandler;
-    private PersistenceFacade persistenceFacade;
-    private EventBus eventBusMock;
+    private InMemoryPersistenceHandler inMemoryPersistenceHandler;
 
 
     @Before
@@ -43,9 +34,7 @@ public class PersistenceFacadeTest {
         inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
         inMemoryFilterListHandler = new InMemoryFilterListHandler();
         inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
-        eventBusMock = mock(EventBus.class);
-        persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, eventBusMock);
+        inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
     }
 
 
@@ -54,12 +43,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.filterAnime(null);
+        final boolean result = inMemoryPersistenceHandler.filterAnime(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
     }
 
 
@@ -69,12 +57,11 @@ public class PersistenceFacadeTest {
         final FilterEntry entry = new FilterEntry("", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.filterAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
     }
 
 
@@ -84,12 +71,11 @@ public class PersistenceFacadeTest {
         final FilterEntry entry = new FilterEntry("Death Note", "");
 
         // when
-        final boolean result = persistenceFacade.filterAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
     }
 
 
@@ -99,12 +85,11 @@ public class PersistenceFacadeTest {
         final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.filterAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(1));
     }
 
 
@@ -114,12 +99,11 @@ public class PersistenceFacadeTest {
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.filterAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(1));
     }
 
 
@@ -128,10 +112,10 @@ public class PersistenceFacadeTest {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
         final FilterEntry entry = new FilterEntry("Death Note", infoLink);
-        persistenceFacade.filterAnime(entry);
+        inMemoryPersistenceHandler.filterAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.filterEntryExists(infoLink);
+        final boolean result = inMemoryPersistenceHandler.filterEntryExists(infoLink);
 
         // then
         assertThat(result, equalTo(true));
@@ -143,10 +127,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.filterEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = inMemoryPersistenceHandler.filterEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -155,10 +138,10 @@ public class PersistenceFacadeTest {
     public void testFilterAnimeList() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
-        persistenceFacade.filterAnime(entry);
+        inMemoryPersistenceHandler.filterAnime(entry);
 
         // when
-        final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
+        final List<FilterEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
 
         // then
         assertThat(fetchFilterList.size(), equalTo(1));
@@ -169,10 +152,10 @@ public class PersistenceFacadeTest {
     public void testFetchWatchList() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
-        persistenceFacade.watchAnime(entry);
+        inMemoryPersistenceHandler.watchAnime(entry);
 
         // when
-        final List<WatchListEntry> fetchWatchList = persistenceFacade.fetchWatchList();
+        final List<WatchListEntry> fetchWatchList = inMemoryPersistenceHandler.fetchWatchList();
 
         // then
         assertThat(fetchWatchList.size(), equalTo(1));
@@ -184,15 +167,14 @@ public class PersistenceFacadeTest {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
         final FilterEntry entry = new FilterEntry("Death Note", infoLink);
-        persistenceFacade.filterAnime(entry);
+        inMemoryPersistenceHandler.filterAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.removeFromFilterList(infoLink);
+        final boolean result = inMemoryPersistenceHandler.removeFromFilterList(infoLink);
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
     }
 
 
@@ -201,10 +183,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.removeFromFilterList(null);
+        final boolean result = inMemoryPersistenceHandler.removeFromFilterList(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -214,10 +195,10 @@ public class PersistenceFacadeTest {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
-        persistenceFacade.watchAnime(entry);
+        inMemoryPersistenceHandler.watchAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.watchListEntryExists(infoLink);
+        final boolean result = inMemoryPersistenceHandler.watchListEntryExists(infoLink);
 
         // then
         assertThat(result, equalTo(true));
@@ -229,10 +210,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.watchListEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = inMemoryPersistenceHandler.watchListEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -242,12 +222,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.watchAnime(null);
+        final boolean result = inMemoryPersistenceHandler.watchAnime(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
     }
 
 
@@ -257,12 +236,11 @@ public class PersistenceFacadeTest {
         final WatchListEntry entry = new WatchListEntry("", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.watchAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
     }
 
 
@@ -272,12 +250,11 @@ public class PersistenceFacadeTest {
         final WatchListEntry entry = new WatchListEntry("Death Note", "");
 
         // when
-        final boolean result = persistenceFacade.watchAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
     }
 
 
@@ -287,12 +264,11 @@ public class PersistenceFacadeTest {
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.watchAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(1));
     }
 
 
@@ -302,12 +278,11 @@ public class PersistenceFacadeTest {
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
-        final boolean result = persistenceFacade.watchAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(1));
     }
 
 
@@ -316,15 +291,14 @@ public class PersistenceFacadeTest {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
-        persistenceFacade.watchAnime(entry);
+        inMemoryPersistenceHandler.watchAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.removeFromWatchList(infoLink);
+        final boolean result = inMemoryPersistenceHandler.removeFromWatchList(infoLink);
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
     }
 
 
@@ -333,10 +307,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.removeFromWatchList(null);
+        final boolean result = inMemoryPersistenceHandler.removeFromWatchList(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -346,12 +319,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.addAnime(null);
+        final boolean result = inMemoryPersistenceHandler.addAnime(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
     }
 
 
@@ -368,12 +340,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
     }
 
 
@@ -389,12 +360,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
     }
 
 
@@ -410,12 +380,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
     }
 
 
@@ -431,12 +400,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
     }
 
 
@@ -452,12 +420,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
     }
 
 
@@ -473,12 +440,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(1));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
     }
 
 
@@ -494,12 +460,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
     }
 
 
@@ -515,12 +480,11 @@ public class PersistenceFacadeTest {
         entry.setTitle("Death Note");
 
         // when
-        final boolean result = persistenceFacade.addAnime(entry);
+        final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(0));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
     }
 
 
@@ -536,10 +500,10 @@ public class PersistenceFacadeTest {
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
-        persistenceFacade.addAnime(entry);
+        inMemoryPersistenceHandler.addAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.animeEntryExists(infoLink);
+        final boolean result = inMemoryPersistenceHandler.animeEntryExists(infoLink);
 
         // then
         assertThat(result, equalTo(true));
@@ -551,10 +515,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.animeEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = inMemoryPersistenceHandler.animeEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -570,10 +533,10 @@ public class PersistenceFacadeTest {
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
-        persistenceFacade.addAnime(entry);
+        inMemoryPersistenceHandler.addAnime(entry);
 
         // when
-        final List<Anime> animeList = persistenceFacade.fetchAnimeList();
+        final List<Anime> animeList = inMemoryPersistenceHandler.fetchAnimeList();
 
         // then
         assertThat(animeList.size(), equalTo(1));
@@ -591,15 +554,14 @@ public class PersistenceFacadeTest {
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
-        persistenceFacade.addAnime(entry);
+        inMemoryPersistenceHandler.addAnime(entry);
 
         // when
-        final boolean result = persistenceFacade.removeAnime(entry.getId());
+        final boolean result = inMemoryPersistenceHandler.removeAnime(entry.getId());
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(true));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
     }
 
 
@@ -608,10 +570,9 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        final boolean result = persistenceFacade.removeAnime(null);
+        final boolean result = inMemoryPersistenceHandler.removeAnime(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
         assertThat(result, equalTo(false));
     }
 
@@ -627,22 +588,21 @@ public class PersistenceFacadeTest {
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
-        persistenceFacade.addAnime(entry);
+        inMemoryPersistenceHandler.addAnime(entry);
 
         final FilterEntry filterEntry = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
-        persistenceFacade.filterAnime(filterEntry);
+        inMemoryPersistenceHandler.filterAnime(filterEntry);
 
         final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate", "http://cdn.myanimelist.net/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
-        persistenceFacade.watchAnime(watchEntry);
+        inMemoryPersistenceHandler.watchAnime(watchEntry);
 
         // when
-        persistenceFacade.clearAll();
+        inMemoryPersistenceHandler.clearAll();
 
         // then
-        verify(eventBusMock, times(4)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
     }
 
 
@@ -651,12 +611,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        persistenceFacade.addFilterList(null);
+        inMemoryPersistenceHandler.addFilterList(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchFilterList(), not(nullValue()));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList(), not(nullValue()));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
     }
 
 
@@ -675,11 +634,10 @@ public class PersistenceFacadeTest {
         list.add(steinsGate);
 
         // when
-        persistenceFacade.addFilterList(list);
+        inMemoryPersistenceHandler.addFilterList(list);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchFilterList().size(), equalTo(list.size()));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(list.size()));
     }
 
 
@@ -688,12 +646,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        persistenceFacade.addWatchList(null);
+        inMemoryPersistenceHandler.addWatchList(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchWatchList(), not(nullValue()));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList(), not(nullValue()));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
     }
 
 
@@ -712,11 +669,10 @@ public class PersistenceFacadeTest {
         list.add(steinsGate);
 
         // when
-        persistenceFacade.addWatchList(list);
+        inMemoryPersistenceHandler.addWatchList(list);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchWatchList().size(), equalTo(list.size()));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(list.size()));
     }
 
 
@@ -746,11 +702,10 @@ public class PersistenceFacadeTest {
         list.add(steinsGate);
 
         // when
-        persistenceFacade.addAnimeList(list);
+        inMemoryPersistenceHandler.addAnimeList(list);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList().size(), equalTo(list.size()));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(list.size()));
     }
 
 
@@ -759,12 +714,11 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        persistenceFacade.addAnimeList(null);
+        inMemoryPersistenceHandler.addAnimeList(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList(), not(nullValue()));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList(), not(nullValue()));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
     }
 
 
@@ -773,13 +727,12 @@ public class PersistenceFacadeTest {
         // given
 
         // when
-        persistenceFacade.updateOrCreate(null);
+        inMemoryPersistenceHandler.updateOrCreate(null);
 
         // then
-        verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
     }
 
 
@@ -796,12 +749,11 @@ public class PersistenceFacadeTest {
         entry.setType(AnimeType.TV);
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().get(0), equalTo(entry));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().get(0), equalTo(entry));
     }
 
 
@@ -817,18 +769,17 @@ public class PersistenceFacadeTest {
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
-        persistenceFacade.addAnime(entry);
+        inMemoryPersistenceHandler.addAnime(entry);
 
         final int episodes = 37;
         entry.setEpisodes(episodes);
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
     }
 
 
@@ -838,12 +789,11 @@ public class PersistenceFacadeTest {
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchFilterList().get(0), equalTo(entry));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().get(0), equalTo(entry));
     }
 
 
@@ -852,18 +802,17 @@ public class PersistenceFacadeTest {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
 
-        persistenceFacade.filterAnime(entry);
+        inMemoryPersistenceHandler.filterAnime(entry);
 
         final String thumbnail = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
         entry.setThumbnail(thumbnail);
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchFilterList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchFilterList().get(0).getThumbnail(), equalTo(thumbnail));
     }
 
 
@@ -873,12 +822,11 @@ public class PersistenceFacadeTest {
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchWatchList().get(0), equalTo(entry));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().get(0), equalTo(entry));
     }
 
 
@@ -887,17 +835,16 @@ public class PersistenceFacadeTest {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
 
-        persistenceFacade.watchAnime(entry);
+        inMemoryPersistenceHandler.watchAnime(entry);
 
         final String thumbnail = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
         entry.setThumbnail(thumbnail);
 
         // when
-        persistenceFacade.updateOrCreate(entry);
+        inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(persistenceFacade.fetchWatchList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(false));
+        assertThat(inMemoryPersistenceHandler.fetchWatchList().get(0).getThumbnail(), equalTo(thumbnail));
     }
 }

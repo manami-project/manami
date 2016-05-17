@@ -2,7 +2,7 @@ package io.github.manami.persistence.inmemory.watchlist;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
@@ -14,7 +14,6 @@ import javax.inject.Named;
 import com.google.common.collect.ImmutableList;
 
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
@@ -52,7 +51,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
     @Override
     public boolean watchAnime(final MinimalEntry anime) {
-        if (anime == null || isBlank(anime.getInfoLink()) || watchList.containsKey(anime.getInfoLink())) {
+        if (!isValidMinimalEntry(anime) || watchList.containsKey(anime.getInfoLink())) {
             return false;
         }
 
@@ -64,22 +63,18 @@ public class InMemoryWatchListHandler implements WatchListHandler {
             entry = (WatchListEntry) anime;
         }
 
-        if (entry != null && isBlank(entry.getThumbnail())) {
-            entry.setThumbnail(AbstractMinimalEntry.NO_IMG_THUMB);
-        }
-
-        if (entry != null) {
-            watchList.put(entry.getInfoLink(), entry);
-            return true;
-        }
-
-        return false;
+        watchList.put(entry.getInfoLink(), entry);
+        return true;
     }
 
 
     @Override
     public boolean removeFromWatchList(final String url) {
-        return watchList.remove(url) != null;
+        if (isNotBlank(url)) {
+            return watchList.remove(url) != null;
+        }
+
+        return false;
     }
 
 
@@ -92,7 +87,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
 
     public void updateOrCreate(final WatchListEntry entry) {
-        if (entry != null && isNotBlank(entry.getInfoLink())) {
+        if (isValidMinimalEntry(entry)) {
             watchList.put(entry.getInfoLink(), entry);
         }
     }
