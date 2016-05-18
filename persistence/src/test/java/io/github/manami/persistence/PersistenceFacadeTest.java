@@ -31,19 +31,14 @@ import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
 public class PersistenceFacadeTest {
 
-    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-    private InMemoryFilterListHandler inMemoryFilterListHandler;
-    private InMemoryWatchListHandler inMemoryWatchListHandler;
     private PersistenceFacade persistenceFacade;
     private EventBus eventBusMock;
+    private InMemoryPersistenceHandler inMemoryPersistenceHandler;
 
 
     @Before
     public void setUp() throws IOException {
-        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-        inMemoryFilterListHandler = new InMemoryFilterListHandler();
-        inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
+        inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
         eventBusMock = mock(EventBus.class);
         persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, eventBusMock);
     }

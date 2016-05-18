@@ -23,18 +23,12 @@ import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
 public class InMemoryPersistenceHandlerTest {
 
-    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-    private InMemoryFilterListHandler inMemoryFilterListHandler;
-    private InMemoryWatchListHandler inMemoryWatchListHandler;
     private InMemoryPersistenceHandler inMemoryPersistenceHandler;
 
 
     @Before
     public void setUp() throws IOException {
-        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-        inMemoryFilterListHandler = new InMemoryFilterListHandler();
-        inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
+        inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
     }
 
 

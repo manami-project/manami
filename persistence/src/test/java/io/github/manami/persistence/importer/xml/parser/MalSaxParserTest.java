@@ -36,18 +36,13 @@ public class MalSaxParserTest {
     private static final String MAL_EXPORT_FILE = "mal_export.xml";
     private XmlImporter xmlImporter;
     private Path file;
-    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-    private InMemoryFilterListHandler inMemoryFilterListHandler;
-    private InMemoryWatchListHandler inMemoryWatchListHandler;
+    private PersistenceFacade persistenceFacade;
 
 
     @Before
     public void setUp() throws IOException {
-        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-        inMemoryFilterListHandler = new InMemoryFilterListHandler();
-        inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
-        final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
+        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
+        persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
         xmlImporter = new XmlImporter(XmlStrategy.MAL, persistenceFacade);
         final ClassPathResource resource = new ClassPathResource(MAL_EXPORT_FILE);
         file = resource.getFile().toPath();
@@ -62,7 +57,7 @@ public class MalSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<Anime> fetchAnimeList = inMemoryAnimeListHandler.fetchAnimeList();
+        final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
         assertThat(fetchAnimeList, not(nullValue()));
         assertThat(fetchAnimeList.isEmpty(), equalTo(false));
         assertThat(fetchAnimeList.size(), equalTo(2));
@@ -93,7 +88,7 @@ public class MalSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<WatchListEntry> fetchWatchList = inMemoryWatchListHandler.fetchWatchList();
+        final List<WatchListEntry> fetchWatchList = persistenceFacade.fetchWatchList();
         assertThat(fetchWatchList, not(nullValue()));
         assertThat(fetchWatchList.isEmpty(), equalTo(false));
         assertThat(fetchWatchList.size(), equalTo(2));
@@ -120,7 +115,7 @@ public class MalSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<FilterEntry> fetchFilterList = inMemoryFilterListHandler.fetchFilterList();
+        final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
         assertThat(fetchFilterList, not(nullValue()));
         assertThat(fetchFilterList.isEmpty(), equalTo(false));
         assertThat(fetchFilterList.size(), equalTo(2));

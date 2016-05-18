@@ -284,6 +284,10 @@ public class Manami implements ApplicationPersistence {
      * @since 2.10.0
      */
     public void exportList(final List<Anime> list, final Path file) {
+        if (list == null || file == null) {
+            throw new IllegalArgumentException("Either list or file to export to is null");
+        }
+
         if (file.toString().endsWith(FILE_SUFFIX_JSON)) {
             new JsonExporter(persistence).exportList(list, file);
         }

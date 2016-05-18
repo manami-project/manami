@@ -39,18 +39,13 @@ public class XmlExporterTest {
     private static final String ANIME_LIST_EXPORT_FILE = "test_anime_list_export.xml";
     private XmlExporter xmlExporter;
     private File file;
-    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-    private InMemoryFilterListHandler inMemoryFilterListHandler;
-    private InMemoryWatchListHandler inMemoryWatchListHandler;
+    private PersistenceFacade persistenceFacade;
 
 
     @Before
     public void setUp() throws IOException {
-        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-        inMemoryFilterListHandler = new InMemoryFilterListHandler();
-        inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
-        final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
+        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
+        persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
         xmlExporter = new XmlExporter(persistenceFacade);
         file = testFolder.newFile(ANIME_LIST_EXPORT_FILE);
     }
@@ -65,7 +60,7 @@ public class XmlExporterTest {
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
-        inMemoryAnimeListHandler.addAnime(bokuDake);
+        persistenceFacade.addAnime(bokuDake);
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
@@ -73,13 +68,13 @@ public class XmlExporterTest {
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
-        inMemoryAnimeListHandler.addAnime(rurouniKenshin);
+        persistenceFacade.addAnime(rurouniKenshin);
 
         final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "http://cdn.myanimelist.net/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
-        inMemoryWatchListHandler.watchAnime(deathNoteRewrite);
+        persistenceFacade.watchAnime(deathNoteRewrite);
 
         final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
-        inMemoryFilterListHandler.filterAnime(gintama);
+        persistenceFacade.filterAnime(gintama);
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
         final StringBuilder expectedFileBuilder = new StringBuilder();

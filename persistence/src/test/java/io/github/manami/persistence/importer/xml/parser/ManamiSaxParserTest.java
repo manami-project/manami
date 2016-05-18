@@ -36,17 +36,12 @@ public class ManamiSaxParserTest {
     private static final String TEST_ANIME_LIST_FILE = "test_anime_list.xml";
     private XmlImporter xmlImporter;
     private Path file;
-    private InMemoryAnimeListHandler inMemoryAnimeListHandler;
-    private InMemoryFilterListHandler inMemoryFilterListHandler;
-    private InMemoryWatchListHandler inMemoryWatchListHandler;
+    private InMemoryPersistenceHandler inMemoryPersistenceHandler;
 
 
     @Before
     public void setUp() throws IOException {
-        inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
-        inMemoryFilterListHandler = new InMemoryFilterListHandler();
-        inMemoryWatchListHandler = new InMemoryWatchListHandler();
-        final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(inMemoryAnimeListHandler, inMemoryFilterListHandler, inMemoryWatchListHandler);
+        inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
         final PersistenceFacade persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
         xmlImporter = new XmlImporter(XmlStrategy.MANAMI, persistenceFacade);
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
@@ -62,7 +57,7 @@ public class ManamiSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<Anime> fetchAnimeList = inMemoryAnimeListHandler.fetchAnimeList();
+        final List<Anime> fetchAnimeList = inMemoryPersistenceHandler.fetchAnimeList();
         assertThat(fetchAnimeList, not(nullValue()));
         assertThat(fetchAnimeList.isEmpty(), equalTo(false));
         assertThat(fetchAnimeList.size(), equalTo(2));
@@ -93,7 +88,7 @@ public class ManamiSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<WatchListEntry> fetchWatchList = inMemoryWatchListHandler.fetchWatchList();
+        final List<WatchListEntry> fetchWatchList = inMemoryPersistenceHandler.fetchWatchList();
         assertThat(fetchWatchList, not(nullValue()));
         assertThat(fetchWatchList.isEmpty(), equalTo(false));
         assertThat(fetchWatchList.size(), equalTo(1));
@@ -114,7 +109,7 @@ public class ManamiSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<FilterEntry> fetchFilterList = inMemoryFilterListHandler.fetchFilterList();
+        final List<FilterEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
         assertThat(fetchFilterList, not(nullValue()));
         assertThat(fetchFilterList.isEmpty(), equalTo(false));
         assertThat(fetchFilterList.size(), equalTo(1));
