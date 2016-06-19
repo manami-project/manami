@@ -99,11 +99,11 @@ public class MalSaxParserTest {
         assertThat(akatsukiNoYona.getTitle(), equalTo("Akatsuki no Yona"));
         assertThat(akatsukiNoYona.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
 
-        final WatchListEntry rurouniKenshin = fetchWatchList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/27655"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Aldnoah.Zero 2nd Season"));
-        assertThat(rurouniKenshin.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        final WatchListEntry aldnoahZero = fetchWatchList.get(1);
+        assertThat(aldnoahZero, not(nullValue()));
+        assertThat(aldnoahZero.getInfoLink(), equalTo("http://myanimelist.net/anime/27655"));
+        assertThat(aldnoahZero.getTitle(), equalTo("Aldnoah.Zero 2nd Season"));
+        assertThat(aldnoahZero.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
     }
 
 

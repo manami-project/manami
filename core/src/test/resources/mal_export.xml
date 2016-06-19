@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?> 	
+		<!--
+		 Created by XML Export feature at MyAnimeList.net
+		 Programmed by Xinil
+		 Last updated 5/27/2008
+		-->
+		
+		<myanimelist>
+		
+			<myinfo>
+				<user_id>0000001</user_id>
+				<user_name>------</user_name>
+				<user_export_type>1</user_export_type>
+				<user_total_anime>8</user_total_anime>
+				<user_total_watching>1</user_total_watching>
+				<user_total_completed>2</user_total_completed>
+				<user_total_onhold>2</user_total_onhold>
+				<user_total_dropped>2</user_total_dropped>
+				<user_total_plantowatch>1</user_total_plantowatch>
+			</myinfo>
+		
+			<anime>
+				<series_animedb_id>1535</series_animedb_id>
+				<series_title><![CDATA[Death Note]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>37</series_episodes>
+				<my_id>1996627</my_id>
+				<my_watched_episodes>37</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Completed</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching>0</my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>45</series_animedb_id>
+				<series_title><![CDATA[Rurouni Kenshin: Meiji Kenkaku Romantan]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>94</series_episodes>
+				<my_id>3972418</my_id>
+				<my_watched_episodes>95</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>2008-09-18</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Completed</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching>0</my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>25013</series_animedb_id>
+				<series_title><![CDATA[Akatsuki no Yona]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>24</series_episodes>
+				<my_id>0</my_id>
+				<my_watched_episodes>11</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Watching</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching>0</my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>		
+		
+			<anime>
+				<series_animedb_id>27655</series_animedb_id>
+				<series_title><![CDATA[Aldnoah.Zero 2nd Season]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>12</series_episodes>
+				<my_id>0</my_id>
+				<my_watched_episodes>0</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Plan to Watch</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching>0</my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>335</series_animedb_id>
+				<series_title><![CDATA[Matantei Loki Ragnarok]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>26</series_episodes>
+				<my_id>2682693</my_id>
+				<my_watched_episodes>5</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Dropped</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching>0</my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>957</series_animedb_id>
+				<series_title><![CDATA[Saiunkoku Monogatari]]></series_title>
+				<series_type>TV</series_type>
+				<series_episodes>39</series_episodes>
+				<my_id>16712844</my_id>
+				<my_watched_episodes>15</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>Dropped</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching></my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>21195</series_animedb_id>
+				<series_title><![CDATA[Soul Eater: Late Night Show]]></series_title>
+				<series_type>Special</series_type>
+				<series_episodes>51</series_episodes>
+				<my_id>0</my_id>
+				<my_watched_episodes>49</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>On-Hold</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching></my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+		
+			<anime>
+				<series_animedb_id>17635</series_animedb_id>
+				<series_title><![CDATA[Koitabi: True Tours Nanto]]></series_title>
+				<series_type>Special</series_type>
+				<series_episodes>6</series_episodes>
+				<my_id>0</my_id>
+				<my_watched_episodes>2</my_watched_episodes>
+				<my_start_date>0000-00-00</my_start_date>
+				<my_finish_date>0000-00-00</my_finish_date>
+				<my_rated></my_rated>
+				<my_score>0</my_score>
+				<my_dvd></my_dvd>
+				<my_storage></my_storage>
+				<my_status>On-Hold</my_status>
+				<my_comments><![CDATA[]]></my_comments>
+				<my_times_watched>0</my_times_watched>
+				<my_rewatch_value></my_rewatch_value>
+				<my_tags><![CDATA[]]></my_tags>
+				<my_rewatching></my_rewatching>
+				<my_rewatching_ep>0</my_rewatching_ep>
+				<update_on_import>0</update_on_import>
+			</anime>
+  			
+		</myanimelist>
