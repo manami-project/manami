@@ -108,7 +108,7 @@
 
     <properties>
         <java.target.version>1.8</java.target.version>
-        <manami.version>2.10.2</manami.version>
+        <manami.version>2.10.3</manami.version>
         <logback.version>1.1.7</logback.version>
     </properties>
 
