@@ -2,33 +2,33 @@ package io.github.manami.core;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.io.Files;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CmdAddAnime;
@@ -48,36 +48,55 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ManamiTest {
 
     private static final String TEST_ANIME_LIST_FILE_XML = "test_anime_list.xml";
     private static final String TEST_ANIME_LIST_FILE_JSON = "test_anime_list.json";
     private static final String TEST_ANIME_LIST_FILE_CSV = "test_anime_list.csv";
     private static final String TEST_MAL_LIST_FILE = "mal_export.xml";
-    private static final String ANIME_LIST_EXPORT_FILE_JSON = "test_anime_list_export.json";
-    private static final String ANIME_LIST_EXPORT_FILE_CSV = "test_anime_list_export.csv";
     private static final String TEST_RECOMMENDATIONS_FILE = "test_recommendations_list.json";
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-
+    private Path tempFolder;
     private Cache cacheMock;
     private Config configMock;
     private EventBus eventBusMock;
+    private String separator;
     private ServiceRepository serviceRepositoryMock;
     private PersistenceFacade persistenceFacadeMock;
 
-    @Before
+
+    @BeforeMethod
     public void setUp() throws Exception {
         cacheMock = mock(Cache.class);
         configMock = mock(Config.class);
         eventBusMock = mock(EventBus.class);
         serviceRepositoryMock = mock(ServiceRepository.class);
         persistenceFacadeMock = mock(PersistenceFacade.class);
+        separator = FileSystems.getDefault().getSeparator();
+        tempFolder = Files.createTempDirectory(String.valueOf(System.currentTimeMillis()));
     }
 
-    @Test
+
+    @AfterMethod
+    public void tearDown() throws Exception {
+        if (Files.isDirectory(tempFolder)) {
+            Files.list(tempFolder).forEach(file -> {
+                try {
+                    Files.delete(file);
+                } catch (final IOException e) {
+                    log.error("Unable to delete file in temp folder: {}", file);
+                }
+            });
+
+            Files.delete(tempFolder);
+        }
+    }
+
+
+    @Test(groups = "unitTest")
     public void testNewList() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -112,13 +131,14 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(9)).post(any(AnimeListChangedEvent.class));
-        assertThat(config.getFile(), equalTo(null));
-        assertThat(persistenceFacade.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(persistenceFacade.fetchFilterList().isEmpty(), equalTo(true));
+        assertNull(config.getFile());
+        assertTrue(persistenceFacade.fetchAnimeList().isEmpty());
+        assertTrue(persistenceFacade.fetchWatchList().isEmpty());
+        assertTrue(persistenceFacade.fetchFilterList().isEmpty());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testOpen() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -154,53 +174,54 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(9)).post(any(AnimeListChangedEvent.class));
-        assertThat(config.getFile(), equalTo(file));
+        assertEquals(config.getFile(), file);
 
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertFalse(fetchAnimeList.isEmpty());
+        assertEquals(fetchAnimeList.size(), 2);
 
         final Anime bokuDake = fetchAnimeList.get(0);
-        assertThat(bokuDake, not(nullValue()));
-        assertThat(bokuDake.getEpisodes(), equalTo(12));
-        assertThat(bokuDake.getInfoLink(), equalTo("http://myanimelist.net/anime/31043"));
-        assertThat(bokuDake.getLocation(), equalTo("/anime/series/boku_dake_ga_inai_machi"));
-        assertThat(bokuDake.getTitle(), equalTo("Boku dake ga Inai Machi"));
-        assertThat(bokuDake.getType(), equalTo(AnimeType.TV));
+        assertNotNull(bokuDake);
+        assertEquals(bokuDake.getEpisodes(), 12);
+        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
+        assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
+        assertEquals(bokuDake.getType(), AnimeType.TV);
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(4));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/44"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/anime/series/rurouni_kenshin"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.OVA));
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 4);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+        assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
 
         final List<WatchListEntry> fetchWatchList = inMemoryPersistenceHandler.fetchWatchList();
-        assertThat(fetchWatchList, not(nullValue()));
-        assertThat(fetchWatchList.isEmpty(), equalTo(false));
-        assertThat(fetchWatchList.size(), equalTo(1));
+        assertNotNull(fetchWatchList);
+        assertFalse(fetchWatchList.isEmpty());
+        assertEquals(fetchWatchList.size(), 1);
 
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
-        assertThat(deathNoteRewrite, not(nullValue()));
-        assertThat(deathNoteRewrite.getInfoLink(), equalTo("http://myanimelist.net/anime/2994"));
-        assertThat(deathNoteRewrite.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/anime/13/8518t.jpg"));
-        assertThat(deathNoteRewrite.getTitle(), equalTo("Death Note Rewrite"));
+        assertNotNull(deathNoteRewrite);
+        assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
+        assertEquals(deathNoteRewrite.getThumbnail(), "http://cdn.myanimelist.net/images/anime/13/8518t.jpg");
+        assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
 
         final List<FilterEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
-        assertThat(fetchFilterList, not(nullValue()));
-        assertThat(fetchFilterList.isEmpty(), equalTo(false));
-        assertThat(fetchFilterList.size(), equalTo(1));
+        assertNotNull(fetchFilterList);
+        assertFalse(fetchFilterList.isEmpty());
+        assertEquals(fetchFilterList.size(), 1);
 
         final FilterEntry gintama = fetchFilterList.get(0);
-        assertThat(gintama, not(nullValue()));
-        assertThat(gintama.getInfoLink(), equalTo("http://myanimelist.net/anime/918"));
-        assertThat(gintama.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/anime/2/10038t.jpg"));
-        assertThat(gintama.getTitle(), equalTo("Gintama"));
+        assertNotNull(gintama);
+        assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
+        assertEquals(gintama.getThumbnail(), "http://cdn.myanimelist.net/images/anime/2/10038t.jpg");
+        assertEquals(gintama.getTitle(), "Gintama");
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsNull() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -213,11 +234,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchFilterList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchFilterList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -232,11 +254,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchFilterList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchFilterList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutInfoLink() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -251,11 +274,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchFilterList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchFilterList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutThumbnail() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -270,11 +294,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchFilterList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchFilterList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsFullEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -289,11 +314,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchFilterList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchFilterList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterEntryExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -309,10 +335,11 @@ public class ManamiTest {
         final boolean result = app.filterEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertTrue(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterEntryNotExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -325,10 +352,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFilterAnimeList() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -343,10 +371,11 @@ public class ManamiTest {
         final List<FilterEntry> fetchFilterList = app.fetchFilterList();
 
         // then
-        assertThat(fetchFilterList.size(), equalTo(1));
+        assertEquals(fetchFilterList.size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testFetchWatchList() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -361,10 +390,11 @@ public class ManamiTest {
         final List<WatchListEntry> fetchWatchList = app.fetchWatchList();
 
         // then
-        assertThat(fetchWatchList.size(), equalTo(1));
+        assertEquals(fetchWatchList.size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromFilterListWorks() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -381,11 +411,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchFilterList().isEmpty(), equalTo(true));
+        assertTrue(result);
+        assertTrue(app.fetchFilterList().isEmpty());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromFilterListNullAsArgument() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -398,10 +429,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchListEntryExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -417,10 +449,11 @@ public class ManamiTest {
         final boolean result = app.watchListEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertTrue(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchListEntryNotExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -433,10 +466,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsNull() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -449,11 +483,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchWatchList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchWatchList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -468,11 +503,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchWatchList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchWatchList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutInfoLink() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -487,11 +523,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchWatchList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchWatchList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutThumbnail() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -506,11 +543,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchWatchList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchWatchList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsFullEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -525,11 +563,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchWatchList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchWatchList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromWatchListWorks() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -546,11 +585,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchWatchList().isEmpty(), equalTo(true));
+        assertTrue(result);
+        assertTrue(app.fetchWatchList().isEmpty());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromWatchListNullAsArgument() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -563,10 +603,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsNull() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -579,11 +620,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchAnimeList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchAnimeList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsFullEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -605,11 +647,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchAnimeList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -630,11 +673,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchAnimeList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -655,11 +699,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchAnimeList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -680,11 +725,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchAnimeList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchAnimeList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -705,11 +751,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchAnimeList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -730,11 +777,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().size(), equalTo(1));
+        assertTrue(result);
+        assertEquals(app.fetchAnimeList().size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -755,11 +803,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchAnimeList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchAnimeList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutType() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -780,11 +829,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
-        assertThat(app.fetchAnimeList().size(), equalTo(0));
+        assertFalse(result);
+        assertEquals(app.fetchAnimeList().size(), 0);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testAnimeEntryExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -807,10 +857,11 @@ public class ManamiTest {
         final boolean result = app.animeEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertTrue(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testAnimeEntryNotExists() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -823,10 +874,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testAnimeList() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -848,10 +900,11 @@ public class ManamiTest {
         final List<Anime> animeList = app.fetchAnimeList();
 
         // then
-        assertThat(animeList.size(), equalTo(1));
+        assertEquals(animeList.size(), 1);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListWorks() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -874,11 +927,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(true));
-        assertThat(app.fetchAnimeList().isEmpty(), equalTo(true));
+        assertTrue(result);
+        assertTrue(app.fetchAnimeList().isEmpty());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListNullAsArgument() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -891,10 +945,11 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(result, equalTo(false));
+        assertFalse(result);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateWithNull() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -907,12 +962,13 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(app.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(app.fetchFilterList().isEmpty(), equalTo(true));
+        assertTrue(app.fetchAnimeList().isEmpty());
+        assertTrue(app.fetchWatchList().isEmpty());
+        assertTrue(app.fetchFilterList().isEmpty());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -934,11 +990,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(app.fetchAnimeList().get(0), equalTo(entry));
+        assertFalse(app.fetchAnimeList().isEmpty());
+        assertEquals(app.fetchAnimeList().get(0), entry);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -965,11 +1022,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(app.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
+        assertFalse(app.fetchAnimeList().isEmpty());
+        assertEquals(app.fetchAnimeList().get(0).getEpisodes(), episodes);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewFilterEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -984,11 +1042,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(app.fetchFilterList().get(0), equalTo(entry));
+        assertFalse(app.fetchFilterList().isEmpty());
+        assertEquals(app.fetchFilterList().get(0), entry);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedFilterEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1008,11 +1067,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(app.fetchFilterList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertFalse(app.fetchFilterList().isEmpty());
+        assertEquals(app.fetchFilterList().get(0).getThumbnail(), thumbnail);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewWatchListEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1027,11 +1087,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(1)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(app.fetchWatchList().get(0), equalTo(entry));
+        assertFalse(app.fetchWatchList().isEmpty());
+        assertEquals(app.fetchWatchList().get(0), entry);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedWatchListEntry() {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1051,11 +1112,12 @@ public class ManamiTest {
 
         // then
         verify(eventBusMock, times(2)).post(any(AnimeListChangedEvent.class));
-        assertThat(app.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(app.fetchWatchList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertFalse(app.fetchWatchList().isEmpty());
+        assertEquals(app.fetchWatchList().get(0).getThumbnail(), thumbnail);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testThatPredefinedListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1083,21 +1145,22 @@ public class ManamiTest {
 
         final ClassPathResource resource = new ClassPathResource(TEST_RECOMMENDATIONS_FILE);
         final StringBuilder expectedFileBuilder = new StringBuilder();
-        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(expectedFileBuilder::append);
 
-        final File file = testFolder.newFile(ANIME_LIST_EXPORT_FILE_JSON);
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.json"));
 
         // when
-        app.exportList(list, file.toPath());
+        app.exportList(list, file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(expectedFileBuilder.toString(), equalTo(exportedFileBuilder.toString()));
+        assertEquals(expectedFileBuilder.toString(), exportedFileBuilder.toString());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testThatPredefinedListIsNotExportedIfFileSuffixIsNotJson() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1123,19 +1186,20 @@ public class ManamiTest {
         rurouniKenshin.setType(AnimeType.OVA);
         list.add(rurouniKenshin);
 
-        final File file = testFolder.newFile("some_other_filename.dat");
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.xml"));
 
         // when
-        app.exportList(list, file.toPath());
+        app.exportList(list, file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(file, StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(isBlank(exportedFileBuilder.toString()), equalTo(true));
+        assertTrue(isBlank(exportedFileBuilder.toString()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+
+    @Test(groups = "unitTest", expectedExceptions = IllegalArgumentException.class)
     public void testThatExportListIsNull() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1143,15 +1207,16 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final File file = testFolder.newFile(ANIME_LIST_EXPORT_FILE_JSON);
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.xml"));
 
         // when
-        app.exportList(null, file.toPath());
+        app.exportList(null, file);
 
         // then
     }
 
-    @Test(expected = IllegalArgumentException.class)
+
+    @Test(groups = "unitTest", expectedExceptions = IllegalArgumentException.class)
     public void testThatExportFileIsNull() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1183,7 +1248,8 @@ public class ManamiTest {
         // then
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testSearchStringIsBlank() {
         // given
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacadeMock, serviceRepositoryMock, eventBusMock);
@@ -1197,7 +1263,8 @@ public class ManamiTest {
         verify(serviceRepositoryMock, times(0)).startService(any());
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testSearch() {
         // given
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacadeMock, serviceRepositoryMock, eventBusMock);
@@ -1210,7 +1277,7 @@ public class ManamiTest {
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThaExportedWorksCorrectlyForCsv() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1242,22 +1309,22 @@ public class ManamiTest {
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE_CSV);
         final StringBuilder expectedFileBuilder = new StringBuilder();
-        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(expectedFileBuilder::append);
 
-        final File file = testFolder.newFile(ANIME_LIST_EXPORT_FILE_CSV);
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.csv"));
 
         // when
-        app.export(file.toPath());
+        app.export(file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(expectedFileBuilder.toString(), equalTo(exportedFileBuilder.toString()));
+        assertEquals(expectedFileBuilder.toString(), exportedFileBuilder.toString());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThaExportedWorksCorrectlyForJson() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1289,22 +1356,22 @@ public class ManamiTest {
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE_JSON);
         final StringBuilder expectedFileBuilder = new StringBuilder();
-        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(expectedFileBuilder::append);
 
-        final File file = testFolder.newFile(ANIME_LIST_EXPORT_FILE_JSON);
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.json"));
 
         // when
-        app.export(file.toPath());
+        app.export(file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(expectedFileBuilder.toString(), equalTo(exportedFileBuilder.toString()));
+        assertEquals(expectedFileBuilder.toString(), exportedFileBuilder.toString());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThaExportedIsNotExecutedBecauseFileSuffixDoesNotMatchAnyKnownFileType() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1334,20 +1401,20 @@ public class ManamiTest {
         final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
         persistenceFacade.filterAnime(gintama);
 
-        final File file = testFolder.newFile("export_file.dat");
+        final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.test"));
 
         // when
-        app.export(file.toPath());
+        app.export(file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(file, StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(isBlank(exportedFileBuilder.toString()), equalTo(true));
+        assertTrue(isBlank(exportedFileBuilder.toString()));
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatImportWorksCorrectlyForJson() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1360,29 +1427,29 @@ public class ManamiTest {
 
         // then
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertFalse(fetchAnimeList.isEmpty());
+        assertEquals(fetchAnimeList.size(), 2);
 
         final Anime bokuDake = fetchAnimeList.get(0);
-        assertThat(bokuDake, not(nullValue()));
-        assertThat(bokuDake.getEpisodes(), equalTo(12));
-        assertThat(bokuDake.getInfoLink(), equalTo("http://myanimelist.net/anime/31043"));
-        assertThat(bokuDake.getLocation(), equalTo("/anime/series/boku_dake_ga_inai_machi"));
-        assertThat(bokuDake.getTitle(), equalTo("Boku dake ga Inai Machi"));
-        assertThat(bokuDake.getType(), equalTo(AnimeType.TV));
+        assertNotNull(bokuDake);
+        assertEquals(bokuDake.getEpisodes(), 12);
+        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
+        assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
+        assertEquals(bokuDake.getType(), AnimeType.TV);
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(4));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/44"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/anime/series/rurouni_kenshin"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.OVA));
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 4);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+        assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatImportWorksCorrectlyForCsv() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1395,28 +1462,29 @@ public class ManamiTest {
 
         // then
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertFalse(fetchAnimeList.isEmpty());
+        assertEquals(fetchAnimeList.size(), 2);
 
         final Anime bokuDake = fetchAnimeList.get(0);
-        assertThat(bokuDake, not(nullValue()));
-        assertThat(bokuDake.getEpisodes(), equalTo(12));
-        assertThat(bokuDake.getInfoLink(), equalTo("http://myanimelist.net/anime/31043"));
-        assertThat(bokuDake.getLocation(), equalTo("/anime/series/boku_dake_ga_inai_machi"));
-        assertThat(bokuDake.getTitle(), equalTo("Boku dake ga Inai Machi"));
-        assertThat(bokuDake.getType(), equalTo(AnimeType.TV));
+        assertNotNull(bokuDake);
+        assertEquals(bokuDake.getEpisodes(), 12);
+        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
+        assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
+        assertEquals(bokuDake.getType(), AnimeType.TV);
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(4));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/44"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/anime/series/rurouni_kenshin"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.OVA));
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 4);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+        assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testThatImportWorksCorrectlyForMalXml() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1429,62 +1497,63 @@ public class ManamiTest {
 
         // then
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertFalse(fetchAnimeList.isEmpty());
+        assertEquals(fetchAnimeList.size(), 2);
 
         final Anime deathNote = fetchAnimeList.get(0);
-        assertThat(deathNote, not(nullValue()));
-        assertThat(deathNote.getEpisodes(), equalTo(37));
-        assertThat(deathNote.getInfoLink(), equalTo("http://myanimelist.net/anime/1535"));
-        assertThat(deathNote.getLocation(), equalTo("/"));
-        assertThat(deathNote.getTitle(), equalTo("Death Note"));
-        assertThat(deathNote.getType(), equalTo(AnimeType.TV));
+        assertNotNull(deathNote);
+        assertEquals(deathNote.getEpisodes(), 37);
+        assertEquals(deathNote.getInfoLink(), "http://myanimelist.net/anime/1535");
+        assertEquals(deathNote.getLocation(), "/");
+        assertEquals(deathNote.getTitle(), "Death Note");
+        assertEquals(deathNote.getType(), AnimeType.TV);
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(94));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/45"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.TV));
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 94);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/45");
+        assertEquals(rurouniKenshin.getLocation(), "/");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan");
+        assertEquals(rurouniKenshin.getType(), AnimeType.TV);
 
         final List<WatchListEntry> fetchWatchList = persistenceFacade.fetchWatchList();
-        assertThat(fetchWatchList, not(nullValue()));
-        assertThat(fetchWatchList.isEmpty(), equalTo(false));
-        assertThat(fetchWatchList.size(), equalTo(2));
+        assertNotNull(fetchWatchList);
+        assertFalse(fetchWatchList.isEmpty());
+        assertEquals(fetchWatchList.size(), 2);
 
         final WatchListEntry akatsukiNoYona = fetchWatchList.get(0);
-        assertThat(akatsukiNoYona, not(nullValue()));
-        assertThat(akatsukiNoYona.getInfoLink(), equalTo("http://myanimelist.net/anime/25013"));
-        assertThat(akatsukiNoYona.getTitle(), equalTo("Akatsuki no Yona"));
-        assertThat(akatsukiNoYona.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertNotNull(akatsukiNoYona);
+        assertEquals(akatsukiNoYona.getInfoLink(), "http://myanimelist.net/anime/25013");
+        assertEquals(akatsukiNoYona.getTitle(), "Akatsuki no Yona");
+        assertEquals(akatsukiNoYona.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
 
         final WatchListEntry aldnohaZero = fetchWatchList.get(1);
-        assertThat(aldnohaZero, not(nullValue()));
-        assertThat(aldnohaZero.getInfoLink(), equalTo("http://myanimelist.net/anime/27655"));
-        assertThat(aldnohaZero.getTitle(), equalTo("Aldnoah.Zero 2nd Season"));
-        assertThat(aldnohaZero.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertNotNull(aldnohaZero);
+        assertEquals(aldnohaZero.getInfoLink(), "http://myanimelist.net/anime/27655");
+        assertEquals(aldnohaZero.getTitle(), "Aldnoah.Zero 2nd Season");
+        assertEquals(aldnohaZero.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
 
         final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
-        assertThat(fetchFilterList, not(nullValue()));
-        assertThat(fetchFilterList.isEmpty(), equalTo(false));
-        assertThat(fetchFilterList.size(), equalTo(2));
+        assertNotNull(fetchFilterList);
+        assertFalse(fetchFilterList.isEmpty());
+        assertEquals(fetchFilterList.size(), 2);
 
         final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
-        assertThat(matanteiLokiRagnarok, not(nullValue()));
-        assertThat(matanteiLokiRagnarok.getInfoLink(), equalTo("http://myanimelist.net/anime/335"));
-        assertThat(matanteiLokiRagnarok.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(matanteiLokiRagnarok.getTitle(), equalTo("Matantei Loki Ragnarok"));
+        assertNotNull(matanteiLokiRagnarok);
+        assertEquals(matanteiLokiRagnarok.getInfoLink(), "http://myanimelist.net/anime/335");
+        assertEquals(matanteiLokiRagnarok.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(matanteiLokiRagnarok.getTitle(), "Matantei Loki Ragnarok");
 
         final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
-        assertThat(saiunkokuMonogatari, not(nullValue()));
-        assertThat(saiunkokuMonogatari.getInfoLink(), equalTo("http://myanimelist.net/anime/957"));
-        assertThat(saiunkokuMonogatari.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(saiunkokuMonogatari.getTitle(), equalTo("Saiunkoku Monogatari"));
+        assertNotNull(saiunkokuMonogatari);
+        assertEquals(saiunkokuMonogatari.getInfoLink(), "http://myanimelist.net/anime/957");
+        assertEquals(saiunkokuMonogatari.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(saiunkokuMonogatari.getTitle(), "Saiunkoku Monogatari");
     }
 
-    @Test
+
+    @Test(groups = "unitTest")
     public void testThatImportDoesNotWorkForAnyOtherFile() throws SAXException, ParserConfigurationException, IOException {
         // given
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
@@ -1497,15 +1566,15 @@ public class ManamiTest {
 
         // then
         final List<Anime> animeList = persistenceFacade.fetchAnimeList();
-        assertThat(animeList, not(nullValue()));
-        assertThat(animeList.isEmpty(), equalTo(true));
+        assertNotNull(animeList);
+        assertTrue(animeList.isEmpty());
 
         final List<WatchListEntry> watchList = persistenceFacade.fetchWatchList();
-        assertThat(watchList, not(nullValue()));
-        assertThat(watchList.isEmpty(), equalTo(true));
+        assertNotNull(watchList);
+        assertTrue(watchList.isEmpty());
 
         final List<FilterEntry> filterList = persistenceFacade.fetchFilterList();
-        assertThat(filterList, not(nullValue()));
-        assertThat(filterList.isEmpty(), equalTo(true));
+        assertNotNull(filterList);
+        assertTrue(filterList.isEmpty());
     }
 }

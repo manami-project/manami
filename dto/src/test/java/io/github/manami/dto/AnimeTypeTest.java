@@ -1,13 +1,12 @@
 package io.github.manami.dto;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertEquals;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 public class AnimeTypeTest {
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUnknown() {
         // given
         final String defaultString = "akjbfJKdsd";
@@ -20,13 +19,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(null));
-        assertThat(upperCaseStringType, equalTo(null));
-        assertThat(lowerCaseStringType, equalTo(null));
+        assertEquals(defaultStringType, null);
+        assertEquals(upperCaseStringType, null);
+        assertEquals(lowerCaseStringType, null);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testTv() {
         // given
         final String defaultString = "Tv";
@@ -39,13 +38,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.TV));
-        assertThat(upperCaseStringType, equalTo(AnimeType.TV));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.TV));
+        assertEquals(defaultStringType, AnimeType.TV);
+        assertEquals(upperCaseStringType, AnimeType.TV);
+        assertEquals(lowerCaseStringType, AnimeType.TV);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testMovie() {
         // given
         final String defaultString = "Movie";
@@ -58,13 +57,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.MOVIE));
-        assertThat(upperCaseStringType, equalTo(AnimeType.MOVIE));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.MOVIE));
+        assertEquals(defaultStringType, AnimeType.MOVIE);
+        assertEquals(upperCaseStringType, AnimeType.MOVIE);
+        assertEquals(lowerCaseStringType, AnimeType.MOVIE);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testOva() {
         // given
         final String defaultString = "Ova";
@@ -77,13 +76,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.OVA));
-        assertThat(upperCaseStringType, equalTo(AnimeType.OVA));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.OVA));
+        assertEquals(defaultStringType, AnimeType.OVA);
+        assertEquals(upperCaseStringType, AnimeType.OVA);
+        assertEquals(lowerCaseStringType, AnimeType.OVA);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testSpecial() {
         // given
         final String defaultString = "Special";
@@ -96,13 +95,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.SPECIAL));
-        assertThat(upperCaseStringType, equalTo(AnimeType.SPECIAL));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.SPECIAL));
+        assertEquals(defaultStringType, AnimeType.SPECIAL);
+        assertEquals(upperCaseStringType, AnimeType.SPECIAL);
+        assertEquals(lowerCaseStringType, AnimeType.SPECIAL);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testOna() {
         // given
         final String defaultString = "Ona";
@@ -115,13 +114,13 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.ONA));
-        assertThat(upperCaseStringType, equalTo(AnimeType.ONA));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.ONA));
+        assertEquals(defaultStringType, AnimeType.ONA);
+        assertEquals(upperCaseStringType, AnimeType.ONA);
+        assertEquals(lowerCaseStringType, AnimeType.ONA);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testMusic() {
         // given
         final String defaultString = "Music";
@@ -134,8 +133,8 @@ public class AnimeTypeTest {
         final AnimeType lowerCaseStringType = AnimeType.findByName(lowerCase);
 
         // then
-        assertThat(defaultStringType, equalTo(AnimeType.MUSIC));
-        assertThat(upperCaseStringType, equalTo(AnimeType.MUSIC));
-        assertThat(lowerCaseStringType, equalTo(AnimeType.MUSIC));
+        assertEquals(defaultStringType, AnimeType.MUSIC);
+        assertEquals(upperCaseStringType, AnimeType.MUSIC);
+        assertEquals(lowerCaseStringType, AnimeType.MUSIC);
     }
 }

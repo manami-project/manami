@@ -1,19 +1,18 @@
 package io.github.manami.dto.entities;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 import java.util.UUID;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.AnimeType;
 
 public class AnimeTest {
 
-    @Test
+    @Test(groups = "unitTest")
     public void testCopyEmptyAnime() {
         // given
         final Anime target = new Anime();
@@ -31,18 +30,18 @@ public class AnimeTest {
         Anime.copyAnime(anime, target);
 
         // then
-        assertThat(target.getEpisodes(), equalTo(anime.getEpisodes()));
-        assertThat(target.getInfoLink(), equalTo(anime.getInfoLink()));
-        assertThat(target.getLocation(), equalTo(anime.getLocation()));
-        assertThat(target.getPicture(), equalTo(anime.getPicture()));
-        assertThat(target.getThumbnail(), equalTo(anime.getThumbnail()));
-        assertThat(target.getTitle(), equalTo(anime.getTitle()));
-        assertThat(target.getType(), equalTo(anime.getType()));
-        assertThat(target.getId(), not(anime.getId()));
+        assertEquals(target.getEpisodes(), anime.getEpisodes());
+        assertEquals(target.getInfoLink(), anime.getInfoLink());
+        assertEquals(target.getLocation(), anime.getLocation());
+        assertEquals(target.getPicture(), anime.getPicture());
+        assertEquals(target.getThumbnail(), anime.getThumbnail());
+        assertEquals(target.getTitle(), anime.getTitle());
+        assertEquals(target.getType(), anime.getType());
+        assertNotEquals(target.getId(), anime.getId());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testConstructorWithUUID() {
         // given
         final UUID uuid = UUID.randomUUID();
@@ -51,18 +50,18 @@ public class AnimeTest {
         final Anime result = new Anime(uuid);
 
         // then
-        assertThat(result.getEpisodes(), equalTo(0));
-        assertThat(result.getPicture(), equalTo(EMPTY));
-        assertThat(result.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(result.getInfoLink(), equalTo(null));
-        assertThat(result.getLocation(), equalTo(EMPTY));
-        assertThat(result.getTitle(), equalTo(null));
-        assertThat(result.getType(), equalTo(null));
-        assertThat(result.getId(), equalTo(uuid));
+        assertEquals(result.getEpisodes(), 0);
+        assertEquals(result.getPicture(), EMPTY);
+        assertEquals(result.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(result.getInfoLink(), null);
+        assertEquals(result.getLocation(), EMPTY);
+        assertEquals(result.getTitle(), null);
+        assertEquals(result.getType(), null);
+        assertEquals(result.getId(), uuid);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testSetEpisodesDoesNotChangeToNegativeNumber() {
         // given
         final Anime anime = new Anime();
@@ -71,11 +70,11 @@ public class AnimeTest {
         anime.setEpisodes(-1);
 
         // then
-        assertThat(anime.getEpisodes(), equalTo(0));
+        assertEquals(anime.getEpisodes(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testSetEpisodesDoesNotChangeToNegativeNumberForNonDefaultValue() {
         // given
         final Anime anime = new Anime();
@@ -86,11 +85,11 @@ public class AnimeTest {
         anime.setEpisodes(-1);
 
         // then
-        assertThat(anime.getEpisodes(), equalTo(episodes));
+        assertEquals(anime.getEpisodes(), episodes);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testIsValidAnimeWithNull() {
         // given
 
@@ -98,11 +97,11 @@ public class AnimeTest {
         final boolean result = Anime.isValidAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testIsValidAnimeWithValidEntry() {
         // given
         final Anime anime = new Anime();
@@ -118,11 +117,11 @@ public class AnimeTest {
         final boolean result = Anime.isValidAnime(anime);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testIsValidAnimeWithTypeNull() {
         // given
         final Anime anime = new Anime();
@@ -138,11 +137,11 @@ public class AnimeTest {
         final boolean result = Anime.isValidAnime(anime);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForNull() {
         // given
         final Anime anime = new Anime();
@@ -152,11 +151,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(null));
+        assertEquals(result, null);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForTv() {
         // given
         final AnimeType type = AnimeType.TV;
@@ -167,11 +166,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForMovie() {
         // given
         final AnimeType type = AnimeType.MOVIE;
@@ -182,11 +181,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForMusic() {
         // given
         final AnimeType type = AnimeType.MUSIC;
@@ -197,11 +196,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForOna() {
         // given
         final AnimeType type = AnimeType.ONA;
@@ -212,11 +211,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForOva() {
         // given
         final AnimeType type = AnimeType.OVA;
@@ -227,11 +226,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetTypeAsStringForSpecial() {
         // given
         final AnimeType type = AnimeType.SPECIAL;
@@ -242,11 +241,11 @@ public class AnimeTest {
         final String result = anime.getTypeAsString();
 
         // then
-        assertThat(result, equalTo(type.getValue()));
+        assertEquals(result, type.getValue());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testCopyNullTarget() {
         // given
         final Anime target = new Anime();
@@ -264,18 +263,18 @@ public class AnimeTest {
         Anime.copyNullTarget(anime, target);
 
         // then
-        assertThat(target.getEpisodes(), equalTo(anime.getEpisodes()));
-        assertThat(target.getInfoLink(), equalTo(anime.getInfoLink()));
-        assertThat(target.getLocation(), equalTo(anime.getLocation()));
-        assertThat(target.getPicture(), equalTo(anime.getPicture()));
-        assertThat(target.getThumbnail(), equalTo(anime.getThumbnail()));
-        assertThat(target.getTitle(), equalTo(anime.getTitle()));
-        assertThat(target.getType(), equalTo(anime.getType()));
-        assertThat(target.getId(), not(anime.getId()));
+        assertEquals(target.getEpisodes(), anime.getEpisodes());
+        assertEquals(target.getInfoLink(), anime.getInfoLink());
+        assertEquals(target.getLocation(), anime.getLocation());
+        assertEquals(target.getPicture(), anime.getPicture());
+        assertEquals(target.getThumbnail(), anime.getThumbnail());
+        assertEquals(target.getTitle(), anime.getTitle());
+        assertEquals(target.getType(), anime.getType());
+        assertNotEquals(target.getId(), anime.getId());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testCopyNullTargetWithFilledTarget() {
         // given
         final Anime target = new Anime();
@@ -300,13 +299,13 @@ public class AnimeTest {
         Anime.copyNullTarget(anime, target);
 
         // then
-        assertThat(target.getEpisodes(), not(anime.getEpisodes()));
-        assertThat(target.getInfoLink(), not(anime.getInfoLink()));
-        assertThat(target.getLocation(), not(anime.getLocation()));
-        assertThat(target.getPicture(), not(anime.getPicture()));
-        assertThat(target.getThumbnail(), not(anime.getThumbnail()));
-        assertThat(target.getTitle(), not(anime.getTitle()));
-        assertThat(target.getType(), not(anime.getType()));
-        assertThat(target.getId(), not(anime.getId()));
+        assertNotEquals(target.getEpisodes(), anime.getEpisodes());
+        assertNotEquals(target.getInfoLink(), anime.getInfoLink());
+        assertNotEquals(target.getLocation(), anime.getLocation());
+        assertNotEquals(target.getPicture(), anime.getPicture());
+        assertNotEquals(target.getThumbnail(), anime.getThumbnail());
+        assertNotEquals(target.getTitle(), anime.getTitle());
+        assertNotEquals(target.getType(), anime.getType());
+        assertNotEquals(target.getId(), anime.getId());
     }
 }

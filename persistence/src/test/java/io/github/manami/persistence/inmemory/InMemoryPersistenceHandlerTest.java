@@ -1,16 +1,14 @@
 package io.github.manami.persistence.inmemory;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
@@ -26,13 +24,13 @@ public class InMemoryPersistenceHandlerTest {
     private InMemoryPersistenceHandler inMemoryPersistenceHandler;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsNull() {
         // given
 
@@ -40,12 +38,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
         final FilterEntry entry = new FilterEntry("", "http://myanimelist.net/anime/1535");
@@ -54,12 +52,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutInfoLink() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "");
@@ -68,12 +66,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsEntryWithoutThumbnail() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
@@ -82,12 +80,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeIsFullEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -96,12 +94,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryExists() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -112,11 +110,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryNotExists() {
         // given
 
@@ -124,11 +122,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.filterEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterAnimeList() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
@@ -138,11 +136,11 @@ public class InMemoryPersistenceHandlerTest {
         final List<FilterEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
 
         // then
-        assertThat(fetchFilterList.size(), equalTo(1));
+        assertEquals(fetchFilterList.size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFetchWatchList() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
@@ -152,11 +150,11 @@ public class InMemoryPersistenceHandlerTest {
         final List<WatchListEntry> fetchWatchList = inMemoryPersistenceHandler.fetchWatchList();
 
         // then
-        assertThat(fetchWatchList.size(), equalTo(1));
+        assertEquals(fetchWatchList.size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromFilterListWorks() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -167,12 +165,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeFromFilterList(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromFilterListNullAsArgument() {
         // given
 
@@ -180,11 +178,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeFromFilterList(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryExists() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -195,11 +193,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchListEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryNotExists() {
         // given
 
@@ -207,11 +205,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchListEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsNull() {
         // given
 
@@ -219,12 +217,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
         final WatchListEntry entry = new WatchListEntry("", "http://myanimelist.net/anime/1535");
@@ -233,12 +231,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutInfoLink() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "");
@@ -247,12 +245,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutThumbnail() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
@@ -261,12 +259,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchAnimeIsFullEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -275,12 +273,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromWatchListWorks() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -291,12 +289,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeFromWatchList(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromWatchListNullAsArgument() {
         // given
 
@@ -304,11 +302,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeFromWatchList(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsNull() {
         // given
 
@@ -316,12 +314,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsFullEntry() {
         // given
         final Anime entry = new Anime();
@@ -337,12 +335,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final Anime entry = new Anime();
@@ -357,12 +355,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
         final Anime entry = new Anime();
@@ -377,12 +375,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
         final Anime entry = new Anime();
@@ -397,12 +395,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
         final Anime entry = new Anime();
@@ -417,12 +415,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
         final Anime entry = new Anime();
@@ -437,12 +435,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
         final Anime entry = new Anime();
@@ -457,12 +455,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutType() {
         // given
         final Anime entry = new Anime();
@@ -477,12 +475,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeEntryExists() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -500,11 +498,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.animeEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeEntryNotExists() {
         // given
 
@@ -512,11 +510,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.animeEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeList() {
         // given
         final Anime entry = new Anime();
@@ -533,11 +531,11 @@ public class InMemoryPersistenceHandlerTest {
         final List<Anime> animeList = inMemoryPersistenceHandler.fetchAnimeList();
 
         // then
-        assertThat(animeList.size(), equalTo(1));
+        assertEquals(animeList.size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListWorks() {
         // given
         final Anime entry = new Anime();
@@ -554,12 +552,12 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeAnime(entry.getId());
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertEquals(result, true);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListNullAsArgument() {
         // given
 
@@ -567,11 +565,11 @@ public class InMemoryPersistenceHandlerTest {
         final boolean result = inMemoryPersistenceHandler.removeAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatClearAllWorks() {
         // given
         final Anime entry = new Anime();
@@ -594,13 +592,13 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.clearAll();
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), true);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), true);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAddFilterListWithNull() {
         // given
 
@@ -608,12 +606,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addFilterList(null);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchFilterList(), not(nullValue()));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
+        assertNotNull(inMemoryPersistenceHandler.fetchFilterList());
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatAddFilterListWorks() {
         // given
         final List<FilterEntry> list = newArrayList();
@@ -631,11 +629,11 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addFilterList(list);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().size(), equalTo(list.size()));
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().size(), list.size());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAddWatchListWithNull() {
         // given
 
@@ -643,12 +641,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addWatchList(null);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchWatchList(), not(nullValue()));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
+        assertNotNull(inMemoryPersistenceHandler.fetchWatchList());
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatAddWatchListWorks() {
         // given
         final List<WatchListEntry> list = newArrayList();
@@ -666,11 +664,11 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addWatchList(list);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().size(), equalTo(list.size()));
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().size(), list.size());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatAddAnimeListWorks() {
         // given
         final List<Anime> list = newArrayList();
@@ -699,11 +697,11 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addAnimeList(list);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().size(), equalTo(list.size()));
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().size(), list.size());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAddAnimeListWithNull() {
         // given
 
@@ -711,12 +709,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.addAnimeList(null);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList(), not(nullValue()));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertNotNull(inMemoryPersistenceHandler.fetchAnimeList());
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateWithNull() {
         // given
 
@@ -724,13 +722,13 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(null);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(true));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(true));
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), true);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), true);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -746,12 +744,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().get(0), equalTo(entry));
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().get(0), entry);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -772,12 +770,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchAnimeList().get(0).getEpisodes(), episodes);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewFilterEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -786,12 +784,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().get(0), equalTo(entry));
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().get(0), entry);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedFilterEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
@@ -805,12 +803,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchFilterList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchFilterList().get(0).getThumbnail(), thumbnail);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewWatchListEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -819,12 +817,12 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().get(0), equalTo(entry));
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().get(0), entry);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedWatchListEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
@@ -838,7 +836,7 @@ public class InMemoryPersistenceHandlerTest {
         inMemoryPersistenceHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), equalTo(false));
-        assertThat(inMemoryPersistenceHandler.fetchWatchList().get(0).getThumbnail(), equalTo(thumbnail));
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().isEmpty(), false);
+        assertEquals(inMemoryPersistenceHandler.fetchWatchList().get(0).getThumbnail(), thumbnail);
     }
 }

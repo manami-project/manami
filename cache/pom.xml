@@ -48,16 +48,12 @@
             <artifactId>ui4j-all</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.testng</groupId>
+        	<artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

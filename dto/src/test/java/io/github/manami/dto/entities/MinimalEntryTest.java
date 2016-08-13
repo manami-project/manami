@@ -1,15 +1,14 @@
 package io.github.manami.dto.entities;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertEquals;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.AnimeType;
 
 public class MinimalEntryTest {
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWithNull() {
         // given
 
@@ -17,11 +16,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryIsValid() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -30,11 +29,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryNotValidMissingTitle() {
         // given
         final FilterEntry entry = new FilterEntry(null, "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -43,11 +42,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryIsValidMissingThumbnail() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", null, "http://myanimelist.net/anime/1535");
@@ -56,11 +55,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterEntryNotValidMissingInfoLink() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", null);
@@ -69,11 +68,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryIsValid() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -82,11 +81,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryNotValidMissingTitle() {
         // given
         final WatchListEntry entry = new WatchListEntry(null, "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
@@ -95,11 +94,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryIsValidMissingThumbnail() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", null, "http://myanimelist.net/anime/1535");
@@ -108,11 +107,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchListEntryNotValidMissingInfoLink() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", null);
@@ -121,11 +120,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeIsValid() {
         // given
         final Anime entry = new Anime();
@@ -141,11 +140,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeNotValidMissingTitle() {
         // given
         final Anime entry = new Anime();
@@ -160,11 +159,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeNotValidMissingThumbnail() {
         // given
         final Anime entry = new Anime();
@@ -178,11 +177,11 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeNotValidMissingInfoLink() {
         // given
         final Anime entry = new Anime();
@@ -196,6 +195,6 @@ public class MinimalEntryTest {
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 }

@@ -1,15 +1,14 @@
 package io.github.manami.persistence.exporter.csv;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertEquals;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 
 public class CsvConfigTest {
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatNonMatchableStringReturnsNull() {
         // given
 
@@ -17,11 +16,11 @@ public class CsvConfigTest {
         final CsvConfigType result = CsvConfigType.findByName("anyNonMatchableString");
 
         // then
-        assertThat(result, equalTo(null));
+        assertEquals(result, null);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeList() {
         // given
         final String exactSameString = "animeList";
@@ -34,13 +33,13 @@ public class CsvConfigTest {
         final CsvConfigType resultLowerCase = CsvConfigType.findByName(lowerCase);
 
         // then
-        assertThat(resultExactSame, equalTo(CsvConfigType.ANIMELIST));
-        assertThat(resultUpperCase, equalTo(CsvConfigType.ANIMELIST));
-        assertThat(resultLowerCase, equalTo(CsvConfigType.ANIMELIST));
+        assertEquals(resultExactSame, CsvConfigType.ANIMELIST);
+        assertEquals(resultUpperCase, CsvConfigType.ANIMELIST);
+        assertEquals(resultLowerCase, CsvConfigType.ANIMELIST);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testWatchList() {
         // given
         final String exactSameString = "watchList";
@@ -53,13 +52,13 @@ public class CsvConfigTest {
         final CsvConfigType resultLowerCase = CsvConfigType.findByName(lowerCase);
 
         // then
-        assertThat(resultExactSame, equalTo(CsvConfigType.WATCHLIST));
-        assertThat(resultUpperCase, equalTo(CsvConfigType.WATCHLIST));
-        assertThat(resultLowerCase, equalTo(CsvConfigType.WATCHLIST));
+        assertEquals(resultExactSame, CsvConfigType.WATCHLIST);
+        assertEquals(resultUpperCase, CsvConfigType.WATCHLIST);
+        assertEquals(resultLowerCase, CsvConfigType.WATCHLIST);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFilterList() {
         // given
         final String exactSameString = "filterList";
@@ -72,8 +71,8 @@ public class CsvConfigTest {
         final CsvConfigType resultLowerCase = CsvConfigType.findByName(lowerCase);
 
         // then
-        assertThat(resultExactSame, equalTo(CsvConfigType.FILTERLIST));
-        assertThat(resultUpperCase, equalTo(CsvConfigType.FILTERLIST));
-        assertThat(resultLowerCase, equalTo(CsvConfigType.FILTERLIST));
+        assertEquals(resultExactSame, CsvConfigType.FILTERLIST);
+        assertEquals(resultUpperCase, CsvConfigType.FILTERLIST);
+        assertEquals(resultLowerCase, CsvConfigType.FILTERLIST);
     }
 }

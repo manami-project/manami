@@ -1,10 +1,8 @@
 package io.github.manami.persistence.importer.csv;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,9 +10,9 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
@@ -37,7 +35,7 @@ public class CsvImporterTest {
     private PersistenceFacade persistenceFacade;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
         persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
@@ -47,7 +45,7 @@ public class CsvImporterTest {
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatAnimeListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -56,27 +54,27 @@ public class CsvImporterTest {
 
         // then
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertEquals(fetchAnimeList.isEmpty(), false);
+        assertEquals(fetchAnimeList.size(), 2);
         final Anime bokuDake = fetchAnimeList.get(0);
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(bokuDake, not(nullValue()));
-        assertThat(bokuDake.getEpisodes(), equalTo(12));
-        assertThat(bokuDake.getInfoLink(), equalTo("http://myanimelist.net/anime/31043"));
-        assertThat(bokuDake.getLocation(), equalTo("/anime/series/boku_dake_ga_inai_machi"));
-        assertThat(bokuDake.getTitle(), equalTo("Boku dake ga Inai Machi"));
-        assertThat(bokuDake.getType(), equalTo(AnimeType.TV));
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(4));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/44"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/anime/series/rurouni_kenshin"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.OVA));
+        assertNotNull(bokuDake);
+        assertEquals(bokuDake.getEpisodes(), 12);
+        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
+        assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
+        assertEquals(bokuDake.getType(), AnimeType.TV);
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 4);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+        assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatWatchListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -85,18 +83,18 @@ public class CsvImporterTest {
 
         // then
         final List<WatchListEntry> fetchWatchList = persistenceFacade.fetchWatchList();
-        assertThat(fetchWatchList, not(nullValue()));
-        assertThat(fetchWatchList.isEmpty(), equalTo(false));
-        assertThat(fetchWatchList.size(), equalTo(1));
+        assertNotNull(fetchWatchList);
+        assertEquals(fetchWatchList.isEmpty(), false);
+        assertEquals(fetchWatchList.size(), 1);
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
-        assertThat(deathNoteRewrite, not(nullValue()));
-        assertThat(deathNoteRewrite.getInfoLink(), equalTo("http://myanimelist.net/anime/2994"));
-        assertThat(deathNoteRewrite.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(deathNoteRewrite.getTitle(), equalTo("Death Note Rewrite"));
+        assertNotNull(deathNoteRewrite);
+        assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
+        assertEquals(deathNoteRewrite.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatFilterListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -105,13 +103,13 @@ public class CsvImporterTest {
 
         // then
         final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
-        assertThat(fetchFilterList, not(nullValue()));
-        assertThat(fetchFilterList.isEmpty(), equalTo(false));
-        assertThat(fetchFilterList.size(), equalTo(1));
+        assertNotNull(fetchFilterList);
+        assertEquals(fetchFilterList.isEmpty(), false);
+        assertEquals(fetchFilterList.size(), 1);
         final FilterEntry gintama = fetchFilterList.get(0);
-        assertThat(gintama, not(nullValue()));
-        assertThat(gintama.getInfoLink(), equalTo("http://myanimelist.net/anime/918"));
-        assertThat(gintama.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(gintama.getTitle(), equalTo("Gintama"));
+        assertNotNull(gintama);
+        assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
+        assertEquals(gintama.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(gintama.getTitle(), "Gintama");
     }
 }

@@ -1,13 +1,12 @@
 package io.github.manami.persistence.inmemory.animelist;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
@@ -17,13 +16,13 @@ public class InMemoryAnimeListHandlerTest {
     private InMemoryAnimeListHandler inMemoryAnimeListHandler;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         inMemoryAnimeListHandler = new InMemoryAnimeListHandler();
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsNull() {
         // given
 
@@ -31,12 +30,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsFullEntry() {
         // given
         final Anime entry = new Anime();
@@ -52,12 +51,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final Anime entry = new Anime();
@@ -72,12 +71,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
         final Anime entry = new Anime();
@@ -92,12 +91,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
         final Anime entry = new Anime();
@@ -112,12 +111,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
         final Anime entry = new Anime();
@@ -132,12 +131,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
         final Anime entry = new Anime();
@@ -152,12 +151,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(1));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
         final Anime entry = new Anime();
@@ -172,12 +171,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testaddAnimeIsEntryWithoutType() {
         // given
         final Anime entry = new Anime();
@@ -192,12 +191,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
 
         // then
-        assertThat(result, equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().size(), equalTo(0));
+        assertEquals(result, false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().size(), 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeEntryExists() {
         // given
         final String infoLink = "http://myanimelist.net/anime/1535";
@@ -215,11 +214,11 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.animeEntryExists(infoLink);
 
         // then
-        assertThat(result, equalTo(true));
+        assertEquals(result, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeEntryNotExists() {
         // given
 
@@ -227,11 +226,11 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.animeEntryExists("http://myanimelist.net/anime/1535");
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testAnimeList() {
         // given
         final Anime entry = new Anime();
@@ -248,11 +247,11 @@ public class InMemoryAnimeListHandlerTest {
         final List<Anime> animeList = inMemoryAnimeListHandler.fetchAnimeList();
 
         // then
-        assertThat(animeList.size(), equalTo(1));
+        assertEquals(animeList.size(), 1);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListWorks() {
         // given
         final Anime entry = new Anime();
@@ -269,12 +268,12 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.removeAnime(entry.getId());
 
         // then
-        assertThat(result, equalTo(true));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertEquals(result, true);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testRemoveFromAnimeListNullAsArgument() {
         // given
 
@@ -282,11 +281,11 @@ public class InMemoryAnimeListHandlerTest {
         final boolean result = inMemoryAnimeListHandler.removeAnime(null);
 
         // then
-        assertThat(result, equalTo(false));
+        assertEquals(result, false);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateWithNull() {
         // given
 
@@ -294,11 +293,11 @@ public class InMemoryAnimeListHandlerTest {
         inMemoryAnimeListHandler.updateOrCreate(null);
 
         // then
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -314,12 +313,12 @@ public class InMemoryAnimeListHandlerTest {
         inMemoryAnimeListHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().get(0), equalTo(entry));
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().get(0), entry);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -340,12 +339,12 @@ public class InMemoryAnimeListHandlerTest {
         inMemoryAnimeListHandler.updateOrCreate(entry);
 
         // then
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), equalTo(false));
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().get(0).getEpisodes(), equalTo(episodes));
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), false);
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().get(0).getEpisodes(), episodes);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testClearing() {
         // given
         final Anime entry = new Anime();
@@ -363,6 +362,6 @@ public class InMemoryAnimeListHandlerTest {
         inMemoryAnimeListHandler.clear();
 
         // then
-        assertThat(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), equalTo(true));
+        assertEquals(inMemoryAnimeListHandler.fetchAnimeList().isEmpty(), true);
     }
 }

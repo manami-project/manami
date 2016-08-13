@@ -1,5 +1,12 @@
-# Custom
+### Custom ###
+# Log files
 *.log
+
+# TestNG output
+**/test-output/**
+
+
+
 
 # Created by https://www.gitignore.io
 

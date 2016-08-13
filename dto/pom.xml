@@ -26,12 +26,8 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
+        	<groupId>org.testng</groupId>
+        	<artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

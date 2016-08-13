@@ -1,10 +1,8 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,9 +10,9 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
@@ -39,7 +37,7 @@ public class MalSaxParserTest {
     private PersistenceFacade persistenceFacade;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
         persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
@@ -49,7 +47,7 @@ public class MalSaxParserTest {
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatAnimeListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -58,29 +56,29 @@ public class MalSaxParserTest {
 
         // then
         final List<Anime> fetchAnimeList = persistenceFacade.fetchAnimeList();
-        assertThat(fetchAnimeList, not(nullValue()));
-        assertThat(fetchAnimeList.isEmpty(), equalTo(false));
-        assertThat(fetchAnimeList.size(), equalTo(2));
+        assertNotNull(fetchAnimeList);
+        assertEquals(fetchAnimeList.isEmpty(), false);
+        assertEquals(fetchAnimeList.size(), 2);
 
         final Anime deathNote = fetchAnimeList.get(0);
-        assertThat(deathNote, not(nullValue()));
-        assertThat(deathNote.getEpisodes(), equalTo(37));
-        assertThat(deathNote.getInfoLink(), equalTo("http://myanimelist.net/anime/1535"));
-        assertThat(deathNote.getLocation(), equalTo("/"));
-        assertThat(deathNote.getTitle(), equalTo("Death Note"));
-        assertThat(deathNote.getType(), equalTo(AnimeType.TV));
+        assertNotNull(deathNote);
+        assertEquals(deathNote.getEpisodes(), 37);
+        assertEquals(deathNote.getInfoLink(), "http://myanimelist.net/anime/1535");
+        assertEquals(deathNote.getLocation(), "/");
+        assertEquals(deathNote.getTitle(), "Death Note");
+        assertEquals(deathNote.getType(), AnimeType.TV);
 
         final Anime rurouniKenshin = fetchAnimeList.get(1);
-        assertThat(rurouniKenshin, not(nullValue()));
-        assertThat(rurouniKenshin.getEpisodes(), equalTo(94));
-        assertThat(rurouniKenshin.getInfoLink(), equalTo("http://myanimelist.net/anime/45"));
-        assertThat(rurouniKenshin.getLocation(), equalTo("/"));
-        assertThat(rurouniKenshin.getTitle(), equalTo("Rurouni Kenshin: Meiji Kenkaku Romantan"));
-        assertThat(rurouniKenshin.getType(), equalTo(AnimeType.TV));
+        assertNotNull(rurouniKenshin);
+        assertEquals(rurouniKenshin.getEpisodes(), 94);
+        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/45");
+        assertEquals(rurouniKenshin.getLocation(), "/");
+        assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan");
+        assertEquals(rurouniKenshin.getType(), AnimeType.TV);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatWatchListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -89,25 +87,25 @@ public class MalSaxParserTest {
 
         // then
         final List<WatchListEntry> fetchWatchList = persistenceFacade.fetchWatchList();
-        assertThat(fetchWatchList, not(nullValue()));
-        assertThat(fetchWatchList.isEmpty(), equalTo(false));
-        assertThat(fetchWatchList.size(), equalTo(2));
+        assertNotNull(fetchWatchList);
+        assertEquals(fetchWatchList.isEmpty(), false);
+        assertEquals(fetchWatchList.size(), 2);
 
         final WatchListEntry akatsukiNoYona = fetchWatchList.get(0);
-        assertThat(akatsukiNoYona, not(nullValue()));
-        assertThat(akatsukiNoYona.getInfoLink(), equalTo("http://myanimelist.net/anime/25013"));
-        assertThat(akatsukiNoYona.getTitle(), equalTo("Akatsuki no Yona"));
-        assertThat(akatsukiNoYona.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertNotNull(akatsukiNoYona);
+        assertEquals(akatsukiNoYona.getInfoLink(), "http://myanimelist.net/anime/25013");
+        assertEquals(akatsukiNoYona.getTitle(), "Akatsuki no Yona");
+        assertEquals(akatsukiNoYona.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
 
         final WatchListEntry aldnoahZero = fetchWatchList.get(1);
-        assertThat(aldnoahZero, not(nullValue()));
-        assertThat(aldnoahZero.getInfoLink(), equalTo("http://myanimelist.net/anime/27655"));
-        assertThat(aldnoahZero.getTitle(), equalTo("Aldnoah.Zero 2nd Season"));
-        assertThat(aldnoahZero.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
+        assertNotNull(aldnoahZero);
+        assertEquals(aldnoahZero.getInfoLink(), "http://myanimelist.net/anime/27655");
+        assertEquals(aldnoahZero.getTitle(), "Aldnoah.Zero 2nd Season");
+        assertEquals(aldnoahZero.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatFilterListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -116,20 +114,20 @@ public class MalSaxParserTest {
 
         // then
         final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
-        assertThat(fetchFilterList, not(nullValue()));
-        assertThat(fetchFilterList.isEmpty(), equalTo(false));
-        assertThat(fetchFilterList.size(), equalTo(2));
+        assertNotNull(fetchFilterList);
+        assertEquals(fetchFilterList.isEmpty(), false);
+        assertEquals(fetchFilterList.size(), 2);
 
         final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
-        assertThat(matanteiLokiRagnarok, not(nullValue()));
-        assertThat(matanteiLokiRagnarok.getInfoLink(), equalTo("http://myanimelist.net/anime/335"));
-        assertThat(matanteiLokiRagnarok.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(matanteiLokiRagnarok.getTitle(), equalTo("Matantei Loki Ragnarok"));
+        assertNotNull(matanteiLokiRagnarok);
+        assertEquals(matanteiLokiRagnarok.getInfoLink(), "http://myanimelist.net/anime/335");
+        assertEquals(matanteiLokiRagnarok.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(matanteiLokiRagnarok.getTitle(), "Matantei Loki Ragnarok");
 
         final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
-        assertThat(saiunkokuMonogatari, not(nullValue()));
-        assertThat(saiunkokuMonogatari.getInfoLink(), equalTo("http://myanimelist.net/anime/957"));
-        assertThat(saiunkokuMonogatari.getThumbnail(), equalTo("http://cdn.myanimelist.net/images/qm_50.gif"));
-        assertThat(saiunkokuMonogatari.getTitle(), equalTo("Saiunkoku Monogatari"));
+        assertNotNull(saiunkokuMonogatari);
+        assertEquals(saiunkokuMonogatari.getInfoLink(), "http://myanimelist.net/anime/957");
+        assertEquals(saiunkokuMonogatari.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(saiunkokuMonogatari.getTitle(), "Saiunkoku Monogatari");
     }
 }

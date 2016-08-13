@@ -1,16 +1,16 @@
 package io.github.manami.cache.extractor.plugins.mal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
@@ -22,7 +22,7 @@ public class MyAnimeListNetPluginTest {
     private String deathNoteRawXml;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         sut = new MyAnimeListNetPlugin();
         final ClassPathResource resource = new ClassPathResource(DEATH_NOTE_MAL_XML_FILE);
@@ -32,7 +32,7 @@ public class MyAnimeListNetPluginTest {
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testGetDomain() {
         // given
         final String expectedValue = "myanimelist.net";
@@ -41,12 +41,12 @@ public class MyAnimeListNetPluginTest {
         final String result = sut.getDomain();
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result, equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result, expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testIsValidInfoLink() throws IOException {
         // given
         final Anime anime = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
@@ -55,11 +55,11 @@ public class MyAnimeListNetPluginTest {
         final boolean result = sut.isValidInfoLink();
 
         // then
-        assertThat(result, equalTo(true));
+        assertTrue(result);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractTitle() throws IOException {
         // given
         final String expectedValue = "Death Note";
@@ -68,12 +68,12 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getTitle(), equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result.getTitle(), expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractType() throws IOException {
         // given
         final AnimeType expectedValue = AnimeType.TV;
@@ -82,12 +82,12 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getType(), equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result.getType(), expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractEpisodes() throws IOException {
         // given
         final int expectedValue = 37;
@@ -96,12 +96,12 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getEpisodes(), equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result.getEpisodes(), expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractPictureLink() throws IOException {
         // given
         final String expectedValue = "http://cdn.myanimelist.net/images/anime/9/9453.jpg";
@@ -110,12 +110,12 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getPicture(), equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result.getPicture(), expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractThumbnail() throws IOException {
         // given
         final String expectedValue = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
@@ -124,12 +124,12 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getThumbnail(), equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result.getThumbnail(), expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testNormalizeInfoLink() throws IOException {
         // given
         final String rawLink = "http://myanimelist.net/anime/1535/Death_Note";
@@ -139,12 +139,12 @@ public class MyAnimeListNetPluginTest {
         final String result = sut.normalizeInfoLink(rawLink);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result, equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result, expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testNormalizeInfoLinkFromSearchString() throws IOException {
         // given
         final String rawLink = "http://myanimelist.net/anime/1535/Death_Note?q=death%20note";
@@ -154,12 +154,12 @@ public class MyAnimeListNetPluginTest {
         final String result = sut.normalizeInfoLink(rawLink);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result, equalTo(expectedValue));
+        assertNotNull(result);
+        assertEquals(result, expectedValue);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testExtractRelatedAnimes() throws IOException {
         // given
         final String expectedValue = "http://myanimelist.net/anime/2994";
@@ -168,9 +168,9 @@ public class MyAnimeListNetPluginTest {
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
 
         // then
-        assertThat(result, not(nullValue()));
-        assertThat(result.getRelatedAnimes().isEmpty(), equalTo(false));
-        assertThat(result.getRelatedAnimes().size(), equalTo(1));
-        assertThat(result.getRelatedAnimes().get(0), equalTo(expectedValue));
+        assertNotNull(result);
+        assertFalse(result.getRelatedAnimes().isEmpty());
+        assertEquals(result.getRelatedAnimes().size(), 1);
+        assertEquals(result.getRelatedAnimes().get(0), expectedValue);
     }
 }

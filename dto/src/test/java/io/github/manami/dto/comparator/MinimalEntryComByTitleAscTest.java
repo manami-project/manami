@@ -1,15 +1,14 @@
 package io.github.manami.dto.comparator;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertEquals;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import io.github.manami.dto.entities.WatchListEntry;
 
 public class MinimalEntryComByTitleAscTest {
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFirstOneGreater() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -21,11 +20,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(steinsGate, gintama);
 
         // then
-        assertThat(result > 0, equalTo(true));
+        assertEquals(result > 0, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFirstOneLesser() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -37,11 +36,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(gintama, steinsGate);
 
         // then
-        assertThat(result < 0, equalTo(true));
+        assertEquals(result < 0, true);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testBothEqual() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -52,11 +51,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(steinsGate, steinsGate);
 
         // then
-        assertThat(result, equalTo(0));
+        assertEquals(result, 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFirstParameterNull() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -67,11 +66,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(null, steinsGate);
 
         // then
-        assertThat(result, equalTo(0));
+        assertEquals(result, 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testSecondParameterNull() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -82,11 +81,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(steinsGate, null);
 
         // then
-        assertThat(result, equalTo(0));
+        assertEquals(result, 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testFirstParameterTitleNullOrEmpty() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -99,11 +98,11 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(gintama, steinsGate);
 
         // then
-        assertThat(result, equalTo(0));
+        assertEquals(result, 0);
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testSecondParameterTitleNullOrEmpty() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -116,6 +115,6 @@ public class MinimalEntryComByTitleAscTest {
         final int result = comparator.compare(gintama, steinsGate);
 
         // then
-        assertThat(result, equalTo(0));
+        assertEquals(result, 0);
     }
 }

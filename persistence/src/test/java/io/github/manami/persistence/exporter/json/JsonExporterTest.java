@@ -1,26 +1,26 @@
 package io.github.manami.persistence.exporter.json;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.io.Files;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
@@ -31,30 +31,48 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JsonExporterTest {
-
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
 
     private static final String TEST_ANIME_LIST_FILE = "test_anime_list.json";
     private static final String TEST_RECOMMENDATIONS_FILE = "test_recommendations_list.json";
     private static final String ANIME_LIST_EXPORT_FILE = "test_anime_list_export.json";
     private JsonExporter jsonExporter;
-    private File file;
+    private Path file;
+    private Path tempFolder;
     private PersistenceFacade persistenceFacade;
 
 
-    @Before
+    @BeforeMethod
     public void setUp() throws IOException {
         final InMemoryPersistenceHandler inMemoryPersistenceHandler = new InMemoryPersistenceHandler(new InMemoryAnimeListHandler(), new InMemoryFilterListHandler(), new InMemoryWatchListHandler());
         persistenceFacade = new PersistenceFacade(inMemoryPersistenceHandler, mock(EventBus.class));
         jsonExporter = new JsonExporter(persistenceFacade);
-        file = testFolder.newFile(ANIME_LIST_EXPORT_FILE);
+        tempFolder = Files.createTempDirectory(String.valueOf(System.currentTimeMillis()));
+        final String separator = FileSystems.getDefault().getSeparator();
+        file = Files.createFile(Paths.get(tempFolder + separator + ANIME_LIST_EXPORT_FILE));
     }
 
 
-    @Test
+    @AfterMethod
+    public void tearDown() throws Exception {
+        if (Files.isDirectory(tempFolder)) {
+            Files.list(tempFolder).forEach(file -> {
+                try {
+                    Files.delete(file);
+                } catch (final IOException e) {
+                    log.error("Unable to delete file in temp folder: {}", file);
+                }
+            });
+
+            Files.delete(tempFolder);
+        }
+    }
+
+
+    @Test(groups = "unitTest")
     public void testThatAnimeListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
         final Anime bokuDake = new Anime();
@@ -81,20 +99,20 @@ public class JsonExporterTest {
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);
         final StringBuilder expectedFileBuilder = new StringBuilder();
-        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(expectedFileBuilder::append);
 
         // when
-        jsonExporter.exportAll(file.toPath());
+        jsonExporter.exportAll(file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(expectedFileBuilder.toString(), equalTo(exportedFileBuilder.toString()));
+        assertEquals(expectedFileBuilder.toString(), exportedFileBuilder.toString());
     }
 
 
-    @Test
+    @Test(groups = "unitTest")
     public void testThatPredefinedListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
         final List<Anime> list = newArrayList();
@@ -117,15 +135,15 @@ public class JsonExporterTest {
 
         final ClassPathResource resource = new ClassPathResource(TEST_RECOMMENDATIONS_FILE);
         final StringBuilder expectedFileBuilder = new StringBuilder();
-        Files.readLines(resource.getFile(), Charset.forName("UTF-8")).forEach(expectedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(expectedFileBuilder::append);
 
         // when
-        jsonExporter.exportList(list, file.toPath());
+        jsonExporter.exportList(list, file);
 
         // then
         final StringBuilder exportedFileBuilder = new StringBuilder();
-        Files.readLines(file, Charset.forName("UTF-8")).forEach(exportedFileBuilder::append);
+        Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8).forEach(exportedFileBuilder::append);
 
-        assertThat(expectedFileBuilder.toString(), equalTo(exportedFileBuilder.toString()));
+        assertEquals(expectedFileBuilder.toString(), exportedFileBuilder.toString());
     }
 }
