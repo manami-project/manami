@@ -20,6 +20,7 @@ import static io.github.manami.gui.utility.DialogLibrary.showImportFileDialog;
 import static io.github.manami.gui.utility.DialogLibrary.showOpenFileDialog;
 import static io.github.manami.gui.utility.DialogLibrary.showSaveAsFileDialog;
 import static io.github.manami.gui.utility.DialogLibrary.showUnsavedChangesDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.nio.file.Files;
@@ -373,6 +374,9 @@ public class MainController implements Observer {
      * @since 2.9.0
      */
     private void search() {
+        Platform.runLater(() -> {
+            txtSearchString.setText(EMPTY);
+        });
         app.search(txtSearchString.getText());
         showSearchResultTab();
     }

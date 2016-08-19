@@ -34,6 +34,7 @@ public class SearchService extends AbstractService<Void> {
         this.persistanceHandler = persistanceHandler;
         this.eventBus = eventBus;
         event = new SearchResultEvent();
+        event.setSearchString(searchString);
     }
 
 

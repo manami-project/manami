@@ -14,6 +14,7 @@ import io.github.manami.dto.entities.MinimalEntry;
  */
 public class SearchResultEvent {
 
+    private String searchString;
     private final List<MinimalEntry> animeListSearchResultList;
     private final List<MinimalEntry> filterListSearchResultList;
     private final List<MinimalEntry> watchListSearchResultList;
@@ -53,5 +54,23 @@ public class SearchResultEvent {
      */
     public List<MinimalEntry> getWatchListSearchResultList() {
         return watchListSearchResultList;
+    }
+
+
+    /**
+     * @since 2.10.3
+     * @return the searchString
+     */
+    public String getSearchString() {
+        return searchString;
+    }
+
+
+    /**
+     * @since 2.10.3
+     * @param searchString
+     */
+    public void setSearchString(final String searchString) {
+        this.searchString = searchString;
     }
 }

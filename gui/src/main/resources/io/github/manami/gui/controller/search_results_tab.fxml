@@ -16,7 +16,7 @@
           <content>
               <BorderPane prefHeight="-1.0" prefWidth="-1.0">
                   <top>
-                      <Label text="Search Results">
+                      <Label fx:id="lblHeading" text="Search Results">
                           <font>
                               <Font name="System Bold" size="16.0" />
                           </font>

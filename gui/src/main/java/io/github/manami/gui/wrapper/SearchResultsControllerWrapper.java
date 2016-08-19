@@ -26,54 +26,73 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SearchResultsControllerWrapper {
 
-	private Tab searchResultTab;
-	private SearchResultsController searchResultController;
+    private Tab searchResultTab;
+    private SearchResultsController searchResultController;
+    private boolean isFirstInvocation = true;
 
 
-	/**
-	 * @since 2.7.2
-	 */
-	private void init() {
-		searchResultTab = new Tab(SEARCH_RESULTS_TAB_TITLE);
-		Parent pane;
-		try {
-			final FXMLLoader fxmlLoader = new FXMLLoader(new ClassPathResource("io/github/manami/gui/controller/search_results_tab.fxml").getURL());
-			pane = (Pane) fxmlLoader.load();
-			searchResultTab.setContent(pane);
-			searchResultController = fxmlLoader.getController();
-		} catch (final Exception e) {
-			log.error("An error occurred while trying to initialize search result tab: ", e);
-			showExceptionDialog(e);
-		}
-	}
+    /**
+     * @since 2.7.2
+     */
+    private void init() {
+        searchResultTab = new Tab(SEARCH_RESULTS_TAB_TITLE);
+        Parent pane;
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(new ClassPathResource("io/github/manami/gui/controller/search_results_tab.fxml").getURL());
+            pane = (Pane) fxmlLoader.load();
+            searchResultTab.setContent(pane);
+            searchResultController = fxmlLoader.getController();
+        } catch (final Exception e) {
+            log.error("An error occurred while trying to initialize search result tab: ", e);
+            showExceptionDialog(e);
+        }
+    }
 
 
-	/**
-	 * @since 2.9.0
-	 * @return the search result tab
-	 */
-	public Tab getSearchResultsTab() {
-		if (searchResultTab == null) {
-			init();
-		}
+    /**
+     * @since 2.9.0
+     * @return the search result tab
+     */
+    public Tab getSearchResultsTab() {
+        if (searchResultTab == null) {
+            init();
+        }
 
-		return searchResultTab;
-	}
+        return searchResultTab;
+    }
 
 
-	/**
-	 * @since 2.9.0
-	 * @param event
-	 *            Event which is fired when a file is opened.
-	 */
-	@Subscribe
-	public void searchResultEvent(final SearchResultEvent event) {
-		Platform.runLater(() -> {
-			if (searchResultController == null) {
-				init();
-			}
+    /**
+     * @since 2.9.0
+     * @param event
+     *            Event which is fired when a file is opened.
+     */
+    @Subscribe
+    public void searchResultEvent(final SearchResultEvent event) throws InterruptedException {
+        Platform.runLater(() -> {
+            if (searchResultController == null) {
+                init();
+            }
 
-			searchResultController.showResults(event);
-		});
-	}
+            searchResultController.showResults(event);
+        });
+
+        if (isFirstInvocation) {
+            reexecuteAfterWaitingTime(event);
+        }
+    }
+
+
+    /**
+     * This dirty hack is needed, because otherwise the title panes won't expand
+     * on first invocation.
+     * 
+     * @param event
+     * @throws InterruptedException
+     */
+    private void reexecuteAfterWaitingTime(final SearchResultEvent event) throws InterruptedException {
+        isFirstInvocation = false;
+        Thread.sleep(500L);
+        searchResultEvent(event);
+    }
 }

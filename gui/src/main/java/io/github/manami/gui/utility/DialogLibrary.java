@@ -23,7 +23,7 @@ import javafx.stage.Stage;
  * @author manami-project
  * @since 2.0.0
  */
-public class DialogLibrary {
+public final class DialogLibrary {
 
     /** Instance of the {@link FileChooser} */
     private static FileChooser fileChooser;
