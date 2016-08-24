@@ -6,9 +6,9 @@
     <anime episodes="4" infoLink="http://myanimelist.net/anime/44" location="/anime/series/rurouni_kenshin" title="Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen" type="OVA"/>
   </animeList>
   <watchList>
-    <watchListEntry infoLink="http://myanimelist.net/anime/2994" thumbnail="http://cdn.myanimelist.net/images/anime/13/8518t.jpg" title="Death Note Rewrite"/>
+    <watchListEntry infoLink="http://myanimelist.net/anime/2994" thumbnail="https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg" title="Death Note Rewrite"/>
   </watchList>
   <filterList>
-    <filterEntry infoLink="http://myanimelist.net/anime/918" thumbnail="http://cdn.myanimelist.net/images/anime/2/10038t.jpg" title="Gintama"/>
+    <filterEntry infoLink="http://myanimelist.net/anime/918" thumbnail="https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg" title="Gintama"/>
   </filterList>
 </manami>

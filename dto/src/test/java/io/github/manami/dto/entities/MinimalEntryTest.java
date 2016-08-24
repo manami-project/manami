@@ -23,7 +23,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testFilterEntryIsValid() {
         // given
-        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -36,7 +36,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testFilterEntryNotValidMissingTitle() {
         // given
-        final FilterEntry entry = new FilterEntry(null, "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry(null, "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -62,7 +62,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testFilterEntryNotValidMissingInfoLink() {
         // given
-        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", null);
+        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", null);
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -75,7 +75,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testWatchListEntryIsValid() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -88,7 +88,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testWatchListEntryNotValidMissingTitle() {
         // given
-        final WatchListEntry entry = new WatchListEntry(null, "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry(null, "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -114,7 +114,7 @@ public class MinimalEntryTest {
     @Test(groups = "unitTest")
     public void testWatchListEntryNotValidMissingInfoLink() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", null);
+        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", null);
 
         // when
         final boolean result = MinimalEntry.isValidMinimalEntry(entry);
@@ -131,8 +131,8 @@ public class MinimalEntryTest {
         entry.setEpisodes(37);
         entry.setInfoLink("http://myanimelist.net/anime/1535");
         entry.setLocation("/death_note");
-        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
@@ -151,8 +151,8 @@ public class MinimalEntryTest {
         entry.setEpisodes(37);
         entry.setInfoLink("http://myanimelist.net/anime/1535");
         entry.setLocation("/death_note");
-        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setType(AnimeType.TV);
 
         // when
@@ -170,7 +170,7 @@ public class MinimalEntryTest {
         entry.setEpisodes(37);
         entry.setInfoLink("http://myanimelist.net/anime/1535");
         entry.setLocation("/death_note");
-        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
+        entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setType(AnimeType.TV);
 
         // when
@@ -187,8 +187,8 @@ public class MinimalEntryTest {
         final Anime entry = new Anime();
         entry.setEpisodes(37);
         entry.setLocation("/death_note");
-        entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setType(AnimeType.TV);
 
         // when

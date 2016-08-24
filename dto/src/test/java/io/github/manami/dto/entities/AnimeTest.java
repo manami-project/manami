@@ -21,8 +21,8 @@ public class AnimeTest {
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
-        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
 
@@ -52,7 +52,7 @@ public class AnimeTest {
         // then
         assertEquals(result.getEpisodes(), 0);
         assertEquals(result.getPicture(), EMPTY);
-        assertEquals(result.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(result.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(result.getInfoLink(), null);
         assertEquals(result.getLocation(), EMPTY);
         assertEquals(result.getTitle(), null);
@@ -108,8 +108,8 @@ public class AnimeTest {
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
-        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
 
@@ -128,8 +128,8 @@ public class AnimeTest {
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
-        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(null);
 
@@ -254,8 +254,8 @@ public class AnimeTest {
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
-        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
 
@@ -281,8 +281,8 @@ public class AnimeTest {
         target.setEpisodes(4);
         target.setInfoLink("http://myanimelist.net/anime/10863");
         target.setLocation("/anime/series/steins_gate_special");
-        target.setPicture("http://cdn.myanimelist.net/images/anime/7/36531.jpg");
-        target.setThumbnail("http://cdn.myanimelist.net/images/anime/7/36531t.jpg");
+        target.setPicture("https://myanimelist.cdn-dena.com/images/anime/7/36531.jpg");
+        target.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/7/36531t.jpg");
         target.setTitle("Steins;Gate: Oukoubakko no Poriomania");
         target.setType(AnimeType.SPECIAL);
 
@@ -290,8 +290,8 @@ public class AnimeTest {
         anime.setEpisodes(37);
         anime.setInfoLink("http://myanimelist.net/anime/1535");
         anime.setLocation("/anime/series/death_note");
-        anime.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        anime.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
+        anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
+        anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
 

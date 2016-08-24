@@ -104,7 +104,7 @@ public class MyAnimeListNetPluginTest {
     @Test(groups = "unitTest")
     public void testExtractPictureLink() throws IOException {
         // given
-        final String expectedValue = "http://cdn.myanimelist.net/images/anime/9/9453.jpg";
+        final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg";
 
         // when
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);
@@ -118,7 +118,7 @@ public class MyAnimeListNetPluginTest {
     @Test(groups = "unitTest")
     public void testExtractThumbnail() throws IOException {
         // given
-        final String expectedValue = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
+        final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg";
 
         // when
         final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", deathNoteRawXml);

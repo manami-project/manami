@@ -125,7 +125,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
     @Override
     protected String extractPictureLink() {
-        pattern = Pattern.compile("http://cdn\\.myanimelist\\.net/images/anime/[0-9]+/[0-9]+\\.jpg");
+        pattern = Pattern.compile("https://myanimelist\\.cdn-dena\\.com/images/anime/[0-9]+/[0-9]+\\.jpg");
         matcher = pattern.matcher(siteContent);
         String picture = null;
 

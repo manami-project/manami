@@ -10,10 +10,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.ToolVersion;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
+import io.github.manami.persistence.importer.xml.postprocessor.ImportMigrationPostProcessor;
 
 /**
  * @author manami-project
@@ -30,6 +32,8 @@ public class ManamiSaxParser extends DefaultHandler {
     private final List<FilterEntry> filterListEntries;
     private final List<WatchListEntry> watchListEntries;
 
+    private ImportMigrationPostProcessor importMigrationPostProcessor;
+
 
     /**
      * Constructor awaiting a list.
@@ -42,6 +46,7 @@ public class ManamiSaxParser extends DefaultHandler {
         animeListEntries = newArrayList();
         filterListEntries = newArrayList();
         watchListEntries = newArrayList();
+
     }
 
 
@@ -50,6 +55,9 @@ public class ManamiSaxParser extends DefaultHandler {
         strBuilder = new StringBuilder();
 
         switch (qName) {
+            case "manami":
+                importMigrationPostProcessor = new ImportMigrationPostProcessor(ToolVersion.getToolVersion(), attributes.getValue("version"), animeListEntries, filterListEntries, watchListEntries);
+                break;
             case "anime":
                 createAnimeEntry(attributes);
                 break;
@@ -68,6 +76,7 @@ public class ManamiSaxParser extends DefaultHandler {
         persistence.addAnimeList(animeListEntries);
         persistence.addFilterList(filterListEntries);
         persistence.addWatchList(watchListEntries);
+        importMigrationPostProcessor.execute();
     }
 
 

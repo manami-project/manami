@@ -11,14 +11,24 @@ public interface MinimalEntry {
     String getTitle();
 
 
+    void setTitle(String title);
+
+
     String getThumbnail();
+
+
+    void setThumbnail(String url);
 
 
     String getInfoLink();
 
 
+    void setInfoLink(String infoLink);
+
+
     /**
      * Checks if a MinimalEntry entry is Valid
+     *
      * @param anime
      * @return
      */

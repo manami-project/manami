@@ -14,10 +14,10 @@ import lombok.ToString;
 public abstract class AbstractMinimalEntry implements MinimalEntry {
 
     /** Placeholder image in case no image is available. */
-    public static final String NO_IMG = "http://cdn.myanimelist.net/images/na_series.gif";
+    public static final String NO_IMG = "https://myanimelist.cdn-dena.com/images/na_series.gif";
 
     /** Placeholder image in case no image is available, thumbnail size. */
-    public static final String NO_IMG_THUMB = "http://cdn.myanimelist.net/images/qm_50.gif";
+    public static final String NO_IMG_THUMB = "https://myanimelist.cdn-dena.com/images/qm_50.gif";
 
     @Getter
     @Setter

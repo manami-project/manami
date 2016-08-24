@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.1.0
  */
 @Slf4j
-public class ToolVersion {
+public final class ToolVersion {
 
     /**
      * @since 2.7.0

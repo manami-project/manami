@@ -94,7 +94,7 @@ public class ManamiSaxParserTest {
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
         assertNotNull(deathNoteRewrite);
         assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
-        assertEquals(deathNoteRewrite.getThumbnail(), "http://cdn.myanimelist.net/images/anime/13/8518t.jpg");
+        assertEquals(deathNoteRewrite.getThumbnail(), "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg");
         assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
     }
 
@@ -115,7 +115,6 @@ public class ManamiSaxParserTest {
         final FilterEntry gintama = fetchFilterList.get(0);
         assertNotNull(gintama);
         assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
-        assertEquals(gintama.getThumbnail(), "http://cdn.myanimelist.net/images/anime/2/10038t.jpg");
         assertEquals(gintama.getTitle(), "Gintama");
     }
 }

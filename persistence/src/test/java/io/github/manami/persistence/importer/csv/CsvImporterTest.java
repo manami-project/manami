@@ -89,7 +89,7 @@ public class CsvImporterTest {
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
         assertNotNull(deathNoteRewrite);
         assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
-        assertEquals(deathNoteRewrite.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(deathNoteRewrite.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
     }
 
@@ -109,7 +109,7 @@ public class CsvImporterTest {
         final FilterEntry gintama = fetchFilterList.get(0);
         assertNotNull(gintama);
         assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
-        assertEquals(gintama.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(gintama.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(gintama.getTitle(), "Gintama");
     }
 }

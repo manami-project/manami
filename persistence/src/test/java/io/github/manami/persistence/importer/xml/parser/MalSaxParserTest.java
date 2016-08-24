@@ -95,13 +95,13 @@ public class MalSaxParserTest {
         assertNotNull(akatsukiNoYona);
         assertEquals(akatsukiNoYona.getInfoLink(), "http://myanimelist.net/anime/25013");
         assertEquals(akatsukiNoYona.getTitle(), "Akatsuki no Yona");
-        assertEquals(akatsukiNoYona.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(akatsukiNoYona.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
 
         final WatchListEntry aldnoahZero = fetchWatchList.get(1);
         assertNotNull(aldnoahZero);
         assertEquals(aldnoahZero.getInfoLink(), "http://myanimelist.net/anime/27655");
         assertEquals(aldnoahZero.getTitle(), "Aldnoah.Zero 2nd Season");
-        assertEquals(aldnoahZero.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(aldnoahZero.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
     }
 
 
@@ -121,13 +121,13 @@ public class MalSaxParserTest {
         final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
         assertNotNull(matanteiLokiRagnarok);
         assertEquals(matanteiLokiRagnarok.getInfoLink(), "http://myanimelist.net/anime/335");
-        assertEquals(matanteiLokiRagnarok.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(matanteiLokiRagnarok.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(matanteiLokiRagnarok.getTitle(), "Matantei Loki Ragnarok");
 
         final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
         assertNotNull(saiunkokuMonogatari);
         assertEquals(saiunkokuMonogatari.getInfoLink(), "http://myanimelist.net/anime/957");
-        assertEquals(saiunkokuMonogatari.getThumbnail(), "http://cdn.myanimelist.net/images/qm_50.gif");
+        assertEquals(saiunkokuMonogatari.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(saiunkokuMonogatari.getTitle(), "Saiunkoku Monogatari");
     }
 }
