@@ -1,16 +1,5 @@
 package io.github.manami.core.services;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
-
-import java.io.IOException;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
@@ -19,6 +8,16 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
+import java.io.IOException;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * @author manami-project
@@ -57,11 +56,11 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
 
         httpclient = HttpClients.createDefault();
 
-        persistence.fetchFilterList().forEach(this::loadThumbnailIfNotExists);
-        persistence.fetchWatchList().forEach(this::loadThumbnailIfNotExists);
+        persistence.fetchFilterList().parallelStream().forEach(this::loadThumbnailIfNotExists);
+        persistence.fetchWatchList().parallelStream().forEach(this::loadThumbnailIfNotExists);
 
-        persistence.fetchFilterList().forEach(this::checkPictures);
-        persistence.fetchWatchList().forEach(this::checkPictures);
+        persistence.fetchFilterList().parallelStream().forEach(this::checkPictures);
+        persistence.fetchWatchList().parallelStream().forEach(this::checkPictures);
 
         try {
             httpclient.close();
