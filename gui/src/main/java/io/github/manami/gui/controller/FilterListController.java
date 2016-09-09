@@ -24,8 +24,8 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
-import io.github.manami.cache.extractor.anime.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeSiteExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
 import io.github.manami.core.commands.CmdDeleteFilterEntry;

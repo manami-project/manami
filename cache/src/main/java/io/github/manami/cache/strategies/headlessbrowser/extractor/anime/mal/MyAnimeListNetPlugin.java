@@ -1,18 +1,19 @@
-package io.github.manami.cache.extractor.plugins.mal;
+package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AbstractAnimeSitePlugin;
+import io.github.manami.dto.AnimeType;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.inject.Named;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Named;
-
-import io.github.manami.cache.extractor.anime.AbstractAnimeSitePlugin;
-import io.github.manami.cache.extractor.anime.Extractor;
-import io.github.manami.dto.AnimeType;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Class to gather information from myanimelist.net automatically.
@@ -179,7 +180,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
 
     @Override
-    public List<String> extractRelatedAnimes() {
+    public Set<String> extractRelatedAnimes() {
         final List<String> raw = newArrayList();
         String subStr = super.siteContent.trim();
 
@@ -202,7 +203,7 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
             }
         }
 
-        final List<String> ret = newArrayList();
+        final Set<String> ret = newHashSet();
         if (raw.size() > 0) {
             raw.forEach(element -> {
                 final String relatedAnimeUrl = normalizeInfoLink(element);

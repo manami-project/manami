@@ -1,5 +1,17 @@
 package io.github.manami.core.services;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
@@ -8,16 +20,6 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
-import java.io.IOException;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
 
 /**
  * @author manami-project
@@ -89,10 +91,10 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
         }
 
         if (entry != null && (isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
-            final Anime cachedAnime = cache.fetchAnime(entry.getInfoLink());
+            final Optional<Anime> cachedAnime = cache.fetchAnime(entry.getInfoLink());
             log.debug("Loading thumbnail for entry {}", entry.getInfoLink());
-            if (cachedAnime != null) {
-                updateThumbnail(entry, cachedAnime);
+            if (cachedAnime.isPresent()) {
+                updateThumbnail(entry, cachedAnime.get());
             }
         }
     }
@@ -138,10 +140,10 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
             }
 
             if (responseCodeThumbnail != OK) {
-                final Anime updatedAnime = cache.fetchAnime(entry.getInfoLink());
-                if (updatedAnime != null) {
+                final Optional<Anime> updatedAnime = cache.fetchAnime(entry.getInfoLink());
+                if (updatedAnime.isPresent()) {
                     log.debug("Updating thumbnail for [{}]", entry.getInfoLink());
-                    updateThumbnail(entry, updatedAnime);
+                    updateThumbnail(entry, updatedAnime.get());
                 }
             }
         }

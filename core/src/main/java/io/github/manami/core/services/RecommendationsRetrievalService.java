@@ -1,14 +1,14 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.countMatches;
-import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.substring;
+import io.github.manami.cache.Cache;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetPlugin;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -20,15 +20,15 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.HeadlessBrowser;
-import io.github.manami.cache.extractor.anime.AnimeExtractor;
-import io.github.manami.cache.extractor.plugins.mal.MyAnimeListNetPlugin;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.countMatches;
+import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.substring;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -99,7 +99,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
         for (int i = 0; i < userRecomList.size() && !isInterrupt(); i++) {
             setChanged();
-            notifyObservers(new AdvancedProgressState(i + 1, userRecomList.size(), cache.fetchAnime(userRecomList.get(i))));
+            notifyObservers(new AdvancedProgressState(i + 1, userRecomList.size(), cache.fetchAnime(userRecomList.get(i)).get()));
         }
 
         return resultList;

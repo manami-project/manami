@@ -1,9 +1,10 @@
-package io.github.manami.cache.extractor.anime;
+package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
-import java.util.List;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 
 /**
  * Contains a list of all [{@link AnimeExtractor}s.
@@ -32,7 +33,7 @@ public class ExtractorList {
 
 
     /**
-     * Returns the first extractor that seems to be responsible.
+     * Returns the first extractor that claims responsibility.
      *
      * @since 2.3.0
      * @param url

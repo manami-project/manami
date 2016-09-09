@@ -1,4 +1,9 @@
-package io.github.manami.cache.extractor.anime;
+package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
+
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG;
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG_THUMB;
@@ -6,14 +11,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-
-import java.util.List;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
 
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility
@@ -56,11 +53,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeExtractor {
                 ret.setInfoLink(normalizeInfoLink(url));
                 ret.setPicture(isNoneBlank(picture) ? extractPictureLink() : NO_IMG);
                 ret.setThumbnail(isNoneBlank(thumbnail) ? extractThumbnail() : NO_IMG_THUMB);
-
-                final List<String> relatedAnimes = extractRelatedAnimes();
-                for (final String infoLink : relatedAnimes) {
-                    ret.getRelatedAnimes().add(infoLink);
-                }
             }
         }
 

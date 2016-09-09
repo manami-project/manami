@@ -2,6 +2,10 @@ package io.github.manami.cache;
 
 import io.github.manami.dto.entities.Anime;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * The cache is supposed to save raw html files from which the information can
  * be extracted at any time.
@@ -11,13 +15,7 @@ import io.github.manami.dto.entities.Anime;
  */
 public interface Cache {
 
-    /**
-     * Retrieves an anime.
-     *
-     * @since 2.0.0
-     * @param url
-     *            URL of the info link site.
-     * @return Instance of an {@link Anime} corresponding to the link.
-     */
-    Anime fetchAnime(final String url);
+       Optional<Anime> fetchAnime(String url);
+       Set<String> fetchRelatedAnimes(Anime anime);
+       Map<String, Integer> fetchRecommendations(Anime anime);
 }

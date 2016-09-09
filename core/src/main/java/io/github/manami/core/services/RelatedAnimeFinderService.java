@@ -1,16 +1,7 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Observer;
-import java.util.Stack;
-
+import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.ProgressState;
@@ -19,6 +10,16 @@ import io.github.manami.dto.entities.MinimalEntry;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.Stack;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Finds related animes in info site links.
@@ -124,13 +125,16 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
     private void checkAnime(final String url) {
         final List<Anime> showAnimeList = newArrayList();
-        final Anime cachedAnime = cache.fetchAnime(url);
+        final Optional<Anime> optCachedAnime = cache.fetchAnime(url);
 
-        if (cachedAnime == null) {
+        if (!optCachedAnime.isPresent()) {
             return;
         }
 
-        final List<String> relatedAnimeList = cachedAnime.getRelatedAnimes();
+        Anime cachedAnime = optCachedAnime.get();
+
+        final List<String> relatedAnimeList = Lists.newArrayList();
+        cache.fetchRelatedAnimes(cachedAnime).forEach(relatedAnimeList::add);
 
         for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
             final String element = relatedAnimeList.get(index);
@@ -142,7 +146,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
                 }
 
                 if (!relatedAnime.containsKey(element) && !app.animeEntryExists(element) && !app.watchListEntryExists(element) && !app.filterEntryExists(element)) {
-                    final Anime curAnime = cache.fetchAnime(element);
+                    final Anime curAnime = cache.fetchAnime(element).get();
                     relatedAnime.put(element, curAnime);
                     showAnimeList.add(curAnime);
                 }

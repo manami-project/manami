@@ -1,4 +1,4 @@
-package io.github.manami.cache.extractor.anime;
+package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
 import io.github.manami.dto.entities.Anime;
 

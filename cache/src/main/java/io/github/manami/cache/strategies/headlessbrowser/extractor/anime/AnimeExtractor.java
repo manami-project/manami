@@ -1,6 +1,6 @@
-package io.github.manami.cache.extractor.anime;
+package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
-import io.github.manami.cache.extractor.relatedanime.RelatedAnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 
 /**
  * @author manami-project

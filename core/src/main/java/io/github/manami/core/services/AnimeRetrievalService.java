@@ -41,7 +41,7 @@ public class AnimeRetrievalService extends Service<Anime> {
 
             @Override
             protected Anime call() throws Exception {
-                return cache.fetchAnime(url);
+                return cache.fetchAnime(url).get();
             }
         };
     }
