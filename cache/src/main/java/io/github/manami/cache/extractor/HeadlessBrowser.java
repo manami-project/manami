@@ -1,15 +1,15 @@
 package io.github.manami.cache.extractor;
 
-import javax.inject.Named;
-
+import com.moodysalem.phantomjs.wrapper.PhantomJS;
+import com.moodysalem.phantomjs.wrapper.beans.PhantomJSExecutionResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 
-import com.ui4j.api.browser.BrowserEngine;
-import com.ui4j.api.browser.BrowserFactory;
-import com.ui4j.api.browser.Page;
-
-import javafx.application.Platform;
-import lombok.extern.slf4j.Slf4j;
+import javax.inject.Named;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A Browser which lets you download the various anime sites. It is necessary to
@@ -25,12 +25,10 @@ public class HeadlessBrowser {
 
     private static final String[] VALID_SCHEMES = new String[] { "HTTP", "HTTPS" };
     private final UrlValidator urlValidator;
-    private BrowserEngine browserEngine;
 
 
     public HeadlessBrowser() {
         urlValidator = new UrlValidator(VALID_SCHEMES);
-        Platform.runLater(() -> browserEngine = BrowserFactory.getWebKit());
     }
 
 
@@ -48,10 +46,18 @@ public class HeadlessBrowser {
             return null;
         }
 
+
         String ret = null;
 
-        final Page page = browserEngine.navigate(url);
-        ret = page.getDocument().getBody().getInnerHTML();
+        StringBuilder command = new StringBuilder("var page = require('webpage').create();page.open('").append(url).append("', function (status) { if (status !== 'success') { console.log('Unable to access network'); } else { var p = page.evaluate(function () { return document.getElementsByTagName('html')[0].innerHTML }); console.log(p); } phantom.exit(); });");
+        InputStream stream = new ByteArrayInputStream(command.toString().getBytes(StandardCharsets.UTF_8));
+
+        try {
+            PhantomJSExecutionResponse resp = PhantomJS.exec(stream);
+            ret = resp.getStdOut();
+        } catch (IOException e) {
+            log.error("Unable to download webpage [{}] as String", url, e);
+        }
 
         return ret;
     }

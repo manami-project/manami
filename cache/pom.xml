@@ -44,16 +44,16 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ui4j</groupId>
-            <artifactId>ui4j-all</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
         </dependency>
         <dependency>
         	<groupId>org.testng</groupId>
         	<artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.moodysalem</groupId>
+            <artifactId>phantomjs-wrapper</artifactId>
         </dependency>
     </dependencies>
 </project>
