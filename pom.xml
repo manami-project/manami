@@ -177,6 +177,9 @@
                             <manifest>
                                 <mainClass>io.github.manami.Main</mainClass>
                             </manifest>
+                            <manifestEntries>
+	                            <Built-By>love for anmime</Built-By>
+	                        </manifestEntries>
                         </archive>
                     </configuration>
                     <executions>
