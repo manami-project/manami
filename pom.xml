@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
-                <version>20160212</version>
+                <version>20160810</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -48,7 +48,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>4.3.0.RELEASE</version>
+                <version>4.3.2.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -58,7 +58,7 @@
             <dependency>
                 <groupId>org.controlsfx</groupId>
                 <artifactId>controlsfx</artifactId>
-                <version>8.40.10</version>
+                <version>8.40.12</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -78,7 +78,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.8</version>
+                <version>1.16.10</version>
             </dependency>
             <dependency>
 			    <groupId>org.testng</groupId>
