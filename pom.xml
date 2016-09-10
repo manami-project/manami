@@ -122,7 +122,7 @@
 
     <properties>
         <java.target.version>1.8</java.target.version>
-        <manami.version>2.10.4</manami.version>
+        <manami.version>2.10.5</manami.version>
         <logback.version>1.1.7</logback.version>
         <phantomjs.wrapper.version>3.0.0</phantomjs.wrapper.version>
     </properties>
