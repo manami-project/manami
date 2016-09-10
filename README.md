@@ -26,5 +26,6 @@ Manami is not meant to be an alternative to MAL. It should be seen as an extensi
 
 ### Installation
 * Needs Java8 u66 or higher
+* Download the *.jar file of the latest [release](https://github.com/manami-project/manami/releases) 
 * No installation or additional setup needed. Just Download the *.jar and start it by double click
     * or via console: java -jar manami.jar
