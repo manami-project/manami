@@ -183,7 +183,7 @@
                                 <mainClass>io.github.manami.Main</mainClass>
                             </manifest>
                             <manifestEntries>
-	                            <Built-By>love for anmime</Built-By>
+	                            <Built-By>love for anime</Built-By>
 	                        </manifestEntries>
                         </archive>
                     </configuration>
