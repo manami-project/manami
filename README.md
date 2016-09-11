@@ -1,6 +1,6 @@
 # Manami
 
-[![License: GNU Affero General Public License v3 (AGPLv3)](https://img.shields.io/badge/license-AGPLv3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0.de.html) [![Build Status](https://travis-ci.org/manami-project/manami.svg?branch=development)](https://travis-ci.org/manami-project/manami) [![codecov](https://codecov.io/gh/manami-project/manami/branch/development/graph/badge.svg)](https://codecov.io/gh/manami-project/manami/branch/development)
+[![License: GNU Affero General Public License v3 (AGPLv3)](https://img.shields.io/badge/license-AGPLv3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0.de.html) [![Build Status](https://travis-ci.org/manami-project/manami.svg?branch=development)](https://travis-ci.org/manami-project/manami) [![codecov](https://codecov.io/gh/manami-project/manami/branch/development/graph/badge.svg)](https://codecov.io/gh/manami-project/manami/branch/development) [![Dependency Status](https://www.versioneye.com/user/projects/57d4f9e3c07f2e0044bd6040/badge.svg)](https://www.versioneye.com/user/projects/57d4f9e3c07f2e0044bd6040)
 
 
 ## What does it do?
