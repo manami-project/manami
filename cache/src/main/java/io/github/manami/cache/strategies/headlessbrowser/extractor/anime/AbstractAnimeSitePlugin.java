@@ -1,16 +1,17 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG;
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG_THUMB;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
 
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility

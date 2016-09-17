@@ -1,26 +1,28 @@
 package io.github.manami.cache.strategies.headlessbrowser;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
-import io.github.manami.cache.strategies.AnimeRetrieval;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeSiteExtractor;
-import io.github.manami.cache.strategies.RecommendationsRetrieval;
-import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
-import io.github.manami.dto.entities.Anime;
-import lombok.Synchronized;
-import lombok.extern.slf4j.Slf4j;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import io.github.manami.cache.strategies.AnimeRetrieval;
+import io.github.manami.cache.strategies.RecommendationsRetrieval;
+import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeSiteExtractor;
+import io.github.manami.dto.entities.Anime;
+import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class provides access to the anime meta data. The data are taken
- * directly from the respective website using a headless browser to render the page an extract the relavant data.
+ * directly from the respective website using a headless browser to render the
+ * page an extract the relavant data.
  *
  * @author manami-project
  * @since 2.0.0
@@ -49,12 +51,11 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
         this.browser = browser;
     }
 
+
     @Override
     public Optional<Anime> fetchAnime(final String url) {
         return Optional.ofNullable(downloadAndExtractAnime(url));
     }
-
-
 
 
     /**
@@ -96,12 +97,13 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(String url) {
+    public Set<String> fetchRelatedAnimes(final String url) {
         return null;
     }
 
+
     @Override
-    public Map<String, Integer> fetchRecommendations(String url) {
+    public Map<String, Integer> fetchRecommendations(final String url) {
         return null;
     }
 }

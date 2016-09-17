@@ -1,8 +1,8 @@
 package io.github.manami.cache.strategies;
 
-import io.github.manami.dto.entities.Anime;
-
 import java.util.Optional;
+
+import io.github.manami.dto.entities.Anime;
 
 public interface AnimeRetrieval {
 

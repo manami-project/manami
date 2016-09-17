@@ -1,10 +1,10 @@
 package io.github.manami.cache;
 
-import io.github.manami.dto.entities.Anime;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import io.github.manami.dto.entities.Anime;
 
 /**
  * The cache is supposed to save raw html files from which the information can
@@ -15,7 +15,11 @@ import java.util.Set;
  */
 public interface Cache {
 
-       Optional<Anime> fetchAnime(String url);
-       Set<String> fetchRelatedAnimes(Anime anime);
-       Map<String, Integer> fetchRecommendations(Anime anime);
+    Optional<Anime> fetchAnime(String url);
+
+
+    Set<String> fetchRelatedAnimes(Anime anime);
+
+
+    Map<String, Integer> fetchRecommendations(Anime anime);
 }

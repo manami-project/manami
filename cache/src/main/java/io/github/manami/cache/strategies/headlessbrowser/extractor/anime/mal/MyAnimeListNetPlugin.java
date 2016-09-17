@@ -1,19 +1,20 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AbstractAnimeSitePlugin;
-import io.github.manami.dto.AnimeType;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import javax.inject.Named;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import javax.inject.Named;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AbstractAnimeSitePlugin;
+import io.github.manami.dto.AnimeType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class to gather information from myanimelist.net automatically.

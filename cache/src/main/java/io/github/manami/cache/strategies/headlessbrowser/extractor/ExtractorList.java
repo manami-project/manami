@@ -1,10 +1,11 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
 
 /**
  * Contains a list of all [{@link AnimeExtractor}s.
