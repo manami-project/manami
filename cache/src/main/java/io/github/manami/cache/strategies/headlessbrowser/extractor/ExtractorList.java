@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 
 /**
@@ -82,6 +82,27 @@ public class ExtractorList {
             if (extractor.isResponsible(url) && clazz.isInstance(extractor)) {
                 return Optional.of(extractor);
             }
+        }
+
+        return Optional.empty();
+    }
+
+
+    /**
+     * Returns the first extractor that claims responsibility.
+     *
+     * @since 2.10.6
+     * @param url
+     *            An instance of the first {@link RecommendationsExtractor}
+     *            claiming
+     *            responsibility.
+     * @return First {@link RecommendationsExtractor} which is responsible.
+     */
+    public Optional<RecommendationsExtractor> getRecommendationsExtractor(final String url) {
+        final Optional<AnimeExtractor> ret = getExtractor(url, RecommendationsExtractor.class);
+
+        if (ret.isPresent()) {
+            return Optional.of((RecommendationsExtractor) ret.get());
         }
 
         return Optional.empty();

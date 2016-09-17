@@ -2,7 +2,7 @@ package io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime
 
 import java.util.Set;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
 
 /**
  * Can extract links to related animes.
@@ -18,5 +18,5 @@ public interface RelatedAnimeExtractor extends AnimeExtractor {
      * @since 2.3.0
      * @return A list of URLs for related animes.
      */
-    Set<String> extractRelatedAnimes(String url, String siteContent);
+    Set<String> extractRelatedAnimes(String siteContent);
 }

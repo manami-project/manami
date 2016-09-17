@@ -20,7 +20,7 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAn
 public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtractor {
 
     @Override
-    public Set<String> extractRelatedAnimes(final String url, final String siteContent) {
+    public Set<String> extractRelatedAnimes(final String siteContent) {
         final List<String> raw = newArrayList();
         String subStr = siteContent.trim();
 

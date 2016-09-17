@@ -2,6 +2,7 @@ package io.github.manami.cache.strategies.headlessbrowser;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,7 @@ import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.dto.entities.Anime;
 import lombok.Synchronized;
@@ -110,7 +112,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
             // the site is not cached
             if (isNotBlank(normalizedUrl)) {
                 final String infoLinkSite = downloadSiteContent(normalizedUrl);
-                ret = extractor.get().extractRelatedAnimes(normalizedUrl, infoLinkSite);
+                ret = extractor.get().extractRelatedAnimes(infoLinkSite);
             }
         }
 
@@ -120,6 +122,19 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
     @Override
     public Map<String, Integer> fetchRecommendations(final String url) {
-        return null;
+        Map<String, Integer> ret = new HashMap<>();
+        final Optional<RecommendationsExtractor> extractor = extractors.getRecommendationsExtractor(url);
+
+        if (isNotBlank(url) && extractor.isPresent()) {
+            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
+
+            // the site is not cached
+            if (isNotBlank(normalizedUrl)) {
+                final String infoLinkSite = downloadSiteContent(normalizedUrl);
+                ret = extractor.get().extractRecommendations(infoLinkSite);
+            }
+        }
+
+        return ret;
     }
 }

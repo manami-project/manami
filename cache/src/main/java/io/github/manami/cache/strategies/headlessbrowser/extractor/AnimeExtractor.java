@@ -1,4 +1,4 @@
-package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
+package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
 /**
  * @author manami-project
