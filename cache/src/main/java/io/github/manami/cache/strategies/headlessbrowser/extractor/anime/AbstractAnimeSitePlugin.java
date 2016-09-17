@@ -20,7 +20,7 @@ import io.github.manami.dto.entities.Anime;
  * @author manami-project
  * @since 2.0.0
  */
-public abstract class AbstractAnimeSitePlugin implements AnimeExtractor {
+public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
 
     /** Content on from which all meta information are being extracted from. */
     protected String siteContent;
@@ -73,26 +73,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeExtractor {
         siteContent = siteContent.replaceAll("(\r\n|\n\r|\r|\n|\t)", "");
         siteContent = normalizeSpace(siteContent);
     }
-
-
-    @Override
-    public boolean isResponsible(final String url) {
-        if (isBlank(url)) {
-            return false;
-        }
-
-        return url.startsWith("http://" + getDomain()) || url.startsWith("http://www." + getDomain()) || url.startsWith("https://" + getDomain()) || url.startsWith("https://www." + getDomain());
-    }
-
-
-    /**
-     * Returns the domain of a specific anime site plugin. Important is that it
-     * does not include the protocol.
-     *
-     * @since 2.0.0
-     * @return The domain.
-     */
-    protected abstract String getDomain();
 
 
     /**

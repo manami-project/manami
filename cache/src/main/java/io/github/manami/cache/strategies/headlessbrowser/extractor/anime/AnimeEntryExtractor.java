@@ -8,7 +8,7 @@ import io.github.manami.dto.entities.Anime;
  * @author manami-project
  * @since 2.0.0
  */
-public interface AnimeSiteExtractor {
+public interface AnimeEntryExtractor extends AnimeExtractor {
 
     /**
      * Returns an instance of the requested {@link Anime} or null in case of an
@@ -23,15 +23,4 @@ public interface AnimeSiteExtractor {
      *         case of an invalid link.
      */
     Anime extractAnimeEntry(String Url, String sitecontent);
-
-
-    /**
-     * Normalizes a link if necessary.
-     *
-     * @since 2.1.2
-     * @param url
-     *            URL
-     * @return Normalized URL.
-     */
-    String normalizeInfoLink(String url);
 }

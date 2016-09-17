@@ -1,11 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +9,7 @@ import javax.inject.Named;
 
 import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AbstractAnimeSitePlugin;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
 import io.github.manami.dto.AnimeType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Named
 @Extractor
 @Slf4j
-public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
+public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
     /** Regex Pattern. */
     private Pattern pattern;
@@ -38,9 +35,6 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
     /** Request unsuccessful by incapsula. */
     private static final String REQUEST_UNSUCCESSFUL = "Request unsuccessful. Incapsula incident ID";
-
-    /** Domain name. */
-    private final static String DOMAIN = "myanimelist.net";
 
 
     @Override
@@ -120,12 +114,6 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
 
     @Override
-    protected String getDomain() {
-        return DOMAIN;
-    }
-
-
-    @Override
     protected String extractPictureLink() {
         pattern = Pattern.compile("https://myanimelist\\.cdn-dena\\.com/images/anime/[0-9]+/[0-9]+\\.jpg");
         matcher = pattern.matcher(siteContent);
@@ -136,34 +124,6 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
         }
 
         return picture;
-    }
-
-
-    @Override
-    public String normalizeInfoLink(final String url) {
-        final String prefix = String.format("http://%s/anime", DOMAIN);
-
-        // no tailings
-        pattern = Pattern.compile(".*?/[0-9]+");
-        matcher = pattern.matcher(url);
-
-        String ret = null;
-
-        if (matcher.find()) {
-            ret = matcher.group();
-        }
-
-        // correct prefix
-        if (isNotBlank(ret) && !ret.startsWith(prefix)) {
-            pattern = Pattern.compile("/[0-9]+");
-            matcher = pattern.matcher(url);
-
-            if (matcher.find()) {
-                ret = prefix + matcher.group();
-            }
-        }
-
-        return ret;
     }
 
 
@@ -181,39 +141,13 @@ public class MyAnimeListNetPlugin extends AbstractAnimeSitePlugin {
 
 
     @Override
-    public Set<String> extractRelatedAnimes() {
-        final List<String> raw = newArrayList();
-        String subStr = super.siteContent.trim();
+    public String normalizeInfoLink(final String url) {
+        return MyAnimeListNetUtil.normalizeInfoLink(url);
+    }
 
-        // get rid of all whitespaces
-        subStr = subStr.replaceAll("\\s", "");
 
-        pattern = Pattern.compile("</div>RelatedAnime</h2>(.*?)<h2>");
-        matcher = pattern.matcher(subStr);
-
-        if (matcher.find()) {
-            subStr = matcher.group();
-        }
-
-        if (isNotBlank(subStr) && isNotBlank(super.siteContent) && !super.siteContent.startsWith(subStr.substring(0, 4))) {
-            pattern = Pattern.compile("/anime/[0-9]+");
-            matcher = pattern.matcher(subStr);
-
-            while (matcher.find()) {
-                raw.add(matcher.group());
-            }
-        }
-
-        final Set<String> ret = newHashSet();
-        if (raw.size() > 0) {
-            raw.forEach(element -> {
-                final String relatedAnimeUrl = normalizeInfoLink(element);
-                if (!ret.contains(relatedAnimeUrl)) {
-                    ret.add(relatedAnimeUrl);
-                }
-            });
-        }
-
-        return ret;
+    @Override
+    public boolean isResponsible(final String url) {
+        return MyAnimeListNetUtil.isResponsible(url);
     }
 }

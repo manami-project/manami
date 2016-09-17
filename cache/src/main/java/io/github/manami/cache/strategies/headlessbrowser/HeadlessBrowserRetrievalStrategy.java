@@ -9,12 +9,15 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.common.collect.Sets;
+
 import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeSiteExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.dto.entities.Anime;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
@@ -80,15 +83,15 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      */
     private Anime downloadAndExtractAnime(final String url) {
         Anime ret = null;
-        final AnimeSiteExtractor extractor = extractors.getAnimeExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
 
-        if (isNotBlank(url) && extractor != null) {
-            final String normalizedUrl = extractor.normalizeInfoLink(url);
+        if (isNotBlank(url) && extractor.isPresent()) {
+            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
 
             // the site is not cached
             if (isNotBlank(normalizedUrl)) {
                 final String infoLinkSite = downloadSiteContent(normalizedUrl);
-                ret = extractor.extractAnimeEntry(normalizedUrl, infoLinkSite);
+                ret = extractor.get().extractAnimeEntry(normalizedUrl, infoLinkSite);
             }
         }
 
@@ -98,7 +101,20 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
     @Override
     public Set<String> fetchRelatedAnimes(final String url) {
-        return null;
+        Set<String> ret = Sets.newHashSet();
+        final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(url);
+
+        if (isNotBlank(url) && extractor.isPresent()) {
+            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
+
+            // the site is not cached
+            if (isNotBlank(normalizedUrl)) {
+                final String infoLinkSite = downloadSiteContent(normalizedUrl);
+                ret = extractor.get().extractRelatedAnimes(normalizedUrl, infoLinkSite);
+            }
+        }
+
+        return ret;
     }
 
 

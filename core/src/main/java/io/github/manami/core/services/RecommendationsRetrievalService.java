@@ -3,7 +3,7 @@ package io.github.manami.core.services;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetPlugin;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
 import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
@@ -69,7 +69,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
      */
     public RecommendationsRetrievalService(final Manami app, final Cache cache, final Observer observer) {
         browser = new HeadlessBrowser();
-        extractor = new MyAnimeListNetPlugin();
+        extractor = new MyAnimeListNetAnimeExtractor();
         urlList = newArrayList();
         recommendationsAll = newHashMap();
         this.app = app;

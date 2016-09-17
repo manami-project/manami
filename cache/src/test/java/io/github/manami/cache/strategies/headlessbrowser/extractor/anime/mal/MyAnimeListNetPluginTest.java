@@ -17,13 +17,13 @@ import io.github.manami.dto.entities.Anime;
 public class MyAnimeListNetPluginTest {
 
     private static final String DEATH_NOTE_MAL_XML_FILE = "death_note_mal.xml";
-    private MyAnimeListNetPlugin sut;
+    private MyAnimeListNetAnimeExtractor sut;
     private String deathNoteRawXml;
 
 
     @BeforeMethod
     public void setUp() throws IOException {
-        sut = new MyAnimeListNetPlugin();
+        sut = new MyAnimeListNetAnimeExtractor();
         final ClassPathResource resource = new ClassPathResource(DEATH_NOTE_MAL_XML_FILE);
         final StringBuilder strBuilder = new StringBuilder();
         Files.readAllLines(resource.getFile().toPath()).forEach(strBuilder::append);

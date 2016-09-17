@@ -1,12 +1,10 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
-
 /**
  * @author manami-project
  * @since 2.3.0
  */
-public interface AnimeExtractor extends AnimeSiteExtractor, RelatedAnimeExtractor {
+public interface AnimeExtractor {
 
     /**
      * Checks whether the current plugin can process the given link.
@@ -16,4 +14,15 @@ public interface AnimeExtractor extends AnimeSiteExtractor, RelatedAnimeExtracto
      * @return True if the extractor is responsible.
      */
     boolean isResponsible(String url);
+
+
+    /**
+     * Normalizes a link if necessary.
+     *
+     * @since 2.1.2
+     * @param url
+     *            URL
+     * @return Normalized URL.
+     */
+    String normalizeInfoLink(String url);
 }
