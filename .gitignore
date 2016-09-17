@@ -1,5 +1,6 @@
 ### Custom ###
 # Log files
+gui/config/**
 *.log
 
 # TestNG output
