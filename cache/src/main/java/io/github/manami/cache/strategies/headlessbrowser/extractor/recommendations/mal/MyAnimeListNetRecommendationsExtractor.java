@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Maps;
 
 import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
@@ -32,7 +34,19 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
 
     @Override
     public String normalizeInfoLink(final String url) {
-        return String.format("%s/Death_Note/userrecs", MyAnimeListNetUtil.normalizeInfoLink(url));
+        String normalizedUrl = MyAnimeListNetUtil.normalizeInfoLink(url);
+
+        final String patternString = String.format("http://%s/anime/[0-9]+", MyAnimeListNetUtil.DOMAIN);
+
+        // no tailings
+        final Pattern pattern = Pattern.compile(patternString);
+        final Matcher matcher = pattern.matcher(normalizedUrl);
+
+        if (matcher.find()) {
+            normalizedUrl = String.format("%s/Death_Note/userrecs", normalizedUrl);
+        }
+
+        return normalizedUrl;
     }
 
 
@@ -59,7 +73,9 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
 
                     if (containsIgnoreCase(sub, recomFlag)) {
                         final int numberOfRecoms = countMatches(sub, recomFlag);
-                        ret.put(curAnime, numberOfRecoms);
+                        final String fullUrl = createCleanFullUrl(curAnime);
+
+                        ret.put(fullUrl, numberOfRecoms);
                         recomSite = substring(recomSite, nextAnime - 1);
                     } else {
                         recomSite = substring(recomSite, nextAnime);
@@ -73,5 +89,14 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
         }
 
         return ret;
+    }
+
+
+    /**
+     * @param curAnime
+     * @return
+     */
+    private String createCleanFullUrl(final String curAnime) {
+        return StringUtils.removeEnd(String.format("http://%s%s", MyAnimeListNetUtil.DOMAIN, curAnime), "/");
     }
 }

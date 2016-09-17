@@ -32,7 +32,7 @@ public final class MyAnimeListNetUtil {
         Pattern pattern = Pattern.compile(".*?/[0-9]+");
         Matcher matcher = pattern.matcher(url);
 
-        String ret = null;
+        String ret = url;
 
         if (matcher.find()) {
             ret = matcher.group();
@@ -40,11 +40,11 @@ public final class MyAnimeListNetUtil {
 
         // correct prefix
         if (isNotBlank(ret) && !ret.startsWith(prefix)) {
-            pattern = Pattern.compile("/[0-9]+");
+            pattern = Pattern.compile("[0-9]+");
             matcher = pattern.matcher(url);
 
             if (matcher.find()) {
-                ret = prefix + matcher.group();
+                ret = String.format("%s/%s", prefix, matcher.group());
             }
         }
 

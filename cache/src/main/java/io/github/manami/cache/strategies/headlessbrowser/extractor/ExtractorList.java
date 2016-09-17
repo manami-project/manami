@@ -32,6 +32,9 @@ public class ExtractorList {
      */
     @Inject
     public ExtractorList(@Extractor final List<AnimeExtractor> extractors) {
+        if (extractors == null) {
+            throw new IllegalStateException("Extractor list cannot be null");
+        }
         this.extractors = extractors;
     }
 
