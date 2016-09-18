@@ -1,10 +1,10 @@
 package io.github.manami.dto.events;
 
-import static com.google.common.collect.Lists.newArrayList;
+import io.github.manami.dto.entities.MinimalEntry;
 
 import java.util.List;
 
-import io.github.manami.dto.entities.MinimalEntry;
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Contains a {@link List} of {@link MinimalEntry} for each list type.

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.controlsfx.control.Notifications;
@@ -24,8 +25,8 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
-import io.github.manami.cache.extractor.anime.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
 import io.github.manami.core.commands.CmdDeleteFilterEntry;
@@ -191,10 +192,10 @@ public class FilterListController extends AbstractAnimeListController implements
             return;
         }
 
-        final AnimeSiteExtractor extractor = extractors.getAnimeExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
 
-        if (extractor != null) {
-            url = extractor.normalizeInfoLink(url);
+        if (extractor.isPresent()) {
+            url = extractor.get().normalizeInfoLink(url);
         }
 
         if (!app.filterEntryExists(url)) {

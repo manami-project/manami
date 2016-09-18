@@ -2,13 +2,7 @@ package io.github.manami.core.services;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
-import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.countMatches;
-import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.substring;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,13 +11,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Observer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.HeadlessBrowser;
-import io.github.manami.cache.extractor.anime.AnimeExtractor;
-import io.github.manami.cache.extractor.plugins.mal.MyAnimeListNetPlugin;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
 import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
@@ -32,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Extracts and counts recommendations for a list of animes.
- *
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
  * @author manami-project
@@ -40,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
-
-    private final HeadlessBrowser browser;
 
     /** List to be searched for recommendations. */
     private final List<String> urlList;
@@ -68,8 +57,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
      * @param observer
      */
     public RecommendationsRetrievalService(final Manami app, final Cache cache, final Observer observer) {
-        browser = new HeadlessBrowser();
-        extractor = new MyAnimeListNetPlugin();
+        extractor = new MyAnimeListNetAnimeExtractor();
         urlList = newArrayList();
         recommendationsAll = newHashMap();
         this.app = app;
@@ -99,7 +87,14 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
         for (int i = 0; i < userRecomList.size() && !isInterrupt(); i++) {
             setChanged();
-            notifyObservers(new AdvancedProgressState(i + 1, userRecomList.size(), cache.fetchAnime(userRecomList.get(i))));
+
+            /*
+             * +1 on i because i starts with 0 and +1 because the value
+             * indicates the next entry to be loaded
+             */
+            final int nextEntryIndex = i + 2;
+
+            notifyObservers(new AdvancedProgressState(nextEntryIndex, userRecomList.size(), cache.fetchAnime(userRecomList.get(i)).get()));
         }
 
         return resultList;
@@ -107,39 +102,13 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
 
     private void getRecommendations(final String url) {
-        final String recomUrl = String.format("%s/Death_Note/userrecs", url);
-        String recomSite = (recomUrl.startsWith("http")) ? browser.pageAsString(recomUrl) : null;
-        final String animeUrlDelimiter = "/anime/";
-        final String recomFlag = "Recommended by";
-        recomSite = normalizeSpace(recomSite);
+        final Optional<Anime> animeToFindRecommendationsFor = cache.fetchAnime(url);
 
-        if (isNotBlank(recomSite)) {
-            String curAnime = null;
-
-            while (recomSite.length() > 0) {
-                if (curAnime == null && startsWithIgnoreCase(recomSite, animeUrlDelimiter)) {
-                    final Pattern entryPattern = Pattern.compile("/anime/([0-9]*?)/");
-                    final Matcher entryMatcher = entryPattern.matcher(recomSite);
-                    curAnime = (entryMatcher.find()) ? entryMatcher.group() : null;
-                    recomSite = substring(recomSite, animeUrlDelimiter.length() - 1, recomSite.length());
-                } else if (curAnime != null && !startsWithIgnoreCase(recomSite, "/anime/")) {
-                    final int nextAnime = indexOfIgnoreCase(recomSite, animeUrlDelimiter);
-                    final String sub = substring(recomSite, 0, nextAnime);
-
-                    if (containsIgnoreCase(sub, recomFlag)) {
-                        final int numberOfRecoms = countMatches(sub, recomFlag);
-                        addRecom(curAnime, numberOfRecoms);
-                        recomSite = substring(recomSite, nextAnime - 1);
-                    } else {
-                        recomSite = substring(recomSite, nextAnime);
-                    }
-
-                    curAnime = null;
-                } else {
-                    recomSite = substring(recomSite, 1, recomSite.length());
-                }
-            }
+        if (!animeToFindRecommendationsFor.isPresent()) {
+            return;
         }
+
+        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(key, value));
     }
 
 

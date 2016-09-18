@@ -4,6 +4,7 @@ import static io.github.manami.gui.components.Icons.createIconDelete;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.controlsfx.validation.Severity;
@@ -14,8 +15,8 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
-import io.github.manami.cache.extractor.anime.AnimeSiteExtractor;
-import io.github.manami.cache.extractor.anime.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.commands.CmdDeleteWatchListEntry;
@@ -120,10 +121,10 @@ public class WatchListController extends AbstractAnimeListController {
             return;
         }
 
-        final AnimeSiteExtractor extractor = extractors.getAnimeExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
 
-        if (extractor != null) {
-            url = extractor.normalizeInfoLink(url);
+        if (extractor.isPresent()) {
+            url = extractor.get().normalizeInfoLink(url);
         }
 
         if (!app.watchListEntryExists(url)) {

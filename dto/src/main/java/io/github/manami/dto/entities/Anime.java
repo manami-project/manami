@@ -47,10 +47,6 @@ public class Anime extends AbstractMinimalEntry {
     @Setter
     private String picture = "";
 
-    /** A list of related animes. */
-    @Getter
-    private final List<String> relatedAnimes;
-
 
     /**
      * Constructor awaiting all Attributes.
@@ -74,7 +70,6 @@ public class Anime extends AbstractMinimalEntry {
         this.episodes = episodes;
         this.location = location;
         id = randomUUID();
-        relatedAnimes = newArrayList();
     }
 
 
@@ -85,7 +80,6 @@ public class Anime extends AbstractMinimalEntry {
      */
     public Anime() {
         id = randomUUID();
-        relatedAnimes = newArrayList();
     }
 
 
@@ -96,7 +90,6 @@ public class Anime extends AbstractMinimalEntry {
      */
     public Anime(final UUID id) {
         this.id = id;
-        relatedAnimes = newArrayList();
     }
 
 
