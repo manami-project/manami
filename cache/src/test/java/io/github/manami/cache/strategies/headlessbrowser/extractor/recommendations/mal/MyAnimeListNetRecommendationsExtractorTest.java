@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -35,11 +34,6 @@ public class MyAnimeListNetRecommendationsExtractorTest {
         final StringBuilder strBuilder = new StringBuilder();
         Files.readAllLines(resource.getFile().toPath()).forEach(strBuilder::append);
         rawHtml = strBuilder.toString();
-    }
-
-
-    @AfterMethod
-    public void afterMethod() {
     }
 
 

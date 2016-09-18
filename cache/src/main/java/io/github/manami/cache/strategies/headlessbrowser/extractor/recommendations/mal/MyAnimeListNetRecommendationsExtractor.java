@@ -26,6 +26,9 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAn
 @Extractor
 public class MyAnimeListNetRecommendationsExtractor implements RecommendationsExtractor {
 
+    private static final String DELIMITER_NEXT_RECOMMENDATION = "<div class=\"picSurround\">";
+
+
     @Override
     public boolean isResponsible(final String url) {
         return MyAnimeListNetUtil.isResponsible(url);
@@ -68,7 +71,7 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
                     curAnime = (entryMatcher.find()) ? entryMatcher.group() : null;
                     recomSite = substring(recomSite, animeUrlDelimiter.length() - 1, recomSite.length());
                 } else if (curAnime != null && !startsWithIgnoreCase(recomSite, "/anime/")) {
-                    final int nextAnime = indexOfIgnoreCase(recomSite, animeUrlDelimiter);
+                    final int nextAnime = indexOfIgnoreCase(recomSite, DELIMITER_NEXT_RECOMMENDATION);
                     final String sub = substring(recomSite, 0, nextAnime);
 
                     if (containsIgnoreCase(sub, recomFlag)) {
