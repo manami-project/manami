@@ -1,14 +1,14 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
+import io.github.manami.dto.entities.InfoLink;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Contains a list of all [{@link AnimeExtractor}s.
@@ -43,13 +43,13 @@ public class ExtractorList {
      * Returns the first extractor that claims responsibility.
      *
      * @since 2.3.0
-     * @param url
+     * @param infoLink
      *            An instance of the first {@link AnimeEntryExtractor} claiming
      *            responsibility.
      * @return First {@link AnimeEntryExtractor} which is responsible.
      */
-    public Optional<AnimeEntryExtractor> getAnimeEntryExtractor(final String url) {
-        final Optional<AnimeExtractor> ret = getExtractor(url, AnimeEntryExtractor.class);
+    public Optional<AnimeEntryExtractor> getAnimeEntryExtractor(final InfoLink infoLink) {
+        final Optional<AnimeExtractor> ret = getExtractor(infoLink, AnimeEntryExtractor.class);
 
         if (ret.isPresent()) {
             return Optional.of((AnimeEntryExtractor) ret.get());
@@ -63,14 +63,14 @@ public class ExtractorList {
      * Returns the first extractor that claims responsibility.
      *
      * @since 2.10.6
-     * @param url
+     * @param infoLink
      *            An instance of the first {@link RelatedAnimeExtractor}
      *            claiming
      *            responsibility.
      * @return First {@link RelatedAnimeExtractor} which is responsible.
      */
-    public Optional<RelatedAnimeExtractor> getRelatedAnimeExtractor(final String url) {
-        final Optional<AnimeExtractor> ret = getExtractor(url, RelatedAnimeExtractor.class);
+    public Optional<RelatedAnimeExtractor> getRelatedAnimeExtractor(final InfoLink infoLink) {
+        final Optional<AnimeExtractor> ret = getExtractor(infoLink, RelatedAnimeExtractor.class);
 
         if (ret.isPresent()) {
             return Optional.of((RelatedAnimeExtractor) ret.get());
@@ -80,9 +80,9 @@ public class ExtractorList {
     }
 
 
-    private Optional<AnimeExtractor> getExtractor(final String url, final Class clazz) {
+    private Optional<AnimeExtractor> getExtractor(final InfoLink infoLink, final Class clazz) {
         for (final AnimeExtractor extractor : extractors) {
-            if (extractor.isResponsible(url) && clazz.isInstance(extractor)) {
+            if (extractor.isResponsible(infoLink.getUrl()) && clazz.isInstance(extractor)) {
                 return Optional.of(extractor);
             }
         }
@@ -101,7 +101,7 @@ public class ExtractorList {
      *            responsibility.
      * @return First {@link RecommendationsExtractor} which is responsible.
      */
-    public Optional<RecommendationsExtractor> getRecommendationsExtractor(final String url) {
+    public Optional<RecommendationsExtractor> getRecommendationsExtractor(final InfoLink url) {
         final Optional<AnimeExtractor> ret = getExtractor(url, RecommendationsExtractor.class);
 
         if (ret.isPresent()) {

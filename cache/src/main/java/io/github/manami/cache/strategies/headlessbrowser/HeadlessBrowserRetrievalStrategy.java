@@ -1,17 +1,6 @@
 package io.github.manami.cache.strategies.headlessbrowser;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.google.common.collect.Sets;
-
 import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
@@ -21,8 +10,16 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEn
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This class provides access to the anime meta data. The data are taken
@@ -58,8 +55,8 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Optional<Anime> fetchAnime(final String url) {
-        return Optional.ofNullable(downloadAndExtractAnime(url));
+    public Optional<Anime> fetchAnime(final InfoLink infoLink) {
+        return Optional.ofNullable(downloadAndExtractAnime(infoLink));
     }
 
 
@@ -72,7 +69,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      * @return Raw XML of the downloaded site.
      */
     @Synchronized
-    private String downloadSiteContent(final String url) {
+    private String downloadSiteContent(final InfoLink url) {
         return browser.pageAsString(url);
     }
 
@@ -83,17 +80,17 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      * @since 2.5.1
      * @return
      */
-    private Anime downloadAndExtractAnime(final String url) {
+    private Anime downloadAndExtractAnime(final InfoLink infoLink) {
         Anime ret = null;
-        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(infoLink);
 
-        if (isNotBlank(url) && extractor.isPresent()) {
-            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
+        if (infoLink.isValid() && extractor.isPresent()) {
+            final InfoLink normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
 
             // the site is not cached
-            if (isNotBlank(normalizedUrl)) {
-                final String infoLinkSite = downloadSiteContent(normalizedUrl);
-                ret = extractor.get().extractAnimeEntry(normalizedUrl, infoLinkSite);
+            if (normalizedInfoLink.isValid()) {
+                final String infoLinkSite = downloadSiteContent(normalizedInfoLink);
+                ret = extractor.get().extractAnimeEntry(normalizedInfoLink, infoLinkSite);
             }
         }
 
@@ -102,16 +99,16 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(final String url) {
+    public Set<String> fetchRelatedAnimes(final InfoLink infoLink) {
         Set<String> ret = Sets.newHashSet();
-        final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(url);
+        final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(infoLink);
 
-        if (isNotBlank(url) && extractor.isPresent()) {
-            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
+        if (infoLink.isValid() && extractor.isPresent()) {
+            final InfoLink normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
 
             // the site is not cached
-            if (isNotBlank(normalizedUrl)) {
-                final String infoLinkSite = downloadSiteContent(normalizedUrl);
+            if (normalizedInfoLink.isValid()) {
+                final String infoLinkSite = downloadSiteContent(normalizedInfoLink);
                 ret = extractor.get().extractRelatedAnimes(infoLinkSite);
             }
         }
@@ -121,16 +118,16 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Map<String, Integer> fetchRecommendations(final String url) {
+    public Map<String, Integer> fetchRecommendations(final InfoLink infoLink) {
         Map<String, Integer> ret = new HashMap<>();
-        final Optional<RecommendationsExtractor> extractor = extractors.getRecommendationsExtractor(url);
+        final Optional<RecommendationsExtractor> extractor = extractors.getRecommendationsExtractor(infoLink);
 
-        if (isNotBlank(url) && extractor.isPresent()) {
-            final String normalizedUrl = extractor.get().normalizeInfoLink(url);
+        if (infoLink.isValid() && extractor.isPresent()) {
+            InfoLink normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
 
             // the site is not cached
-            if (isNotBlank(normalizedUrl)) {
-                final String infoLinkSite = downloadSiteContent(normalizedUrl);
+            if (normalizedInfoLink.isValid()) {
+                final String infoLinkSite = downloadSiteContent(normalizedInfoLink);
                 ret = extractor.get().extractRecommendations(infoLinkSite);
             }
         }

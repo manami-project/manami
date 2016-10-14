@@ -1,17 +1,17 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.inject.Named;
-
 import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AbstractAnimeSitePlugin;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
 import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.InfoLink;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Named;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Class to gather information from myanimelist.net automatically.
@@ -141,7 +141,7 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
 
     @Override
-    public String normalizeInfoLink(final String url) {
+    public InfoLink normalizeInfoLink(final InfoLink url) {
         return MyAnimeListNetUtil.normalizeInfoLink(url);
     }
 

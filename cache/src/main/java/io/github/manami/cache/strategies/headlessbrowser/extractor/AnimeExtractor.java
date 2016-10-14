@@ -1,5 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
+import io.github.manami.dto.entities.InfoLink;
+
 /**
  * @author manami-project
  * @since 2.3.0
@@ -20,9 +22,9 @@ public interface AnimeExtractor {
      * Normalizes a link if necessary.
      *
      * @since 2.1.2
-     * @param url
+     * @param infoLink
      *            URL
      * @return Normalized URL.
      */
-    String normalizeInfoLink(String url);
+    InfoLink normalizeInfoLink(InfoLink infoLink);
 }

@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.persistence.AnimeListHandler;
 
@@ -54,8 +55,8 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
 
     @Override
-    public boolean animeEntryExists(final String url) {
-        return isInList(url);
+    public boolean animeEntryExists(final InfoLink infoLink) {
+        return isInList(infoLink);
     }
 
 
@@ -71,13 +72,13 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
 
     /**
      * @since 2.7.0
-     * @param url
+     * @param infoLink
      * @return
      */
-    private boolean isInList(final String url) {
-        if (isNotBlank(url)) {
+    private boolean isInList(final InfoLink infoLink) {
+        if (infoLink.isValid()) {
             for (final MinimalEntry curEntry : animeList.values()) {
-                if (url.equalsIgnoreCase(curEntry.getInfoLink())) {
+                if (infoLink.equals(curEntry.getInfoLink())) {
                     return true;
                 }
             }

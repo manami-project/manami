@@ -215,7 +215,7 @@ public class CheckListService extends AbstractService<Void> {
             updateProgress();
             final Anime anime = list.get(index);
 
-            if (isBlank(anime.getInfoLink())) {
+            if (!anime.getInfoLink().isValid()) {
                 continue;
             }
 

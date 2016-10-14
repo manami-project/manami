@@ -1,14 +1,14 @@
 package io.github.manami.persistence.importer.xml.postprocessor;
 
-import static org.testng.Assert.assertEquals;
-
-import java.util.List;
-
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.WatchListEntry;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
 
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 public class ImportMigrationPostProcessorTest {
 
@@ -17,9 +17,9 @@ public class ImportMigrationPostProcessorTest {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
         final String entry2Thumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
-        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, "http://myanimelist.net/anime/1535");
-        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, "http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17");
-        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2");
+        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
+        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
         final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
 
@@ -40,9 +40,9 @@ public class ImportMigrationPostProcessorTest {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
         final String entry2Thumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
-        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, "http://myanimelist.net/anime/1535");
-        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, "http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17");
-        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2");
+        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
+        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
         final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
 
@@ -63,9 +63,9 @@ public class ImportMigrationPostProcessorTest {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
         final String entry2Thumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
-        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, "http://myanimelist.net/anime/1535");
-        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, "http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17");
-        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2");
+        final FilterEntry entry1 = new FilterEntry("Death Note", entry1Thumb, new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
+        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
         final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
 
@@ -85,9 +85,9 @@ public class ImportMigrationPostProcessorTest {
     public void testMigration2103WorksForFilterList() {
         // given
         final String fmpThumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
-        final FilterEntry entry1 = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
-        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", fmpThumb, "http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17");
-        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2");
+        final FilterEntry entry1 = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", fmpThumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
+        final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
         final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
 
@@ -107,9 +107,9 @@ public class ImportMigrationPostProcessorTest {
     public void testMigration2103WorksForWatchList() {
         // given
         final String fmpThumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
-        final WatchListEntry entry1 = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
-        final WatchListEntry entry2 = new WatchListEntry("Fullmetal Panic!", fmpThumb, "http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17");
-        final WatchListEntry entry3 = new WatchListEntry("Code Geass: Hangyaku no Lelouch R2", "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2");
+        final WatchListEntry entry1 = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
+        final WatchListEntry entry2 = new WatchListEntry("Fullmetal Panic!", fmpThumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
+        final WatchListEntry entry3 = new WatchListEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
         final List<WatchListEntry> watchListEntries = Lists.newArrayList(entry1, entry2, entry3);
 

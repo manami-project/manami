@@ -1,18 +1,16 @@
 package io.github.manami.dto.entities;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-import java.util.UUID;
-
 import io.github.manami.dto.AnimeType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.UUID;
+
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Represents an Anime with all it's saved meta information.
@@ -63,7 +61,7 @@ public class Anime extends AbstractMinimalEntry {
      * @param location
      *            Location on the HDD.
      */
-    public Anime(final String title, final AnimeType type, final int episodes, final String infoLink, final String location) {
+    public Anime(final String title, final AnimeType type, final int episodes, final InfoLink infoLink, final String location) {
         super.setTitle(title);
         super.setInfoLink(infoLink);
         this.type = type;
@@ -108,7 +106,7 @@ public class Anime extends AbstractMinimalEntry {
             target.setEpisodes(source.getEpisodes());
         }
 
-        if (isBlank(target.getInfoLink())) {
+        if (!target.getInfoLink().isPresent()) {
             target.setInfoLink(source.getInfoLink());
         }
 

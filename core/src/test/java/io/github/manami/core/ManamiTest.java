@@ -1,35 +1,6 @@
 package io.github.manami.core;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CmdAddAnime;
 import io.github.manami.core.commands.CmdAddFilterEntry;
@@ -41,6 +12,7 @@ import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.AnimeListChangedEvent;
 import io.github.manami.persistence.PersistenceFacade;
@@ -49,6 +21,32 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 @Slf4j
 public class ManamiTest {
@@ -111,16 +109,16 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
-        final FilterEntry filterEntry = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final FilterEntry filterEntry = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
 
-        final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
+        final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
 
         cmdService.executeCommand(new CmdAddAnime(entry, app));
         cmdService.executeCommand(new CmdAddFilterEntry(filterEntry, app));
@@ -153,7 +151,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -161,10 +159,10 @@ public class ManamiTest {
         entry.setType(AnimeType.TV);
         persistenceFacade.addAnime(entry);
 
-        final FilterEntry filterEntry = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final FilterEntry filterEntry = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
         persistenceFacade.filterAnime(filterEntry);
 
-        final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
+        final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
         persistenceFacade.watchAnime(watchEntry);
 
         final Path file = new ClassPathResource(TEST_ANIME_LIST_FILE_XML).getFile().toPath();
@@ -184,7 +182,7 @@ public class ManamiTest {
         final Anime bokuDake = fetchAnimeList.get(0);
         assertNotNull(bokuDake);
         assertEquals(bokuDake.getEpisodes(), 12);
-        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getInfoLink().getUrl(), "http://myanimelist.net/anime/31043");
         assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
         assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
         assertEquals(bokuDake.getType(), AnimeType.TV);
@@ -192,7 +190,7 @@ public class ManamiTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 4);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/44");
         assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
@@ -204,7 +202,7 @@ public class ManamiTest {
 
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
         assertNotNull(deathNoteRewrite);
-        assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
+        assertEquals(deathNoteRewrite.getInfoLink().getUrl(), "http://myanimelist.net/anime/2994");
         assertEquals(deathNoteRewrite.getThumbnail(), "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg");
         assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
 
@@ -215,7 +213,7 @@ public class ManamiTest {
 
         final FilterEntry gintama = fetchFilterList.get(0);
         assertNotNull(gintama);
-        assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
+        assertEquals(gintama.getInfoLink().getUrl(), "http://myanimelist.net/anime/918");
         assertEquals(gintama.getThumbnail(), "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg");
         assertEquals(gintama.getTitle(), "Gintama");
     }
@@ -247,7 +245,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -267,7 +265,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", "");
+        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink(""));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -287,7 +285,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -307,7 +305,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -327,7 +325,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final FilterEntry entry = new FilterEntry("Death Note", infoLink);
         app.filterAnime(entry);
 
@@ -348,7 +346,7 @@ public class ManamiTest {
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
         // when
-        final boolean result = app.filterEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = app.filterEntryExists(new InfoLink("http://myanimelist.net/anime/1535"));
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
@@ -364,7 +362,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         app.filterAnime(entry);
 
         // when
@@ -383,7 +381,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         app.watchAnime(entry);
 
         // when
@@ -402,7 +400,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final FilterEntry entry = new FilterEntry("Death Note", infoLink);
         app.filterAnime(entry);
 
@@ -441,7 +439,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
         app.watchAnime(entry);
 
@@ -462,7 +460,7 @@ public class ManamiTest {
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
         // when
-        final boolean result = app.watchListEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = app.watchListEntryExists(new InfoLink("http://myanimelist.net/anime/1535"));
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
@@ -496,7 +494,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -516,7 +514,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", "");
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink(""));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -536,7 +534,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -556,7 +554,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -576,7 +574,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
         app.watchAnime(entry);
 
@@ -635,7 +633,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -661,7 +659,7 @@ public class ManamiTest {
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
         final Anime entry = new Anime();
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -714,7 +712,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
@@ -740,7 +738,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
@@ -766,7 +764,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setTitle("Death Note");
@@ -792,7 +790,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -818,7 +816,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -842,7 +840,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final Anime entry = new Anime();
         entry.setEpisodes(37);
         entry.setInfoLink(infoLink);
@@ -870,7 +868,7 @@ public class ManamiTest {
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
         // when
-        final boolean result = app.animeEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = app.animeEntryExists(new InfoLink("http://myanimelist.net/anime/1535"));
 
         // then
         verify(eventBusMock, times(0)).post(any(AnimeListChangedEvent.class));
@@ -888,7 +886,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -914,7 +912,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -978,7 +976,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -1005,7 +1003,7 @@ public class ManamiTest {
 
         final Anime entry = new Anime();
         entry.setEpisodes(35);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         entry.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -1035,7 +1033,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         app.updateOrCreate(entry);
@@ -1055,7 +1053,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, new InfoLink("http://myanimelist.net/anime/1535"));
 
         app.filterAnime(entry);
 
@@ -1080,7 +1078,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         app.updateOrCreate(entry);
@@ -1100,7 +1098,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, new InfoLink("http://myanimelist.net/anime/1535"));
 
         app.watchAnime(entry);
 
@@ -1129,7 +1127,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1137,7 +1135,7 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
@@ -1172,7 +1170,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1180,7 +1178,7 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
@@ -1228,7 +1226,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1236,7 +1234,7 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
@@ -1287,7 +1285,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1295,16 +1293,16 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
         persistenceFacade.addAnime(rurouniKenshin);
 
-        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
+        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", new InfoLink("http://myanimelist.net/anime/2994"));
         persistenceFacade.watchAnime(deathNoteRewrite);
 
-        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
+        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", new InfoLink("http://myanimelist.net/anime/918"));
         persistenceFacade.filterAnime(gintama);
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE_CSV);
@@ -1334,7 +1332,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1342,16 +1340,16 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
         persistenceFacade.addAnime(rurouniKenshin);
 
-        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
+        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", new InfoLink("http://myanimelist.net/anime/2994"));
         persistenceFacade.watchAnime(deathNoteRewrite);
 
-        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
+        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", new InfoLink("http://myanimelist.net/anime/918"));
         persistenceFacade.filterAnime(gintama);
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE_JSON);
@@ -1381,7 +1379,7 @@ public class ManamiTest {
 
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -1389,16 +1387,16 @@ public class ManamiTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
         persistenceFacade.addAnime(rurouniKenshin);
 
-        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
+        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg", new InfoLink("http://myanimelist.net/anime/2994"));
         persistenceFacade.watchAnime(deathNoteRewrite);
 
-        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
+        final FilterEntry gintama = new FilterEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg", new InfoLink("http://myanimelist.net/anime/918"));
         persistenceFacade.filterAnime(gintama);
 
         final Path file = Files.createFile(Paths.get(tempFolder + separator + "tempfile.test"));
@@ -1434,7 +1432,7 @@ public class ManamiTest {
         final Anime bokuDake = fetchAnimeList.get(0);
         assertNotNull(bokuDake);
         assertEquals(bokuDake.getEpisodes(), 12);
-        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getInfoLink().getUrl(), "http://myanimelist.net/anime/31043");
         assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
         assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
         assertEquals(bokuDake.getType(), AnimeType.TV);
@@ -1442,7 +1440,7 @@ public class ManamiTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 4);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/44");
         assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
@@ -1469,7 +1467,7 @@ public class ManamiTest {
         final Anime bokuDake = fetchAnimeList.get(0);
         assertNotNull(bokuDake);
         assertEquals(bokuDake.getEpisodes(), 12);
-        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getInfoLink().getUrl(), "http://myanimelist.net/anime/31043");
         assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
         assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
         assertEquals(bokuDake.getType(), AnimeType.TV);
@@ -1477,7 +1475,7 @@ public class ManamiTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 4);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/44");
         assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
@@ -1504,7 +1502,7 @@ public class ManamiTest {
         final Anime deathNote = fetchAnimeList.get(0);
         assertNotNull(deathNote);
         assertEquals(deathNote.getEpisodes(), 37);
-        assertEquals(deathNote.getInfoLink(), "http://myanimelist.net/anime/1535");
+        assertEquals(deathNote.getInfoLink().getUrl(), "http://myanimelist.net/anime/1535");
         assertEquals(deathNote.getLocation(), "/");
         assertEquals(deathNote.getTitle(), "Death Note");
         assertEquals(deathNote.getType(), AnimeType.TV);
@@ -1512,7 +1510,7 @@ public class ManamiTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 94);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/45");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/45");
         assertEquals(rurouniKenshin.getLocation(), "/");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan");
         assertEquals(rurouniKenshin.getType(), AnimeType.TV);
@@ -1524,13 +1522,13 @@ public class ManamiTest {
 
         final WatchListEntry akatsukiNoYona = fetchWatchList.get(0);
         assertNotNull(akatsukiNoYona);
-        assertEquals(akatsukiNoYona.getInfoLink(), "http://myanimelist.net/anime/25013");
+        assertEquals(akatsukiNoYona.getInfoLink().getUrl(), "http://myanimelist.net/anime/25013");
         assertEquals(akatsukiNoYona.getTitle(), "Akatsuki no Yona");
         assertEquals(akatsukiNoYona.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
 
         final WatchListEntry aldnohaZero = fetchWatchList.get(1);
         assertNotNull(aldnohaZero);
-        assertEquals(aldnohaZero.getInfoLink(), "http://myanimelist.net/anime/27655");
+        assertEquals(aldnohaZero.getInfoLink().getUrl(), "http://myanimelist.net/anime/27655");
         assertEquals(aldnohaZero.getTitle(), "Aldnoah.Zero 2nd Season");
         assertEquals(aldnohaZero.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
 
@@ -1541,13 +1539,13 @@ public class ManamiTest {
 
         final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
         assertNotNull(matanteiLokiRagnarok);
-        assertEquals(matanteiLokiRagnarok.getInfoLink(), "http://myanimelist.net/anime/335");
+        assertEquals(matanteiLokiRagnarok.getInfoLink().getUrl(), "http://myanimelist.net/anime/335");
         assertEquals(matanteiLokiRagnarok.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(matanteiLokiRagnarok.getTitle(), "Matantei Loki Ragnarok");
 
         final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
         assertNotNull(saiunkokuMonogatari);
-        assertEquals(saiunkokuMonogatari.getInfoLink(), "http://myanimelist.net/anime/957");
+        assertEquals(saiunkokuMonogatari.getInfoLink().getUrl(), "http://myanimelist.net/anime/957");
         assertEquals(saiunkokuMonogatari.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(saiunkokuMonogatari.getTitle(), "Saiunkoku Monogatari");
     }

@@ -1,20 +1,20 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.io.IOException;
-import java.nio.file.Files;
-
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 public class MyAnimeListNetAnimeExtractorTest {
 
@@ -38,7 +38,8 @@ public class MyAnimeListNetAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void testIsValidInfoLink() throws IOException {
         // given
-        sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        sut.extractAnimeEntry(infoLink, rawHtml);
 
         // when
         final boolean result = sut.isValidInfoLink();
@@ -52,9 +53,10 @@ public class MyAnimeListNetAnimeExtractorTest {
     public void testExtractTitle() throws IOException {
         // given
         final String expectedValue = "Death Note";
+        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
-        final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
 
         // then
         assertNotNull(result);
@@ -66,9 +68,10 @@ public class MyAnimeListNetAnimeExtractorTest {
     public void testExtractType() throws IOException {
         // given
         final AnimeType expectedValue = AnimeType.TV;
+        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
-        final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
 
         // then
         assertNotNull(result);
@@ -80,9 +83,10 @@ public class MyAnimeListNetAnimeExtractorTest {
     public void testExtractEpisodes() throws IOException {
         // given
         final int expectedValue = 37;
+        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
-        final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
 
         // then
         assertNotNull(result);
@@ -94,9 +98,10 @@ public class MyAnimeListNetAnimeExtractorTest {
     public void testExtractPictureLink() throws IOException {
         // given
         final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg";
+        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
-        final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
 
         // then
         assertNotNull(result);
@@ -110,7 +115,7 @@ public class MyAnimeListNetAnimeExtractorTest {
         final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg";
 
         // when
-        final Anime result = sut.extractAnimeEntry("http://myanimelist.net/anime/1535", rawHtml);
+        final Anime result = sut.extractAnimeEntry(new InfoLink("http://myanimelist.net/anime/1535"), rawHtml);
 
         // then
         assertNotNull(result);
@@ -205,64 +210,64 @@ public class MyAnimeListNetAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void normalizeInfoLinkQueryParameter() {
         // given
-        final String url = "https://myanimelist.net/anime.php?id=1535";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime.php?id=1535");
 
         // when
-        final String result = sut.normalizeInfoLink(url);
+        final InfoLink result = sut.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest")
     public void normalizeInfoLinkSearch() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note?q=death%20note";
+        final InfoLink url = new InfoLink("https://myanimelist.net/anime/1535/Death_Note?q=death%20note");
 
         // when
-        final String result = sut.normalizeInfoLink(url);
+        final InfoLink result = sut.normalizeInfoLink(url);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest")
     public void normalizeInfoLinkDefault() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
 
         // when
-        final String result = sut.normalizeInfoLink(url);
+        final InfoLink result = sut.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest", description = "If you get the expected url already it is being returned as is, but with http instead of https.")
     public void normalizeInfoLinkIdentical() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
 
         // when
-        final String result = sut.normalizeInfoLink(url);
+        final InfoLink result = sut.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest", description = "If the url does not match the expected pattern it is being returned unchanged.")
     public void normalizeInfoLinkDifferentPattern() {
         // given
-        final String url = " https://myanimelist.net/news?_location=mal_h_m";
+        final InfoLink infoLink = new InfoLink(" https://myanimelist.net/news?_location=mal_h_m");
 
         // when
-        final String result = sut.normalizeInfoLink(url);
+        final InfoLink result = sut.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, url);
+        assertEquals(result.getUrl(), infoLink.getUrl());
     }
 }

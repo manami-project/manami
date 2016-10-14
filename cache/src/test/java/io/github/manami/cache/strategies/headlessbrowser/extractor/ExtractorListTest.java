@@ -1,23 +1,22 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import com.google.common.collect.Lists;
-
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal.MyAnimeListNetRecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.mal.MyAnimeListNetRelatedAnimeExtractor;
+import io.github.manami.dto.entities.InfoLink;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 public class ExtractorListTest {
 
@@ -28,7 +27,7 @@ public class ExtractorListTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        extractorListAll = Lists.newArrayList();
+        extractorListAll = newArrayList();
         extractorListAll.add(new MyAnimeListNetAnimeExtractor());
         extractorListAll.add(new MyAnimeListNetRelatedAnimeExtractor());
         extractorListAll.add(new MyAnimeListNetRecommendationsExtractor());
@@ -64,7 +63,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(DEATH_NOTE_URL);
+        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertTrue(result.isPresent());
@@ -77,7 +76,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(DEATH_NOTE_UNSUPPORTED_URL);
+        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(new InfoLink(DEATH_NOTE_UNSUPPORTED_URL));
 
         // then
         assertFalse(result.isPresent());
@@ -87,13 +86,13 @@ public class ExtractorListTest {
     @Test(groups = "unitTest")
     public void getAnimeEntryExtractorNotAvailable() {
         // given
-        final List<AnimeExtractor> extractorList = Lists.newArrayList();
+        final List<AnimeExtractor> extractorList = newArrayList();
         extractorList.add(new MyAnimeListNetRelatedAnimeExtractor());
         extractorList.add(new MyAnimeListNetRecommendationsExtractor());
         final ExtractorList list = new ExtractorList(extractorList);
 
         // when
-        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(DEATH_NOTE_URL);
+        final Optional<AnimeEntryExtractor> result = list.getAnimeEntryExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertFalse(result.isPresent());
@@ -106,7 +105,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(DEATH_NOTE_URL);
+        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertTrue(result.isPresent());
@@ -119,7 +118,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(DEATH_NOTE_UNSUPPORTED_URL);
+        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(new InfoLink(DEATH_NOTE_UNSUPPORTED_URL));
 
         // then
         assertFalse(result.isPresent());
@@ -129,13 +128,13 @@ public class ExtractorListTest {
     @Test(groups = "unitTest")
     public void getRecommendationsExtractorNotAvailable() {
         // given
-        final List<AnimeExtractor> extractorList = Lists.newArrayList();
+        final List<AnimeExtractor> extractorList = newArrayList();
         extractorList.add(new MyAnimeListNetAnimeExtractor());
         extractorList.add(new MyAnimeListNetRelatedAnimeExtractor());
         final ExtractorList list = new ExtractorList(extractorList);
 
         // when
-        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(DEATH_NOTE_URL);
+        final Optional<RecommendationsExtractor> result = list.getRecommendationsExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertFalse(result.isPresent());
@@ -148,7 +147,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(DEATH_NOTE_URL);
+        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertTrue(result.isPresent());
@@ -161,7 +160,7 @@ public class ExtractorListTest {
         final ExtractorList list = new ExtractorList(extractorListAll);
 
         // when
-        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(DEATH_NOTE_UNSUPPORTED_URL);
+        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(new InfoLink(DEATH_NOTE_UNSUPPORTED_URL));
 
         // then
         assertFalse(result.isPresent());
@@ -171,13 +170,13 @@ public class ExtractorListTest {
     @Test(groups = "unitTest")
     public void getRelatedAnimeExtractorNotAvailable() {
         // given
-        final List<AnimeExtractor> extractorList = Lists.newArrayList();
+        final List<AnimeExtractor> extractorList = newArrayList();
         extractorList.add(new MyAnimeListNetAnimeExtractor());
         extractorList.add(new MyAnimeListNetRecommendationsExtractor());
         final ExtractorList list = new ExtractorList(extractorList);
 
         // when
-        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(DEATH_NOTE_URL);
+        final Optional<RelatedAnimeExtractor> result = list.getRelatedAnimeExtractor(new InfoLink(DEATH_NOTE_URL));
 
         // then
         assertFalse(result.isPresent());

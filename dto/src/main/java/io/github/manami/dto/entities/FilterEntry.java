@@ -14,7 +14,7 @@ public class FilterEntry extends AbstractMinimalEntry {
      * @param thumbnail
      * @param infoLink
      */
-    public FilterEntry(final String title, final String thumbnail, final String infoLink) {
+    public FilterEntry(final String title, final String thumbnail, final InfoLink infoLink) {
         super.setTitle(title);
         super.setThumbnail(thumbnail);
         super.setInfoLink(infoLink);
@@ -28,7 +28,7 @@ public class FilterEntry extends AbstractMinimalEntry {
      * @param title
      * @param infoLink
      */
-    public FilterEntry(final String title, final String infoLink) {
+    public FilterEntry(final String title, final InfoLink infoLink) {
         super.setTitle(title);
         super.setInfoLink(infoLink);
     }

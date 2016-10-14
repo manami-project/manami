@@ -1,24 +1,22 @@
 package io.github.manami.persistence.inmemory.filterlist;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newConcurrentMap;
-import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import com.google.common.collect.ImmutableList;
+import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.FilterListHandler;
 
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-
-import com.google.common.collect.ImmutableList;
-
-import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.FilterListHandler;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 
 /**
  * @author manami-project
@@ -27,7 +25,7 @@ import io.github.manami.persistence.FilterListHandler;
 @Named
 public class InMemoryFilterListHandler implements FilterListHandler {
 
-    private final Map<String, FilterEntry> filterList;
+    private final Map<InfoLink, FilterEntry> filterList;
 
 
     public InMemoryFilterListHandler() {
@@ -63,15 +61,15 @@ public class InMemoryFilterListHandler implements FilterListHandler {
 
 
     @Override
-    public boolean filterEntryExists(final String url) {
-        return filterList.containsKey(url);
+    public boolean filterEntryExists(final InfoLink infoLink) {
+        return filterList.containsKey(infoLink);
     }
 
 
     @Override
-    public boolean removeFromFilterList(final String url) {
-        if (isNotBlank(url)) {
-            return filterList.remove(url) != null;
+    public boolean removeFromFilterList(final InfoLink infoLink) {
+        if (infoLink != null && infoLink.isValid()) {
+            return filterList.remove(infoLink) != null;
         }
 
         return false;

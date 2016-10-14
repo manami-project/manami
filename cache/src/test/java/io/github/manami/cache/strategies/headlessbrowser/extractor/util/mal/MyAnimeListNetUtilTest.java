@@ -1,10 +1,11 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal;
 
+import io.github.manami.dto.entities.InfoLink;
+import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import org.testng.annotations.Test;
 
 public class MyAnimeListNetUtilTest {
 
@@ -99,64 +100,64 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void normalizeInfoLinkQueryParameter() {
         // given
-        final String url = "https://myanimelist.net/anime.php?id=1535";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime.php?id=1535");
 
         // when
-        final String result = MyAnimeListNetUtil.normalizeInfoLink(url);
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest")
     public void normalizeInfoLinkSearch() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note?q=death%20note";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note?q=death%20note");
 
         // when
-        final String result = MyAnimeListNetUtil.normalizeInfoLink(url);
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest")
     public void normalizeInfoLinkDefault() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
 
         // when
-        final String result = MyAnimeListNetUtil.normalizeInfoLink(url);
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest", description = "If you get the expected url already it is being returned as is, but with http instead of https.")
     public void normalizeInfoLinkIdentical() {
         // given
-        final String url = "https://myanimelist.net/anime/1535/Death_Note";
+        final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
 
         // when
-        final String result = MyAnimeListNetUtil.normalizeInfoLink(url);
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, EXPECTED_DEATH_NOTE_URL);
+        assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
     }
 
 
     @Test(groups = "unitTest", description = "If the url does not match the expected pattern it is being returned unchanged.")
     public void normalizeInfoLinkDifferentPattern() {
         // given
-        final String url = " https://myanimelist.net/news?_location=mal_h_m";
+        final InfoLink infoLink = new InfoLink(" https://myanimelist.net/news?_location=mal_h_m");
 
         // when
-        final String result = MyAnimeListNetUtil.normalizeInfoLink(url);
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
         // then
-        assertEquals(result, url);
+        assertEquals(result, infoLink);
     }
 }

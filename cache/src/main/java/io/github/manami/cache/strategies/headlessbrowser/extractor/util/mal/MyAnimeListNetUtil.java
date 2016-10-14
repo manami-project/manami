@@ -1,10 +1,12 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import io.github.manami.dto.entities.InfoLink;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public final class MyAnimeListNetUtil {
 
@@ -25,14 +27,15 @@ public final class MyAnimeListNetUtil {
     }
 
 
-    public static String normalizeInfoLink(final String url) {
+    public static InfoLink normalizeInfoLink(final InfoLink infoLink) {
         final String prefix = String.format("http://%s/anime", DOMAIN);
+
+        String ret = infoLink.getUrl();
 
         // no tailings
         Pattern pattern = Pattern.compile(".*?/[0-9]+");
-        Matcher matcher = pattern.matcher(url);
+        Matcher matcher = pattern.matcher(ret);
 
-        String ret = url;
 
         if (matcher.find()) {
             ret = matcher.group();
@@ -41,13 +44,13 @@ public final class MyAnimeListNetUtil {
         // correct prefix
         if (isNotBlank(ret) && !ret.startsWith(prefix)) {
             pattern = Pattern.compile("[0-9]+");
-            matcher = pattern.matcher(url);
+            matcher = pattern.matcher(ret);
 
             if (matcher.find()) {
                 ret = String.format("%s/%s", prefix, matcher.group());
             }
         }
 
-        return ret;
+        return new InfoLink(ret);
     }
 }

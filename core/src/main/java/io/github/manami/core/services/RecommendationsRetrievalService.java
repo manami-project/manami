@@ -1,8 +1,14 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import io.github.manami.cache.Cache;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -13,14 +19,8 @@ import java.util.Objects;
 import java.util.Observer;
 import java.util.Optional;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -31,6 +31,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
+
+    /** Max percentage rate which the shown recommendations can make out of all entries. */
+    private static final int MAX_PERCENTAGE = 80;
+
+    /** Max number of entries of which a recommendations list can consist. */
+    private static final int MAX_NUMBER_OF_ENTRIES = 100;
 
     /** List to be searched for recommendations. */
     private final List<String> urlList;
@@ -69,14 +75,14 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     @Override
     public List<Anime> execute() {
         app.fetchAnimeList().forEach(entry -> {
-            if (isNotBlank(entry.getInfoLink())) {
-                urlList.add(entry.getInfoLink());
+            if (entry.getInfoLink().isValid()) {
+                urlList.add(entry.getInfoLink().getUrl());
             }
         });
 
         for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
             log.debug("Getting recommendations for {}", urlList.get(i));
-            getRecommendations(urlList.get(i));
+            getRecommendations(new InfoLink(urlList.get(i)));
             setChanged();
             notifyObservers(new ProgressState(i + 1, urlList.size()));
         }
@@ -94,32 +100,32 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
              */
             final int nextEntryIndex = i + 2;
 
-            notifyObservers(new AdvancedProgressState(nextEntryIndex, userRecomList.size(), cache.fetchAnime(userRecomList.get(i)).get()));
+            notifyObservers(new AdvancedProgressState(nextEntryIndex, userRecomList.size(), cache.fetchAnime(new InfoLink(userRecomList.get(i))).get()));
         }
 
         return resultList;
     }
 
 
-    private void getRecommendations(final String url) {
-        final Optional<Anime> animeToFindRecommendationsFor = cache.fetchAnime(url);
+    private void getRecommendations(final InfoLink infoLink) {
+        final Optional<Anime> animeToFindRecommendationsFor = cache.fetchAnime(infoLink);
 
         if (!animeToFindRecommendationsFor.isPresent()) {
             return;
         }
 
-        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(key, value));
+        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(new InfoLink(key), value));
     }
 
 
-    private void addRecom(final String url, final int amount) {
-        final String normalizedUrl = extractor.normalizeInfoLink(url);
+    private void addRecom(final InfoLink infoLink, final int amount) {
+        final InfoLink normalizedInfoLink = extractor.normalizeInfoLink(infoLink);
 
-        if (!urlList.contains(normalizedUrl) && !app.filterEntryExists(normalizedUrl) && !app.watchListEntryExists(normalizedUrl)) {
-            if (recommendationsAll.containsKey(normalizedUrl)) {
-                recommendationsAll.put(normalizedUrl, recommendationsAll.get(normalizedUrl) + amount);
+        if (!urlList.contains(normalizedInfoLink) && !app.filterEntryExists(normalizedInfoLink) && !app.watchListEntryExists(normalizedInfoLink)) {
+            if (recommendationsAll.containsKey(normalizedInfoLink)) {
+                recommendationsAll.put(normalizedInfoLink.getUrl(), recommendationsAll.get(normalizedInfoLink) + amount);
             } else {
-                recommendationsAll.put(normalizedUrl, amount);
+                recommendationsAll.put(normalizedInfoLink.getUrl(), amount);
             }
         }
     }
@@ -138,7 +144,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         int curSum = 0;
 
         for (final Entry<String, Integer> entry : recommendationsAll.entrySet()) {
-            if (percentage < 80 && userRecomList.size() < 100) {
+            if (percentage < MAX_PERCENTAGE && userRecomList.size() < MAX_NUMBER_OF_ENTRIES) {
                 userRecomList.add(entry.getKey());
                 curSum += entry.getValue();
                 percentage = (curSum * 100) / sumAll;

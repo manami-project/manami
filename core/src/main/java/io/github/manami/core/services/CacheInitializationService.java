@@ -1,18 +1,16 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * This service is called whenever a new list is opened. It creates cache
@@ -60,7 +58,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             // create cache entries for the reversed list
             for (int index = 0; index < reversedList.size() && !isInterrupt(); index++) {
                 final Anime anime = reversedList.get(index);
-                if (isNotBlank(anime.getInfoLink())) {
+                if (anime.getInfoLink().isValid()) {
                     log.debug("Creating cache entry for {} if necessary.", anime.getInfoLink());
                     cache.fetchAnime(anime.getInfoLink());
                 }

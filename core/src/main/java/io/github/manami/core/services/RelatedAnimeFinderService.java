@@ -1,9 +1,16 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Sets.newHashSet;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import com.google.common.collect.Lists;
+import com.sun.javafx.collections.ObservableSetWrapper;
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.MinimalEntry;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -11,17 +18,10 @@ import java.util.Observer;
 import java.util.Optional;
 import java.util.Stack;
 
-import com.google.common.collect.Lists;
-import com.sun.javafx.collections.ObservableSetWrapper;
-
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
-import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Finds related animes in info site links.
@@ -84,10 +84,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
     @Override
     public Map<String, Anime> execute() {
         list.forEach(entry -> {
-            final String url = entry.getInfoLink();
-            if (isNotBlank(url)) {
-                myAnimes.add(url);
-                animesToCheck.push(url);
+            final InfoLink infoLink = entry.getInfoLink();
+            if (infoLink.isValid()) {
+                myAnimes.add(infoLink.getUrl());
+                animesToCheck.push(infoLink.getUrl());
             }
         });
 
@@ -103,7 +103,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
             if (!checkedAnimes.contains(entry)) {
                 log.debug("Checking {} for related animes.", entry);
-                checkAnime(entry);
+                checkAnime(new InfoLink(entry));
             }
         }
 
@@ -122,9 +122,9 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
     }
 
 
-    private void checkAnime(final String url) {
+    private void checkAnime(final InfoLink infoLink) {
         final List<Anime> showAnimeList = newArrayList();
-        final Optional<Anime> optCachedAnime = cache.fetchAnime(url);
+        final Optional<Anime> optCachedAnime = cache.fetchAnime(infoLink);
 
         if (!optCachedAnime.isPresent()) {
             return;
@@ -140,12 +140,12 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
             if (isNotBlank(element)) {
 
-                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
+                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(new InfoLink(element))) {
                     animesToCheck.push(element);
                 }
 
-                if (!relatedAnime.containsKey(element) && !app.animeEntryExists(element) && !app.watchListEntryExists(element) && !app.filterEntryExists(element)) {
-                    final Anime curAnime = cache.fetchAnime(element).get();
+                if (!relatedAnime.containsKey(element) && !app.animeEntryExists(new InfoLink(element)) && !app.watchListEntryExists(new InfoLink(element)) && !app.filterEntryExists(new InfoLink(element))) {
+                    final Anime curAnime = cache.fetchAnime(new InfoLink(element)).get();
                     relatedAnime.put(element, curAnime);
                     showAnimeList.add(curAnime);
                 }
@@ -154,13 +154,13 @@ public class RelatedAnimeFinderService extends AbstractService<Map<String, Anime
 
         setChanged();
 
-        if (!showAnimeList.isEmpty()) {
-            log.trace("\n\n---------------- Extracted animes for [{}] ----------------", url);
+        if (!showAnimeList.isEmpty() && log.isTraceEnabled()) {
+            log.trace("\n\n---------------- Extracted animes for [{}] ----------------", infoLink);
             showAnimeList.forEach(e -> log.trace("{} : {}", e.getTitle(), e.getInfoLink()));
             log.trace("-----------------------------------------------------------\n\n");
         }
 
         notifyObservers(showAnimeList);
-        checkedAnimes.add(url);
+        checkedAnimes.add(infoLink.getUrl());
     }
 }

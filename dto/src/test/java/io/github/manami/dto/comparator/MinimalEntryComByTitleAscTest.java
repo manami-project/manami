@@ -1,10 +1,10 @@
 package io.github.manami.dto.comparator;
 
-import static org.testng.Assert.assertEquals;
-
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.WatchListEntry;
 import org.testng.annotations.Test;
 
-import io.github.manami.dto.entities.WatchListEntry;
+import static org.testng.Assert.assertEquals;
 
 public class MinimalEntryComByTitleAscTest {
 
@@ -13,8 +13,8 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
-        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
+        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
 
         // when
         final int result = comparator.compare(steinsGate, gintama);
@@ -29,8 +29,8 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
-        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
+        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
 
         // when
         final int result = comparator.compare(gintama, steinsGate);
@@ -45,7 +45,7 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
 
         // when
         final int result = comparator.compare(steinsGate, steinsGate);
@@ -60,7 +60,7 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
 
         // when
         final int result = comparator.compare(null, steinsGate);
@@ -75,7 +75,7 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
 
         // when
         final int result = comparator.compare(steinsGate, null);
@@ -90,8 +90,8 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
-        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
+        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
         gintama.setTitle("");
 
         // when
@@ -107,8 +107,8 @@ public class MinimalEntryComByTitleAscTest {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
 
-        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", "http://myanimelist.net/anime/9253");
-        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", "http://myanimelist.net/anime/28977");
+        final WatchListEntry steinsGate = new WatchListEntry("Steins;Gate", "https://myanimelist.cdn-dena.com/images/anime/5/73199t.jpg", new InfoLink("http://myanimelist.net/anime/9253"));
+        final WatchListEntry gintama = new WatchListEntry("Gintama", "https://myanimelist.cdn-dena.com/images/anime/3/72078t.jpg", new InfoLink("http://myanimelist.net/anime/28977"));
         steinsGate.setTitle("");
 
         // when

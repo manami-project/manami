@@ -1,7 +1,15 @@
 package io.github.manami.persistence.importer.json;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.PersistenceFacade;
+import io.github.manami.persistence.importer.Importer;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,16 +17,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONTokener;
-
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.PersistenceFacade;
-import io.github.manami.persistence.importer.Importer;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Imports a list from a valid JSON file.
@@ -79,11 +79,13 @@ public class JsonImporter implements Importer {
             final String title = animeListArr.getJSONObject(i).getString("title").trim();
             final AnimeType type = AnimeType.findByName(animeListArr.getJSONObject(i).getString("type").trim());
             final Integer episodes = animeListArr.getJSONObject(i).getInt("episodes");
-            final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
             final String location = animeListArr.getJSONObject(i).getString("location").trim();
 
+            String infoLink = animeListArr.getJSONObject(i).getString("infoLink");
+            infoLink = (infoLink!=null) ? infoLink.trim() : infoLink;
+
             if (isNotBlank(title) && type != null && episodes != null && isNotBlank(infoLink) && isNotBlank(location)) {
-                final Anime curAnime = new Anime(title, type, episodes, infoLink, location);
+                final Anime curAnime = new Anime(title, type, episodes, new InfoLink(infoLink), location);
                 animeListEntries.add(curAnime);
             } else {
                 log.debug("Could not import '{}', because the type is unknown.", title);
@@ -103,10 +105,11 @@ public class JsonImporter implements Importer {
         for (int i = 0; i < animeListArr.length(); i++) {
             final String thumbnail = animeListArr.getJSONObject(i).getString("thumbnail").trim();
             final String title = animeListArr.getJSONObject(i).getString("title").trim();
-            final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
+            String infoLink = animeListArr.getJSONObject(i).getString("infoLink");
+            infoLink = (infoLink!=null) ? infoLink.trim() : infoLink;
 
             if (isNotBlank(title) && isNotBlank(infoLink)) {
-                watchListEntries.add(new WatchListEntry(title, thumbnail, infoLink));
+                watchListEntries.add(new WatchListEntry(title, thumbnail, new InfoLink(infoLink)));
             } else {
                 log.debug("Could not import '{}', because the type is unknown.", title);
             }
@@ -125,10 +128,11 @@ public class JsonImporter implements Importer {
         for (int i = 0; i < animeListArr.length(); i++) {
             final String thumbnail = animeListArr.getJSONObject(i).getString("thumbnail").trim();
             final String title = animeListArr.getJSONObject(i).getString("title").trim();
-            final String infoLink = animeListArr.getJSONObject(i).getString("infoLink").trim();
+            String infoLink = animeListArr.getJSONObject(i).getString("infoLink");
+            infoLink = (infoLink!=null) ? infoLink.trim() : infoLink;
 
             if (isNotBlank(title) && isNotBlank(infoLink)) {
-                filterListEntries.add(new FilterEntry(title, thumbnail, infoLink));
+                filterListEntries.add(new FilterEntry(title, thumbnail, new InfoLink(infoLink)));
             } else {
                 log.debug("Could not import '{}', because the type is unknown.", title);
             }

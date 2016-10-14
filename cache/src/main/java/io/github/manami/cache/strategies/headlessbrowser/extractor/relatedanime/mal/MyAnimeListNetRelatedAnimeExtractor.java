@@ -1,19 +1,19 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.mal;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.entities.InfoLink;
 
+import javax.inject.Named;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Named;
-
-import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Named
 @Extractor
@@ -46,7 +46,7 @@ public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtracto
         final Set<String> ret = newHashSet();
         if (raw.size() > 0) {
             raw.forEach(element -> {
-                final String relatedAnimeUrl = normalizeInfoLink(element);
+                final String relatedAnimeUrl = normalizeInfoLink(new InfoLink(element)).getUrl();
                 if (!ret.contains(relatedAnimeUrl)) {
                     ret.add(relatedAnimeUrl);
                 }
@@ -64,7 +64,7 @@ public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtracto
 
 
     @Override
-    public String normalizeInfoLink(final String url) {
+    public InfoLink normalizeInfoLink(final InfoLink url) {
         return MyAnimeListNetUtil.normalizeInfoLink(url);
     }
 }

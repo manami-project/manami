@@ -1,13 +1,17 @@
 package io.github.manami.persistence.exporter.xml;
 
-import static io.github.manami.dto.ToolVersion.getToolVersion;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.ApplicationPersistence;
+import io.github.manami.persistence.exporter.Exporter;
+import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,20 +22,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.ApplicationPersistence;
-import io.github.manami.persistence.exporter.Exporter;
-import io.github.manami.persistence.utility.PathResolver;
-import lombok.extern.slf4j.Slf4j;
+import static io.github.manami.dto.ToolVersion.getToolVersion;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author manami-project
@@ -54,7 +52,7 @@ public class XmlExporter implements Exporter {
     /**
      * Constructor.
      * @since 2.0.0
-     * @param configFilesPath
+     * @param persistence
      * Config for the application.
      */
     public XmlExporter(final ApplicationPersistence persistence) {
@@ -210,7 +208,7 @@ public class XmlExporter implements Exporter {
             actAnime.setAttribute("episodes", String.valueOf(anime.getEpisodes()));
 
             // attribute "infolink"
-            actAnime.setAttribute("infoLink", anime.getInfoLink());
+            actAnime.setAttribute("infoLink", anime.getInfoLink().getUrl());
 
             // attribute "location"
             actAnime.setAttribute("location", anime.getLocation());
@@ -240,7 +238,7 @@ public class XmlExporter implements Exporter {
             actEntry.setAttribute("thumbnail", anime.getThumbnail());
 
             // attribute "infolink"
-            actEntry.setAttribute("infoLink", anime.getInfoLink());
+            actEntry.setAttribute("infoLink", anime.getInfoLink().getUrl());
 
             // append to animeList
             elementWatchList.appendChild(actEntry);
@@ -267,7 +265,7 @@ public class XmlExporter implements Exporter {
             actEntry.setAttribute("thumbnail", anime.getThumbnail());
 
             // attribute "infolink"
-            actEntry.setAttribute("infoLink", anime.getInfoLink());
+            actEntry.setAttribute("infoLink", anime.getInfoLink().getUrl());
 
             // append to animeList
             elementFilterList.appendChild(actEntry);

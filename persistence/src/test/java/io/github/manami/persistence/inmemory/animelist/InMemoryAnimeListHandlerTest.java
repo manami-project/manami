@@ -1,15 +1,15 @@
 package io.github.manami.persistence.inmemory.animelist;
 
-import static org.testng.Assert.assertEquals;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
+import static org.testng.Assert.assertEquals;
 
 public class InMemoryAnimeListHandlerTest {
 
@@ -40,7 +40,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -60,7 +60,7 @@ public class InMemoryAnimeListHandlerTest {
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final Anime entry = new Anime();
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -101,7 +101,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
@@ -121,7 +121,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
         entry.setTitle("Death Note");
@@ -141,7 +141,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setTitle("Death Note");
@@ -161,7 +161,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -181,7 +181,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -199,7 +199,7 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = "unitTest")
     public void testAnimeEntryExists() {
         // given
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final Anime entry = new Anime();
         entry.setEpisodes(37);
         entry.setInfoLink(infoLink);
@@ -223,7 +223,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
 
         // when
-        final boolean result = inMemoryAnimeListHandler.animeEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = inMemoryAnimeListHandler.animeEntryExists(new InfoLink("http://myanimelist.net/anime/1535"));
 
         // then
         assertEquals(result, false);
@@ -235,7 +235,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -256,7 +256,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -302,7 +302,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -323,7 +323,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(35);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -349,7 +349,7 @@ public class InMemoryAnimeListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");

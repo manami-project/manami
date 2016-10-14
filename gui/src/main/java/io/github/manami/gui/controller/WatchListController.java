@@ -1,18 +1,6 @@
 package io.github.manami.gui.controller;
 
-import static io.github.manami.gui.components.Icons.createIconDelete;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import com.sun.javafx.collections.ObservableListWrapper;
-
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
@@ -23,6 +11,7 @@ import io.github.manami.core.commands.CmdDeleteWatchListEntry;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
@@ -36,6 +25,15 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static io.github.manami.gui.components.Icons.createIconDelete;
 
 /**
  * @author manami-project
@@ -115,20 +113,20 @@ public class WatchListController extends AbstractAnimeListController {
 
     @FXML
     public void addEntry() {
-        String url = txtUrl.getText().trim();
+        InfoLink infoLink = new InfoLink(txtUrl.getText().trim());
 
         if (validationSupport.getValidationResult().getErrors().size() > 0) {
             return;
         }
 
-        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(infoLink);
 
         if (extractor.isPresent()) {
-            url = extractor.get().normalizeInfoLink(url);
+            infoLink = extractor.get().normalizeInfoLink(infoLink);
         }
 
-        if (!app.watchListEntryExists(url)) {
-            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, url);
+        if (!app.watchListEntryExists(infoLink)) {
+            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, infoLink);
             retrievalService.setOnSucceeded(event -> {
                 final WatchListEntry anime = WatchListEntry.valueOf((Anime) event.getSource().getValue());
 
@@ -197,7 +195,7 @@ public class WatchListController extends AbstractAnimeListController {
 
 
     @Override
-    boolean isInList(final String infoLink) {
-        return isNotBlank(infoLink) && app.watchListEntryExists(infoLink);
+    boolean isInList(final InfoLink infoLink) {
+        return infoLink.isValid() && app.watchListEntryExists(infoLink);
     }
 }

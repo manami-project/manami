@@ -1,24 +1,22 @@
 package io.github.manami.persistence.inmemory.watchlist;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newConcurrentMap;
-import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import com.google.common.collect.ImmutableList;
+import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.WatchListHandler;
 
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-
-import com.google.common.collect.ImmutableList;
-
-import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.WatchListHandler;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 
 /**
  * @author manami-project
@@ -27,7 +25,7 @@ import io.github.manami.persistence.WatchListHandler;
 @Named
 public class InMemoryWatchListHandler implements WatchListHandler {
 
-    private final Map<String, WatchListEntry> watchList;
+    private final Map<InfoLink, WatchListEntry> watchList;
 
 
     public InMemoryWatchListHandler() {
@@ -44,8 +42,8 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
 
     @Override
-    public boolean watchListEntryExists(final String url) {
-        return watchList.containsKey(url);
+    public boolean watchListEntryExists(final InfoLink infoLink) {
+        return watchList.containsKey(infoLink);
     }
 
 
@@ -69,9 +67,9 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
 
     @Override
-    public boolean removeFromWatchList(final String url) {
-        if (isNotBlank(url)) {
-            return watchList.remove(url) != null;
+    public boolean removeFromWatchList(final InfoLink infoLink) {
+        if (infoLink != null && infoLink.isValid()) {
+            return watchList.remove(infoLink) != null;
         }
 
         return false;

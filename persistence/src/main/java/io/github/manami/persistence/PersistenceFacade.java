@@ -1,22 +1,20 @@
 package io.github.manami.persistence;
 
-import static io.github.manami.dto.entities.Anime.isValidAnime;
-import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.AnimeListChangedEvent;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.UUID;
+
+import static io.github.manami.dto.entities.Anime.isValidAnime;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 
 /**
  * This is a facade which is used by the application to hide which strategy is
@@ -67,18 +65,18 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public boolean filterEntryExists(final String url) {
-        return strategy.filterEntryExists(url);
+    public boolean filterEntryExists(final InfoLink infoLink) {
+        return strategy.filterEntryExists(infoLink);
     }
 
 
     @Override
-    public boolean removeFromFilterList(final String url) {
-        if (isBlank(url)) {
+    public boolean removeFromFilterList(final InfoLink infoLink) {
+        if (infoLink == null || !infoLink.isValid()) {
             return false;
         }
 
-        if (strategy.removeFromFilterList(url)) {
+        if (strategy.removeFromFilterList(infoLink)) {
             eventBus.post(new AnimeListChangedEvent());
             return true;
         }
@@ -107,8 +105,8 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public boolean animeEntryExists(final String url) {
-        return strategy.animeEntryExists(url);
+    public boolean animeEntryExists(final InfoLink infoLink) {
+        return strategy.animeEntryExists(infoLink);
     }
 
 
@@ -119,8 +117,8 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public boolean watchListEntryExists(final String url) {
-        return strategy.watchListEntryExists(url);
+    public boolean watchListEntryExists(final InfoLink infoLink) {
+        return strategy.watchListEntryExists(infoLink);
     }
 
 
@@ -138,12 +136,12 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public boolean removeFromWatchList(final String url) {
-        if (isBlank(url)) {
+    public boolean removeFromWatchList(final InfoLink infoLink) {
+        if (infoLink ==null || !infoLink.isValid()) {
             return false;
         }
 
-        if (strategy.removeFromWatchList(url)) {
+        if (strategy.removeFromWatchList(infoLink)) {
             eventBus.post(new AnimeListChangedEvent());
             return true;
         }

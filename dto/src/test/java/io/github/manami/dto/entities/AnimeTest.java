@@ -1,14 +1,15 @@
 package io.github.manami.dto.entities;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import io.github.manami.dto.AnimeType;
+import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-import org.testng.annotations.Test;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
 
-import io.github.manami.dto.AnimeType;
 
 public class AnimeTest {
 
@@ -19,7 +20,7 @@ public class AnimeTest {
 
         final Anime anime = new Anime();
         anime.setEpisodes(37);
-        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -53,7 +54,7 @@ public class AnimeTest {
         assertEquals(result.getEpisodes(), 0);
         assertEquals(result.getPicture(), EMPTY);
         assertEquals(result.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
-        assertEquals(result.getInfoLink(), null);
+        assertNotNull(result.getInfoLink());
         assertEquals(result.getLocation(), EMPTY);
         assertEquals(result.getTitle(), null);
         assertEquals(result.getType(), null);
@@ -106,7 +107,7 @@ public class AnimeTest {
         // given
         final Anime anime = new Anime();
         anime.setEpisodes(37);
-        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -126,7 +127,7 @@ public class AnimeTest {
         // given
         final Anime anime = new Anime();
         anime.setEpisodes(37);
-        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -252,7 +253,7 @@ public class AnimeTest {
 
         final Anime anime = new Anime();
         anime.setEpisodes(37);
-        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
@@ -279,7 +280,7 @@ public class AnimeTest {
         // given
         final Anime target = new Anime();
         target.setEpisodes(4);
-        target.setInfoLink("http://myanimelist.net/anime/10863");
+        target.setInfoLink(new InfoLink("http://myanimelist.net/anime/10863"));
         target.setLocation("/anime/series/steins_gate_special");
         target.setPicture("https://myanimelist.cdn-dena.com/images/anime/7/36531.jpg");
         target.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/7/36531t.jpg");
@@ -288,7 +289,7 @@ public class AnimeTest {
 
         final Anime anime = new Anime();
         anime.setEpisodes(37);
-        anime.setInfoLink("http://myanimelist.net/anime/1535");
+        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");

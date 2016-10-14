@@ -1,20 +1,6 @@
 package io.github.manami.core;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
@@ -24,6 +10,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.ThumbnailBackloadService;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
@@ -36,6 +23,17 @@ import io.github.manami.persistence.importer.json.JsonImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter;
 import io.github.manami.persistence.importer.xml.XmlImporter.XmlStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.xml.sax.SAXException;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Main access to the features of the application. This class has got delegation
@@ -191,13 +189,13 @@ public class Manami implements ApplicationPersistence {
 	}
 
 	@Override
-	public boolean filterEntryExists(final String url) {
-		return persistence.filterEntryExists(url);
+	public boolean filterEntryExists(final InfoLink infoLink) {
+		return persistence.filterEntryExists(infoLink);
 	}
 
 	@Override
-	public boolean removeFromFilterList(final String url) {
-		return persistence.removeFromFilterList(url);
+	public boolean removeFromFilterList(final InfoLink infoLink) {
+		return persistence.removeFromFilterList(infoLink);
 	}
 
 	@Override
@@ -220,8 +218,8 @@ public class Manami implements ApplicationPersistence {
 	}
 
 	@Override
-	public boolean animeEntryExists(final String url) {
-		return persistence.animeEntryExists(url);
+	public boolean animeEntryExists(final InfoLink infoLink) {
+		return persistence.animeEntryExists(infoLink);
 	}
 
 	@Override
@@ -230,8 +228,8 @@ public class Manami implements ApplicationPersistence {
 	}
 
 	@Override
-	public boolean watchListEntryExists(final String url) {
-		return persistence.watchListEntryExists(url);
+	public boolean watchListEntryExists(final InfoLink infoLink) {
+		return persistence.watchListEntryExists(infoLink);
 	}
 
 	@Override
@@ -240,8 +238,8 @@ public class Manami implements ApplicationPersistence {
 	}
 
 	@Override
-	public boolean removeFromWatchList(final String url) {
-		return persistence.removeFromWatchList(url);
+	public boolean removeFromWatchList(final InfoLink infoLink) {
+		return persistence.removeFromWatchList(infoLink);
 	}
 
 	@Override

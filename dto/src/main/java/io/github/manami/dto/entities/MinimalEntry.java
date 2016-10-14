@@ -20,10 +20,10 @@ public interface MinimalEntry {
     void setThumbnail(String url);
 
 
-    String getInfoLink();
+    InfoLink getInfoLink();
 
 
-    void setInfoLink(String infoLink);
+    void setInfoLink(InfoLink infoLink);
 
 
     /**
@@ -40,7 +40,7 @@ public interface MinimalEntry {
         }
 
         ret &= isNotBlank(anime.getTitle());
-        ret &= isNotBlank(anime.getInfoLink());
+        ret &= anime.getInfoLink() != null && anime.getInfoLink().isPresent();
 
         return ret;
     }

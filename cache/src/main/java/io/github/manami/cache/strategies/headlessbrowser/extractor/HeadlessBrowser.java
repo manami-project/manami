@@ -1,18 +1,15 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
+import com.moodysalem.phantomjs.wrapper.PhantomJS;
+import com.moodysalem.phantomjs.wrapper.beans.PhantomJSExecutionResponse;
+import io.github.manami.dto.entities.InfoLink;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Named;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import javax.inject.Named;
-
-import org.apache.commons.validator.routines.UrlValidator;
-
-import com.moodysalem.phantomjs.wrapper.PhantomJS;
-import com.moodysalem.phantomjs.wrapper.beans.PhantomJSExecutionResponse;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * A Browser which lets you download the various anime sites. It is necessary to
@@ -26,15 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HeadlessBrowser {
 
-    private static final String[] VALID_SCHEMES = new String[] { "HTTP", "HTTPS" };
-    private final UrlValidator urlValidator;
-
-
-    public HeadlessBrowser() {
-        urlValidator = new UrlValidator(VALID_SCHEMES);
-    }
-
-
     /**
      * Downloads the site and returns it.
      *
@@ -43,8 +31,8 @@ public class HeadlessBrowser {
      *            URL
      * @return Plain xml text of the website.
      */
-    public String pageAsString(final String url) {
-        if (!urlValidator.isValid(url)) {
+    public String pageAsString(final InfoLink url) {
+        if (!url.isValid()) {
             log.warn("Seems not be a valid URL: {}", url);
             return null;
         }
