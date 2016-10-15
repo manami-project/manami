@@ -21,8 +21,6 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEn
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.dto.entities.Anime;
-import lombok.Synchronized;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class provides access to the anime meta data. The data are taken
@@ -33,11 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.0.0
  */
 @Named
-@Slf4j
 public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, RelatedAnimeRetrieval, RecommendationsRetrieval {
-
-    /** Instance of a headless browser. */
-    private final HeadlessBrowser browser;
 
     /** Wrapper for all extractors. */
     private final ExtractorList extractors;
@@ -51,9 +45,8 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      *            Headless Browser
      */
     @Inject
-    public HeadlessBrowserRetrievalStrategy(final ExtractorList extractors, final HeadlessBrowser browser) {
+    public HeadlessBrowserRetrievalStrategy(final ExtractorList extractors) {
         this.extractors = extractors;
-        this.browser = browser;
     }
 
 
@@ -71,9 +64,8 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      *            URL to download.
      * @return Raw XML of the downloaded site.
      */
-    @Synchronized
     private String downloadSiteContent(final String url) {
-        return browser.pageAsString(url);
+        return new HeadlessBrowser().pageAsString(url);
     }
 
 

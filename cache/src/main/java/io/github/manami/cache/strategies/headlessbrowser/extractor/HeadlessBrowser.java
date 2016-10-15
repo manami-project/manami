@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Named;
-
 import org.apache.commons.validator.routines.UrlValidator;
 
 import com.moodysalem.phantomjs.wrapper.PhantomJS;
@@ -22,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author manami-project
  * @since 2.0.0
  */
-@Named
 @Slf4j
 public class HeadlessBrowser {
 

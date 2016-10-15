@@ -1,7 +1,8 @@
 package io.github.manami.core.services;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
@@ -12,6 +13,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Observer;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
@@ -48,6 +53,8 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     private final AnimeExtractor extractor;
     private final Manami app;
     private final Cache cache;
+    private final AtomicInteger progress = new AtomicInteger(0);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
 
     /**
@@ -58,8 +65,8 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
      */
     public RecommendationsRetrievalService(final Manami app, final Cache cache, final Observer observer) {
         extractor = new MyAnimeListNetAnimeExtractor();
-        urlList = newArrayList();
-        recommendationsAll = newHashMap();
+        urlList = newCopyOnWriteArrayList();
+        recommendationsAll = newConcurrentMap();
         this.app = app;
         this.cache = cache;
         addObserver(observer);
@@ -74,11 +81,27 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
             }
         });
 
-        for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
-            log.debug("Getting recommendations for {}", urlList.get(i));
-            getRecommendations(urlList.get(i));
-            setChanged();
-            notifyObservers(new ProgressState(i + 1, urlList.size()));
+        Collections.shuffle(urlList);
+
+        final List<Callable<Void>> taskList = newArrayList();
+
+        urlList.forEach(entry -> {
+            taskList.add(() -> {
+                if (!isInterrupt()) {
+                    log.debug("Getting recommendations for {}", entry);
+                    getRecommendations(entry);
+                    setChanged();
+                    notifyObservers(new ProgressState(progress.incrementAndGet(), urlList.size()));
+                }
+                return null;
+            });
+        });
+
+        try {
+            executorService.invokeAll(taskList);
+        } catch (final InterruptedException e) {
+            log.error("Error on invoking getting recommendations: ", e);
+            cancel();
         }
 
         if (!isInterrupt()) {
@@ -113,6 +136,10 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
 
     private void addRecom(final String url, final int amount) {
+        if (isInterrupt()) {
+            return;
+        }
+
         final String normalizedUrl = extractor.normalizeInfoLink(url);
 
         if (!urlList.contains(normalizedUrl) && !app.filterEntryExists(normalizedUrl) && !app.watchListEntryExists(normalizedUrl)) {
