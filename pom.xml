@@ -6,6 +6,9 @@
     <artifactId>parent</artifactId>
     <version>${manami.version}</version>
     <packaging>pom</packaging>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
     <modules>
         <module>cache</module>
         <module>core</module>
@@ -43,12 +46,12 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.4</version>
+                <version>3.5</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>4.3.3.RELEASE</version>
+                <version>4.3.4.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -63,7 +66,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>19.0</version>
+                <version>20.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -78,7 +81,7 @@
             <dependency>
 			    <groupId>org.testng</groupId>
 			    <artifactId>testng</artifactId>
-			    <version>6.9.10</version>
+			    <version>6.10</version>
                 <scope>test</scope>
 			</dependency>
             <dependency>
@@ -125,6 +128,7 @@
         <manami.version>2.11.1</manami.version>
         <logback.version>1.1.7</logback.version>
         <phantomjs.wrapper.version>3.0.0</phantomjs.wrapper.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
@@ -137,28 +141,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.6.0</version>
                 <configuration>
                     <source>${java.target.version}</source>
                     <target>${java.target.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.10</version>
-                <configuration>
-                    <classpathContainers>
-                        <classpathContainer>org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER
-                        </classpathContainer>
-                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER
-                        </classpathContainer>
-                    </classpathContainers>
                 </configuration>
             </plugin>
             <plugin>
