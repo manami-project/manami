@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
@@ -42,7 +42,7 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
             final String title = extractTitle();
             final AnimeType type = extractType();
             Integer episodes = 0;
-            if (NumberUtils.isNumber(extractEpisodes())) {
+            if (StringUtils.isNumeric(extractEpisodes())) {
                 episodes = Integer.valueOf(extractEpisodes());
             }
 

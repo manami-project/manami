@@ -14,8 +14,6 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.controlsfx.control.Notifications;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -121,8 +119,6 @@ public class FilterListController extends AbstractAnimeListController implements
     private final static int MAX_ENTRIES = 25;
 
     private ValidationSupport validationSupport;
-
-    private final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
 
     /**
@@ -269,7 +265,7 @@ public class FilterListController extends AbstractAnimeListController implements
 
         // adds new Anime entry
         if (object instanceof ArrayList) {
-            final ArrayList<Anime> list = (ArrayList<Anime>) object;
+            final List<Anime> list = (ArrayList<Anime>) object;
 
             if (list.size() > 0) {
                 int numOfEntriesAdded = 0;

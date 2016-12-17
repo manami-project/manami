@@ -18,4 +18,7 @@ public class CheckListConfig {
 
     @Getter
     private final boolean checkMetaData;
+
+    @Getter
+    private final boolean checkDeadEntries;
 }

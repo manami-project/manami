@@ -39,6 +39,7 @@
                              <CheckBox fx:id="cbLocations" mnemonicParsing="false" selected="true" text="Check locations" />
                              <CheckBox fx:id="cbCrc" mnemonicParsing="false" selected="true" text="Check CRC" />
                              <CheckBox fx:id="cbMetaData" mnemonicParsing="false" selected="true" text="Meta data" />
+                        <CheckBox fx:id="cbDeadEntries" layoutX="10.0" layoutY="101.0" mnemonicParsing="false" selected="true" text="Dead entries" />
                              <HBox alignment="CENTER">
                                 <children>
                                     <Button fx:id="btnStart" defaultButton="true" mnemonicParsing="false" text="Start">

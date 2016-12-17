@@ -98,6 +98,9 @@ public class CheckListController implements Observer {
     @FXML
     private CheckBox cbMetaData;
 
+    @FXML
+    private CheckBox cbDeadEntries;
+
     /** Instance of the tab in which the pane is being shown. */
     private Tab tab;
 
@@ -133,9 +136,9 @@ public class CheckListController implements Observer {
     private void start() {
         clear();
 
-        if (cbLocations.isSelected() || cbCrc.isSelected() || cbMetaData.isSelected()) {
+        if (cbLocations.isSelected() || cbCrc.isSelected() || cbMetaData.isSelected() | cbDeadEntries.isSelected()) {
             showProgressControls(true);
-            final CheckListConfig config = new CheckListConfig(cbLocations.isSelected(), cbCrc.isSelected(), cbMetaData.isSelected());
+            final CheckListConfig config = new CheckListConfig(cbLocations.isSelected(), cbCrc.isSelected(), cbMetaData.isSelected(), cbDeadEntries.isSelected());
             service = new CheckListService(config, appConfig.getFile(), Main.CONTEXT.getBean(Cache.class), Main.CONTEXT.getBean(Manami.class), this);
             serviceRepo.startService(service);
         }

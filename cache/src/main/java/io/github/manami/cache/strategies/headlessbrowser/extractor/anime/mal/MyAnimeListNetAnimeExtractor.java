@@ -51,9 +51,12 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
         if (matcher.find()) {
             title = matcher.group();
-
             title = title.replace("<h1 class=\"h1\"><span itemprop=\"name\">", "").replace("</span></h1>", "");
             title = title.trim();
+        }
+
+        if (title.contains("404 Not Found")) {
+            title = null;
         }
 
         return title;

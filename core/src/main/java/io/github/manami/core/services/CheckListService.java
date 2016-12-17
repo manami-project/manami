@@ -1,20 +1,10 @@
 package io.github.manami.core.services;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.config.CheckListConfig;
-import io.github.manami.core.services.events.AbstractEvent.EventType;
-import io.github.manami.core.services.events.CrcEvent;
-import io.github.manami.core.services.events.EpisodesDifferEvent;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.core.services.events.RelativizeLocationEvent;
-import io.github.manami.core.services.events.SimpleLocationEvent;
-import io.github.manami.core.services.events.TitleDifferEvent;
-import io.github.manami.core.services.events.TypeDifferEvent;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.persistence.utility.PathResolver;
-import lombok.extern.slf4j.Slf4j;
+import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.newDirectoryStream;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -33,11 +23,25 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import static java.nio.file.Files.isRegularFile;
-import static java.nio.file.Files.newDirectoryStream;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
+import com.google.common.collect.ImmutableList;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.config.CheckListConfig;
+import io.github.manami.core.services.events.AbstractEvent.EventType;
+import io.github.manami.core.services.events.CrcEvent;
+import io.github.manami.core.services.events.DeadLinkEvent;
+import io.github.manami.core.services.events.EpisodesDifferEvent;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.core.services.events.RelativizeLocationEvent;
+import io.github.manami.core.services.events.SimpleLocationEvent;
+import io.github.manami.core.services.events.TitleDifferEvent;
+import io.github.manami.core.services.events.TypeDifferEvent;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
@@ -46,6 +50,7 @@ import static org.springframework.util.Assert.notNull;
 @Slf4j
 public class CheckListService extends AbstractService<Void> {
 
+    private static final String MSG_DEAD_INFOLINK = "The infoLink seems to not exist anymore for %s.";
     private final Cache cache;
     private final List<Anime> list;
     private final CheckListConfig config;
@@ -96,6 +101,10 @@ public class CheckListService extends AbstractService<Void> {
             checkMetaData();
         }
 
+        if (config.isCheckDeadEntries()) {
+            checkDeadEntries();
+        }
+
         return null;
     }
 
@@ -133,6 +142,11 @@ public class CheckListService extends AbstractService<Void> {
 
         if (config.isCheckMetaData()) {
             progressMax += list.size();
+        }
+
+        if (config.isCheckDeadEntries()) {
+            progressMax += app.fetchWatchList().size();
+            progressMax += app.fetchFilterList().size();
         }
     }
 
@@ -225,7 +239,7 @@ public class CheckListService extends AbstractService<Void> {
                 continue;
             }
 
-            Anime cachedEntry = optCachedEntry.get();
+            final Anime cachedEntry = optCachedEntry.get();
 
             if (!anime.getTitle().equals(cachedEntry.getTitle())) {
                 fireTitleDiffersEvent(anime, cachedEntry.getTitle());
@@ -395,5 +409,49 @@ public class CheckListService extends AbstractService<Void> {
             setChanged();
             notifyObservers(event);
         }
+    }
+
+
+    private void checkDeadEntries() {
+        final List<MinimalEntry> immutableWatchList = ImmutableList.copyOf(app.fetchWatchList());
+
+        for (int index = 0; index < immutableWatchList.size() && !isInterrupt(); index++) {
+            final MinimalEntry currentEntry = immutableWatchList.get(index);
+            checkEntryForDeadLink(currentEntry);
+        }
+
+        final List<MinimalEntry> immutableFilterList = ImmutableList.copyOf(app.fetchFilterList());
+
+        for (int index = 0; index < immutableFilterList.size() && !isInterrupt(); index++) {
+            final MinimalEntry currentEntry = immutableFilterList.get(index);
+            checkEntryForDeadLink(currentEntry);
+        }
+    }
+
+
+    /**
+     * @param currentEntry
+     * @return
+     */
+    private void checkEntryForDeadLink(final MinimalEntry currentEntry) {
+        updateProgress();
+
+        if (currentEntry == null || isBlank(currentEntry.getInfoLink())) {
+            return;
+        }
+
+        final Optional<Anime> cacheEntry = cache.fetchAnime(currentEntry.getInfoLink());
+
+        if (!cacheEntry.isPresent()) {
+            fireDeadLinkEvent(currentEntry);
+        }
+    }
+
+
+    private void fireDeadLinkEvent(final MinimalEntry currentEntry) {
+        final DeadLinkEvent event = new DeadLinkEvent(currentEntry, app);
+        event.setType(EventType.ERROR);
+        event.setMessage(String.format(MSG_DEAD_INFOLINK, currentEntry.getTitle()));
+        fire(event);
     }
 }
