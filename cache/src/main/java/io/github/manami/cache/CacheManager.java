@@ -35,19 +35,19 @@ public final class CacheManager implements Cache {
      * Key: URL of the anime, Value: Instance of the anime including all meta
      * data.
      */
-    private LoadingCache<String, Optional<Anime>> animeEntryCache = null;
+    private LoadingCache<InfoLink, Optional<Anime>> animeEntryCache = null;
 
     /**
-     * Key: URL of the anime, Value: List of anime urls which are related to the
+     * Key: URL of the anime, Value: Set of anime urls which are related to the
      * anime url in the key
      */
-    private LoadingCache<String, Set<String>> relatedAnimeCache = null;
+    private LoadingCache<InfoLink, Set<InfoLink>> relatedAnimeCache = null;
 
     /**
      * Key: URL of the anime, Value: List of anime urls which are recommended
-     * titles to the anime url
+     * titles to the anime url with their amount of occurence
      */
-    private LoadingCache<String, Map<String, Integer>> recommendationsCache = null;
+    private LoadingCache<InfoLink, Map<InfoLink, Integer>> recommendationsCache = null;
 
 
     @Inject
@@ -79,15 +79,13 @@ public final class CacheManager implements Cache {
             return cachedEntry;
         }
 
-        String url = infoLink.getUrl();
-
         try {
-            cachedEntry = animeEntryCache.get(url);
+            cachedEntry = animeEntryCache.get(infoLink);
 
             if (!cachedEntry.isPresent()) {
                 log.warn("No Entry for [{}]. Invalidating cache entry and refetching entry.", infoLink);
-                animeEntryCache.invalidate(url);
-                cachedEntry = animeEntryCache.get(url);
+                animeEntryCache.invalidate(infoLink);
+                cachedEntry = animeEntryCache.get(infoLink);
                 log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, cachedEntry);
             }
         } catch (final ExecutionException e) {
@@ -100,15 +98,15 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(final Anime anime) {
-        Set<String> ret = Sets.newHashSet();
+    public Set<InfoLink> fetchRelatedAnimes(final Anime anime) {
+        Set<InfoLink> ret = Sets.newHashSet();
 
         if (isAnimeInvalid(anime)) {
             return ret;
         }
 
         try {
-            final String infoLink = anime.getInfoLink().getUrl();
+            final InfoLink infoLink = anime.getInfoLink();
             ret = relatedAnimeCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
@@ -126,15 +124,15 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Map<String, Integer> fetchRecommendations(final Anime anime) {
-        Map<String, Integer> ret = newHashMap();
+    public Map<InfoLink, Integer> fetchRecommendations(final Anime anime) {
+        Map<InfoLink, Integer> ret = newHashMap();
 
         if (isAnimeInvalid(anime)) {
             return ret;
         }
 
         try {
-            final String infoLink = anime.getInfoLink().getUrl();
+            final InfoLink infoLink = anime.getInfoLink();
             ret = recommendationsCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
@@ -157,12 +155,10 @@ public final class CacheManager implements Cache {
 
 
     private void buildAnimeCache() {
-        animeEntryCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Optional<Anime>>() {
+        animeEntryCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Optional<Anime>>() {
 
             @Override
-            public Optional<Anime> load(final String url) throws Exception {
-                InfoLink infoLink = new InfoLink(url);
-
+            public Optional<Anime> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
                     return daemonRestRetrievalStrategy.fetchAnime(infoLink);
                 }
@@ -174,12 +170,10 @@ public final class CacheManager implements Cache {
 
 
     private void buildRelatedAnimeCache() {
-        relatedAnimeCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Set<String>>() {
+        relatedAnimeCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Set<InfoLink>>() {
 
             @Override
-            public Set<String> load(final String url) throws Exception {
-                InfoLink infoLink = new InfoLink(url);
-
+            public Set<InfoLink> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
                     return daemonRestRetrievalStrategy.fetchRelatedAnimes(infoLink);
                 }
@@ -191,12 +185,10 @@ public final class CacheManager implements Cache {
 
 
     private void buildRecommendationsCache() {
-        recommendationsCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Map<String, Integer>>() {
+        recommendationsCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Map<InfoLink, Integer>>() {
 
             @Override
-            public Map<String, Integer> load(final String url) throws Exception {
-                InfoLink infoLink = new InfoLink(url);
-
+            public Map<InfoLink, Integer> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
                     return daemonRestRetrievalStrategy.fetchRecommendations(infoLink);
                 }

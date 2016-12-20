@@ -13,5 +13,5 @@ public interface RelatedAnimeRetrieval {
      * @return A {@link Set} of all related animes or an empty {@link Set}, but
      *         never null.
      */
-    Set<String> fetchRelatedAnimes(InfoLink infoLink);
+    Set<InfoLink> fetchRelatedAnimes(InfoLink infoLink);
 }

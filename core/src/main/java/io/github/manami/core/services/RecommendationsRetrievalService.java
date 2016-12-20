@@ -39,18 +39,18 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     private static final int MAX_NUMBER_OF_ENTRIES = 100;
 
     /** List to be searched for recommendations. */
-    private final List<String> urlList;
+    private final List<InfoLink> urlList;
 
     /** List which is being given to the GUI. */
     private List<Anime> resultList;
 
     /** All possible recommendations */
-    private Map<String, Integer> recommendationsAll;
+    private Map<InfoLink, Integer> recommendationsAll;
 
     /**
      * All recommendations that make 80% of all written user recommendations.
      */
-    private List<String> userRecomList;
+    private List<InfoLink> userRecomList;
     private final AnimeExtractor extractor;
     private final Manami app;
     private final Cache cache;
@@ -76,13 +76,13 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     public List<Anime> execute() {
         app.fetchAnimeList().forEach(entry -> {
             if (entry.getInfoLink().isValid()) {
-                urlList.add(entry.getInfoLink().getUrl());
+                urlList.add(entry.getInfoLink());
             }
         });
 
         for (int i = 0; i < urlList.size() && !isInterrupt(); i++) {
             log.debug("Getting recommendations for {}", urlList.get(i));
-            getRecommendations(new InfoLink(urlList.get(i)));
+            getRecommendations(urlList.get(i));
             setChanged();
             notifyObservers(new ProgressState(i + 1, urlList.size()));
         }
@@ -100,7 +100,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
              */
             final int nextEntryIndex = i + 2;
 
-            notifyObservers(new AdvancedProgressState(nextEntryIndex, userRecomList.size(), cache.fetchAnime(new InfoLink(userRecomList.get(i))).get()));
+            notifyObservers(new AdvancedProgressState(nextEntryIndex, userRecomList.size(), cache.fetchAnime(userRecomList.get(i)).get()));
         }
 
         return resultList;
@@ -114,7 +114,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
             return;
         }
 
-        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(new InfoLink(key), value));
+        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(key, value));
     }
 
 
@@ -123,9 +123,9 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
 
         if (!urlList.contains(normalizedInfoLink) && !app.filterEntryExists(normalizedInfoLink) && !app.watchListEntryExists(normalizedInfoLink)) {
             if (recommendationsAll.containsKey(normalizedInfoLink)) {
-                recommendationsAll.put(normalizedInfoLink.getUrl(), recommendationsAll.get(normalizedInfoLink) + amount);
+                recommendationsAll.put(normalizedInfoLink, recommendationsAll.get(normalizedInfoLink) + amount);
             } else {
-                recommendationsAll.put(normalizedInfoLink.getUrl(), amount);
+                recommendationsAll.put(normalizedInfoLink, amount);
             }
         }
     }
@@ -135,7 +135,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         int sumAll = 0;
         recommendationsAll = sortMapByValue(recommendationsAll);
 
-        for (final Entry<String, Integer> entry : recommendationsAll.entrySet()) {
+        for (final Entry<InfoLink, Integer> entry : recommendationsAll.entrySet()) {
             sumAll += entry.getValue();
         }
 
@@ -143,7 +143,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         int percentage = 0;
         int curSum = 0;
 
-        for (final Entry<String, Integer> entry : recommendationsAll.entrySet()) {
+        for (final Entry<InfoLink, Integer> entry : recommendationsAll.entrySet()) {
             if (percentage < MAX_PERCENTAGE && userRecomList.size() < MAX_NUMBER_OF_ENTRIES) {
                 userRecomList.add(entry.getKey());
                 curSum += entry.getValue();
@@ -155,16 +155,16 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     }
 
 
-    private static Map<String, Integer> sortMapByValue(final Map<String, Integer> unsortMap) {
+    private static Map<InfoLink, Integer> sortMapByValue(final Map<InfoLink, Integer> unsortMap) {
         // Convert Map to List
-        final List<Map.Entry<String, Integer>> list = newArrayList(unsortMap.entrySet());
+        final List<Map.Entry<InfoLink, Integer>> list = newArrayList(unsortMap.entrySet());
 
         // Sort list with comparator, to compare the Map values
         Collections.sort(list, (o1, o2) -> (o1.getValue() > o2.getValue()) ? -1 : ((Objects.equals(o1.getValue(), o2.getValue())) ? 0 : 1));
 
         // Convert sorted map back to a Map
-        final Map<String, Integer> sortedMap = new LinkedHashMap<>();
-        for (final Entry<String, Integer> entry : list) {
+        final Map<InfoLink, Integer> sortedMap = new LinkedHashMap<>();
+        for (final Entry<InfoLink, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;

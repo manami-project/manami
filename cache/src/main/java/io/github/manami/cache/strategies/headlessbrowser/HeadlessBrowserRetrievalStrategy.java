@@ -99,8 +99,8 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(final InfoLink infoLink) {
-        Set<String> ret = Sets.newHashSet();
+    public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
+        Set<InfoLink> ret = Sets.newHashSet();
         final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(infoLink);
 
         if (infoLink.isValid() && extractor.isPresent()) {
@@ -118,8 +118,8 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Map<String, Integer> fetchRecommendations(final InfoLink infoLink) {
-        Map<String, Integer> ret = new HashMap<>();
+    public Map<InfoLink, Integer> fetchRecommendations(final InfoLink infoLink) {
+        Map<InfoLink, Integer> ret = new HashMap<>();
         final Optional<RecommendationsExtractor> extractor = extractors.getRecommendationsExtractor(infoLink);
 
         if (infoLink.isValid() && extractor.isPresent()) {

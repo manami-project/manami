@@ -15,5 +15,5 @@ public interface RecommendationsRetrieval {
      *         The KEY represents the URL of the recommended anime.
      *         The VALUE contains the amount of recommendations made.
      */
-    Map<String, Integer> fetchRecommendations(InfoLink infoLink);
+    Map<InfoLink, Integer> fetchRecommendations(InfoLink infoLink);
 }

@@ -147,7 +147,7 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
 
     @Override
-    public boolean isResponsible(final String url) {
+    public boolean isResponsible(final InfoLink url) {
         return MyAnimeListNetUtil.isResponsible(url);
     }
 }

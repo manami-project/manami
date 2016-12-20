@@ -5,7 +5,6 @@ import io.github.manami.dto.entities.InfoLink;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public final class MyAnimeListNetUtil {
@@ -18,10 +17,12 @@ public final class MyAnimeListNetUtil {
     }
 
 
-    public static boolean isResponsible(final String url) {
-        if (isBlank(url)) {
+    public static boolean isResponsible(final InfoLink infoLink) {
+        if (!infoLink.isValid()) {
             return false;
         }
+
+        String url = infoLink.getUrl();
 
         return url.startsWith("http://" + DOMAIN) || url.startsWith("http://www." + DOMAIN) || url.startsWith("https://" + DOMAIN) || url.startsWith("https://www." + DOMAIN);
     }

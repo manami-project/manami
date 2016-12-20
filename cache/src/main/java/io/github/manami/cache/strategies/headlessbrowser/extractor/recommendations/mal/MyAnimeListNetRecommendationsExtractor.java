@@ -28,8 +28,8 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
 
 
     @Override
-    public boolean isResponsible(final String url) {
-        return MyAnimeListNetUtil.isResponsible(url);
+    public boolean isResponsible(final InfoLink infoLink) {
+        return MyAnimeListNetUtil.isResponsible(infoLink);
     }
 
 
@@ -52,8 +52,8 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
 
 
     @Override
-    public Map<String, Integer> extractRecommendations(final String siteContent) {
-        final Map<String, Integer> ret = Maps.newHashMap();
+    public Map<InfoLink, Integer> extractRecommendations(final String siteContent) {
+        final Map<InfoLink, Integer> ret = Maps.newHashMap();
 
         final String animeUrlDelimiter = "/anime/";
         final String recomFlag = "Recommended by";
@@ -76,7 +76,7 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
                         final int numberOfRecoms = countMatches(sub, recomFlag);
                         final String fullUrl = createCleanFullUrl(curAnime);
 
-                        ret.put(fullUrl, numberOfRecoms);
+                        ret.put(new InfoLink(fullUrl), numberOfRecoms);
                         recomSite = substring(recomSite, nextAnime - 1);
                     } else {
                         recomSite = substring(recomSite, nextAnime);

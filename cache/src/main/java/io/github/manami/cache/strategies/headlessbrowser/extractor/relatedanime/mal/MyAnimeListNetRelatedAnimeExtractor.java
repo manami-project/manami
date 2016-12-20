@@ -20,8 +20,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtractor {
 
     @Override
-    public Set<String> extractRelatedAnimes(final String siteContent) {
-        final List<String> raw = newArrayList();
+    public Set<InfoLink> extractRelatedAnimes(final String siteContent) {
+        final List<InfoLink> raw = newArrayList();
         String subStr = siteContent.trim();
 
         // get rid of all whitespaces
@@ -39,14 +39,14 @@ public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtracto
             matcher = pattern.matcher(subStr);
 
             while (matcher.find()) {
-                raw.add(matcher.group());
+                raw.add(new InfoLink(matcher.group()));
             }
         }
 
-        final Set<String> ret = newHashSet();
+        final Set<InfoLink> ret = newHashSet();
         if (raw.size() > 0) {
             raw.forEach(element -> {
-                final String relatedAnimeUrl = normalizeInfoLink(new InfoLink(element)).getUrl();
+                final InfoLink relatedAnimeUrl = normalizeInfoLink(element);
                 if (!ret.contains(relatedAnimeUrl)) {
                     ret.add(relatedAnimeUrl);
                 }
@@ -58,13 +58,13 @@ public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtracto
 
 
     @Override
-    public boolean isResponsible(final String url) {
-        return MyAnimeListNetUtil.isResponsible(url);
+    public boolean isResponsible(final InfoLink infoLink) {
+        return MyAnimeListNetUtil.isResponsible(infoLink);
     }
 
 
     @Override
-    public InfoLink normalizeInfoLink(final InfoLink url) {
-        return MyAnimeListNetUtil.normalizeInfoLink(url);
+    public InfoLink normalizeInfoLink(final InfoLink infoLink) {
+        return MyAnimeListNetUtil.normalizeInfoLink(infoLink);
     }
 }

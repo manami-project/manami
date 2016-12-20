@@ -16,10 +16,10 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpWww() {
         // given
-        final String url = "http://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = MyAnimeListNetUtil.isResponsible(url);
+        final boolean result = MyAnimeListNetUtil.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -29,10 +29,10 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttp() {
         // given
-        final String url = "http://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = MyAnimeListNetUtil.isResponsible(url);
+        final boolean result = MyAnimeListNetUtil.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -42,10 +42,10 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpsWww() {
         // given
-        final String url = "https://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = MyAnimeListNetUtil.isResponsible(url);
+        final boolean result = MyAnimeListNetUtil.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -55,10 +55,10 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttps() {
         // given
-        final String url = "https://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = MyAnimeListNetUtil.isResponsible(url);
+        final boolean result = MyAnimeListNetUtil.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -68,10 +68,10 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleFalse() {
         // given
-        final String url = "https://animenewsnetwork.com/encyclopedia/anime.php?id=6592";
+        final InfoLink infoLink = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
 
         // when
-        final boolean result = MyAnimeListNetUtil.isResponsible(url);
+        final boolean result = MyAnimeListNetUtil.isResponsible(infoLink);
 
         // then
         assertFalse(result);
@@ -81,9 +81,9 @@ public class MyAnimeListNetUtilTest {
     @Test(groups = "unitTest")
     public void isResponsibleBlank() {
         // given
-        final String urlEmpty = "";
-        final String urlWhitespace = "";
-        final String urlNull = null;
+        final InfoLink urlEmpty = new InfoLink("");
+        final InfoLink urlWhitespace = new InfoLink("");
+        final InfoLink urlNull = new InfoLink(null);
 
         // when
         final boolean resultEmpty = MyAnimeListNetUtil.isResponsible(urlEmpty);

@@ -11,11 +11,11 @@ public interface AnimeExtractor {
     /**
      * Checks whether the current plugin can process the given link.
      *
-     * @param url
+     * @param infoLink
      *            URL
      * @return True if the extractor is responsible.
      */
-    boolean isResponsible(String url);
+    boolean isResponsible(InfoLink infoLink);
 
 
     /**

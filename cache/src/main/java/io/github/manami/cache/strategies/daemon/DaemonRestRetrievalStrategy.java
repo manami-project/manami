@@ -29,13 +29,13 @@ public class DaemonRestRetrievalStrategy implements AnimeRetrieval, RelatedAnime
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(final InfoLink infoLink) {
+    public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
         return null;
     }
 
 
     @Override
-    public Map<String, Integer> fetchRecommendations(final InfoLink infoLink) {
+    public Map<InfoLink, Integer> fetchRecommendations(final InfoLink infoLink) {
         return null;
     }
 }

@@ -82,7 +82,7 @@ public class ExtractorList {
 
     private Optional<AnimeExtractor> getExtractor(final InfoLink infoLink, final Class clazz) {
         for (final AnimeExtractor extractor : extractors) {
-            if (extractor.isResponsible(infoLink.getUrl()) && clazz.isInstance(extractor)) {
+            if (extractor.isResponsible(infoLink) && clazz.isInstance(extractor)) {
                 return Optional.of(extractor);
             }
         }

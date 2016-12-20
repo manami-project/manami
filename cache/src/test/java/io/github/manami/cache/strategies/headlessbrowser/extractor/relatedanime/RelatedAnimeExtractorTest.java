@@ -40,25 +40,25 @@ public class RelatedAnimeExtractorTest {
         // given
 
         // when
-        final Set<String> result = sut.extractRelatedAnimes(rawHtml);
+        final Set<InfoLink> result = sut.extractRelatedAnimes(rawHtml);
 
         // then
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(result.size(), 3);
-        assertTrue(result.contains("http://myanimelist.net/anime/849"));
-        assertTrue(result.contains("http://myanimelist.net/anime/7311"));
-        assertTrue(result.contains("http://myanimelist.net/anime/26351"));
+        assertTrue(result.contains(new InfoLink("http://myanimelist.net/anime/849")));
+        assertTrue(result.contains(new InfoLink("http://myanimelist.net/anime/7311")));
+        assertTrue(result.contains(new InfoLink("http://myanimelist.net/anime/26351")));
     }
 
 
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpWww() {
         // given
-        final String url = "http://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = sut.isResponsible(url);
+        final boolean result = sut.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -68,10 +68,10 @@ public class RelatedAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttp() {
         // given
-        final String url = "http://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = sut.isResponsible(url);
+        final boolean result = sut.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -81,10 +81,10 @@ public class RelatedAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpsWww() {
         // given
-        final String url = "https://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = sut.isResponsible(url);
+        final boolean result = sut.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -94,10 +94,10 @@ public class RelatedAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttps() {
         // given
-        final String url = "https://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink infoLink = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
-        final boolean result = sut.isResponsible(url);
+        final boolean result = sut.isResponsible(infoLink);
 
         // then
         assertTrue(result);
@@ -107,10 +107,10 @@ public class RelatedAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleFalse() {
         // given
-        final String url = "https://animenewsnetwork.com/encyclopedia/anime.php?id=6592";
+        final InfoLink infoLink = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
 
         // when
-        final boolean result = sut.isResponsible(url);
+        final boolean result = sut.isResponsible(infoLink);
 
         // then
         assertFalse(result);
@@ -120,9 +120,9 @@ public class RelatedAnimeExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleBlank() {
         // given
-        final String urlEmpty = "";
-        final String urlWhitespace = "";
-        final String urlNull = null;
+        final InfoLink urlEmpty = new InfoLink("");
+        final InfoLink urlWhitespace = new InfoLink("");
+        final InfoLink urlNull = new InfoLink(null);
 
         // when
         final boolean resultEmpty = sut.isResponsible(urlEmpty);

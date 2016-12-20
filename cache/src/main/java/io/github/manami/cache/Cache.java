@@ -19,8 +19,8 @@ public interface Cache {
     Optional<Anime> fetchAnime(InfoLink infoLink);
 
 
-    Set<String> fetchRelatedAnimes(Anime anime);
+    Set<InfoLink> fetchRelatedAnimes(Anime anime);
 
 
-    Map<String, Integer> fetchRecommendations(Anime anime);
+    Map<InfoLink, Integer> fetchRecommendations(Anime anime);
 }

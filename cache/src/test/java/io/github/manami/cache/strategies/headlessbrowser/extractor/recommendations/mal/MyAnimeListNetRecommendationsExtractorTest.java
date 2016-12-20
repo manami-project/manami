@@ -1,6 +1,6 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal;
 
-import com.beust.jcommander.internal.Sets;
+
 import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
 import io.github.manami.dto.entities.InfoLink;
 import org.springframework.core.io.ClassPathResource;
@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -40,27 +41,26 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     public void extractRecommendations() {
         // given
         final String entry1 = "http://myanimelist.net/anime/2236";
-        final Set<String> entries = Sets.newHashSet();
-
-        entries.add("http://myanimelist.net/anime/648");
-        entries.add("http://myanimelist.net/anime/4382");
-        entries.add("http://myanimelist.net/anime/21845");
-        entries.add("http://myanimelist.net/anime/1692");
-        entries.add("http://myanimelist.net/anime/2476");
-        entries.add("http://myanimelist.net/anime/661");
-        entries.add("http://myanimelist.net/anime/147");
-        entries.add("http://myanimelist.net/anime/510");
-        entries.add("http://myanimelist.net/anime/2973");
+        final Set<InfoLink> entries = newHashSet();
+        entries.add(new InfoLink("http://myanimelist.net/anime/648"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/4382"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/21845"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/1692"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/2476"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/661"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/147"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/510"));
+        entries.add(new InfoLink("http://myanimelist.net/anime/2973"));
 
         // when
-        final Map<String, Integer> result = sut.extractRecommendations(rawHtml);
+        final Map<InfoLink, Integer> result = sut.extractRecommendations(rawHtml);
 
         // then
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(result.size(), 10);
-        assertTrue(result.containsKey(entry1));
-        assertEquals(result.get(entry1), Integer.valueOf(2));
+        assertTrue(result.containsKey(new InfoLink(entry1)));
+        assertEquals(result.get(new InfoLink(entry1)), Integer.valueOf(2));
 
         entries.forEach(entry -> {
             assertTrue(result.containsKey(entry));
@@ -72,7 +72,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpWww() {
         // given
-        final String url = "http://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink url = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
         final boolean result = sut.isResponsible(url);
@@ -85,7 +85,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttp() {
         // given
-        final String url = "http://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink url = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
         final boolean result = sut.isResponsible(url);
@@ -98,7 +98,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttpsWww() {
         // given
-        final String url = "https://www." + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink url = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
         final boolean result = sut.isResponsible(url);
@@ -111,7 +111,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleTrueHttps() {
         // given
-        final String url = "https://" + DEATH_NOTE_URL_NO_PROTOCOL;
+        final InfoLink url = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
 
         // when
         final boolean result = sut.isResponsible(url);
@@ -124,7 +124,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleFalse() {
         // given
-        final String url = "https://animenewsnetwork.com/encyclopedia/anime.php?id=6592";
+        final InfoLink url = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
 
         // when
         final boolean result = sut.isResponsible(url);
@@ -137,9 +137,9 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     @Test(groups = "unitTest")
     public void isResponsibleBlank() {
         // given
-        final String urlEmpty = "";
-        final String urlWhitespace = "";
-        final String urlNull = null;
+        final InfoLink urlEmpty = new InfoLink("");
+        final InfoLink urlWhitespace = new InfoLink("");
+        final InfoLink urlNull = new InfoLink(null);
 
         // when
         final boolean resultEmpty = sut.isResponsible(urlEmpty);

@@ -1,12 +1,11 @@
 package io.github.manami.dto.entities;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@EqualsAndHashCode
 public class InfoLink {
 
     private static final String[] VALID_SCHEMES = new String[] { "HTTP", "HTTPS" };
@@ -45,5 +44,29 @@ public class InfoLink {
     @Override
     public String toString() {
         return url;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !(obj instanceof InfoLink)) {
+            return false;
+        }
+
+        if(obj == this) {
+            return true;
+        }
+
+        InfoLink otherInfoLink = (InfoLink) obj;
+
+        if(isPresent() && otherInfoLink.isPresent()) {
+            return url.equals(otherInfoLink.getUrl());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }
