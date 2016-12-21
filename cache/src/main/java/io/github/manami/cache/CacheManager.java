@@ -150,7 +150,7 @@ public final class CacheManager implements Cache {
 
 
     private boolean isAnimeInvalid(final Anime anime) {
-        return anime == null || anime.getInfoLink().isPresent();
+        return anime == null || !anime.getInfoLink().isPresent();
     }
 
 

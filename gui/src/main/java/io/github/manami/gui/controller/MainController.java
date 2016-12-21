@@ -17,6 +17,7 @@ import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.controller.callbacks.AnimeEpisodesCallback;
+import io.github.manami.gui.controller.callbacks.AnimeInfoLinkCallback;
 import io.github.manami.gui.controller.callbacks.AnimeTypeCallback;
 import io.github.manami.gui.controller.callbacks.DefaultCallback;
 import io.github.manami.gui.controller.callbacks.RowCountCallback;
@@ -146,7 +147,7 @@ public class MainController implements Observer {
 
     /** Column: info link */
     @FXML
-    private TableColumn<Anime, String> colAnimeListLink;
+    private TableColumn<Anime, InfoLink> colAnimeListLink;
 
     /** Column: location on hard drive */
     @FXML
@@ -319,14 +320,14 @@ public class MainController implements Observer {
             selectedAnime.setEpisodes(event.getNewValue());
         });
 
-        // COLUMN: Link
+        // COLUMN: InfoLink
         colAnimeListLink.setCellValueFactory(new PropertyValueFactory<>("infoLink"));
-        colAnimeListLink.setCellFactory(defaultCallback);
+        colAnimeListLink.setCellFactory(new AnimeInfoLinkCallback());
         colAnimeListLink.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
             copyAnime(selectedAnime, oldValue);
-            InfoLink newValue = new InfoLink(event.getNewValue());
+            InfoLink newValue = event.getNewValue();
             executeCommand(new CmdChangeInfoLink(oldValue, newValue, app));
             selectedAnime.setInfoLink(newValue);
         });
