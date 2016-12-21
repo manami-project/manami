@@ -1,8 +1,9 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
+import com.google.common.collect.ImmutableList;
+import io.github.manami.cache.Cache;
+import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,11 +12,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.common.collect.ImmutableList;
-
-import io.github.manami.cache.Cache;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * This service is called whenever a new list is opened. It creates cache
@@ -28,15 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CacheInitializationService extends AbstractService<Void> {
 
+    private static final int MAX_THREADS = Runtime.getRuntime().availableProcessors() / 2;
+
     /** Instance of the cache. */
     private final Cache cache;
 
     /** The user's anime list. */
     private final List<Anime> list;
 
-    private final ExecutorService animeExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private final ExecutorService relatedExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private final ExecutorService recomExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService animeExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
+    private final ExecutorService relatedExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
+    private final ExecutorService recomExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
 
 
     /**
