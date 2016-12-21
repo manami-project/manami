@@ -1,28 +1,10 @@
 package io.github.manami.persistence.exporter.csv;
 
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
@@ -30,6 +12,22 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
 
 @Slf4j
 public class CsvExporterTest {
@@ -74,7 +72,7 @@ public class CsvExporterTest {
         // given
         final Anime bokuDake = new Anime();
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink("http://myanimelist.net/anime/31043");
+        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
         bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
@@ -82,16 +80,16 @@ public class CsvExporterTest {
 
         final Anime rurouniKenshin = new Anime();
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink("http://myanimelist.net/anime/44");
+        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
         rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
         persistenceFacade.addAnime(rurouniKenshin);
 
-        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "http://cdn.myanimelist.net/images/anime/13/8518t.jpg", "http://myanimelist.net/anime/2994");
+        final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "http://cdn.myanimelist.net/images/anime/13/8518t.jpg", new InfoLink("http://myanimelist.net/anime/2994"));
         persistenceFacade.watchAnime(deathNoteRewrite);
 
-        final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", "http://myanimelist.net/anime/918");
+        final FilterEntry gintama = new FilterEntry("Gintama", "http://cdn.myanimelist.net/images/anime/2/10038t.jpg", new InfoLink("http://myanimelist.net/anime/918"));
         persistenceFacade.filterAnime(gintama);
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);

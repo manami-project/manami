@@ -1,21 +1,20 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.ToolVersion;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.importer.xml.postprocessor.ImportMigrationPostProcessor;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author manami-project
@@ -90,11 +89,8 @@ public class ManamiSaxParser extends DefaultHandler {
         actAnime.setType(AnimeType.findByName(attributes.getValue("type").trim()));
         actAnime.setEpisodes(Integer.valueOf(attributes.getValue("episodes").trim()));
         actAnime.setLocation(attributes.getValue("location").trim());
+        actAnime.setInfoLink(new InfoLink(attributes.getValue("infoLink").trim()));
 
-        final String infoLink = attributes.getValue("infoLink").trim();
-        if (isNotBlank(infoLink)) {
-            actAnime.setInfoLink(infoLink);
-        }
         animeListEntries.add(actAnime);
     }
 
@@ -104,7 +100,7 @@ public class ManamiSaxParser extends DefaultHandler {
      * @param attributes
      */
     private void createFilterEntry(final Attributes attributes) {
-        final FilterEntry entry = new FilterEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), attributes.getValue("infoLink").trim());
+        final FilterEntry entry = new FilterEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), new InfoLink(attributes.getValue("infoLink").trim()));
         filterListEntries.add(entry);
     }
 
@@ -114,7 +110,7 @@ public class ManamiSaxParser extends DefaultHandler {
      * @param attributes
      */
     private void createWatchListEntry(final Attributes attributes) {
-        final WatchListEntry entry = new WatchListEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), attributes.getValue("infoLink").trim());
+        final WatchListEntry entry = new WatchListEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), new InfoLink(attributes.getValue("infoLink").trim()));
         watchListEntries.add(entry);
     }
 

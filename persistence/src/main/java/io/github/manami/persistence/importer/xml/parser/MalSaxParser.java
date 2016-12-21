@@ -1,17 +1,17 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.util.List;
-
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.persistence.PersistenceFacade;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.persistence.PersistenceFacade;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author manami-project
@@ -64,8 +64,8 @@ public class MalSaxParser extends DefaultHandler {
 
         switch (qName) {
             case "series_animedb_id":
-                if (isBlank(actAnime.getInfoLink())) {
-                    actAnime.setInfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim());
+                if (!actAnime.getInfoLink().isPresent()) {
+                    actAnime.setInfoLink(new InfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim()));
                 }
                 break;
             case "series_title":

@@ -1,26 +1,7 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.gui.components.Icons.createIconDelete;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.controlsfx.control.Notifications;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
-
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
@@ -34,6 +15,7 @@ import io.github.manami.core.services.RelatedAnimeFinderService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
@@ -53,6 +35,22 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.gui.components.Icons.createIconDelete;
 
 /**
  * Controller for adding and removing entries to the filter list.
@@ -182,20 +180,20 @@ public class FilterListController extends AbstractAnimeListController implements
      */
     @FXML
     public void addEntry() {
-        String url = txtUrl.getText().trim();
+        InfoLink infoLink = new InfoLink(txtUrl.getText().trim());
 
         if (validationSupport.getValidationResult().getErrors().size() > 0) {
             return;
         }
 
-        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(url);
+        final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(infoLink);
 
         if (extractor.isPresent()) {
-            url = extractor.get().normalizeInfoLink(url);
+            infoLink = extractor.get().normalizeInfoLink(infoLink);
         }
 
-        if (!app.filterEntryExists(url)) {
-            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, url);
+        if (!app.filterEntryExists(infoLink)) {
+            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, infoLink);
             retrievalService.setOnSucceeded(event -> {
                 final FilterEntry anime = FilterEntry.valueOf((Anime) event.getSource().getValue());
 
@@ -348,7 +346,7 @@ public class FilterListController extends AbstractAnimeListController implements
 
 
     @Override
-    boolean isInList(final String infoLink) {
-        return isNotBlank(infoLink) && app.filterEntryExists(infoLink);
+    boolean isInList(final InfoLink infoLink) {
+        return infoLink.isValid() && app.filterEntryExists(infoLink);
     }
 }

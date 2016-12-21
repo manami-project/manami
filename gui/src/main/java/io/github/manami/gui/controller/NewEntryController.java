@@ -1,18 +1,5 @@
 package io.github.manami.gui.controller;
 
-import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
-import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.math.NumberUtils;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -22,11 +9,23 @@ import io.github.manami.core.config.Config;
 import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Shows the window in which a new entry can be created.
@@ -215,10 +214,10 @@ public class NewEntryController {
      */
     public void add() {
         final String title = txtTitle.getText().trim();
-        final Integer episodes = Integer.valueOf(txtEpisodes.getText());
-        final String infoLink = txtInfoLink.getText();
-        final String location = txtLocation.getText();
-        final String type = txtType.getText();
+        final Integer episodes = Integer.valueOf(txtEpisodes.getText().trim());
+        final InfoLink infoLink = new InfoLink(txtInfoLink.getText().trim());
+        final String location = txtLocation.getText().trim();
+        final String type = txtType.getText().trim();
         if (validationSupport.getValidationResult().getErrors().size() == 0) {
             cmdService.executeCommand(new CmdAddAnime(new Anime(title, AnimeType.findByName(type), episodes, infoLink, location), Main.CONTEXT.getBean(Manami.class)));
             close();
@@ -296,12 +295,12 @@ public class NewEntryController {
 
         convertUrlIfNecessary();
 
-        final String url = txtInfoLink.getText();
+        final InfoLink infoLink = new InfoLink(txtInfoLink.getText().trim());
 
-        if (isNotBlank(url)) {
+        if (infoLink.isValid()) {
             setDisableAutoCompleteWidgets(true);
 
-            retrievalService = new AnimeRetrievalService(Main.CONTEXT.getBean(Cache.class), url);
+            retrievalService = new AnimeRetrievalService(Main.CONTEXT.getBean(Cache.class), infoLink);
             retrievalService.setOnSucceeded(event -> {
                 final Anime anime = (Anime) event.getSource().getValue();
 
@@ -309,7 +308,7 @@ public class NewEntryController {
                     Platform.runLater(() -> {
                         txtTitle.setText(anime.getTitle());
                         txtEpisodes.setText(String.valueOf(anime.getEpisodes()));
-                        txtInfoLink.setText(anime.getInfoLink());
+                        txtInfoLink.setText(anime.getInfoLink().getUrl());
                         setTextfieldType(anime.getTypeAsString());
                         checkEpisodeArrowButtons();
                     });

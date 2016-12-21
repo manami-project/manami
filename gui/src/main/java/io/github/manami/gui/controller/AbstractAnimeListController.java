@@ -1,14 +1,5 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
-import static io.github.manami.gui.components.Icons.createIconFilterList;
-import static io.github.manami.gui.components.Icons.createIconRemove;
-import static io.github.manami.gui.components.Icons.createIconWatchList;
-import static org.springframework.util.Assert.notNull;
-
-import java.text.Collator;
-import java.util.List;
-
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
@@ -16,6 +7,7 @@ import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
@@ -32,6 +24,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
+
+import java.text.Collator;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static io.github.manami.gui.components.Icons.createIconFilterList;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.components.Icons.createIconWatchList;
+import static org.springframework.util.Assert.notNull;
 
 /**
  * Abstract class if an anime result list. The list entries can be customized by
@@ -154,7 +155,7 @@ public abstract class AbstractAnimeListController {
         // search for entries which are missing
         for (int index = 0; index < getComponentList().size(); index++) {
             componentEntry = getComponentList().get(index).getAnime();
-            if (entry.getInfoLink().equalsIgnoreCase(componentEntry.getInfoLink())) {
+            if (entry.getInfoLink().getUrl().equalsIgnoreCase(componentEntry.getInfoLink().getUrl())) {
                 isAlreadyShown = true;
                 componentEntryIndex = index;
                 break;
@@ -190,7 +191,7 @@ public abstract class AbstractAnimeListController {
      * @return true if the entry represented by it's info link is already in the
      *         list.
      */
-    abstract boolean isInList(String infoLink);
+    abstract boolean isInList(InfoLink infoLink);
 
 
     /**
@@ -318,7 +319,7 @@ public abstract class AbstractAnimeListController {
      *         as target.
      */
     protected Hyperlink getTitleComponent(final MinimalEntry anime) {
-        final Hyperlink title = HyperlinkBuilder.buildFrom(anime.getTitle(), anime.getInfoLink());
+        final Hyperlink title = HyperlinkBuilder.buildFrom(anime.getTitle(), anime.getInfoLink().getUrl());
         title.setFont(Font.font(24.0));
         return title;
     }

@@ -1,9 +1,10 @@
 package io.github.manami.persistence;
 
-import java.util.List;
-
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
+
+import java.util.List;
 
 /**
  * @author manami-project
@@ -31,18 +32,18 @@ public interface FilterListHandler {
     /**
      * Checks whether an anime is already in your filter list.
      * @since 2.1.0
-     * @param url
+     * @param infoLink
      * URL
      * @return true if the URL is in the filter list.
      */
-    boolean filterEntryExists(String url);
+    boolean filterEntryExists(InfoLink infoLink);
 
 
     /**
      * Removes an entry from the filter list.
      * @since 2.1.0
-     * @param url
+     * @param infoLink
      * URL
      */
-    boolean removeFromFilterList(String url);
+    boolean removeFromFilterList(InfoLink infoLink);
 }

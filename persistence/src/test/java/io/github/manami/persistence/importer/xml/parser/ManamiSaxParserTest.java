@@ -1,22 +1,6 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -28,6 +12,19 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class ManamiSaxParserTest {
 
@@ -63,7 +60,7 @@ public class ManamiSaxParserTest {
         final Anime bokuDake = fetchAnimeList.get(0);
         assertNotNull(bokuDake);
         assertEquals(bokuDake.getEpisodes(), 12);
-        assertEquals(bokuDake.getInfoLink(), "http://myanimelist.net/anime/31043");
+        assertEquals(bokuDake.getInfoLink().getUrl(), "http://myanimelist.net/anime/31043");
         assertEquals(bokuDake.getLocation(), "/anime/series/boku_dake_ga_inai_machi");
         assertEquals(bokuDake.getTitle(), "Boku dake ga Inai Machi");
         assertEquals(bokuDake.getType(), AnimeType.TV);
@@ -71,7 +68,7 @@ public class ManamiSaxParserTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 4);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/44");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/44");
         assertEquals(rurouniKenshin.getLocation(), "/anime/series/rurouni_kenshin");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         assertEquals(rurouniKenshin.getType(), AnimeType.OVA);
@@ -93,7 +90,7 @@ public class ManamiSaxParserTest {
 
         final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
         assertNotNull(deathNoteRewrite);
-        assertEquals(deathNoteRewrite.getInfoLink(), "http://myanimelist.net/anime/2994");
+        assertEquals(deathNoteRewrite.getInfoLink().getUrl(), "http://myanimelist.net/anime/2994");
         assertEquals(deathNoteRewrite.getThumbnail(), "https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg");
         assertEquals(deathNoteRewrite.getTitle(), "Death Note Rewrite");
     }
@@ -114,7 +111,7 @@ public class ManamiSaxParserTest {
 
         final FilterEntry gintama = fetchFilterList.get(0);
         assertNotNull(gintama);
-        assertEquals(gintama.getInfoLink(), "http://myanimelist.net/anime/918");
+        assertEquals(gintama.getInfoLink().getUrl(), "http://myanimelist.net/anime/918");
         assertEquals(gintama.getTitle(), "Gintama");
     }
 }

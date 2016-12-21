@@ -1,18 +1,18 @@
 package io.github.manami.persistence.inmemory.watchlist;
 
-import static org.testng.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 public class InMemoryWatchListHandlerTest {
 
@@ -28,7 +28,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testFetchWatchList() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         inMemoryWatchListHandler.watchAnime(entry);
 
         // when
@@ -42,7 +42,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchListEntryExists() {
         // given
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
         inMemoryWatchListHandler.watchAnime(entry);
 
@@ -59,7 +59,7 @@ public class InMemoryWatchListHandlerTest {
         // given
 
         // when
-        final boolean result = inMemoryWatchListHandler.watchListEntryExists("http://myanimelist.net/anime/1535");
+        final boolean result = inMemoryWatchListHandler.watchListEntryExists(new InfoLink("http://myanimelist.net/anime/1535"));
 
         // then
         assertEquals(result, false);
@@ -82,7 +82,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
-        final WatchListEntry entry = new WatchListEntry("", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);
@@ -96,7 +96,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutInfoLink() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "");
+        final WatchListEntry entry = new WatchListEntry("Death Note", null);
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);
@@ -110,7 +110,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchAnimeIsEntryWithoutThumbnail() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);
@@ -124,7 +124,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchAnimeIsFullEntry() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);
@@ -138,7 +138,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testRemoveFromWatchListWorks() {
         // given
-        final String infoLink = "http://myanimelist.net/anime/1535";
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         final WatchListEntry entry = new WatchListEntry("Death Note", infoLink);
         inMemoryWatchListHandler.watchAnime(entry);
 
@@ -178,7 +178,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testUpdateOrCreateForNewWatchListEntry() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         inMemoryWatchListHandler.updateOrCreate(entry);
@@ -192,7 +192,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testUpdateOrCreateForModifiedWatchListEntry() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, new InfoLink("http://myanimelist.net/anime/1535"));
 
         inMemoryWatchListHandler.watchAnime(entry);
 
@@ -211,7 +211,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testClearing() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
         inMemoryWatchListHandler.watchAnime(entry);
 
         // when
@@ -225,7 +225,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchListEntryNotAddedBecauseItAlreadyExists() {
         // given
-        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
         inMemoryWatchListHandler.watchAnime(entry);
 
         // when
@@ -240,7 +240,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = "unitTest")
     public void testWatchFilterEntry() {
         // given
-        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", "http://myanimelist.net/anime/1535");
+        final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);
@@ -256,7 +256,7 @@ public class InMemoryWatchListHandlerTest {
         // given
         final Anime entry = new Anime();
         entry.setEpisodes(37);
-        entry.setInfoLink("http://myanimelist.net/anime/1535");
+        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");

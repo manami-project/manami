@@ -1,22 +1,6 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
 import com.google.common.eventbus.EventBus;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -28,6 +12,19 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class MalSaxParserTest {
 
@@ -63,7 +60,7 @@ public class MalSaxParserTest {
         final Anime deathNote = fetchAnimeList.get(0);
         assertNotNull(deathNote);
         assertEquals(deathNote.getEpisodes(), 37);
-        assertEquals(deathNote.getInfoLink(), "http://myanimelist.net/anime/1535");
+        assertEquals(deathNote.getInfoLink().getUrl(), "http://myanimelist.net/anime/1535");
         assertEquals(deathNote.getLocation(), "/");
         assertEquals(deathNote.getTitle(), "Death Note");
         assertEquals(deathNote.getType(), AnimeType.TV);
@@ -71,7 +68,7 @@ public class MalSaxParserTest {
         final Anime rurouniKenshin = fetchAnimeList.get(1);
         assertNotNull(rurouniKenshin);
         assertEquals(rurouniKenshin.getEpisodes(), 94);
-        assertEquals(rurouniKenshin.getInfoLink(), "http://myanimelist.net/anime/45");
+        assertEquals(rurouniKenshin.getInfoLink().getUrl(), "http://myanimelist.net/anime/45");
         assertEquals(rurouniKenshin.getLocation(), "/");
         assertEquals(rurouniKenshin.getTitle(), "Rurouni Kenshin: Meiji Kenkaku Romantan");
         assertEquals(rurouniKenshin.getType(), AnimeType.TV);
@@ -93,13 +90,13 @@ public class MalSaxParserTest {
 
         final WatchListEntry akatsukiNoYona = fetchWatchList.get(0);
         assertNotNull(akatsukiNoYona);
-        assertEquals(akatsukiNoYona.getInfoLink(), "http://myanimelist.net/anime/25013");
+        assertEquals(akatsukiNoYona.getInfoLink().getUrl(), "http://myanimelist.net/anime/25013");
         assertEquals(akatsukiNoYona.getTitle(), "Akatsuki no Yona");
         assertEquals(akatsukiNoYona.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
 
         final WatchListEntry aldnoahZero = fetchWatchList.get(1);
         assertNotNull(aldnoahZero);
-        assertEquals(aldnoahZero.getInfoLink(), "http://myanimelist.net/anime/27655");
+        assertEquals(aldnoahZero.getInfoLink().getUrl(), "http://myanimelist.net/anime/27655");
         assertEquals(aldnoahZero.getTitle(), "Aldnoah.Zero 2nd Season");
         assertEquals(aldnoahZero.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
     }
@@ -120,13 +117,13 @@ public class MalSaxParserTest {
 
         final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
         assertNotNull(matanteiLokiRagnarok);
-        assertEquals(matanteiLokiRagnarok.getInfoLink(), "http://myanimelist.net/anime/335");
+        assertEquals(matanteiLokiRagnarok.getInfoLink().getUrl(), "http://myanimelist.net/anime/335");
         assertEquals(matanteiLokiRagnarok.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(matanteiLokiRagnarok.getTitle(), "Matantei Loki Ragnarok");
 
         final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
         assertNotNull(saiunkokuMonogatari);
-        assertEquals(saiunkokuMonogatari.getInfoLink(), "http://myanimelist.net/anime/957");
+        assertEquals(saiunkokuMonogatari.getInfoLink().getUrl(), "http://myanimelist.net/anime/957");
         assertEquals(saiunkokuMonogatari.getThumbnail(), "https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertEquals(saiunkokuMonogatari.getTitle(), "Saiunkoku Monogatari");
     }

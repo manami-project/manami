@@ -1,9 +1,10 @@
 package io.github.manami.core.services;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 
 /**
  * Retrieves an entity of an {@link Anime} by providing the info link URL.
@@ -20,18 +21,18 @@ public class AnimeRetrievalService extends Service<Anime> {
      * URL of the info link for which an {@link Anime} entity is being fetched
      * from the cache.
      */
-    private final String url;
+    private final InfoLink infoLink;
 
 
     /**
      * Constructor.
      *
-     * @param url
+     * @param infoLink
      *            Info link URL of the anime.
      */
-    public AnimeRetrievalService(final Cache cache, final String url) {
+    public AnimeRetrievalService(final Cache cache, final InfoLink infoLink) {
         this.cache = cache;
-        this.url = url;
+        this.infoLink = infoLink;
     }
 
 
@@ -41,7 +42,7 @@ public class AnimeRetrievalService extends Service<Anime> {
 
             @Override
             protected Anime call() throws Exception {
-                return cache.fetchAnime(url).get();
+                return cache.fetchAnime(infoLink).get();
             }
         };
     }

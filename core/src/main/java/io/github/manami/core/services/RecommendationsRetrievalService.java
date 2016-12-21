@@ -1,9 +1,15 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
-import static com.google.common.collect.Maps.newConcurrentMap;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -18,14 +24,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.github.manami.cache.Cache;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -37,19 +38,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
 
+    /** Max percentage rate which the shown recommendations can make out of all entries. */
+    private static final int MAX_PERCENTAGE = 80;
+
+    /** Max number of entries of which a recommendations list can consist. */
+    private static final int MAX_NUMBER_OF_ENTRIES = 100;
+
     /** List to be searched for recommendations. */
-    private final List<String> urlList;
+    private final List<InfoLink> urlList;
 
     /** List which is being given to the GUI. */
     private List<Anime> resultList;
 
     /** All possible recommendations */
-    private Map<String, Integer> recommendationsAll;
+    private Map<InfoLink, Integer> recommendationsAll;
 
     /**
      * All recommendations that make 80% of all written user recommendations.
      */
-    private List<String> userRecomList;
+    private List<InfoLink> userRecomList;
     private final AnimeExtractor extractor;
     private final Manami app;
     private final Cache cache;
@@ -76,7 +83,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     @Override
     public List<Anime> execute() {
         app.fetchAnimeList().forEach(entry -> {
-            if (isNotBlank(entry.getInfoLink())) {
+            if (entry.getInfoLink().isValid()) {
                 urlList.add(entry.getInfoLink());
             }
         });
@@ -124,8 +131,8 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     }
 
 
-    private void getRecommendations(final String url) {
-        final Optional<Anime> animeToFindRecommendationsFor = cache.fetchAnime(url);
+    private void getRecommendations(final InfoLink infoLink) {
+        final Optional<Anime> animeToFindRecommendationsFor = cache.fetchAnime(infoLink);
 
         if (!animeToFindRecommendationsFor.isPresent()) {
             return;
@@ -135,18 +142,18 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     }
 
 
-    private void addRecom(final String url, final int amount) {
+    private void addRecom(final  InfoLink infoLink, final int amount) {
         if (isInterrupt()) {
             return;
         }
 
-        final String normalizedUrl = extractor.normalizeInfoLink(url);
+        final InfoLink normalizedInfoLink = extractor.normalizeInfoLink(infoLink);
 
-        if (!urlList.contains(normalizedUrl) && !app.filterEntryExists(normalizedUrl) && !app.watchListEntryExists(normalizedUrl)) {
-            if (recommendationsAll.containsKey(normalizedUrl)) {
-                recommendationsAll.put(normalizedUrl, recommendationsAll.get(normalizedUrl) + amount);
+        if (!urlList.contains(normalizedInfoLink) && !app.filterEntryExists(normalizedInfoLink) && !app.watchListEntryExists(normalizedInfoLink)) {
+            if (recommendationsAll.containsKey(normalizedInfoLink)) {
+                recommendationsAll.put(normalizedInfoLink, recommendationsAll.get(normalizedInfoLink) + amount);
             } else {
-                recommendationsAll.put(normalizedUrl, amount);
+                recommendationsAll.put(normalizedInfoLink, amount);
             }
         }
     }
@@ -156,7 +163,7 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         int sumAll = 0;
         recommendationsAll = sortMapByValue(recommendationsAll);
 
-        for (final Entry<String, Integer> entry : recommendationsAll.entrySet()) {
+        for (final Entry<InfoLink, Integer> entry : recommendationsAll.entrySet()) {
             sumAll += entry.getValue();
         }
 
@@ -164,8 +171,8 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
         int percentage = 0;
         int curSum = 0;
 
-        for (final Entry<String, Integer> entry : recommendationsAll.entrySet()) {
-            if (percentage < 80 && userRecomList.size() < 100) {
+        for (final Entry<InfoLink, Integer> entry : recommendationsAll.entrySet()) {
+            if (percentage < MAX_PERCENTAGE && userRecomList.size() < MAX_NUMBER_OF_ENTRIES) {
                 userRecomList.add(entry.getKey());
                 curSum += entry.getValue();
                 percentage = (curSum * 100) / sumAll;
@@ -176,16 +183,16 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     }
 
 
-    private static Map<String, Integer> sortMapByValue(final Map<String, Integer> unsortMap) {
+    private static Map<InfoLink, Integer> sortMapByValue(final Map<InfoLink, Integer> unsortMap) {
         // Convert Map to List
-        final List<Map.Entry<String, Integer>> list = newArrayList(unsortMap.entrySet());
+        final List<Map.Entry<InfoLink, Integer>> list = newArrayList(unsortMap.entrySet());
 
         // Sort list with comparator, to compare the Map values
         Collections.sort(list, (o1, o2) -> (o1.getValue() > o2.getValue()) ? -1 : ((Objects.equals(o1.getValue(), o2.getValue())) ? 0 : 1));
 
         // Convert sorted map back to a Map
-        final Map<String, Integer> sortedMap = new LinkedHashMap<>();
-        for (final Entry<String, Integer> entry : list) {
+        final Map<InfoLink, Integer> sortedMap = new LinkedHashMap<>();
+        for (final Entry<InfoLink, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;

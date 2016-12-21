@@ -1,17 +1,17 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG;
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG_THUMB;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
 
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility
@@ -27,8 +27,8 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
 
 
     @Override
-    public Anime extractAnimeEntry(final String url, final String siteContent) {
-        if (isBlank(url) || isBlank(siteContent)) {
+    public Anime extractAnimeEntry(final InfoLink infoLink, final String siteContent) {
+        if (!infoLink.isValid() || isBlank(siteContent)) {
             return null;
         }
 
@@ -51,7 +51,7 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
                 ret.setTitle(StringEscapeUtils.unescapeHtml4(title));
                 ret.setType(type);
                 ret.setEpisodes(episodes);
-                ret.setInfoLink(normalizeInfoLink(url));
+                ret.setInfoLink(normalizeInfoLink(infoLink));
                 ret.setPicture(isNoneBlank(picture) ? extractPictureLink() : NO_IMG);
                 ret.setThumbnail(isNoneBlank(thumbnail) ? extractThumbnail() : NO_IMG_THUMB);
             }
@@ -130,7 +130,7 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
 
 
     @Override
-    public String normalizeInfoLink(final String url) {
-        return url;
+    public InfoLink normalizeInfoLink(final InfoLink infoLink) {
+        return infoLink;
     }
 }

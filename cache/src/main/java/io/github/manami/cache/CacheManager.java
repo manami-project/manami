@@ -1,25 +1,23 @@
 package io.github.manami.cache;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Sets;
+import io.github.manami.cache.strategies.daemon.DaemonRestRetrievalStrategy;
+import io.github.manami.cache.strategies.headlessbrowser.HeadlessBrowserRetrievalStrategy;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import io.github.manami.cache.strategies.daemon.DaemonRestRetrievalStrategy;
-import io.github.manami.cache.strategies.headlessbrowser.HeadlessBrowserRetrievalStrategy;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Facade for all inquiries against a cache.
@@ -37,19 +35,19 @@ public final class CacheManager implements Cache {
      * Key: URL of the anime, Value: Instance of the anime including all meta
      * data.
      */
-    private LoadingCache<String, Optional<Anime>> animeEntryCache = null;
+    private LoadingCache<InfoLink, Optional<Anime>> animeEntryCache = null;
 
     /**
-     * Key: URL of the anime, Value: List of anime urls which are related to the
+     * Key: URL of the anime, Value: Set of anime urls which are related to the
      * anime url in the key
      */
-    private LoadingCache<String, Set<String>> relatedAnimeCache = null;
+    private LoadingCache<InfoLink, Set<InfoLink>> relatedAnimeCache = null;
 
     /**
      * Key: URL of the anime, Value: List of anime urls which are recommended
-     * titles to the anime url
+     * titles to the anime url with their amount of occurence
      */
-    private LoadingCache<String, Map<String, Integer>> recommendationsCache = null;
+    private LoadingCache<InfoLink, Map<InfoLink, Integer>> recommendationsCache = null;
 
 
     @Inject
@@ -74,24 +72,24 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Optional<Anime> fetchAnime(final String url) {
+    public Optional<Anime> fetchAnime(final InfoLink infoLink) {
         Optional<Anime> cachedEntry = Optional.empty();
 
-        if (isBlank(url)) {
+        if (!infoLink.isValid()) {
             return cachedEntry;
         }
 
         try {
-            cachedEntry = animeEntryCache.get(url);
+            cachedEntry = animeEntryCache.get(infoLink);
 
             if (!cachedEntry.isPresent()) {
-                log.warn("No Entry for [{}]. Invalidating cache entry and refetching entry.", url);
-                animeEntryCache.invalidate(url);
-                cachedEntry = animeEntryCache.get(url);
-                log.warn("After reinitialising cache entry for [{}] [{}]", url, cachedEntry);
+                log.warn("No Entry for [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                animeEntryCache.invalidate(infoLink);
+                cachedEntry = animeEntryCache.get(infoLink);
+                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, cachedEntry);
             }
         } catch (final ExecutionException e) {
-            log.error("Error fetching anime entry [{}] from cache.", url);
+            log.error("Error fetching anime entry [{}] from cache.", infoLink);
             return Optional.empty();
         }
 
@@ -100,22 +98,22 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Set<String> fetchRelatedAnimes(final Anime anime) {
-        Set<String> ret = Sets.newHashSet();
+    public Set<InfoLink> fetchRelatedAnimes(final Anime anime) {
+        Set<InfoLink> ret = Sets.newHashSet();
 
         if (isAnimeInvalid(anime)) {
             return ret;
         }
 
         try {
-            final String url = anime.getInfoLink();
-            ret = relatedAnimeCache.get(url);
+            final InfoLink infoLink = anime.getInfoLink();
+            ret = relatedAnimeCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
-                log.warn("No related animes in cache entry [{}]. Invalidating cache entry and refetching entry.", url);
-                relatedAnimeCache.invalidate(url);
-                ret = relatedAnimeCache.get(url);
-                log.warn("After reinitialising cache entry for [{}] [{}]", url, ret);
+                log.warn("No related animes in cache entry [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                relatedAnimeCache.invalidate(infoLink);
+                ret = relatedAnimeCache.get(infoLink);
+                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, ret);
             }
         } catch (final ExecutionException e) {
             log.error("Unable to fetch related anime list from cache for [{}]", anime);
@@ -126,22 +124,22 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Map<String, Integer> fetchRecommendations(final Anime anime) {
-        Map<String, Integer> ret = Maps.newHashMap();
+    public Map<InfoLink, Integer> fetchRecommendations(final Anime anime) {
+        Map<InfoLink, Integer> ret = newHashMap();
 
         if (isAnimeInvalid(anime)) {
             return ret;
         }
 
         try {
-            final String url = anime.getInfoLink();
-            ret = recommendationsCache.get(url);
+            final InfoLink infoLink = anime.getInfoLink();
+            ret = recommendationsCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
-                log.warn("No recommendations in cache entry [{}]. Invalidating cache entry and refetching entry.", url);
-                recommendationsCache.invalidate(url);
-                ret = recommendationsCache.get(url);
-                log.warn("After reinitialising cache entry for [{}] [{}]", url, ret);
+                log.warn("No recommendations in cache entry [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                recommendationsCache.invalidate(infoLink);
+                ret = recommendationsCache.get(infoLink);
+                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, ret);
             }
         } catch (final ExecutionException e) {
             log.error("Unable to fetch related anime list from cache for [{}]", anime);
@@ -152,15 +150,15 @@ public final class CacheManager implements Cache {
 
 
     private boolean isAnimeInvalid(final Anime anime) {
-        return anime == null || isBlank(anime.getInfoLink());
+        return anime == null || anime.getInfoLink().isPresent();
     }
 
 
     private void buildAnimeCache() {
-        animeEntryCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Optional<Anime>>() {
+        animeEntryCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Optional<Anime>>() {
 
             @Override
-            public Optional<Anime> load(final String infoLink) throws Exception {
+            public Optional<Anime> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
                     return daemonRestRetrievalStrategy.fetchAnime(infoLink);
                 }
@@ -172,30 +170,30 @@ public final class CacheManager implements Cache {
 
 
     private void buildRelatedAnimeCache() {
-        relatedAnimeCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Set<String>>() {
+        relatedAnimeCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Set<InfoLink>>() {
 
             @Override
-            public Set<String> load(final String url) throws Exception {
+            public Set<InfoLink> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchRelatedAnimes(url);
+                    return daemonRestRetrievalStrategy.fetchRelatedAnimes(infoLink);
                 }
 
-                return headlessBrowserRetrievalStrategy.fetchRelatedAnimes(url);
+                return headlessBrowserRetrievalStrategy.fetchRelatedAnimes(infoLink);
             }
         });
     }
 
 
     private void buildRecommendationsCache() {
-        recommendationsCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Map<String, Integer>>() {
+        recommendationsCache = CacheBuilder.newBuilder().build(new CacheLoader<InfoLink, Map<InfoLink, Integer>>() {
 
             @Override
-            public Map<String, Integer> load(final String url) throws Exception {
+            public Map<InfoLink, Integer> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchRecommendations(url);
+                    return daemonRestRetrievalStrategy.fetchRecommendations(infoLink);
                 }
 
-                return headlessBrowserRetrievalStrategy.fetchRecommendations(url);
+                return headlessBrowserRetrievalStrategy.fetchRecommendations(infoLink);
             }
         });
     }

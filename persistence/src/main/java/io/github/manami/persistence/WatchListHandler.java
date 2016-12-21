@@ -1,9 +1,10 @@
 package io.github.manami.persistence;
 
-import java.util.List;
-
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
+
+import java.util.List;
 
 /**
  * @author manami-project
@@ -14,11 +15,11 @@ public interface WatchListHandler {
     List<WatchListEntry> fetchWatchList();
 
 
-    boolean watchListEntryExists(String url);
+    boolean watchListEntryExists(InfoLink infoLink);
 
 
     boolean watchAnime(MinimalEntry anime);
 
 
-    boolean removeFromWatchList(String url);
+    boolean removeFromWatchList(InfoLink infoLink);
 }

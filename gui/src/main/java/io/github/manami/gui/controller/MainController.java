@@ -1,38 +1,5 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.dto.entities.Anime.copyAnime;
-import static io.github.manami.gui.components.Icons.createIconDelete;
-import static io.github.manami.gui.components.Icons.createIconExit;
-import static io.github.manami.gui.components.Icons.createIconExport;
-import static io.github.manami.gui.components.Icons.createIconFile;
-import static io.github.manami.gui.components.Icons.createIconFileText;
-import static io.github.manami.gui.components.Icons.createIconFolderOpen;
-import static io.github.manami.gui.components.Icons.createIconImport;
-import static io.github.manami.gui.components.Icons.createIconQuestion;
-import static io.github.manami.gui.components.Icons.createIconRedo;
-import static io.github.manami.gui.components.Icons.createIconSave;
-import static io.github.manami.gui.components.Icons.createIconUndo;
-import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showImportFileDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showOpenFileDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showSaveAsFileDialog;
-import static io.github.manami.gui.utility.DialogLibrary.showUnsavedChangesDialog;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
-
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdChangeEpisodes;
@@ -48,6 +15,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.controller.callbacks.AnimeEpisodesCallback;
 import io.github.manami.gui.controller.callbacks.AnimeTypeCallback;
 import io.github.manami.gui.controller.callbacks.DefaultCallback;
@@ -80,6 +48,38 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.dto.entities.Anime.copyAnime;
+import static io.github.manami.gui.components.Icons.createIconDelete;
+import static io.github.manami.gui.components.Icons.createIconExit;
+import static io.github.manami.gui.components.Icons.createIconExport;
+import static io.github.manami.gui.components.Icons.createIconFile;
+import static io.github.manami.gui.components.Icons.createIconFileText;
+import static io.github.manami.gui.components.Icons.createIconFolderOpen;
+import static io.github.manami.gui.components.Icons.createIconImport;
+import static io.github.manami.gui.components.Icons.createIconQuestion;
+import static io.github.manami.gui.components.Icons.createIconRedo;
+import static io.github.manami.gui.components.Icons.createIconSave;
+import static io.github.manami.gui.components.Icons.createIconUndo;
+import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showImportFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showOpenFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showSaveAsFileDialog;
+import static io.github.manami.gui.utility.DialogLibrary.showUnsavedChangesDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Controller for the main stage.
@@ -326,8 +326,9 @@ public class MainController implements Observer {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
             final Anime oldValue = new Anime(selectedAnime.getId());
             copyAnime(selectedAnime, oldValue);
-            executeCommand(new CmdChangeInfoLink(oldValue, event.getNewValue(), app));
-            selectedAnime.setInfoLink(event.getNewValue());
+            InfoLink newValue = new InfoLink(event.getNewValue());
+            executeCommand(new CmdChangeInfoLink(oldValue, newValue, app));
+            selectedAnime.setInfoLink(newValue);
         });
 
         // COLUMN: Location

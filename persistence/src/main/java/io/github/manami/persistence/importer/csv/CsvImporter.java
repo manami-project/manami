@@ -1,28 +1,28 @@
 package io.github.manami.persistence.importer.csv;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.isNumeric;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.ICsvListReader;
-import org.supercsv.prefs.CsvPreference;
-
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.exporter.csv.CsvConfig;
 import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 import io.github.manami.persistence.importer.Importer;
 import lombok.extern.slf4j.Slf4j;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvListReader;
+import org.supercsv.io.ICsvListReader;
+import org.supercsv.prefs.CsvPreference;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 /**
  * @author manami-project
@@ -66,15 +66,17 @@ public class CsvImporter implements Importer {
                 String title = (String) objectList.get(1);
                 final String typeStr = (String) objectList.get(2);
                 final String episodesStr = (String) objectList.get(3);
-                String infoLink = (String) objectList.get(4);
+                String infoLinkStr = (String) objectList.get(4);
                 String location = (String) objectList.get(5);
 
                 // prepare attributes
                 title = isNotBlank(title) ? title.trim() : null;
                 final AnimeType type = isNotBlank(typeStr) ? AnimeType.findByName(typeStr.trim()) : null;
                 final int episodes = isNotBlank(episodesStr) && isNumeric(episodesStr) ? Integer.parseInt(episodesStr) : 0;
-                infoLink = isNotBlank(infoLink) ? infoLink.trim() : null;
+                infoLinkStr = infoLinkStr != null ? infoLinkStr.trim() : infoLinkStr;
                 location = isNotBlank(location) ? location.trim() : null;
+
+                InfoLink infoLink = new InfoLink(infoLinkStr);
 
                 // create object by list type
                 final CsvConfigType csvConfigType = CsvConfigType.findByName((String) objectList.get(0));

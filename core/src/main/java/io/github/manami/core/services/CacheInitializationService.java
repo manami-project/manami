@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.util.Assert.notNull;
 
 /**
@@ -58,7 +57,7 @@ public class CacheInitializationService extends AbstractService<Void> {
         notNull(list, "List of animes cannot be null");
 
         if (!list.isEmpty()) {
-            // Create copy of anime list and reverse it
+            // Create copy of anime list and shuffle it
             final List<Anime> shuffledList = newArrayList(ImmutableList.copyOf(list));
 
             Collections.shuffle(shuffledList);
@@ -68,7 +67,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             shuffledList.forEach(entry -> {
                 animeTaskList.add(() -> {
                     if (!isInterrupt()) {
-                        if (isNotBlank(entry.getInfoLink())) {
+                        if (entry.getInfoLink().isValid()) {
                             log.debug("Creating cache entry for {} if necessary.", entry.getInfoLink());
                             final Optional<Anime> cachedAnime = cache.fetchAnime(entry.getInfoLink());
 

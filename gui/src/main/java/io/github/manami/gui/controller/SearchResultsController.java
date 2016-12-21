@@ -188,7 +188,7 @@ public class SearchResultsController {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 try {
                     final Desktop desktop = java.awt.Desktop.getDesktop();
-                    desktop.browse(new URI(anime.getInfoLink()));
+                    desktop.browse(new URI(anime.getInfoLink().getUrl()));
                 } catch (final Exception e) {
                     log.error("An error occurred trying to open the infolink in the default browser: ", e);
                     showExceptionDialog(e);

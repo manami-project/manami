@@ -1,10 +1,11 @@
 package io.github.manami.dto.entities;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author manami-project
@@ -26,9 +27,12 @@ public abstract class AbstractMinimalEntry implements MinimalEntry {
     @Setter
     private String thumbnail;
 
+    /**
+     * Is never null.
+     */
     @Getter
     @Setter
-    private String infoLink;
+    private InfoLink infoLink = new InfoLink(EMPTY);
 
 
     /**

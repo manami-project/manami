@@ -1,18 +1,5 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
-import static io.github.manami.gui.utility.DialogLibrary.JSON_FILTER;
-import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import org.controlsfx.control.Notifications;
-
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -21,6 +8,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
@@ -32,6 +20,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.Notifications;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
+import static io.github.manami.gui.utility.DialogLibrary.JSON_FILTER;
+import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
 
 /**
  * @author manami-project
@@ -230,7 +230,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
 
     @Override
-    boolean isInList(final String infoLink) {
+    boolean isInList(final InfoLink infoLink) {
         // not needed for this controller
         return false;
     }

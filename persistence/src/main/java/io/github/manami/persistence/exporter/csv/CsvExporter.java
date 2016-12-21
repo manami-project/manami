@@ -1,25 +1,25 @@
 package io.github.manami.persistence.exporter.csv;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.ANIMELIST;
-import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.FILTERLIST;
-import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.WATCHLIST;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.io.ICsvListWriter;
-import org.supercsv.prefs.CsvPreference;
-
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
 import lombok.extern.slf4j.Slf4j;
+import org.supercsv.io.CsvListWriter;
+import org.supercsv.io.ICsvListWriter;
+import org.supercsv.prefs.CsvPreference;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.ANIMELIST;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.FILTERLIST;
+import static io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType.WATCHLIST;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Exports a list to a csv file.
@@ -87,7 +87,7 @@ public class CsvExporter implements Exporter {
             curEntry.add(entry.getTitle());
             curEntry.add(entry.getTypeAsString());
             curEntry.add(String.valueOf(entry.getEpisodes()));
-            curEntry.add(entry.getInfoLink());
+            curEntry.add(entry.getInfoLink().getUrl());
             curEntry.add(entry.getLocation());
             mappedEntryList.add(curEntry);
         }
@@ -111,10 +111,10 @@ public class CsvExporter implements Exporter {
             curEntry = newArrayList();
             curEntry.add(WATCHLIST.getValue());
             curEntry.add(entry.getTitle());
-            curEntry.add("");
-            curEntry.add("");
-            curEntry.add(entry.getInfoLink());
-            curEntry.add("");
+            curEntry.add(EMPTY);
+            curEntry.add(EMPTY);
+            curEntry.add(entry.getInfoLink().getUrl());
+            curEntry.add(EMPTY);
             mappedEntryList.add(curEntry);
         }
 
@@ -137,10 +137,10 @@ public class CsvExporter implements Exporter {
             curEntry = newArrayList();
             curEntry.add(FILTERLIST.getValue());
             curEntry.add(entry.getTitle());
-            curEntry.add("");
-            curEntry.add("");
-            curEntry.add(entry.getInfoLink());
-            curEntry.add("");
+            curEntry.add(EMPTY);
+            curEntry.add(EMPTY);
+            curEntry.add(entry.getInfoLink().getUrl());
+            curEntry.add(EMPTY);
             mappedEntryList.add(curEntry);
         }
 
