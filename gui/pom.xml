@@ -6,18 +6,19 @@
         <groupId>io.github.manami</groupId>
         <artifactId>parent</artifactId>
         <version>${manami.version}</version>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>gui</artifactId>
     <dependencies>
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
+            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>cache</artifactId>
-            <version>${project.version}</version>
+            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

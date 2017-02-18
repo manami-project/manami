@@ -6,13 +6,14 @@
         <groupId>io.github.manami</groupId>
         <artifactId>parent</artifactId>
         <version>${manami.version}</version>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>persistence</artifactId>
     <dependencies>
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>dto</artifactId>
-            <version>${project.version}</version>
+            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>

@@ -6,6 +6,7 @@
         <groupId>io.github.manami</groupId>
         <artifactId>parent</artifactId>
         <version>${manami.version}</version>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>dto</artifactId>
     <dependencies>
