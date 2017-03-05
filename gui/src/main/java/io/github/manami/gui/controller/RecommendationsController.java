@@ -1,5 +1,18 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
+import static io.github.manami.gui.utility.DialogLibrary.JSON_FILTER;
+import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.controlsfx.control.Notifications;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -10,6 +23,7 @@ import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,18 +34,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.Notifications;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
-import static io.github.manami.gui.utility.DialogLibrary.JSON_FILTER;
-import static io.github.manami.gui.utility.DialogLibrary.showExportDialog;
 
 /**
  * @author manami-project
@@ -81,6 +83,8 @@ public class RecommendationsController extends AbstractAnimeListController imple
     /** Service instance. */
     private RecommendationsRetrievalService service;
 
+    List<MinimalEntry> originalOrder = newArrayList();
+
 
     /**
      * Called from FXML when creating the Object.
@@ -107,7 +111,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
         final Path file = showExportDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage(), JSON_FILTER);
         final List<Anime> exportList = newArrayList();
 
-        getComponentList().forEach(entry -> exportList.add((Anime) entry.getAnime()));
+        getComponentList().values().forEach(entry -> exportList.add((Anime) entry.getAnime()));
 
         app.exportList(exportList, file);
     }
@@ -157,6 +161,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
             final double percent = ((done * 100.00) / all) / 100.00;
 
             if (state.getAnime() != null) {
+                originalOrder.add(state.getAnime());
                 addEntryToGui(state.getAnime());
                 showEntries();
                 Platform.runLater(() -> {
@@ -217,8 +222,10 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
 
     @Override
-    protected void sortComponentEntries() {
-        // don't do anything here. we need the entries in the order they arrive.
+    protected List<AnimeGuiComponentsListEntry> sortComponentEntries() {
+        final List<AnimeGuiComponentsListEntry> correctedOrder = newArrayList();
+        originalOrder.forEach(entry -> correctedOrder.add(getComponentList().get(entry.getInfoLink())));
+        return correctedOrder;
     }
 
 
@@ -247,7 +254,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
             progressBar.setProgress(-1);
             btnExport.setVisible(false);
         });
-        getComponentList().clear();
+        clearComponentList();
         showProgressControls(false);
     }
 }

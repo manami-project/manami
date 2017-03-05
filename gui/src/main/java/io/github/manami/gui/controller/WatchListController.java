@@ -1,6 +1,17 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.gui.components.Icons.createIconDelete;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.sun.javafx.collections.ObservableListWrapper;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
@@ -25,15 +36,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import static io.github.manami.gui.components.Icons.createIconDelete;
 
 /**
  * @author manami-project
@@ -160,7 +162,7 @@ public class WatchListController extends AbstractAnimeListController {
      */
     public void clear() {
         Platform.runLater(() -> gridPane.getChildren().clear());
-        getComponentList().clear();
+        clearComponentList();
         showEntries();
     }
 

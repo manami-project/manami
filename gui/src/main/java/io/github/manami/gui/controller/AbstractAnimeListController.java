@@ -1,10 +1,22 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static io.github.manami.gui.components.Icons.createIconFilterList;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.components.Icons.createIconWatchList;
+import static org.springframework.util.Assert.notNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
 import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.commands.CommandService;
+import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
@@ -25,15 +37,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.Collator;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
-import static io.github.manami.gui.components.Icons.createIconFilterList;
-import static io.github.manami.gui.components.Icons.createIconRemove;
-import static io.github.manami.gui.components.Icons.createIconWatchList;
-import static org.springframework.util.Assert.notNull;
-
 /**
  * Abstract class if an anime result list. The list entries can be customized by
  * overriding the creation methods.
@@ -51,7 +54,7 @@ public abstract class AbstractAnimeListController {
     final private CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     /** List of all GUI components. */
-    private final List<AnimeGuiComponentsListEntry> componentList;
+    private final Map<InfoLink, AnimeGuiComponentsListEntry> componentList;
 
     /**
      * {@link GridPane} containing all the {@link AnimeGuiComponentsListEntry}s
@@ -63,7 +66,7 @@ public abstract class AbstractAnimeListController {
      * Constructor.
      */
     public AbstractAnimeListController() {
-        componentList = newCopyOnWriteArrayList();
+        componentList = newConcurrentMap();
     }
 
 
@@ -87,10 +90,10 @@ public abstract class AbstractAnimeListController {
         Platform.runLater(() -> {
             updateChildren();
             checkGridPane();
-            sortComponentEntries();
+            final List<AnimeGuiComponentsListEntry> sortedComponentEntries = sortComponentEntries();
             animeGuiComponentsGridPane.getChildren().clear();
 
-            for (final AnimeGuiComponentsListEntry entry : componentList) {
+            for (final AnimeGuiComponentsListEntry entry : sortedComponentEntries) {
                 animeGuiComponentsGridPane.getRowConstraints().add(new RowConstraints());
                 final int currentRowNumber = animeGuiComponentsGridPane.getRowConstraints().size() - 1;
 
@@ -122,8 +125,10 @@ public abstract class AbstractAnimeListController {
     /**
      * @since 2.10.0
      */
-    protected void sortComponentEntries() {
-        componentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
+    protected List<AnimeGuiComponentsListEntry> sortComponentEntries() {
+        final List<AnimeGuiComponentsListEntry> sortList = newArrayList(getComponentList().values());
+        Collections.sort(sortList, (objA, objB) -> new MinimalEntryComByTitleAsc().compare(objA.getAnime(), objB.getAnime()));
+        return sortList;
     }
 
 
@@ -144,40 +149,30 @@ public abstract class AbstractAnimeListController {
 
 
     private void updateComponentIfNecessary(final MinimalEntry entry) {
-        boolean isAlreadyShown = false;
         MinimalEntry componentEntry = null;
-        int componentEntryIndex = -1;
+        final int componentEntryIndex = -1;
 
         if (entry == null) {
             return;
         }
 
         // search for entries which are missing
-        for (int index = 0; index < getComponentList().size(); index++) {
-            componentEntry = getComponentList().get(index).getAnime();
-            if (entry.getInfoLink().getUrl().equalsIgnoreCase(componentEntry.getInfoLink().getUrl())) {
-                isAlreadyShown = true;
-                componentEntryIndex = index;
-                break;
+        if (getComponentList().containsKey(entry.getInfoLink())) {
+            // Did the thumbnail change?
+            componentEntry = getComponentList().get(entry.getInfoLink()).getAnime();
+            if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getThumbnail())) {
+                getComponentList().remove(componentEntryIndex);
+                addEntryToGui(entry);
             }
-        }
-
-        if (!isAlreadyShown) {
+        } else {
             addEntryToGui(entry);
-            return;
-        }
 
-        // Did the thumbnail change?
-        if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getThumbnail())) {
-            getComponentList().remove(componentEntryIndex);
-            addEntryToGui(entry);
-            return;
         }
 
         // search for entries which are meant to be removed
         for (int index = 0; index < getComponentList().size(); index++) {
             final AnimeGuiComponentsListEntry component = getComponentList().get(index);
-            if (!isInList(component.getAnime().getInfoLink())) {
+            if (component != null && !isInList(component.getAnime().getInfoLink())) {
                 getComponentList().remove(index);
             }
         }
@@ -209,7 +204,7 @@ public abstract class AbstractAnimeListController {
         componentListEntry = addWatchListButton(componentListEntry);
         componentListEntry = addRemoveButton(componentListEntry);
 
-        componentList.add(componentListEntry);
+        componentList.put(componentListEntry.getAnime().getInfoLink(), componentListEntry);
     }
 
 
@@ -338,7 +333,7 @@ public abstract class AbstractAnimeListController {
     /**
      * @return the componentList
      */
-    protected List<AnimeGuiComponentsListEntry> getComponentList() {
+    protected Map<InfoLink, AnimeGuiComponentsListEntry> getComponentList() {
         return componentList;
     }
 

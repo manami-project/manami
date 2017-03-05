@@ -1,7 +1,25 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.gui.components.Icons.createIconDelete;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.controlsfx.control.Notifications;
+import org.controlsfx.validation.Severity;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
@@ -35,22 +53,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static io.github.manami.gui.components.Icons.createIconDelete;
 
 /**
  * Controller for adding and removing entries to the filter list.
@@ -166,7 +168,7 @@ public class FilterListController extends AbstractAnimeListController implements
             updateChildren();
             recomController.showEntries();
             pagination.setPageFactory(this::createPage);
-            pagination.setPageCount(Lists.partition(getComponentList(), MAX_ENTRIES).size());
+            pagination.setPageCount(Lists.partition(Lists.newArrayList(getComponentList().values()), MAX_ENTRIES).size());
             pagination.setCurrentPageIndex(pagination.getCurrentPageIndex());
             filterListPane.setText(String.format("%s (%s)", FILTER_LIST_TITLE, getComponentList().size()));
         });
@@ -236,8 +238,9 @@ public class FilterListController extends AbstractAnimeListController implements
     public GridPane createPage(final int pageIndex) {
         final GridPane gridPane = new GridPane();
         if (getComponentList().size() > 0) {
-            getComponentList().sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
-            final List<List<AnimeGuiComponentsListEntry>> partitions = Lists.partition(getComponentList(), MAX_ENTRIES);
+            final List<AnimeGuiComponentsListEntry> sortedValueList = Lists.newArrayList(getComponentList().values());
+            sortedValueList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
+            final List<List<AnimeGuiComponentsListEntry>> partitions = Lists.partition(sortedValueList, MAX_ENTRIES);
             pagination.setPageCount(partitions.size());
 
             for (final AnimeGuiComponentsListEntry entry : partitions.get(pageIndex)) {
@@ -304,8 +307,8 @@ public class FilterListController extends AbstractAnimeListController implements
             recomController.getGridPane().getChildren().clear();
             getGridPane().getChildren().clear();
         });
-        recomController.getComponentList().clear();
-        getComponentList().clear();
+        recomController.clearComponentList();
+        clearComponentList();
         showEntries();
     }
 

@@ -1,5 +1,15 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.controlsfx.control.Notifications;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -19,15 +29,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.Notifications;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
 
 /**
  * Controller for finding related animes. Opening as a new tab.
@@ -213,7 +214,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
             lblProgress.setText("Preparing");
             progressBar.setProgress(-1);
         });
-        getComponentList().clear();
+        clearComponentList();
         showProgressControls(false);
     }
 }
