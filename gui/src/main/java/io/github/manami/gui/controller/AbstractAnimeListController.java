@@ -94,6 +94,9 @@ public abstract class AbstractAnimeListController {
             animeGuiComponentsGridPane.getChildren().clear();
 
             for (final AnimeGuiComponentsListEntry entry : sortedComponentEntries) {
+                if (entry == null) {
+                    continue;
+                }
                 animeGuiComponentsGridPane.getRowConstraints().add(new RowConstraints());
                 final int currentRowNumber = animeGuiComponentsGridPane.getRowConstraints().size() - 1;
 
@@ -150,7 +153,6 @@ public abstract class AbstractAnimeListController {
 
     private void updateComponentIfNecessary(final MinimalEntry entry) {
         MinimalEntry componentEntry = null;
-        final int componentEntryIndex = -1;
 
         if (entry == null) {
             return;
@@ -161,19 +163,17 @@ public abstract class AbstractAnimeListController {
             // Did the thumbnail change?
             componentEntry = getComponentList().get(entry.getInfoLink()).getAnime();
             if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getThumbnail())) {
-                getComponentList().remove(componentEntryIndex);
+                getComponentList().remove(componentEntry.getInfoLink());
                 addEntryToGui(entry);
             }
         } else {
             addEntryToGui(entry);
-
         }
 
         // search for entries which are meant to be removed
-        for (int index = 0; index < getComponentList().size(); index++) {
-            final AnimeGuiComponentsListEntry component = getComponentList().get(index);
-            if (component != null && !isInList(component.getAnime().getInfoLink())) {
-                getComponentList().remove(index);
+        for (final AnimeGuiComponentsListEntry currentEntry : getComponentList().values()) {
+            if (currentEntry != null && !isInList(currentEntry.getAnime().getInfoLink())) {
+                getComponentList().remove(currentEntry.getAnime().getInfoLink());
             }
         }
     }
@@ -204,7 +204,7 @@ public abstract class AbstractAnimeListController {
         componentListEntry = addWatchListButton(componentListEntry);
         componentListEntry = addRemoveButton(componentListEntry);
 
-        componentList.put(componentListEntry.getAnime().getInfoLink(), componentListEntry);
+        componentList.put(anime.getInfoLink(), componentListEntry);
     }
 
 
@@ -226,7 +226,7 @@ public abstract class AbstractAnimeListController {
 
         btnAddToFilterList.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry);
+            componentList.remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
@@ -252,7 +252,7 @@ public abstract class AbstractAnimeListController {
 
         btnAddToWatchlist.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddWatchListEntry(WatchListEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry);
+            componentList.remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
@@ -275,7 +275,7 @@ public abstract class AbstractAnimeListController {
         componentListEntry.setRemoveButton(removeButton);
 
         removeButton.setOnAction(event -> {
-            componentList.remove(componentListEntry);
+            componentList.remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
