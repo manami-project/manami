@@ -10,6 +10,7 @@ import static org.springframework.util.Assert.notNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
@@ -47,11 +48,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractAnimeListController {
 
+    private static final int THUMBNAIL_CHECK_ON_NUMBER_OF_INVOCATIONS = 10;
+
     /** Application */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
 
     /** Instance of the main application. */
-    final private CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
+    private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     /** List of all GUI components. */
     private final Map<InfoLink, AnimeGuiComponentsListEntry> componentList;
@@ -61,11 +64,14 @@ public abstract class AbstractAnimeListController {
      */
     private GridPane animeGuiComponentsGridPane;
 
+    private final AtomicInteger thumbnailCheckInvocationCounter;
+
 
     /**
      * Constructor.
      */
     public AbstractAnimeListController() {
+        thumbnailCheckInvocationCounter = new AtomicInteger(0);
         componentList = newConcurrentMap();
     }
 
@@ -121,6 +127,7 @@ public abstract class AbstractAnimeListController {
 
                 animeGuiComponentsGridPane.add(hbButtons, 2, currentRowNumber);
             }
+
         });
     }
 
@@ -148,32 +155,43 @@ public abstract class AbstractAnimeListController {
      */
     protected void updateChildren() {
         getEntryList().forEach(this::updateComponentIfNecessary);
+        checkThumbnailsForChange();
+    }
+
+
+    private void checkThumbnailsForChange() {
+        final int currentInvocation = thumbnailCheckInvocationCounter.incrementAndGet();
+
+        if (currentInvocation >= THUMBNAIL_CHECK_ON_NUMBER_OF_INVOCATIONS) {
+            getComponentList().values().parallelStream().forEach(entry -> {
+                final MinimalEntry componentEntry = getComponentList().get(entry.getAnime().getInfoLink()).getAnime();
+                if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getAnime().getThumbnail())) {
+                    getComponentList().remove(componentEntry.getInfoLink());
+                    addEntryToGui(entry.getAnime());
+                }
+            });
+
+            thumbnailCheckInvocationCounter.set(0);
+        }
     }
 
 
     private void updateComponentIfNecessary(final MinimalEntry entry) {
-        MinimalEntry componentEntry = null;
-
         if (entry == null) {
             return;
         }
 
         // search for entries which are missing
-        if (getComponentList().containsKey(entry.getInfoLink())) {
-            // Did the thumbnail change?
-            componentEntry = getComponentList().get(entry.getInfoLink()).getAnime();
-            if (componentEntry != null && !componentEntry.getThumbnail().equalsIgnoreCase(entry.getThumbnail())) {
-                getComponentList().remove(componentEntry.getInfoLink());
-                addEntryToGui(entry);
-            }
-        } else {
+        if (!getComponentList().containsKey(entry.getInfoLink())) {
             addEntryToGui(entry);
         }
 
         // search for entries which are meant to be removed
-        for (final AnimeGuiComponentsListEntry currentEntry : getComponentList().values()) {
-            if (currentEntry != null && !isInList(currentEntry.getAnime().getInfoLink())) {
-                getComponentList().remove(currentEntry.getAnime().getInfoLink());
+        if (getComponentList().size() > getEntryList().size()) {
+            for (final AnimeGuiComponentsListEntry currentEntry : getComponentList().values()) {
+                if (currentEntry != null && !isInList(currentEntry.getAnime().getInfoLink())) {
+                    getComponentList().remove(currentEntry.getAnime().getInfoLink());
+                }
             }
         }
     }
@@ -204,7 +222,7 @@ public abstract class AbstractAnimeListController {
         componentListEntry = addWatchListButton(componentListEntry);
         componentListEntry = addRemoveButton(componentListEntry);
 
-        componentList.put(anime.getInfoLink(), componentListEntry);
+        getComponentList().put(anime.getInfoLink(), componentListEntry);
     }
 
 
@@ -226,7 +244,7 @@ public abstract class AbstractAnimeListController {
 
         btnAddToFilterList.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
-            componentList.remove(componentListEntry.getAnime().getInfoLink());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
@@ -252,7 +270,7 @@ public abstract class AbstractAnimeListController {
 
         btnAddToWatchlist.setOnAction(event -> {
             cmdService.executeCommand(new CmdAddWatchListEntry(WatchListEntry.valueOf(componentListEntry.getAnime()), app));
-            componentList.remove(componentListEntry.getAnime().getInfoLink());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
@@ -275,7 +293,7 @@ public abstract class AbstractAnimeListController {
         componentListEntry.setRemoveButton(removeButton);
 
         removeButton.setOnAction(event -> {
-            componentList.remove(componentListEntry.getAnime().getInfoLink());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
 
