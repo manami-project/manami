@@ -1,15 +1,16 @@
 package io.github.manami.cache.strategies.daemon;
 
+import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Named;
+
 import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
-
-import javax.inject.Named;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import io.github.manami.dto.entities.RecommendationList;
 
 /**
  * External REST service
@@ -35,7 +36,7 @@ public class DaemonRestRetrievalStrategy implements AnimeRetrieval, RelatedAnime
 
 
     @Override
-    public Map<InfoLink, Integer> fetchRecommendations(final InfoLink infoLink) {
+    public RecommendationList fetchRecommendations(final InfoLink infoLink) {
         return null;
     }
 }

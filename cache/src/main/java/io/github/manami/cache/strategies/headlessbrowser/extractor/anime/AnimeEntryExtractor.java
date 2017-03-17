@@ -17,12 +17,12 @@ public interface AnimeEntryExtractor extends AnimeExtractor {
      * invalid link.
      *
      * @since 2.0.0
-     * @param Url
-     *            URL
+     * @param InfoLink
+     *            infoLink
      * @param sitecontent
      *            Content of the info link website.
      * @return Object of type {@link Anime} with every information or null in
      *         case of an invalid link.
      */
-    Anime extractAnimeEntry(InfoLink Url, String sitecontent);
+    Anime extractAnimeEntry(InfoLink infoLink, String sitecontent);
 }

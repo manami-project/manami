@@ -1,9 +1,7 @@
 package io.github.manami.core.services;
 
-import com.google.common.collect.ImmutableList;
-import io.github.manami.cache.Cache;
-import io.github.manami.dto.entities.Anime;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.springframework.util.Assert.notNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +10,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.springframework.util.Assert.notNull;
+import com.google.common.collect.ImmutableList;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.dto.entities.Anime;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This service is called whenever a new list is opened. It creates cache
@@ -105,7 +106,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             public void run() {
                 if (!isInterrupted()) {
                     log.debug("Creating recommendations cache entry for {} if necessary.", anime.getInfoLink());
-                    cache.fetchRecommendations(anime);
+                    cache.fetchRecommendations(anime.getInfoLink());
                 }
             }
         });
@@ -116,7 +117,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             public void run() {
                 if (!isInterrupted()) {
                     log.debug("Creating related anime cache entry for {} if necessary.", anime.getInfoLink());
-                    cache.fetchRelatedAnimes(anime);
+                    cache.fetchRelatedAnimes(anime.getInfoLink());
                 }
             }
         });

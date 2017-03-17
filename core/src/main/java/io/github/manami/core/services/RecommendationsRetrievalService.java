@@ -1,15 +1,8 @@
 package io.github.manami.core.services;
 
-
-import io.github.manami.cache.Cache;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
-import io.github.manami.core.Manami;
-import io.github.manami.core.services.events.AdvancedProgressState;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -24,9 +17,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
-import static com.google.common.collect.Maps.newConcurrentMap;
+import io.github.manami.cache.Cache;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.AnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal.MyAnimeListNetAnimeExtractor;
+import io.github.manami.core.Manami;
+import io.github.manami.core.services.events.AdvancedProgressState;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Extracts and counts recommendations for a list of animes.
@@ -38,7 +37,10 @@ import static com.google.common.collect.Maps.newConcurrentMap;
 @Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
 
-    /** Max percentage rate which the shown recommendations can make out of all entries. */
+    /**
+     * Max percentage rate which the shown recommendations can make out of all
+     * entries.
+     */
     private static final int MAX_PERCENTAGE = 80;
 
     /** Max number of entries of which a recommendations list can consist. */
@@ -138,11 +140,11 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
             return;
         }
 
-        cache.fetchRecommendations(animeToFindRecommendationsFor.get()).forEach((key, value) -> addRecom(key, value));
+        cache.fetchRecommendations(animeToFindRecommendationsFor.get().getInfoLink()).asList().forEach((entry) -> addRecom(entry.getInfoLink(), entry.getAmount()));
     }
 
 
-    private void addRecom(final  InfoLink infoLink, final int amount) {
+    private void addRecom(final InfoLink infoLink, final int amount) {
         if (isInterrupt()) {
             return;
         }

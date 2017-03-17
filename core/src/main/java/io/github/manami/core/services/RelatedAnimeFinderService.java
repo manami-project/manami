@@ -1,7 +1,18 @@
 package io.github.manami.core.services;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Observer;
+import java.util.Optional;
+import java.util.Stack;
+
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableSetWrapper;
+
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
 import io.github.manami.core.services.events.ProgressState;
@@ -11,16 +22,6 @@ import io.github.manami.dto.entities.MinimalEntry;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.Stack;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Sets.newHashSet;
 
 /**
  * Finds related animes in info site links.
@@ -132,7 +133,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         final Anime cachedAnime = optCachedAnime.get();
 
         final List<InfoLink> relatedAnimeList = Lists.newArrayList();
-        cache.fetchRelatedAnimes(cachedAnime).forEach(relatedAnimeList::add);
+        cache.fetchRelatedAnimes(cachedAnime.getInfoLink()).forEach(relatedAnimeList::add);
 
         for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
             final InfoLink element = relatedAnimeList.get(index);

@@ -1,6 +1,13 @@
 package io.github.manami.cache.strategies.headlessbrowser;
 
+import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.google.common.collect.Sets;
+
 import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
@@ -11,13 +18,7 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendatio
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import io.github.manami.dto.entities.RecommendationList;
 
 /**
  * This class provides access to the anime meta data. The data are taken
@@ -108,12 +109,12 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Map<InfoLink, Integer> fetchRecommendations(final InfoLink infoLink) {
-        Map<InfoLink, Integer> ret = new HashMap<>();
+    public RecommendationList fetchRecommendations(final InfoLink infoLink) {
+        RecommendationList ret = new RecommendationList();
         final Optional<RecommendationsExtractor> extractor = extractors.getRecommendationsExtractor(infoLink);
 
         if (infoLink.isValid() && extractor.isPresent()) {
-            InfoLink normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
+            final InfoLink normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
 
             // the site is not cached
             if (normalizedInfoLink.isValid()) {

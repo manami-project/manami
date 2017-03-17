@@ -1,17 +1,6 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal;
 
-import com.google.common.collect.Maps;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
-import io.github.manami.dto.entities.InfoLink;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.inject.Named;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.countMatches;
 import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
@@ -19,6 +8,20 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.substring;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.Extractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.Recommendation;
+import io.github.manami.dto.entities.RecommendationList;
 
 @Named
 @Extractor
@@ -40,11 +43,18 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
         final String patternString = String.format("http://%s/anime/[0-9]+", MyAnimeListNetUtil.DOMAIN);
 
         // no tailings
-        final Pattern pattern = Pattern.compile(patternString);
-        final Matcher matcher = pattern.matcher(normalizedInfoLink.getUrl());
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(normalizedInfoLink.getUrl());
 
         if (matcher.find()) {
-            normalizedInfoLink = new InfoLink(String.format("%s/Death_Note/userrecs", normalizedInfoLink.getUrl()));
+            String malId = EMPTY;
+            pattern = Pattern.compile("[0-9]+");
+            matcher = pattern.matcher(normalizedInfoLink.getUrl());
+
+            if (matcher.find()) {
+                malId = matcher.group();
+                normalizedInfoLink = new InfoLink(String.format("https://%s/anime.php?id=%s&display=userrecs", MyAnimeListNetUtil.DOMAIN, malId));
+            }
         }
 
         return normalizedInfoLink;
@@ -52,8 +62,8 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
 
 
     @Override
-    public Map<InfoLink, Integer> extractRecommendations(final String siteContent) {
-        final Map<InfoLink, Integer> ret = Maps.newHashMap();
+    public RecommendationList extractRecommendations(final String siteContent) {
+        final RecommendationList ret = new RecommendationList();
 
         final String animeUrlDelimiter = "/anime/";
         final String recomFlag = "Recommended by";
@@ -76,7 +86,7 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
                         final int numberOfRecoms = countMatches(sub, recomFlag);
                         final String fullUrl = createCleanFullUrl(curAnime);
 
-                        ret.put(new InfoLink(fullUrl), numberOfRecoms);
+                        ret.addRecommendation(new Recommendation().infoLink(new InfoLink(fullUrl)).amount(numberOfRecoms));
                         recomSite = substring(recomSite, nextAnime - 1);
                     } else {
                         recomSite = substring(recomSite, nextAnime);

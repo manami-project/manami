@@ -1,27 +1,27 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal;
 
-
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
-import io.github.manami.dto.entities.InfoLink;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Map;
-import java.util.Set;
-
 import static com.google.common.collect.Sets.newHashSet;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Set;
+
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.RecommendationList;
+
 public class MyAnimeListNetRecommendationsExtractorTest {
 
     private static final String DEATH_NOTE_URL_NO_PROTOCOL = MyAnimeListNetUtil.DOMAIN + "/anime/1535/Death_Note";
-    private static final String EXPECTED_DEATH_NOTE_URL = "http://myanimelist.net/anime/1535/Death_Note/userrecs";
+    private static final String EXPECTED_DEATH_NOTE_URL = "https://myanimelist.net/anime.php?id=1535&display=userrecs";
     private static final String TEST_FILE = "recommendations_test_entry.html";
     private MyAnimeListNetRecommendationsExtractor sut;
     private String rawHtml;
@@ -53,18 +53,18 @@ public class MyAnimeListNetRecommendationsExtractorTest {
         entries.add(new InfoLink("http://myanimelist.net/anime/2973"));
 
         // when
-        final Map<InfoLink, Integer> result = sut.extractRecommendations(rawHtml);
+        final RecommendationList result = sut.extractRecommendations(rawHtml);
 
         // then
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(result.size(), 10);
+        assertEquals(result.asList().size(), 10);
         assertTrue(result.containsKey(new InfoLink(entry1)));
-        assertEquals(result.get(new InfoLink(entry1)), Integer.valueOf(2));
+        assertEquals(result.get(new InfoLink(entry1)).getAmount(), Integer.valueOf(2));
 
         entries.forEach(entry -> {
             assertTrue(result.containsKey(entry));
-            assertEquals(result.get(entry), Integer.valueOf(1));
+            assertEquals(result.get(entry).getAmount(), Integer.valueOf(1));
         });
     }
 
