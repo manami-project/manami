@@ -61,7 +61,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>4.3.6.RELEASE</version>
+                <version>4.3.7.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.controlsfx</groupId>
@@ -86,7 +86,7 @@
             <dependency>
 			    <groupId>org.testng</groupId>
 			    <artifactId>testng</artifactId>
-			    <version>6.10</version>
+			    <version>6.11</version>
                 <scope>test</scope>
 			</dependency>
             <dependency>
@@ -133,7 +133,7 @@
         <java.target.version>1.8</java.target.version>
         <manami.version>2.12.6</manami.version>
         <logback.version>1.2.1</logback.version>
-        <phantomjs.wrapper.version>3.0.0</phantomjs.wrapper.version>
+        <phantomjs.wrapper.version>3.1.0</phantomjs.wrapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
