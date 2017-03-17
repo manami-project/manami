@@ -111,7 +111,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
         final Path file = showExportDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage(), JSON_FILTER);
         final List<Anime> exportList = newArrayList();
 
-        getComponentList().values().forEach(entry -> exportList.add((Anime) entry.getAnime()));
+        originalOrder.forEach(entry -> exportList.add((Anime) entry));
 
         app.exportList(exportList, file);
     }
