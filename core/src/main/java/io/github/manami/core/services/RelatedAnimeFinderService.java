@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Observer;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableSetWrapper;
@@ -33,9 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Anime>> {
 
-    /** Contains all animes which are already in the anime list. */
-    private final List<InfoLink> myAnimes;
-
     /** Stack of animes which need to be checked. */
     private Stack<InfoLink> animesToCheck;
 
@@ -52,6 +53,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
     private final Manami app;
 
     private final List<? extends MinimalEntry> list;
+
+    private final AtomicInteger progress = new AtomicInteger(0);
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
 
     /**
@@ -70,39 +75,52 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         this.cache = cache;
         this.list = list;
         addObserver(observer);
-        myAnimes = newArrayList();
         relatedAnime = newHashMap();
         animesToCheck = new Stack<>();
         checkedAnimes = new ObservableSetWrapper<>(newHashSet());
         checkedAnimes.addListener((SetChangeListener<InfoLink>) event -> {
             setChanged();
-            notifyObservers(new ProgressState(checkedAnimes.size() + 1, animesToCheck.size()));
+            notifyObservers(new ProgressState(progress.incrementAndGet(), list.size() + animesToCheck.size()));
         });
     }
 
 
     @Override
     public Map<InfoLink, Anime> execute() {
+        final List<Callable<Void>> initialTaskList = newArrayList();
+
         list.forEach(entry -> {
-            final InfoLink infoLink = entry.getInfoLink();
-            if (infoLink.isValid()) {
-                myAnimes.add(infoLink);
-                animesToCheck.push(infoLink);
-            }
+            initialTaskList.add(() -> {
+                if (!isInterrupt() && entry.getInfoLink().isValid()) {
+                    log.debug("Checking [{}] (initial entry) for related anime.", entry);
+                    checkAnime(entry.getInfoLink());
+                    checkedAnimes.add(entry.getInfoLink());
+                }
+                return null;
+            });
         });
+
+        try {
+            executorService.invokeAll(initialTaskList);
+        } catch (final InterruptedException e) {
+            log.error("Error on invoking getting related anime: ", e);
+            cancel();
+        }
 
         // Sort stack
         final Stack<InfoLink> sortedStack = new Stack<>();
+
         while (!animesToCheck.isEmpty()) {
             sortedStack.push(animesToCheck.pop());
         }
+
         animesToCheck = sortedStack;
 
         while (!animesToCheck.empty() && !isInterrupt()) {
             final InfoLink entry = animesToCheck.pop();
 
             if (!checkedAnimes.contains(entry)) {
-                log.debug("Checking {} for related animes.", entry);
+                log.debug("Checking {} for related anime.", entry);
                 checkAnime(entry);
             }
         }
@@ -114,7 +132,6 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
     @Override
     public void reset() {
         cancel();
-        myAnimes.clear();
         animesToCheck.clear();
         relatedAnime.clear();
         checkedAnimes.clear();
