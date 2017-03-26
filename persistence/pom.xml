@@ -13,7 +13,6 @@
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>dto</artifactId>
-            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -22,10 +21,6 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.supercsv</groupId>

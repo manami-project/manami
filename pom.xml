@@ -25,13 +25,8 @@
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
+                <version>1.2.2</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -125,14 +120,33 @@
             	<artifactId>commons-io</artifactId>
             	<version>2.5</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.manami</groupId>
+                <artifactId>cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.manami</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.manami</groupId>
+                <artifactId>dto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.manami</groupId>
+                <artifactId>persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <properties>
-        <slf4j.version>1.7.24</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <java.target.version>1.8</java.target.version>
-        <manami.version>2.12.6</manami.version>
-        <logback.version>1.2.1</logback.version>
+        <manami.version>2.12.7</manami.version>
         <phantomjs.wrapper.version>3.1.0</phantomjs.wrapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

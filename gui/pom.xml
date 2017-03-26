@@ -13,12 +13,10 @@
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>core</artifactId>
-            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.manami</groupId>
             <artifactId>cache</artifactId>
-            <version>${manami.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
