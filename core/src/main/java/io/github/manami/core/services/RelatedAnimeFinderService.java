@@ -156,7 +156,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
             final InfoLink element = relatedAnimeList.get(index);
 
             if (element.isValid()) {
-                if (!list.contains(element) && !animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
+                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
                     animesToCheck.push(element);
                 }
 
