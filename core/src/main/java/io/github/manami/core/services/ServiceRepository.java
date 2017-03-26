@@ -10,12 +10,14 @@ import javax.inject.Named;
 import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
  * @since 2.5.0
  */
 @Named
+@Slf4j
 public class ServiceRepository implements Observer {
 
     private final ObservableList<BackgroundService> runningServices = new ObservableListWrapper<>(newArrayList());
@@ -28,10 +30,19 @@ public class ServiceRepository implements Observer {
 
         synchronized (runningServices) {
             if (!runningServices.isEmpty()) {
-                for (final BackgroundService curService : runningServices) {
+                for (int index = 0; index < runningServices.size(); index++) {
+                    final BackgroundService curService = runningServices.get(index);
+
                     final boolean isAlreadyRunning = !(service instanceof RelatedAnimeFinderService) && service.getClass().equals(curService.getClass());
 
                     if (isAlreadyRunning) {
+                        curService.cancel();
+                    }
+
+                    final boolean isManuallyStartedService = runningServices.size() >= 3;
+
+                    if (curService instanceof CacheInitializationService && isManuallyStartedService) {
+                        log.info("Stopping cache init service.");
                         curService.cancel();
                     }
                 }

@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CacheInitializationService extends AbstractService<Void> {
 
-    private static final int MAX_THREADS = Runtime.getRuntime().availableProcessors() / 2;
+    private static final int MAX_THREADS = Runtime.getRuntime().availableProcessors();
 
     /** Instance of the cache. */
     private final Cache cache;
