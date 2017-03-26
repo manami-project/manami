@@ -166,7 +166,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
                 showEntries();
                 Platform.runLater(() -> {
                     progressBar.setProgress(percent);
-                    lblProgress.setText(String.format("Loading %s / %s", state.getDone(), all));
+                    lblProgress.setText(String.format("Loading %s / %s", done, all));
                     showExportButtonIfPossible();
                 });
             }
@@ -183,7 +183,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
 
             Platform.runLater(() -> {
                 progressBar.setProgress(percent);
-                lblProgress.setText(String.format("Calculating %s / %s", state.getDone(), all));
+                lblProgress.setText(String.format("Calculating %s / %s", done, all));
                 showExportButtonIfPossible();
             });
             return;

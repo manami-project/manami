@@ -1,5 +1,18 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconCancel;
+import static io.github.manami.gui.components.Icons.createIconEdit;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.controlsfx.control.Notifications;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -33,18 +46,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
-import org.controlsfx.control.Notifications;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Observable;
-import java.util.Observer;
-
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
-import static io.github.manami.gui.components.Icons.createIconEdit;
-import static io.github.manami.gui.components.Icons.createIconRemove;
-import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 /**
  * @author manami-project
@@ -170,7 +171,7 @@ public class CheckListController implements Observer {
 
             Platform.runLater(() -> {
                 progressBar.setProgress(percent);
-                lblProgress.setText(String.format("%s / %s", state.getDone(), all));
+                lblProgress.setText(String.format("%s / %s", done, all));
             });
         }
 

@@ -151,7 +151,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
 
             Platform.runLater(() -> {
                 progressBar.setProgress(percent);
-                lblProgress.setText(String.format("%s / %s", state.getDone(), all));
+                lblProgress.setText(String.format("%s / %s", done, all));
             });
         }
 
