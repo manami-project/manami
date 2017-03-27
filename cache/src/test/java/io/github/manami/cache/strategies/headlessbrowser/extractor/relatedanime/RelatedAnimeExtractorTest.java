@@ -1,20 +1,22 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.mal.MyAnimeListNetRelatedAnimeExtractor;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
-import io.github.manami.dto.entities.InfoLink;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static io.github.manami.cache.strategies.headlessbrowser.extractor.TestConst.UNIT_TEST_GROUP;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.mal.MyAnimeListNetRelatedAnimeExtractor;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.entities.InfoLink;
 
 public class RelatedAnimeExtractorTest {
 
@@ -35,7 +37,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test
+    @Test(groups = UNIT_TEST_GROUP)
     public void extractRelatedAnimes() {
         // given
 
@@ -52,7 +54,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpWww() {
         // given
         final InfoLink infoLink = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -65,7 +67,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttp() {
         // given
         final InfoLink infoLink = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -78,7 +80,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpsWww() {
         // given
         final InfoLink infoLink = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -91,7 +93,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttps() {
         // given
         final InfoLink infoLink = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -104,7 +106,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleFalse() {
         // given
         final InfoLink infoLink = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
@@ -117,7 +119,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleBlank() {
         // given
         final InfoLink urlEmpty = new InfoLink("");
@@ -136,7 +138,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkQueryParameter() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime.php?id=1535");
@@ -149,7 +151,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkSearch() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note?q=death%20note");
@@ -162,7 +164,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkDefault() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -175,7 +177,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If you get the expected url already it is being returned as is, but with http instead of https.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If you get the expected url already it is being returned as is, but with http instead of https.")
     public void normalizeInfoLinkIdentical() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -188,7 +190,7 @@ public class RelatedAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If the url does not match the expected pattern it is being returned unchanged.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If the url does not match the expected pattern it is being returned unchanged.")
     public void normalizeInfoLinkDifferentPattern() {
         // given
         final InfoLink infoLink = new InfoLink(" https://myanimelist.net/news?_location=mal_h_m");

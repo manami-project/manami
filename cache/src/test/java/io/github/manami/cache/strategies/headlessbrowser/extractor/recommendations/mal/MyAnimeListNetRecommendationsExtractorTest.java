@@ -1,6 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static io.github.manami.cache.strategies.headlessbrowser.extractor.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -37,7 +38,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test
+    @Test(groups = UNIT_TEST_GROUP)
     public void extractRecommendations() {
         // given
         final String entry1 = "http://myanimelist.net/anime/2236";
@@ -69,7 +70,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpWww() {
         // given
         final InfoLink url = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -82,7 +83,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttp() {
         // given
         final InfoLink url = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -95,7 +96,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpsWww() {
         // given
         final InfoLink url = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -108,7 +109,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttps() {
         // given
         final InfoLink url = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -121,7 +122,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleFalse() {
         // given
         final InfoLink url = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
@@ -134,7 +135,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleBlank() {
         // given
         final InfoLink urlEmpty = new InfoLink("");
@@ -153,7 +154,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkQueryParameter() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime.php?id=1535");
@@ -166,7 +167,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkSearch() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note?q=death%20note");
@@ -179,7 +180,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkDefault() {
         // given
         final InfoLink url = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -192,7 +193,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If you get the expected url already it is being returned as is, but with http instead of https.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If you get the expected url already it is being returned as is, but with http instead of https.")
     public void normalizeInfoLinkIdentical() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -205,7 +206,7 @@ public class MyAnimeListNetRecommendationsExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If the url does not match the expected pattern it is being returned unchanged.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If the url does not match the expected pattern it is being returned unchanged.")
     public void normalizeInfoLinkDifferentPattern() {
         // given
         final InfoLink infoLink = new InfoLink(" https://myanimelist.net/news?_location=mal_h_m");
