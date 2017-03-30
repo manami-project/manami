@@ -1,10 +1,10 @@
 package io.github.manami.dto.entities;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class RecommendationList {
 
@@ -12,7 +12,7 @@ public class RecommendationList {
 
 
     public RecommendationList() {
-        recommendations = Maps.newHashMap();
+        recommendations = newHashMap();
     }
 
 
@@ -30,7 +30,7 @@ public class RecommendationList {
 
 
     public List<Recommendation> asList() {
-        return Lists.newArrayList(recommendations.values());
+        return newArrayList(recommendations.values());
     }
 
 

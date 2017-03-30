@@ -1,14 +1,15 @@
 package io.github.manami.persistence.importer.xml.postprocessor;
 
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.WatchListEntry;
-import org.testng.annotations.Test;
-import org.testng.collections.Lists;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
+
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.WatchListEntry;
 
 public class ImportMigrationPostProcessorTest {
 
@@ -21,9 +22,9 @@ public class ImportMigrationPostProcessorTest {
         final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
         final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
-        final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
+        final List<FilterEntry> filterListEntries = newArrayList(entry1, entry2, entry3);
 
-        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("unknown", "2.10.2", Lists.newArrayList(), filterListEntries, Lists.newArrayList());
+        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("unknown", "2.10.2", newArrayList(), filterListEntries, newArrayList());
 
         // when
         processor.execute();
@@ -44,9 +45,9 @@ public class ImportMigrationPostProcessorTest {
         final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
         final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
-        final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
+        final List<FilterEntry> filterListEntries = newArrayList(entry1, entry2, entry3);
 
-        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.?.2", Lists.newArrayList(), filterListEntries, Lists.newArrayList());
+        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.?.2", newArrayList(), filterListEntries, newArrayList());
 
         // when
         processor.execute();
@@ -67,9 +68,9 @@ public class ImportMigrationPostProcessorTest {
         final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", entry2Thumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
         final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
-        final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
+        final List<FilterEntry> filterListEntries = newArrayList(entry1, entry2, entry3);
 
-        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.?.2", Lists.newArrayList(), filterListEntries, Lists.newArrayList());
+        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.?.2", newArrayList(), filterListEntries, newArrayList());
 
         // when
         processor.execute();
@@ -89,9 +90,9 @@ public class ImportMigrationPostProcessorTest {
         final FilterEntry entry2 = new FilterEntry("Fullmetal Panic!", fmpThumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
         final FilterEntry entry3 = new FilterEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
-        final List<FilterEntry> filterListEntries = Lists.newArrayList(entry1, entry2, entry3);
+        final List<FilterEntry> filterListEntries = newArrayList(entry1, entry2, entry3);
 
-        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.10.2", Lists.newArrayList(), filterListEntries, Lists.newArrayList());
+        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.10.2", newArrayList(), filterListEntries, newArrayList());
 
         // when
         processor.execute();
@@ -111,9 +112,9 @@ public class ImportMigrationPostProcessorTest {
         final WatchListEntry entry2 = new WatchListEntry("Fullmetal Panic!", fmpThumb, new InfoLink("http://anidb.net/perl-bin/animedb.pl?show=anime&aid=17"));
         final WatchListEntry entry3 = new WatchListEntry("Code Geass: Hangyaku no Lelouch R2", new InfoLink("https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"));
 
-        final List<WatchListEntry> watchListEntries = Lists.newArrayList(entry1, entry2, entry3);
+        final List<WatchListEntry> watchListEntries = newArrayList(entry1, entry2, entry3);
 
-        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.10.2", Lists.newArrayList(), Lists.newArrayList(), watchListEntries);
+        final ImportMigrationPostProcessor processor = new ImportMigrationPostProcessor("2.10.3", "2.10.2", newArrayList(), newArrayList(), watchListEntries);
 
         // when
         processor.execute();

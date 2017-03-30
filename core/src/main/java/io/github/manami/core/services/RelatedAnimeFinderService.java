@@ -10,7 +10,6 @@ import java.util.Observer;
 import java.util.Optional;
 import java.util.Stack;
 
-import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableSetWrapper;
 
 import io.github.manami.cache.Cache;
@@ -132,7 +131,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
         final Anime cachedAnime = optCachedAnime.get();
 
-        final List<InfoLink> relatedAnimeList = Lists.newArrayList();
+        final List<InfoLink> relatedAnimeList = newArrayList();
         cache.fetchRelatedAnimes(cachedAnime.getInfoLink()).forEach(relatedAnimeList::add);
 
         for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {

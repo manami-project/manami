@@ -1,18 +1,18 @@
 package io.github.manami.cache.strategies.headlessbrowser;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.common.collect.Sets;
-
 import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.HeadlessBrowser;
+import io.github.manami.cache.strategies.headlessbrowser.extractor.PhantomJsBrowser;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;
@@ -61,7 +61,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      * @return Raw XML of the downloaded site.
      */
     private String downloadSiteContent(final InfoLink infoLink) {
-        return new HeadlessBrowser().pageAsString(infoLink);
+        return new PhantomJsBrowser().pageAsString(infoLink);
     }
 
 
@@ -91,7 +91,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
     @Override
     public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
-        Set<InfoLink> ret = Sets.newHashSet();
+        Set<InfoLink> ret = newHashSet();
         final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(infoLink);
 
         if (infoLink.isValid() && extractor.isPresent()) {

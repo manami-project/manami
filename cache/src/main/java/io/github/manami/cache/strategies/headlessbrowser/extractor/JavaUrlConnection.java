@@ -1,5 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,13 +15,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.util.EntityUtils;
 
-import com.google.common.collect.Lists;
-
 import io.github.manami.dto.entities.InfoLink;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JavaUrlConnection {
+public class JavaUrlConnection implements HeadlessBrowser {
 
     /**
      * Downloads the site and returns it.
@@ -38,7 +38,7 @@ public class JavaUrlConnection {
         final CloseableHttpClient hc = HttpClients.custom().setHttpProcessor(HttpProcessorBuilder.create().build()).build();
 
         final HttpGet request = new HttpGet(infoLink.getUrl());
-        Lists.newArrayList(request.getAllHeaders()).forEach(header -> {
+        newArrayList(request.getAllHeaders()).forEach(header -> {
             request.removeHeader(header);
         });
         request.setProtocolVersion(HttpVersion.HTTP_1_1);

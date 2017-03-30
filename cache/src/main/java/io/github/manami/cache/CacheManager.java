@@ -1,5 +1,7 @@
 package io.github.manami.cache;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -10,7 +12,6 @@ import javax.inject.Named;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Sets;
 
 import io.github.manami.cache.strategies.daemon.DaemonRestRetrievalStrategy;
 import io.github.manami.cache.strategies.headlessbrowser.HeadlessBrowserRetrievalStrategy;
@@ -99,7 +100,7 @@ public final class CacheManager implements Cache {
 
     @Override
     public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
-        Set<InfoLink> ret = Sets.newHashSet();
+        Set<InfoLink> ret = newHashSet();
 
         if (!infoLink.isValid()) {
             return ret;

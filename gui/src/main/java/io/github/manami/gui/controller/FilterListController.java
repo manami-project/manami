@@ -1,6 +1,7 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.partition;
 import static io.github.manami.gui.components.Icons.createIconDelete;
 
 import java.text.Collator;
@@ -17,7 +18,6 @@ import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import com.google.common.collect.Lists;
 import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
@@ -168,7 +168,7 @@ public class FilterListController extends AbstractAnimeListController implements
             updateChildren();
             recomController.showEntries();
             pagination.setPageFactory(this::createPage);
-            pagination.setPageCount(Lists.partition(Lists.newArrayList(getComponentList().values()), MAX_ENTRIES).size());
+            pagination.setPageCount(partition(newArrayList(getComponentList().values()), MAX_ENTRIES).size());
             pagination.setCurrentPageIndex(pagination.getCurrentPageIndex());
             filterListPane.setText(String.format("%s (%s)", FILTER_LIST_TITLE, getComponentList().size()));
         });
@@ -238,9 +238,9 @@ public class FilterListController extends AbstractAnimeListController implements
     public GridPane createPage(final int pageIndex) {
         final GridPane gridPane = new GridPane();
         if (getComponentList().size() > 0) {
-            final List<AnimeGuiComponentsListEntry> sortedValueList = Lists.newArrayList(getComponentList().values());
+            final List<AnimeGuiComponentsListEntry> sortedValueList = newArrayList(getComponentList().values());
             sortedValueList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
-            final List<List<AnimeGuiComponentsListEntry>> partitions = Lists.partition(sortedValueList, MAX_ENTRIES);
+            final List<List<AnimeGuiComponentsListEntry>> partitions = partition(sortedValueList, MAX_ENTRIES);
             pagination.setPageCount(partitions.size());
 
             for (final AnimeGuiComponentsListEntry entry : partitions.get(pageIndex)) {
