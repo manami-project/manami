@@ -103,7 +103,8 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
             final InfoLink entry = animesToCheck.pop();
 
             if (!checkedAnimes.contains(entry)) {
-                log.debug("Checking {} for related animes.", entry);
+                MDC.put("infoLink", entry.getUrl());
+                log.debug("Checking for related animes.");
                 checkAnime(entry);
             }
         }
@@ -124,7 +125,6 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
 
     private void checkAnime(final InfoLink infoLink) {
-        MDC.put("infoLink", infoLink.getUrl());
         final List<Anime> showAnimeList = newArrayList();
         final Optional<Anime> optCachedAnime = cache.fetchAnime(infoLink);
 
@@ -141,21 +141,12 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
             relatedAnimeList.forEach(e -> log.trace("{}", e));
         }
 
-        for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
-            final InfoLink element = relatedAnimeList.get(index);
-
-            if (element.isValid()) {
-                if (!animesToCheck.contains(element) && !checkedAnimes.contains(element) && !app.filterEntryExists(element)) {
-                    animesToCheck.push(element);
-                }
-
-                if (!relatedAnime.containsKey(element) && !app.animeEntryExists(element) && !app.watchListEntryExists(element) && !app.filterEntryExists(element)) {
-                    final Anime curAnime = cache.fetchAnime(element).get();
-                    relatedAnime.put(element, curAnime);
-                    showAnimeList.add(curAnime);
-                }
-            }
-        }
+        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !animesToCheck.contains(e)).filter(e -> !checkedAnimes.contains(e)).filter(e -> !app.filterEntryExists(e)).forEach(animesToCheck::push);
+        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !relatedAnime.containsKey(e)).filter(e -> !app.animeEntryExists(e)).filter(e -> !app.watchListEntryExists(e)).filter(e -> !app.filterEntryExists(e)).forEach(e -> {
+            final Anime curAnime = cache.fetchAnime(e).get();
+            relatedAnime.put(e, curAnime);
+            showAnimeList.add(curAnime);
+        });
 
         setChanged();
         notifyObservers(showAnimeList);
