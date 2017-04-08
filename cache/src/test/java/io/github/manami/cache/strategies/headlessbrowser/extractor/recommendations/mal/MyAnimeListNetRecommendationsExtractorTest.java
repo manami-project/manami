@@ -1,7 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.mal;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static io.github.manami.cache.strategies.headlessbrowser.extractor.TestConst.UNIT_TEST_GROUP;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;

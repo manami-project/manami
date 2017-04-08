@@ -1,12 +1,13 @@
 package io.github.manami.dto;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
 public class AnimeTypeTest {
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUnknown() {
         // given
         final String defaultString = "akjbfJKdsd";
@@ -25,7 +26,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testTv() {
         // given
         final String defaultString = "Tv";
@@ -44,7 +45,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testMovie() {
         // given
         final String defaultString = "Movie";
@@ -63,7 +64,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testOva() {
         // given
         final String defaultString = "Ova";
@@ -82,7 +83,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testSpecial() {
         // given
         final String defaultString = "Special";
@@ -101,7 +102,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testOna() {
         // given
         final String defaultString = "Ona";
@@ -120,7 +121,7 @@ public class AnimeTypeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testMusic() {
         // given
         final String defaultString = "Music";

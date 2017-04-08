@@ -1,6 +1,6 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime;
 
-import static io.github.manami.cache.strategies.headlessbrowser.extractor.TestConst.UNIT_TEST_GROUP;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 

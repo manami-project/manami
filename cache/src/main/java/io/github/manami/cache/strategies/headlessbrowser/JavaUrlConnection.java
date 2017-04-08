@@ -1,4 +1,4 @@
-package io.github.manami.cache.strategies.headlessbrowser.extractor;
+package io.github.manami.cache.strategies.headlessbrowser;
 
 import static com.google.common.collect.Lists.newArrayList;
 

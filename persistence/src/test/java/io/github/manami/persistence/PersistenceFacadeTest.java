@@ -1,6 +1,22 @@
 package io.github.manami.persistence;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import com.google.common.eventbus.EventBus;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
@@ -12,19 +28,6 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class PersistenceFacadeTest {
 
@@ -41,7 +44,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsNull() {
         // given
 
@@ -55,7 +58,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
         final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -70,7 +73,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutInfoLink() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", null);
@@ -85,7 +88,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutThumbnail() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -100,7 +103,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsFullEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -115,7 +118,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterEntryExists() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -130,7 +133,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterEntryNotExists() {
         // given
 
@@ -143,7 +146,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeList() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -157,7 +160,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFetchWatchList() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -171,7 +174,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromFilterListWorks() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -188,7 +191,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromFilterListNullAsArgument() {
         // given
 
@@ -201,7 +204,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchListEntryExists() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -216,7 +219,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchListEntryNotExists() {
         // given
 
@@ -229,7 +232,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsNull() {
         // given
 
@@ -243,7 +246,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
         final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -258,7 +261,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutInfoLink() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", null);
@@ -273,7 +276,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutThumbnail() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -288,7 +291,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsFullEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -303,7 +306,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromWatchListWorks() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -320,7 +323,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromWatchListNullAsArgument() {
         // given
 
@@ -333,7 +336,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsNull() {
         // given
 
@@ -347,7 +350,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsFullEntry() {
         // given
         final Anime entry = new Anime();
@@ -369,7 +372,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final Anime entry = new Anime();
@@ -390,7 +393,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
         final Anime entry = new Anime();
@@ -411,7 +414,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
         final Anime entry = new Anime();
@@ -432,7 +435,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
         final Anime entry = new Anime();
@@ -453,7 +456,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
         final Anime entry = new Anime();
@@ -474,7 +477,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
         final Anime entry = new Anime();
@@ -495,7 +498,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutType() {
         // given
         final Anime entry = new Anime();
@@ -516,7 +519,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeEntryExists() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -538,7 +541,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeEntryNotExists() {
         // given
 
@@ -551,7 +554,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeList() {
         // given
         final Anime entry = new Anime();
@@ -572,7 +575,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromAnimeListWorks() {
         // given
         final Anime entry = new Anime();
@@ -595,7 +598,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromAnimeListNullAsArgument() {
         // given
 
@@ -608,7 +611,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatClearAllWorks() {
         // given
         final Anime entry = new Anime();
@@ -638,7 +641,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAddFilterListWithNull() {
         // given
 
@@ -652,7 +655,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatAddFilterListWorks() {
         // given
         final List<FilterEntry> list = newArrayList();
@@ -675,7 +678,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAddWatchListWithNull() {
         // given
 
@@ -689,7 +692,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatAddWatchListWorks() {
         // given
         final List<WatchListEntry> list = newArrayList();
@@ -712,7 +715,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatAddAnimeListWorks() {
         // given
         final List<Anime> list = newArrayList();
@@ -746,7 +749,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAddAnimeListWithNull() {
         // given
 
@@ -760,7 +763,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateWithNull() {
         // given
 
@@ -775,7 +778,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -797,7 +800,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -824,7 +827,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForNewFilterEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -839,7 +842,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForModifiedFilterEntry() {
         // given
         final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, new InfoLink("http://myanimelist.net/anime/1535"));
@@ -859,7 +862,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForNewWatchListEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", "http://cdn.myanimelist.net/images/anime/9/9453t.jpg", new InfoLink("http://myanimelist.net/anime/1535"));
@@ -874,7 +877,7 @@ public class PersistenceFacadeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForModifiedWatchListEntry() {
         // given
         final WatchListEntry entry = new WatchListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB, new InfoLink("http://myanimelist.net/anime/1535"));

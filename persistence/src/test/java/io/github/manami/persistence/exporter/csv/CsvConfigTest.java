@@ -1,5 +1,6 @@
 package io.github.manami.persistence.exporter.csv;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
@@ -8,7 +9,7 @@ import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 
 public class CsvConfigTest {
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatNonMatchableStringReturnsNull() {
         // given
 
@@ -20,7 +21,7 @@ public class CsvConfigTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeList() {
         // given
         final String exactSameString = "animeList";
@@ -39,7 +40,7 @@ public class CsvConfigTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testWatchList() {
         // given
         final String exactSameString = "watchList";
@@ -58,7 +59,7 @@ public class CsvConfigTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFilterList() {
         // given
         final String exactSameString = "filterList";

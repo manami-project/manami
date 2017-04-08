@@ -16,6 +16,12 @@
         </dependency>
         <dependency>
             <groupId>io.github.manami</groupId>
+            <artifactId>dto</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.github.manami</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
         <dependency>

@@ -1,20 +1,22 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
-import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal.MyAnimeListNetUtil;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 
 public class MyAnimeListNetAnimeExtractorTest {
 
@@ -35,10 +37,10 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testIsValidInfoLink() throws IOException {
         // given
-        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
         sut.extractAnimeEntry(infoLink, rawHtml);
 
         // when
@@ -49,11 +51,11 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testExtractTitle() throws IOException {
         // given
         final String expectedValue = "Death Note";
-        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
         final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
@@ -64,11 +66,11 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testExtractType() throws IOException {
         // given
         final AnimeType expectedValue = AnimeType.TV;
-        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
         final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
@@ -79,11 +81,11 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testExtractEpisodes() throws IOException {
         // given
         final int expectedValue = 37;
-        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
         final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
@@ -94,11 +96,11 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testExtractPictureLink() throws IOException {
         // given
         final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg";
-        InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
 
         // when
         final Anime result = sut.extractAnimeEntry(infoLink, rawHtml);
@@ -109,7 +111,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testExtractThumbnail() throws IOException {
         // given
         final String expectedValue = "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg";
@@ -123,7 +125,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpWww() {
         // given
         final InfoLink infoLink = new InfoLink("http://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -136,7 +138,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttp() {
         // given
         final InfoLink infoLink = new InfoLink("http://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -149,7 +151,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttpsWww() {
         // given
         final InfoLink infoLink = new InfoLink("https://www." + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -162,7 +164,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleTrueHttps() {
         // given
         final InfoLink infoLink = new InfoLink("https://" + DEATH_NOTE_URL_NO_PROTOCOL);
@@ -175,7 +177,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleFalse() {
         // given
         final InfoLink infoLink = new InfoLink("https://animenewsnetwork.com/encyclopedia/anime.php?id=6592");
@@ -188,7 +190,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleBlank() {
         // given
         final InfoLink urlEmpty = new InfoLink("");
@@ -207,7 +209,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkQueryParameter() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime.php?id=1535");
@@ -220,7 +222,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkSearch() {
         // given
         final InfoLink url = new InfoLink("https://myanimelist.net/anime/1535/Death_Note?q=death%20note");
@@ -233,7 +235,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void normalizeInfoLinkDefault() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -246,7 +248,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If you get the expected url already it is being returned as is, but with http instead of https.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If you get the expected url already it is being returned as is, but with http instead of https.")
     public void normalizeInfoLinkIdentical() {
         // given
         final InfoLink infoLink = new InfoLink("https://myanimelist.net/anime/1535/Death_Note");
@@ -259,7 +261,7 @@ public class MyAnimeListNetAnimeExtractorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "If the url does not match the expected pattern it is being returned unchanged.")
+    @Test(groups = UNIT_TEST_GROUP, description = "If the url does not match the expected pattern it is being returned unchanged.")
     public void normalizeInfoLinkDifferentPattern() {
         // given
         final InfoLink infoLink = new InfoLink(" https://myanimelist.net/news?_location=mal_h_m");

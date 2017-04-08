@@ -1,5 +1,6 @@
 package io.github.manami.core.config;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class ConfigFileWatchdogTest {
 
-    @Test(groups = "unitTest", expectedExceptions = { IllegalStateException.class })
+    @Test(groups = UNIT_TEST_GROUP, expectedExceptions = { IllegalStateException.class })
     public void ConfigFileWatchdog() {
         // given
 
@@ -21,7 +22,7 @@ public class ConfigFileWatchdogTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void validate() throws IOException {
         // given
         final Path createTempDirectory = Files.createTempDirectory("test");

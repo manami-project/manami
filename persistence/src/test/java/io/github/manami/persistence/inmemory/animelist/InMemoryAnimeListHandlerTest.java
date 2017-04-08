@@ -1,15 +1,17 @@
 package io.github.manami.persistence.inmemory.animelist;
 
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 
 public class InMemoryAnimeListHandlerTest {
 
@@ -22,7 +24,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsNull() {
         // given
 
@@ -35,7 +37,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsFullEntry() {
         // given
         final Anime entry = new Anime();
@@ -56,7 +58,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
         final Anime entry = new Anime();
@@ -76,7 +78,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
         final Anime entry = new Anime();
@@ -96,7 +98,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
         final Anime entry = new Anime();
@@ -116,7 +118,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
         final Anime entry = new Anime();
@@ -136,7 +138,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
         final Anime entry = new Anime();
@@ -156,7 +158,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
         final Anime entry = new Anime();
@@ -176,7 +178,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutType() {
         // given
         final Anime entry = new Anime();
@@ -196,7 +198,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeEntryExists() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
@@ -218,7 +220,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeEntryNotExists() {
         // given
 
@@ -230,7 +232,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeList() {
         // given
         final Anime entry = new Anime();
@@ -251,7 +253,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromAnimeListWorks() {
         // given
         final Anime entry = new Anime();
@@ -273,7 +275,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromAnimeListNullAsArgument() {
         // given
 
@@ -285,7 +287,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateWithNull() {
         // given
 
@@ -297,7 +299,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -318,7 +320,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
         final Anime entry = new Anime();
@@ -344,7 +346,7 @@ public class InMemoryAnimeListHandlerTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testClearing() {
         // given
         final Anime entry = new Anime();

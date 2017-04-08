@@ -1,6 +1,23 @@
 package io.github.manami.persistence.importer.xml.parser;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
 import com.google.common.eventbus.EventBus;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -12,19 +29,6 @@ import io.github.manami.persistence.inmemory.InMemoryPersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class ManamiSaxParserTest {
 
@@ -44,7 +48,7 @@ public class ManamiSaxParserTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatAnimeListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -75,7 +79,7 @@ public class ManamiSaxParserTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatWatchListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 
@@ -96,7 +100,7 @@ public class ManamiSaxParserTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatFilterListIsParsedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
 

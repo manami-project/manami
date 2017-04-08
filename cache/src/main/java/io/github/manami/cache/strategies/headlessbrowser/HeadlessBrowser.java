@@ -1,5 +1,4 @@
-package io.github.manami.cache.strategies.headlessbrowser.extractor;
-
+package io.github.manami.cache.strategies.headlessbrowser;
 
 public interface HeadlessBrowser {
 

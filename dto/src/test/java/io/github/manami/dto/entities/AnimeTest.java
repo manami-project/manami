@@ -1,19 +1,20 @@
 package io.github.manami.dto.entities;
 
-import io.github.manami.dto.AnimeType;
-import org.testng.annotations.Test;
-
-import java.util.UUID;
-
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.UUID;
+
+import org.testng.annotations.Test;
+
+import io.github.manami.dto.AnimeType;
 
 public class AnimeTest {
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testCopyEmptyAnime() {
         // given
         final Anime target = new Anime();
@@ -42,7 +43,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testConstructorWithUUID() {
         // given
         final UUID uuid = UUID.randomUUID();
@@ -62,7 +63,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testSetEpisodesDoesNotChangeToNegativeNumber() {
         // given
         final Anime anime = new Anime();
@@ -75,7 +76,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testSetEpisodesDoesNotChangeToNegativeNumberForNonDefaultValue() {
         // given
         final Anime anime = new Anime();
@@ -90,7 +91,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testIsValidAnimeWithNull() {
         // given
 
@@ -102,7 +103,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testIsValidAnimeWithValidEntry() {
         // given
         final Anime anime = new Anime();
@@ -122,7 +123,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testIsValidAnimeWithTypeNull() {
         // given
         final Anime anime = new Anime();
@@ -142,7 +143,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForNull() {
         // given
         final Anime anime = new Anime();
@@ -156,7 +157,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForTv() {
         // given
         final AnimeType type = AnimeType.TV;
@@ -171,7 +172,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForMovie() {
         // given
         final AnimeType type = AnimeType.MOVIE;
@@ -186,7 +187,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForMusic() {
         // given
         final AnimeType type = AnimeType.MUSIC;
@@ -201,7 +202,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForOna() {
         // given
         final AnimeType type = AnimeType.ONA;
@@ -216,7 +217,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForOva() {
         // given
         final AnimeType type = AnimeType.OVA;
@@ -231,7 +232,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testGetTypeAsStringForSpecial() {
         // given
         final AnimeType type = AnimeType.SPECIAL;
@@ -246,7 +247,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testCopyNullTarget() {
         // given
         final Anime target = new Anime();
@@ -275,7 +276,7 @@ public class AnimeTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testCopyNullTargetWithFilledTarget() {
         // given
         final Anime target = new Anime();

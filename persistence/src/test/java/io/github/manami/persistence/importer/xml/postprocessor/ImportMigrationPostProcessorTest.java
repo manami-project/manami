@@ -1,6 +1,7 @@
 package io.github.manami.persistence.importer.xml.postprocessor;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import io.github.manami.dto.entities.WatchListEntry;
 
 public class ImportMigrationPostProcessorTest {
 
-    @Test(groups = "unitTest", description = "Test execution stops, because the tool version is not valid. Result: no changes to the entries.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test execution stops, because the tool version is not valid. Result: no changes to the entries.")
     public void testMigrationStopsInvalidToolVersion() {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
@@ -36,7 +37,7 @@ public class ImportMigrationPostProcessorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test execution stops, because the document version is not valid. Result: no changes to the entries.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test execution stops, because the document version is not valid. Result: no changes to the entries.")
     public void testMigrationStopsInvalidDocumentVersion() {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
@@ -59,7 +60,7 @@ public class ImportMigrationPostProcessorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test migration to version 2.10.3 is skipped, because the document version is not valid. Result: no changes to the entries.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test migration to version 2.10.3 is skipped, because the document version is not valid. Result: no changes to the entries.")
     public void testMigration2103IsSkippedBecauseTheCurrentDocumentVersionIsMoreRecent() {
         // given
         final String entry1Thumb = "http://cdn.myanimelist.net/images/anime/9/9453t.jpg";
@@ -82,7 +83,7 @@ public class ImportMigrationPostProcessorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test migration to version 2.10.3 for filter list")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test migration to version 2.10.3 for filter list")
     public void testMigration2103WorksForFilterList() {
         // given
         final String fmpThumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";
@@ -104,7 +105,7 @@ public class ImportMigrationPostProcessorTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test migration to version 2.10.3 for watch list")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test migration to version 2.10.3 for watch list")
     public void testMigration2103WorksForWatchList() {
         // given
         final String fmpThumb = "http://img7.anidb.net/pics/anime/thumbs/50x65/129527.jpg-thumb.jpg";

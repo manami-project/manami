@@ -1,14 +1,16 @@
 package io.github.manami.dto.comparator;
 
-import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.WatchListEntry;
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.WatchListEntry;
 
 public class MinimalEntryComByTitleAscTest {
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFirstOneGreater() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -24,7 +26,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFirstOneLesser() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -40,7 +42,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testBothEqual() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -55,7 +57,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFirstParameterNull() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -70,7 +72,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testSecondParameterNull() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -85,7 +87,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testFirstParameterTitleNullOrEmpty() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();
@@ -102,7 +104,7 @@ public class MinimalEntryComByTitleAscTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testSecondParameterTitleNullOrEmpty() {
         // given
         final MinimalEntryComByTitleAsc comparator = new MinimalEntryComByTitleAsc();

@@ -1,4 +1,4 @@
-package io.github.manami.cache.strategies.headlessbrowser.extractor;
+package io.github.manami.cache.strategies.headlessbrowser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

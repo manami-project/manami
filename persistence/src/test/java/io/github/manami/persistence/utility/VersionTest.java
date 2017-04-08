@@ -1,5 +1,6 @@
 package io.github.manami.persistence.utility;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -8,7 +9,7 @@ import org.testng.annotations.Test;
 
 public class VersionTest {
 
-    @Test(groups = "unitTest", description = "Test that the validation is successful for a simple version string.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation is successful for a simple version string.")
     public void testSimpleVersionisValid() {
         // given
         final String version = "1.2.3";
@@ -21,7 +22,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test that the validation is successful for a versions with high numbers.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation is successful for a versions with high numbers.")
     public void testVersionisValidForHighNumbers() {
         // given
         final String version = "134.212.356";
@@ -34,7 +35,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test that the validation fails for non numeric chars.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation fails for non numeric chars.")
     public void testVersionInvalidChars() {
         // given
         final String version = "1.?.3";
@@ -47,7 +48,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test that the validation fails if the version does not consists of excactly three parts.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation fails if the version does not consists of excactly three parts.")
     public void testVersionInvalidTooManyParts() {
         // given
         final String version = "1.4.3.1";
@@ -60,7 +61,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test that the validation fails if the version does not consists of excactly three parts.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation fails if the version does not consists of excactly three parts.")
     public void testVersionInvalidTooLessParts() {
         // given
         final String version = "1.4";
@@ -73,7 +74,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Edge case. Test that the validation fails if the parts are there, but the last number is missing.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Edge case. Test that the validation fails if the parts are there, but the last number is missing.")
     public void testVersionInvalidMissingLastPart() {
         // given
         final String version = "1.4.";
@@ -86,7 +87,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Test that the validation fails if the string is empty or null.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Test that the validation fails if the string is empty or null.")
     public void testVersionInvalidEmptyOrNull() {
         // given
         final String versionWhitespace = "  ";
@@ -105,7 +106,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is newer by major version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by major version")
     public void testIsNewerbyMajorVersion() {
         // given
         final Version version = new Version("4.0.0");
@@ -118,7 +119,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is older by major version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by major version")
     public void testIsNotNewerbyMajorVersion() {
         // given
         final Version version = new Version("5.0.0");
@@ -131,7 +132,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is newer by minor version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by minor version")
     public void testIsNewerbyMinorVersion() {
         // given
         final Version version = new Version("1.4.0");
@@ -144,7 +145,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is older by minor version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by minor version")
     public void testIsNotNewerbyMinorVersion() {
         // given
         final Version version = new Version("1.5.0");
@@ -157,7 +158,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is newer by bugfix version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by bugfix version")
     public void testIsNewerbyBugfixVersion() {
         // given
         final Version version = new Version("1.2.4");
@@ -170,7 +171,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is older by bugfix version")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by bugfix version")
     public void testIsNotNewerbyBugfixVersion() {
         // given
         final Version version = new Version("1.2.5");
@@ -183,7 +184,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version is not newer.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is not newer.")
     public void testIsNotNewer() {
         // given
         final Version version = new Version("2.10.3");
@@ -196,7 +197,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Check the other version throws exception if it is not valid.", expectedExceptions = IllegalArgumentException.class)
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version throws exception if it is not valid.", expectedExceptions = IllegalArgumentException.class)
     public void testOtherVersionIsNotValid() {
         // given
         final Version version = new Version("2.10.3");
@@ -206,7 +207,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Call of the constructor with invalid string throws exception.", expectedExceptions = IllegalArgumentException.class)
+    @Test(groups = UNIT_TEST_GROUP, description = "Call of the constructor with invalid string throws exception.", expectedExceptions = IllegalArgumentException.class)
     public void testCreationFails() {
         // given
         final String version = "1.?.2";
@@ -216,7 +217,7 @@ public class VersionTest {
     }
 
 
-    @Test(groups = "unitTest", description = "Instance creation is working with valid string.")
+    @Test(groups = UNIT_TEST_GROUP, description = "Instance creation is working with valid string.")
     public void testCreationWorks() {
         // given
         final String version = "1.2.2";

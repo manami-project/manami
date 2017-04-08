@@ -1,6 +1,26 @@
 package io.github.manami.persistence.exporter.xml;
 
+import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
+
 import com.google.common.eventbus.EventBus;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -12,22 +32,6 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
 
 @Slf4j
 public class XmlExporterTest {
@@ -67,7 +71,7 @@ public class XmlExporterTest {
     }
 
 
-    @Test(groups = "unitTest")
+    @Test(groups = UNIT_TEST_GROUP)
     public void testThatAnimeListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
         final Anime bokuDake = new Anime();

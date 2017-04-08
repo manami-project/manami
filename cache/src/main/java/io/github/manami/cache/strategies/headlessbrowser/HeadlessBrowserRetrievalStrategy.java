@@ -12,7 +12,6 @@ import io.github.manami.cache.strategies.AnimeRetrieval;
 import io.github.manami.cache.strategies.RecommendationsRetrieval;
 import io.github.manami.cache.strategies.RelatedAnimeRetrieval;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList;
-import io.github.manami.cache.strategies.headlessbrowser.extractor.PhantomJsBrowser;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.recommendations.RecommendationsExtractor;
 import io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime.RelatedAnimeExtractor;

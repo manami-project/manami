@@ -15,6 +15,12 @@
             <artifactId>dto</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.manami</groupId>
+            <artifactId>dto</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
         </dependency>

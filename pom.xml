@@ -136,6 +136,13 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+	            <groupId>io.github.manami</groupId>
+	            <artifactId>dto</artifactId>
+                <version>${project.version}</version>
+	            <scope>test</scope>
+	            <type>test-jar</type>
+            </dependency>
+            <dependency>
                 <groupId>io.github.manami</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${project.version}</version>
@@ -146,7 +153,7 @@
     <properties>
         <slf4j.version>1.7.25</slf4j.version>
         <java.target.version>1.8</java.target.version>
-        <manami.version>2.12.8</manami.version>
+        <manami.version>2.13.0</manami.version>
         <phantomjs.wrapper.version>3.1.0</phantomjs.wrapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
