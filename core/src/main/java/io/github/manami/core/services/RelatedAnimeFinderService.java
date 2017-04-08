@@ -10,6 +10,8 @@ import java.util.Observer;
 import java.util.Optional;
 import java.util.Stack;
 
+import org.slf4j.MDC;
+
 import com.sun.javafx.collections.ObservableSetWrapper;
 
 import io.github.manami.cache.Cache;
@@ -122,6 +124,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
 
     private void checkAnime(final InfoLink infoLink) {
+        MDC.put("infoLink", infoLink.getUrl());
         final List<Anime> showAnimeList = newArrayList();
         final Optional<Anime> optCachedAnime = cache.fetchAnime(infoLink);
 
@@ -133,6 +136,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
         final List<InfoLink> relatedAnimeList = newArrayList();
         cache.fetchRelatedAnimes(cachedAnime.getInfoLink()).forEach(relatedAnimeList::add);
+
+        if (log.isTraceEnabled()) {
+            relatedAnimeList.forEach(e -> log.trace("{}", e));
+        }
 
         for (int index = 0; index < relatedAnimeList.size() && !isInterrupt(); index++) {
             final InfoLink element = relatedAnimeList.get(index);
@@ -151,13 +158,6 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         }
 
         setChanged();
-
-        if (!showAnimeList.isEmpty() && log.isTraceEnabled()) {
-            log.trace("\n\n---------------- Extracted animes for [{}] ----------------", infoLink);
-            showAnimeList.forEach(e -> log.trace("{} : {}", e.getTitle(), e.getInfoLink()));
-            log.trace("-----------------------------------------------------------\n\n");
-        }
-
         notifyObservers(showAnimeList);
         checkedAnimes.add(infoLink);
     }
