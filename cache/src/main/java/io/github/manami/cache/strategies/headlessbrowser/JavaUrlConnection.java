@@ -13,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.MDC;
 
 import io.github.manami.dto.entities.InfoLink;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,9 @@ public class JavaUrlConnection implements HeadlessBrowser {
      * @return Plain xml text of the website.
      */
     public String pageAsString(final InfoLink infoLink) {
+        MDC.put("infoLink", infoLink.getUrl());
         if (!infoLink.isValid()) {
-            log.warn("Seems not be a valid URL: [{}]", infoLink);
+            log.warn("Seems not be a valid URL");
             return null;
         }
 
@@ -65,7 +67,7 @@ public class JavaUrlConnection implements HeadlessBrowser {
             }
 
             if (execute.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("Other error, status code [{}] for entry [{}]", execute.getStatusLine().getStatusCode(), infoLink.getUrl());
+                log.error("Other error, status code [{}]", execute.getStatusLine().getStatusCode());
             }
 
             ret = EntityUtils.toString(execute.getEntity());

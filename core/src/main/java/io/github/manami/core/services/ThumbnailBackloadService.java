@@ -11,6 +11,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.MDC;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
@@ -86,13 +87,14 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void loadThumbnailIfNotExists(final MinimalEntry entry) {
+        MDC.put("infoLink", entry.getInfoLink().getUrl());
         if (isInterrupt()) {
             return;
         }
 
         if (entry != null && (isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
             final Optional<Anime> cachedAnime = cache.fetchAnime(entry.getInfoLink());
-            log.debug("Loading thumbnail for entry {}", entry.getInfoLink());
+            log.debug("Loading thumbnail");
             if (cachedAnime.isPresent()) {
                 updateThumbnail(entry, cachedAnime.get());
             }
@@ -123,12 +125,13 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void checkPictures(final MinimalEntry entry) {
+        MDC.put("infoLink", entry.getInfoLink().getUrl());
         if (isInterrupt()) {
             return;
         }
 
         if (entry != null && isNotBlank(entry.getThumbnail())) {
-            log.debug("Checking thumbnail for {}", entry.getInfoLink());
+            log.debug("Checking thumbnail.");
 
             int responseCodeThumbnail = NOT_FOUND;
 
@@ -142,7 +145,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
             if (responseCodeThumbnail != OK) {
                 final Optional<Anime> updatedAnime = cache.fetchAnime(entry.getInfoLink());
                 if (updatedAnime.isPresent()) {
-                    log.debug("Updating thumbnail for [{}]", entry.getInfoLink());
+                    log.debug("Updating thumbnail.");
                     updateThumbnail(entry, updatedAnime.get());
                 }
             }

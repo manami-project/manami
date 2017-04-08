@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.MDC;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -74,6 +76,7 @@ public final class CacheManager implements Cache {
 
     @Override
     public Optional<Anime> fetchAnime(final InfoLink infoLink) {
+        MDC.put("infoLink", infoLink.getUrl());
         Optional<Anime> cachedEntry = Optional.empty();
 
         if (!infoLink.isValid()) {
@@ -84,13 +87,13 @@ public final class CacheManager implements Cache {
             cachedEntry = animeEntryCache.get(infoLink);
 
             if (!cachedEntry.isPresent()) {
-                log.warn("No Entry for [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                log.warn("No meta data entry extracted. Invalidating cache entry and refetching it.");
                 animeEntryCache.invalidate(infoLink);
                 cachedEntry = animeEntryCache.get(infoLink);
-                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, cachedEntry);
+                log.warn("Result after reinitialising cache entry [{}]", cachedEntry);
             }
         } catch (final ExecutionException e) {
-            log.error("Error fetching anime entry [{}] from cache.", infoLink);
+            log.error("Error fetching anime entry from cache.");
             return Optional.empty();
         }
 
@@ -110,13 +113,13 @@ public final class CacheManager implements Cache {
             ret = relatedAnimeCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
-                log.warn("No related animes in cache entry [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                log.warn("No related animes in cache. Invalidating cache entry and refetching it.");
                 relatedAnimeCache.invalidate(infoLink);
                 ret = relatedAnimeCache.get(infoLink);
-                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, ret);
+                log.warn("Result after reinitialising cache entry for [{}]", ret);
             }
         } catch (final ExecutionException e) {
-            log.error("Unable to fetch related anime list from cache for [{}]", infoLink);
+            log.error("Unable to fetch related anime list from cache.");
         }
 
         return ret;
@@ -135,13 +138,13 @@ public final class CacheManager implements Cache {
             ret = recommendationsCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
-                log.warn("No recommendations in cache entry [{}]. Invalidating cache entry and refetching entry.", infoLink);
+                log.warn("No recommendations in cache entry. Invalidating cache entry and refetching it.");
                 recommendationsCache.invalidate(infoLink);
                 ret = recommendationsCache.get(infoLink);
-                log.warn("After reinitialising cache entry for [{}] [{}]", infoLink, ret);
+                log.warn("Result after reinitialising cache entry for [{}]", ret);
             }
         } catch (final ExecutionException e) {
-            log.error("Unable to fetch related anime list from cache for [{}]", infoLink);
+            log.error("Unable to fetch recommendations from cache for.");
         }
 
         return ret;
