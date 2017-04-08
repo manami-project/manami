@@ -7,7 +7,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,6 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JavaUrlConnection implements HeadlessBrowser {
+
+    private static final int HTTP_TOO_MANY_CONNECTIONS = 429;
+    private static final long MIN_WAITING_TIME = 4000L;
+    private static final long MAX_WAITING_TIME = 8000L;
+
 
     /**
      * Downloads the site and returns it.
@@ -36,43 +40,39 @@ public class JavaUrlConnection implements HeadlessBrowser {
         }
 
         final CloseableHttpClient hc = HttpClients.custom().setHttpProcessor(HttpProcessorBuilder.create().build()).build();
-
         final HttpGet request = new HttpGet(infoLink.getUrl());
+
         newArrayList(request.getAllHeaders()).forEach(header -> {
             request.removeHeader(header);
         });
-        request.setProtocolVersion(HttpVersion.HTTP_1_1);
 
+        request.setProtocolVersion(HttpVersion.HTTP_1_1);
         request.setHeader("Host", "myanimelist.net");
         request.setHeader("User-Agent", "curl/7.53.0");
         request.setHeader("Accept", "*/*");
 
         String ret = null;
+
         try {
             final CloseableHttpResponse execute = hc.execute(request);
 
-            if (execute.getStatusLine().getStatusCode() == 429) {
-                log.error("TOO MANY CONNECTIONS!");
-                final long waitingTime = ThreadLocalRandom.current().nextLong(4000L, 8000L);
-                log.warn("Waiting [{}]ms then retry \n\n\n", waitingTime);
+            if (execute.getStatusLine().getStatusCode() == HTTP_TOO_MANY_CONNECTIONS) {
+                log.error("Too many connections");
+                final long waitingTime = ThreadLocalRandom.current().nextLong(MIN_WAITING_TIME, MAX_WAITING_TIME);
+                log.warn("Waiting [{}]ms then retry.", waitingTime);
                 Thread.sleep(waitingTime);
                 return pageAsString(infoLink);
             }
+
             if (execute.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("OTHER ERROR, status code [{}] for entry [{}]", execute.getStatusLine().getStatusCode(), infoLink.getUrl());
+                log.error("Other error, status code [{}] for entry [{}]", execute.getStatusLine().getStatusCode(), infoLink.getUrl());
             }
 
             ret = EntityUtils.toString(execute.getEntity());
-        } catch (final ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (final InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (final IOException | InterruptedException e) {
+            log.error("An error occured during download of infosite: ", e);
         }
+
         return ret;
     }
 }

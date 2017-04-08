@@ -60,7 +60,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
      * @return Raw XML of the downloaded site.
      */
     private String downloadSiteContent(final InfoLink infoLink) {
-        return new PhantomJsBrowser().pageAsString(infoLink);
+        return new JavaUrlConnection().pageAsString(infoLink);
     }
 
 
