@@ -96,26 +96,6 @@
                 <version>1.6</version>
             </dependency>
             <dependency>
-                <groupId>com.moodysalem</groupId>
-                <artifactId>phantomjs-wrapper</artifactId>
-                <version>${phantomjs.wrapper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.moodysalem</groupId>
-                <artifactId>phantomjs-wrapper-windows-binary</artifactId>
-                <version>${phantomjs.wrapper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.moodysalem</groupId>
-                <artifactId>phantomjs-wrapper-linux-binary</artifactId>
-                <version>${phantomjs.wrapper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.moodysalem</groupId>
-                <artifactId>phantomjs-wrapper-macosx-binary</artifactId>
-                <version>${phantomjs.wrapper.version}</version>
-            </dependency>
-            <dependency>
             	<groupId>commons-io</groupId>
             	<artifactId>commons-io</artifactId>
             	<version>2.5</version>
@@ -154,7 +134,6 @@
         <slf4j.version>1.7.25</slf4j.version>
         <java.target.version>1.8</java.target.version>
         <manami.version>2.13.0</manami.version>
-        <phantomjs.wrapper.version>3.1.0</phantomjs.wrapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
