@@ -1,23 +1,10 @@
 package io.github.manami.core.services;
 
-import com.google.common.collect.ImmutableList;
-import io.github.manami.cache.Cache;
-import io.github.manami.core.Manami;
-import io.github.manami.core.config.CheckListConfig;
-import io.github.manami.core.services.events.AbstractEvent.EventType;
-import io.github.manami.core.services.events.CrcEvent;
-import io.github.manami.core.services.events.DeadLinkEvent;
-import io.github.manami.core.services.events.EpisodesDifferEvent;
-import io.github.manami.core.services.events.ProgressState;
-import io.github.manami.core.services.events.RelativizeLocationEvent;
-import io.github.manami.core.services.events.SimpleLocationEvent;
-import io.github.manami.core.services.events.TitleDifferEvent;
-import io.github.manami.core.services.events.TypeDifferEvent;
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.persistence.utility.PathResolver;
-import lombok.extern.slf4j.Slf4j;
+import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.newDirectoryStream;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.Assert.notNull;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -36,11 +23,25 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import static java.nio.file.Files.isRegularFile;
-import static java.nio.file.Files.newDirectoryStream;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.springframework.util.Assert.notNull;
+import com.google.common.collect.ImmutableList;
+
+import io.github.manami.cache.Cache;
+import io.github.manami.core.Manami;
+import io.github.manami.core.config.CheckListConfig;
+import io.github.manami.core.services.events.AbstractEvent.EventType;
+import io.github.manami.core.services.events.CrcEvent;
+import io.github.manami.core.services.events.DeadLinkEvent;
+import io.github.manami.core.services.events.EpisodesDifferEvent;
+import io.github.manami.core.services.events.ProgressState;
+import io.github.manami.core.services.events.RelativizeLocationEvent;
+import io.github.manami.core.services.events.SimpleLocationEvent;
+import io.github.manami.core.services.events.TitleDifferEvent;
+import io.github.manami.core.services.events.TypeDifferEvent;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
@@ -53,7 +54,7 @@ public class CheckListService extends AbstractService<Void> {
     private final Cache cache;
     private final List<Anime> list;
     private final CheckListConfig config;
-    private final Path currentWorkingDir;
+    private Path currentWorkingDir = null;
     private int currentProgress = 0;
     private int progressMax = 0;
     private final Manami app;
@@ -74,11 +75,14 @@ public class CheckListService extends AbstractService<Void> {
      */
     public CheckListService(final CheckListConfig config, final Path file, final Cache cache, final Manami app, final Observer observer) {
         this.config = config;
-        currentWorkingDir = file.getParent();
         this.cache = cache;
         this.app = app;
         list = app.fetchAnimeList();
         addObserver(observer);
+
+        if (file != null) {
+            currentWorkingDir = file.getParent();
+        }
     }
 
 
