@@ -1,10 +1,8 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.partition;
-import static io.github.manami.gui.components.Icons.createIconDelete;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +24,6 @@ import io.github.manami.cache.strategies.headlessbrowser.extractor.ExtractorList
 import io.github.manami.cache.strategies.headlessbrowser.extractor.anime.AnimeEntryExtractor;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
-import io.github.manami.core.commands.CmdDeleteFilterEntry;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.core.services.RelatedAnimeFinderService;
@@ -41,17 +38,14 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.util.Duration;
 
 /**
@@ -79,17 +73,12 @@ public class FilterListController extends AbstractAnimeListController implements
     /** Instance of the main application. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
-    private RecommendationFilterListController recomController;
-
     /** List of all actively running services. */
     private final ObservableList<AnimeRetrievalService> serviceList = new ObservableListWrapper<>(new CopyOnWriteArrayList<>());
 
     /** Root container. */
     @FXML
     private AnchorPane anchor;
-
-    /** {@link GridPane} which shows the results. */
-    private GridPane filterListGridPane;
 
     /** {@link GridPane} which shows the results. */
     @FXML
@@ -107,18 +96,11 @@ public class FilterListController extends AbstractAnimeListController implements
     @FXML
     private Label lblProgressMsg;
 
-    @FXML
-    private TitledPane filterListPane;
-
-    @FXML
-    private TitledPane recomListPane;
-
-    @FXML
-    private Pagination pagination;
-
-    private final static int MAX_ENTRIES = 25;
-
     private ValidationSupport validationSupport;
+
+    private List<Anime> recommendedEntries;
+
+    private Tab tab;
 
 
     /**
@@ -127,11 +109,10 @@ public class FilterListController extends AbstractAnimeListController implements
      * @since 2.1.0
      */
     public void initialize() {
+        recommendedEntries = newArrayList();
+
         validationSupport = new ValidationSupport();
         validationSupport.registerValidator(txtUrl, Validator.createRegexValidator("Info link must be a valid URL", "(http)s?(://).*", Severity.ERROR));
-
-        filterListGridPane = new GridPane();
-        pagination.setPageFactory(this::createPage);
 
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
@@ -145,32 +126,6 @@ public class FilterListController extends AbstractAnimeListController implements
                 lblProgressMsg.setText(text);
                 lblProgressMsg.setVisible(true);
             }
-        });
-
-        app.fetchFilterList().forEach(this::addEntryToGui);
-
-        // recommendations
-        recomController = new RecommendationFilterListController(recomGridPane, recomListPane);
-
-        showEntries();
-    }
-
-
-    /**
-     * Checks repeatedly for external changes and shows new entries if
-     * necessary.
-     *
-     * @since 2.3.0
-     */
-    @Override
-    public void showEntries() {
-        Platform.runLater(() -> {
-            updateChildren();
-            recomController.showEntries();
-            pagination.setPageFactory(this::createPage);
-            pagination.setPageCount(partition(newArrayList(getComponentList().values()), MAX_ENTRIES).size());
-            pagination.setCurrentPageIndex(pagination.getCurrentPageIndex());
-            filterListPane.setText(String.format("%s (%s)", FILTER_LIST_TITLE, getComponentList().size()));
         });
     }
 
@@ -219,42 +174,14 @@ public class FilterListController extends AbstractAnimeListController implements
             }
         }
 
-        txtUrl.setText("");
+        txtUrl.setText(EMPTY);
         showEntries();
     }
 
 
     @Override
     protected GridPane getGridPane() {
-        return filterListGridPane;
-    }
-
-
-    /**
-     * @since 2.7.2
-     * @param pageIndex
-     * @return
-     */
-    public GridPane createPage(final int pageIndex) {
-        final GridPane gridPane = new GridPane();
-        if (getComponentList().size() > 0) {
-            final List<AnimeGuiComponentsListEntry> sortedValueList = newArrayList(getComponentList().values());
-            sortedValueList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
-            final List<List<AnimeGuiComponentsListEntry>> partitions = partition(sortedValueList, MAX_ENTRIES);
-            pagination.setPageCount(partitions.size());
-
-            for (final AnimeGuiComponentsListEntry entry : partitions.get(pageIndex)) {
-                final RowConstraints row = new RowConstraints();
-                gridPane.getRowConstraints().add(row);
-                gridPane.add(entry.getPictureComponent(), 0, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getPictureComponent(), new Insets(0.0, 0.0, 10.0, 0.0));
-                gridPane.add(entry.getTitleComponent(), 1, gridPane.getRowConstraints().size() - 1);
-                gridPane.add(entry.getRemoveButton(), 2, gridPane.getRowConstraints().size() - 1);
-                GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 0.0, 20.0));
-            }
-        }
-
-        return gridPane;
+        return recomGridPane;
     }
 
 
@@ -268,17 +195,14 @@ public class FilterListController extends AbstractAnimeListController implements
         if (object instanceof ArrayList) {
             final List<Anime> list = (ArrayList<Anime>) object;
 
-            if (list.size() > 0) {
-                int numOfEntriesAdded = 0;
-                for (final Anime element : list) {
-                    if (!recomController.containsEntry(element.getInfoLink())) {
-                        recomController.addEntryToGui(FilterEntry.valueOf(element));
-                        recomController.showEntries();
-                        numOfEntriesAdded++;
-                    }
-                }
+            recommendedEntries.addAll(list);
 
-                if (numOfEntriesAdded > 0) {
+            if (list.size() > 0) {
+                final long numOfEntriesAdded = list.stream().filter(e -> !containsEntry(e.getInfoLink())).count();
+
+                showEntries();
+
+                if (numOfEntriesAdded > 0L) {
                     final String strEntry = (numOfEntriesAdded > 1) ? "entries" : "entry";
                     final String text = (numOfEntriesAdded > 1) ? "Found " + numOfEntriesAdded + " new animes which you might want to filter." : "A new anime was found which you might want to filter";
                     Platform.runLater(() -> Notifications.create().title("New recommended filter " + strEntry).text(text).hideAfter(Duration.seconds(6.0))
@@ -286,6 +210,13 @@ public class FilterListController extends AbstractAnimeListController implements
                 }
             }
         }
+    }
+
+
+    @Override
+    public void showEntries() {
+        super.showEntries();
+        Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", recommendedEntries.size())));
     }
 
 
@@ -304,12 +235,19 @@ public class FilterListController extends AbstractAnimeListController implements
      */
     public void clear() {
         Platform.runLater(() -> {
-            recomController.getGridPane().getChildren().clear();
             getGridPane().getChildren().clear();
         });
-        recomController.clearComponentList();
+
         clearComponentList();
         showEntries();
+    }
+
+
+    @Override
+    protected ImageView getPictureComponent(final MinimalEntry anime) {
+        final ImageView thumbnail = new ImageView(new Image(anime.getThumbnail(), true));
+        thumbnail.setCache(true);
+        return thumbnail;
     }
 
 
@@ -321,35 +259,62 @@ public class FilterListController extends AbstractAnimeListController implements
 
     @Override
     protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
+        super.addFilterListButton(componentListEntry);
+        componentListEntry.getAddToFilterListButton().setOnAction(event -> {
+            cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
+            recommendedEntries.remove(componentListEntry.getAnime());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+            showEntries();
+        });
         return componentListEntry;
     }
 
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnDelete = new Button("", createIconDelete());
-        btnDelete.setTooltip(new Tooltip("delete from filter list"));
-
-        componentListEntry.setRemoveButton(btnDelete);
-
-        btnDelete.setOnAction(event -> {
-            cmdService.executeCommand(new CmdDeleteFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry);
+        super.addRemoveButton(componentListEntry);
+        componentListEntry.getRemoveButton().setOnAction(event -> {
+            recommendedEntries.remove(componentListEntry.getAnime());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
             showEntries();
         });
-
         return componentListEntry;
     }
 
 
     @Override
     protected List<? extends MinimalEntry> getEntryList() {
-        return Main.CONTEXT.getBean(Manami.class).fetchFilterList();
+        return recommendedEntries;
     }
 
 
     @Override
     boolean isInList(final InfoLink infoLink) {
         return infoLink.isValid() && app.filterEntryExists(infoLink);
+    }
+
+
+    /**
+     * @since 2.7.0
+     * @param infoLink
+     * @return
+     */
+    public boolean containsEntry(final InfoLink infoLink) {
+        if (!infoLink.isValid()) {
+            return false;
+        }
+
+        for (final AnimeGuiComponentsListEntry element : getComponentList().values()) {
+            if (element.getAnime().getInfoLink().getUrl().equalsIgnoreCase(infoLink.getUrl())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public void setTab(final Tab tab) {
+        this.tab = tab;
     }
 }

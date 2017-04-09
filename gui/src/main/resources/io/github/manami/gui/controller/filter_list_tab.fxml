@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="This list contains all animes that you don't want to appear in the related animes list or in recommendations." />
+                             <Label text="This list contains all anime which are recommended for your filter list. All anime that you don't want to appear in the related animes list or in recommendations should be added to your filter list. You cannot browse the filter list. If you want to delete an entry, search for it and then delete it." />
                              <HBox>
                                  <opaqueInsets>
                                      <Insets />
@@ -76,42 +76,18 @@
                          </children>
                       </VBox>
                   </center>
-                  <bottom>
-                      <Accordion BorderPane.alignment="CENTER">
-                          <panes>
-                              <TitledPane fx:id="recomListPane" expanded="false" text="Recommended Filter List">
-                                 <content>
-                                     <GridPane fx:id="recomGridPane">
-                                         <columnConstraints>
-                                             <ColumnConstraints hgrow="ALWAYS" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
-                                             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                                             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                                         </columnConstraints>
-                                         <rowConstraints>
-                                             <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
-                                         </rowConstraints>
-                                     </GridPane>
-                                 </content>
-                              </TitledPane>
-                              <TitledPane fx:id="filterListPane" text="Filter List">
-                                 <content>
-                                     <BorderPane>
-                                         <center>
-                                             <Pagination fx:id="pagination" maxPageIndicatorCount="20" pageCount="0" BorderPane.alignment="CENTER">
-                                                 <BorderPane.margin>
-                                                     <Insets />
-                                                 </BorderPane.margin>
-                                             </Pagination>
-                                         </center>
-                                     </BorderPane>
-                                 </content>
-                              </TitledPane>
-                          </panes>
-                          <BorderPane.margin>
-                              <Insets bottom="150.0" top="50.0" />
-                          </BorderPane.margin>
-                      </Accordion>
-                  </bottom>
+               <bottom>
+                         <GridPane fx:id="recomGridPane" BorderPane.alignment="CENTER">
+                             <columnConstraints>
+                                 <ColumnConstraints hgrow="ALWAYS" maxWidth="60.0" minWidth="10.0" prefWidth="60.0" />
+                                 <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                                 <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                             </columnConstraints>
+                             <rowConstraints>
+                                 <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                             </rowConstraints>
+                         </GridPane>
+               </bottom>
               </BorderPane>
           </content>
        </ScrollPane>
