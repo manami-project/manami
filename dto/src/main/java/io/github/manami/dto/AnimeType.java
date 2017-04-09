@@ -3,7 +3,8 @@ package io.github.manami.dto;
 import lombok.Getter;
 
 /**
- * Types of animes which are known.
+ * Types of anime which are known.
+ * 
  * @author manami-project
  * @version 2.0.0
  */
@@ -41,7 +42,7 @@ public enum AnimeType {
     /**
      * @since 2.0.0
      * @param type
-     * Type as String value.
+     *            Type as String value.
      */
     private AnimeType(final String value) {
         this.value = value;
@@ -50,9 +51,10 @@ public enum AnimeType {
 
     /**
      * Returns a type by a String comparison. It's not case sensitive.
+     * 
      * @since 2.0.0
      * @param name
-     * Type as String value.
+     *            Type as String value.
      * @return The corresponding AnimeType or null if no type matches.
      */
     public static AnimeType findByName(final String name) {

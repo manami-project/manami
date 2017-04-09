@@ -31,14 +31,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 /**
- * Controller for finding related animes. Opening as a new tab.
+ * Controller for finding related anime. Opening as a new tab.
  *
  * @author manami-project
  * @since 2.3.0
  */
 public class RelatedAnimeController extends AbstractAnimeListController implements Observer {
 
-    public static final String RELATED_ANIME_TAB_TITLE = "Related Animes";
+    public static final String RELATED_ANIME_TAB_TITLE = "Related Anime";
 
     /** Application */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
@@ -167,7 +167,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
         // Processing is done
         if (object instanceof Boolean) {
             showProgressControls(false);
-            Platform.runLater(() -> Notifications.create().title("Search for related animes finished").text("Finished search for related animes.").hideAfter(NOTIFICATION_DURATION)
+            Platform.runLater(() -> Notifications.create().title("Search for related anime finished").text("Finished search for related anime.").hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RelatedAnimeNotificationEventHandler()).showInformation());
         }
     }

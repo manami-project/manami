@@ -25,7 +25,7 @@ import javafx.collections.SetChangeListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Finds related animes in info site links.
+ * Finds related anime in info site links.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
  * @author manami-project
@@ -34,17 +34,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Anime>> {
 
-    /** Contains all animes which are already in the anime list. */
-    private final List<InfoLink> myAnimes;
+    /** Contains all anime which are already in the anime list. */
+    private final List<InfoLink> myAnime;
 
-    /** Stack of animes which need to be checked. */
-    private Stack<InfoLink> animesToCheck;
+    /** Stack of anime which need to be checked. */
+    private Stack<InfoLink> animeToCheck;
 
-    /** List of all related animes. This output is being shown to the user. */
+    /** List of all related anime. This output is being shown to the user. */
     private final Map<InfoLink, Anime> relatedAnime;
 
-    /** Animes which have already been checked. */
-    private final ObservableSet<InfoLink> checkedAnimes;
+    /** Anime which have already been checked. */
+    private final ObservableSet<InfoLink> checkedAnime;
 
     /** Instance of the cache. */
     private final Cache cache;
@@ -61,7 +61,7 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
      * @param app
      *            Instance of the manami app.
      * @param list
-     *            List which being checked for related animes.
+     *            List which being checked for related anime.
      * @param observer
      *            Observer which is being notified about the progress. It also
      *            gets the result as a list through notification.
@@ -71,13 +71,13 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         this.cache = cache;
         this.list = list;
         addObserver(observer);
-        myAnimes = newArrayList();
+        myAnime = newArrayList();
         relatedAnime = newHashMap();
-        animesToCheck = new Stack<>();
-        checkedAnimes = new ObservableSetWrapper<>(newHashSet());
-        checkedAnimes.addListener((SetChangeListener<InfoLink>) event -> {
+        animeToCheck = new Stack<>();
+        checkedAnime = new ObservableSetWrapper<>(newHashSet());
+        checkedAnime.addListener((SetChangeListener<InfoLink>) event -> {
             setChanged();
-            notifyObservers(new ProgressState(checkedAnimes.size() + 1, animesToCheck.size()));
+            notifyObservers(new ProgressState(checkedAnime.size() + 1, animeToCheck.size()));
         });
     }
 
@@ -87,24 +87,24 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         list.forEach(entry -> {
             final InfoLink infoLink = entry.getInfoLink();
             if (infoLink.isValid()) {
-                myAnimes.add(infoLink);
-                animesToCheck.push(infoLink);
+                myAnime.add(infoLink);
+                animeToCheck.push(infoLink);
             }
         });
 
         // Sort stack
         final Stack<InfoLink> sortedStack = new Stack<>();
-        while (!animesToCheck.isEmpty()) {
-            sortedStack.push(animesToCheck.pop());
+        while (!animeToCheck.isEmpty()) {
+            sortedStack.push(animeToCheck.pop());
         }
-        animesToCheck = sortedStack;
+        animeToCheck = sortedStack;
 
-        while (!animesToCheck.empty() && !isInterrupt()) {
-            final InfoLink entry = animesToCheck.pop();
+        while (!animeToCheck.empty() && !isInterrupt()) {
+            final InfoLink entry = animeToCheck.pop();
 
-            if (!checkedAnimes.contains(entry)) {
+            if (!checkedAnime.contains(entry)) {
                 MDC.put("infoLink", entry.getUrl());
-                log.debug("Checking for related animes.");
+                log.debug("Checking for related anime.");
                 checkAnime(entry);
             }
         }
@@ -116,10 +116,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
     @Override
     public void reset() {
         cancel();
-        myAnimes.clear();
-        animesToCheck.clear();
+        myAnime.clear();
+        animeToCheck.clear();
         relatedAnime.clear();
-        checkedAnimes.clear();
+        checkedAnime.clear();
         super.reset();
     }
 
@@ -135,13 +135,13 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
         final Anime cachedAnime = optCachedAnime.get();
 
         final List<InfoLink> relatedAnimeList = newArrayList();
-        cache.fetchRelatedAnimes(cachedAnime.getInfoLink()).forEach(relatedAnimeList::add);
+        cache.fetchRelatedAnime(cachedAnime.getInfoLink()).forEach(relatedAnimeList::add);
 
         if (log.isTraceEnabled()) {
             relatedAnimeList.forEach(e -> log.trace("{}", e));
         }
 
-        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !animesToCheck.contains(e)).filter(e -> !checkedAnimes.contains(e)).filter(e -> !app.filterEntryExists(e)).forEach(animesToCheck::push);
+        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !animeToCheck.contains(e)).filter(e -> !checkedAnime.contains(e)).filter(e -> !app.filterEntryExists(e)).forEach(animeToCheck::push);
         relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !relatedAnime.containsKey(e)).filter(e -> !app.animeEntryExists(e)).filter(e -> !app.watchListEntryExists(e)).filter(e -> !app.filterEntryExists(e)).forEach(e -> {
             final Anime curAnime = cache.fetchAnime(e).get();
             relatedAnime.put(e, curAnime);
@@ -150,6 +150,6 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
         setChanged();
         notifyObservers(showAnimeList);
-        checkedAnimes.add(infoLink);
+        checkedAnime.add(infoLink);
     }
 }

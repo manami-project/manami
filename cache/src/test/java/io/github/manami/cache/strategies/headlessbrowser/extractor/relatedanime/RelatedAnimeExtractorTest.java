@@ -38,11 +38,11 @@ public class RelatedAnimeExtractorTest {
 
 
     @Test(groups = UNIT_TEST_GROUP)
-    public void extractRelatedAnimes() {
+    public void extractRelatedAnime() {
         // given
 
         // when
-        final Set<InfoLink> result = sut.extractRelatedAnimes(rawHtml);
+        final Set<InfoLink> result = sut.extractRelatedAnime(rawHtml);
 
         // then
         assertNotNull(result);

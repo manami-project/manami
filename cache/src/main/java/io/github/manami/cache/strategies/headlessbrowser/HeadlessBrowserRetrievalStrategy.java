@@ -89,7 +89,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     @Override
-    public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
+    public Set<InfoLink> fetchRelatedAnime(final InfoLink infoLink) {
         Set<InfoLink> ret = newHashSet();
         final Optional<RelatedAnimeExtractor> extractor = extractors.getRelatedAnimeExtractor(infoLink);
 
@@ -99,7 +99,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
             // the site is not cached
             if (normalizedInfoLink.isValid()) {
                 final String infoLinkSite = downloadSiteContent(normalizedInfoLink);
-                ret = extractor.get().extractRelatedAnimes(infoLinkSite);
+                ret = extractor.get().extractRelatedAnime(infoLinkSite);
             }
         }
 

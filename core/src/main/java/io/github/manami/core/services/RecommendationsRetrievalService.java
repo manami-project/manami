@@ -28,7 +28,7 @@ import io.github.manami.dto.entities.InfoLink;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Extracts and counts recommendations for a list of animes.
+ * Extracts and counts recommendations for a list of anime.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
  *
  * @author manami-project

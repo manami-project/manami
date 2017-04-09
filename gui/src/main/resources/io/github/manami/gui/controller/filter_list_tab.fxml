@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="This list contains all anime which are recommended for your filter list. All anime that you don't want to appear in the related animes list or in recommendations should be added to your filter list. You cannot browse the filter list. If you want to delete an entry, search for it and then delete it." />
+                             <Label text="This list contains all anime which are recommended for your filter list. All anime that you don't want to appear in the related anime list or in recommendations should be added to your filter list. You cannot browse the filter list. If you want to delete an entry, search for it and then delete it." />
                              <HBox>
                                  <opaqueInsets>
                                      <Insets />

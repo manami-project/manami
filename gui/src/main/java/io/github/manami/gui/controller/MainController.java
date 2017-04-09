@@ -107,7 +107,7 @@ public class MainController implements Observer {
     /** Tab for the filter list. */
     private Tab filterTab;
 
-    /** Tab for the related animes. */
+    /** Tab for the related anime. */
     private Tab relatedAnimeTab;
 
     /** Tab for the recommendations. */
@@ -214,9 +214,9 @@ public class MainController implements Observer {
     @FXML
     private MenuItem cmiDeleteEntry;
 
-    /** Menu item: "Related Animes" */
+    /** Menu item: "Related Anime" */
     @FXML
-    private MenuItem miRelatedAnimes;
+    private MenuItem miRelatedAnime;
 
     /** Menu item: "Recommendations" */
     @FXML
@@ -395,7 +395,7 @@ public class MainController implements Observer {
         final boolean isAnimeListEmpty = app.fetchAnimeList().size() == 0;
         Platform.runLater(() -> {
             miCheckList.setDisable(isAnimeListEmpty);
-            miRelatedAnimes.setDisable(isAnimeListEmpty);
+            miRelatedAnime.setDisable(isAnimeListEmpty);
             miRecommendations.setDisable(isAnimeListEmpty);
             miDeleteEntry.setDisable(isAnimeListEmpty);
             cmiDeleteEntry.setDisable(isAnimeListEmpty);
@@ -810,7 +810,7 @@ public class MainController implements Observer {
     }
 
     /**
-     * An event which is handled whenever a notification for related animes is
+     * An event which is handled whenever a notification for related anime is
      * being clicked.
      *
      * @since 2.5.1

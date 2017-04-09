@@ -30,7 +30,7 @@ public class DaemonRestRetrievalStrategy implements AnimeRetrieval, RelatedAnime
 
 
     @Override
-    public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
+    public Set<InfoLink> fetchRelatedAnime(final InfoLink infoLink) {
         return null;
     }
 

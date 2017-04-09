@@ -15,7 +15,7 @@ import io.github.manami.dto.entities.RecommendationList;
 public class NoRecommendationsTest {
 
     @Test(groups = UNIT_TEST_GROUP, description = "Site without recommendations.")
-    public void extractRelatedAnimesNoRelations() throws IOException {
+    public void extractRelatedAnimeNoRelations() throws IOException {
         // given
         final MyAnimeListNetRecommendationsExtractor sut = new MyAnimeListNetRecommendationsExtractor();
         final ClassPathResource resource = new ClassPathResource("recommendations_test_no_recommendations.html");

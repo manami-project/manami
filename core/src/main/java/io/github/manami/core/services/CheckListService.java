@@ -88,7 +88,7 @@ public class CheckListService extends AbstractService<Void> {
 
     @Override
     public Void execute() {
-        notNull(list, "List of animes cannot be null");
+        notNull(list, "List of anime cannot be null");
 
         countProgressMax();
 

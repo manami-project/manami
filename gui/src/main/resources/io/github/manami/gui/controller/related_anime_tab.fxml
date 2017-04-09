@@ -16,7 +16,7 @@
           <content>
               <BorderPane prefHeight="-1.0" prefWidth="-1.0">
                   <top>
-                      <Label text="Related Animes">
+                      <Label text="Related Anime">
                           <font>
                               <Font name="System Bold" size="16.0" />
                           </font>
@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="This list contains all animes which are related to those in the anime list. Not being shown are entries from the filter list.">
+                             <Label text="This list contains all anime which are related to those in the anime list. Not being shown are entries from the filter list.">
                                  <VBox.margin>
                                      <Insets bottom="30.0" />
                                  </VBox.margin>

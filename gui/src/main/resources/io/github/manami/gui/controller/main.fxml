@@ -129,7 +129,7 @@
                              <KeyCodeCombination alt="UP" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>
                      </MenuItem>
-                     <MenuItem fx:id="miRelatedAnimes" disable="true" mnemonicParsing="false" onAction="#showRelatedAnimeTab" text="Related Animes">
+                     <MenuItem fx:id="miRelatedAnime" disable="true" mnemonicParsing="false" onAction="#showRelatedAnimeTab" text="Related Anime">
                          <accelerator>
                              <KeyCodeCombination alt="UP" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>

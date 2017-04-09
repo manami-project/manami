@@ -55,7 +55,7 @@ public class CacheInitializationService extends AbstractService<Void> {
 
     @Override
     public Void execute() {
-        notNull(list, "List of animes cannot be null");
+        notNull(list, "List of anime cannot be null");
 
         if (!list.isEmpty()) {
             // Create copy of anime list and shuffle it
@@ -117,7 +117,7 @@ public class CacheInitializationService extends AbstractService<Void> {
             public void run() {
                 if (!isInterrupted()) {
                     log.debug("Creating related anime cache entry for {} if necessary.", anime.getInfoLink());
-                    cache.fetchRelatedAnimes(anime.getInfoLink());
+                    cache.fetchRelatedAnime(anime.getInfoLink());
                 }
             }
         });

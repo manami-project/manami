@@ -204,7 +204,7 @@ public class FilterListController extends AbstractAnimeListController implements
 
                 if (numOfEntriesAdded > 0L) {
                     final String strEntry = (numOfEntriesAdded > 1) ? "entries" : "entry";
-                    final String text = (numOfEntriesAdded > 1) ? "Found " + numOfEntriesAdded + " new animes which you might want to filter." : "A new anime was found which you might want to filter";
+                    final String text = (numOfEntriesAdded > 1) ? "Found " + numOfEntriesAdded + " new anime which you might want to filter." : "A new anime was found which you might want to filter";
                     Platform.runLater(() -> Notifications.create().title("New recommended filter " + strEntry).text(text).hideAfter(Duration.seconds(6.0))
                             .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RecommendedFilterListEntryNotificationEventHandler()).showInformation());
                 }

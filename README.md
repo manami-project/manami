@@ -4,25 +4,25 @@
 
 
 ## What does it do?
-Manami let's you create an index file for the animes that you already watched and stored on your hard drive. Additionally based on this list you can search for related animes and recommendations.
+Manami let's you create an index file for the anime that you already watched and stored on your hard drive. Additionally based on this list you can search for related anime and recommendations.
 
 ### All features at a glance
 * Import entries from MAL
 * Automatically fill out meta information upon adding a new entry
     * You only have to add the info link and the location
-* Creates an index list for your local animes which can be opened in your browser
+* Creates an index list for your local anime which can be opened in your browser
 * Import/Export from/to CSV/JSON
     * The basic file format is XML
 * Recommendation search
 * Related anime finder
 * Check your list for inconsistency
 * Use a filter list to narrow your search results down
-* Use a watch list with animes you are currently watching or you plan to watch
+* Use a watch list with anime you are currently watching or you plan to watch
 * No need to provide username or password
 * No installer, it's just portable
 
 ### Why?
-Manami is not meant to be an alternative to MAL. It should be seen as an extension. It provides an index list for you local animes and features that I personally missed on MAL which have never been implemented.
+Manami is not meant to be an alternative to MAL. It should be seen as an extension. It provides an index list for you local anime and features that I personally missed on MAL which have never been implemented.
 
 ### Installation
 * Needs Java8 u66 or higher

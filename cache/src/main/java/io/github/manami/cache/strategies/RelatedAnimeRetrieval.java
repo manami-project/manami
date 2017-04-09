@@ -1,17 +1,17 @@
 package io.github.manami.cache.strategies;
 
-import io.github.manami.dto.entities.InfoLink;
-
 import java.util.Set;
+
+import io.github.manami.dto.entities.InfoLink;
 
 public interface RelatedAnimeRetrieval {
 
     /**
-     * Fetches all related animes for this specific anime (not recursively).
-     * 
+     * Fetches all related anime for this specific anime (not recursively).
+     *
      * @param infoLink
-     * @return A {@link Set} of all related animes or an empty {@link Set}, but
+     * @return A {@link Set} of all related anime or an empty {@link Set}, but
      *         never null.
      */
-    Set<InfoLink> fetchRelatedAnimes(InfoLink infoLink);
+    Set<InfoLink> fetchRelatedAnime(InfoLink infoLink);
 }

@@ -102,7 +102,7 @@ public final class CacheManager implements Cache {
 
 
     @Override
-    public Set<InfoLink> fetchRelatedAnimes(final InfoLink infoLink) {
+    public Set<InfoLink> fetchRelatedAnime(final InfoLink infoLink) {
         Set<InfoLink> ret = newHashSet();
 
         if (!infoLink.isValid()) {
@@ -113,7 +113,7 @@ public final class CacheManager implements Cache {
             ret = relatedAnimeCache.get(infoLink);
 
             if (ret == null || ret.isEmpty()) {
-                log.warn("No related animes in cache. Invalidating cache entry and refetching it.");
+                log.warn("No related anime in cache. Invalidating cache entry and refetching it.");
                 relatedAnimeCache.invalidate(infoLink);
                 ret = relatedAnimeCache.get(infoLink);
                 log.warn("Result after reinitialising cache entry for [{}]", ret);
@@ -172,10 +172,10 @@ public final class CacheManager implements Cache {
             @Override
             public Set<InfoLink> load(final InfoLink infoLink) throws Exception {
                 if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchRelatedAnimes(infoLink);
+                    return daemonRestRetrievalStrategy.fetchRelatedAnime(infoLink);
                 }
 
-                return headlessBrowserRetrievalStrategy.fetchRelatedAnimes(infoLink);
+                return headlessBrowserRetrievalStrategy.fetchRelatedAnime(infoLink);
             }
         });
     }

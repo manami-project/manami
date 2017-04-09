@@ -17,7 +17,7 @@ import io.github.manami.dto.entities.InfoLink;
 public class NoRelationsTest {
 
     @Test(groups = UNIT_TEST_GROUP, description = "Site without related anime.")
-    public void extractRelatedAnimesNoRelations() throws IOException {
+    public void extractRelatedAnimeNoRelations() throws IOException {
         // given
         final MyAnimeListNetRelatedAnimeExtractor sut = new MyAnimeListNetRelatedAnimeExtractor();
         final ClassPathResource resource = new ClassPathResource("related_anime_test_no_relations.html");
@@ -26,7 +26,7 @@ public class NoRelationsTest {
         final String rawHtml = strBuilder.toString();
 
         // when
-        final Set<InfoLink> result = sut.extractRelatedAnimes(rawHtml);
+        final Set<InfoLink> result = sut.extractRelatedAnime(rawHtml);
 
         // then
         assertNotNull(result);
@@ -35,7 +35,7 @@ public class NoRelationsTest {
 
 
     @Test(groups = UNIT_TEST_GROUP, description = "Alternative site without related anime.")
-    public void extractRelatedAnimesNoRelations2() throws IOException {
+    public void extractRelatedAnimeNoRelations2() throws IOException {
         // given
         final MyAnimeListNetRelatedAnimeExtractor sut = new MyAnimeListNetRelatedAnimeExtractor();
         final ClassPathResource resource = new ClassPathResource("related_anime_test_no_relations_2.html");
@@ -44,7 +44,7 @@ public class NoRelationsTest {
         final String rawHtml = strBuilder.toString();
 
         // when
-        final Set<InfoLink> result = sut.extractRelatedAnimes(rawHtml);
+        final Set<InfoLink> result = sut.extractRelatedAnime(rawHtml);
 
         // then
         assertNotNull(result);

@@ -19,7 +19,7 @@ public interface Cache {
     Optional<Anime> fetchAnime(InfoLink infoLink);
 
 
-    Set<InfoLink> fetchRelatedAnimes(InfoLink infoLink);
+    Set<InfoLink> fetchRelatedAnime(InfoLink infoLink);
 
 
     RecommendationList fetchRecommendations(InfoLink infoLink);

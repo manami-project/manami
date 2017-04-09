@@ -55,7 +55,7 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     @Override
     protected Void execute() {
         notNull(cache, "Cache cannot be null");
-        notNull(persistence, "List of animes cannot be null");
+        notNull(persistence, "List of anime cannot be null");
 
         httpclient = HttpClients.createDefault();
 

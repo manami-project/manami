@@ -21,7 +21,7 @@ import io.github.manami.dto.entities.InfoLink;
 public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtractor {
 
     @Override
-    public Set<InfoLink> extractRelatedAnimes(final String siteContent) {
+    public Set<InfoLink> extractRelatedAnime(final String siteContent) {
         final List<InfoLink> raw = newArrayList();
         String subStr = siteContent.trim();
 
