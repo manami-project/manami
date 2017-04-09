@@ -1,21 +1,30 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static io.github.manami.gui.components.Icons.createIconRemove;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.awt.Desktop;
 import java.net.URI;
 import java.text.Collator;
 import java.util.List;
 
+import io.github.manami.Main;
+import io.github.manami.core.Manami;
+import io.github.manami.core.commands.CmdDeleteFilterEntry;
+import io.github.manami.core.commands.CommandService;
+import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -33,6 +42,12 @@ public class SearchResultsController {
 
     public static final String SEARCH_RESULTS_TAB_TITLE = "Search Results";
     public static final String TITLED_TAB_PANE_TITLE = "Search results from:";
+
+    /** Instance of the application. */
+    private final Manami app = Main.CONTEXT.getBean(Manami.class);
+
+    /** Instance of the main application. */
+    private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     @FXML
     private TitledPane animeListTitledPane;
@@ -57,6 +72,7 @@ public class SearchResultsController {
 
     /** List of all GUI components. */
     private List<AnimeGuiComponentsListEntry> componentList;
+    private List<AnimeGuiComponentsListEntry> filterListComponents;
     private SearchResultEvent event;
     private boolean isPaneAlreadyExpaned;
 
@@ -81,15 +97,13 @@ public class SearchResultsController {
     }
 
 
-    /**
-     * @param event
-     * @param isPaneAlreadyExpaned
-     */
     private void createWatchListEntries() {
         componentList = newArrayList();
+
         event.getWatchListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
-        showEntries(watchListGridPane);
-        watchListTitledPane.setText(String.format("%s watch list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
+
+        showEntries(watchListGridPane, componentList);
+        watchListTitledPane.setText(String.format("%s watch list (%d)", TITLED_TAB_PANE_TITLE, watchListGridPane.getChildrenUnmodifiable().size()));
 
         boolean isExpandWatchListPane = false;
         if (!isPaneAlreadyExpaned) {
@@ -101,20 +115,32 @@ public class SearchResultsController {
     }
 
 
-    /**
-     * @param event
-     * @param isPaneAlreadyExpaned
-     * @return
-     */
     private void createFilterListEntries() {
-        componentList = newArrayList();
-        event.getFilterListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
-        showEntries(filterListGridPane);
-        filterListTitledPane.setText(String.format("%s filter list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
+        filterListComponents = newArrayList();
+
+        event.getFilterListSearchResultList().forEach(element -> {
+            final AnimeGuiComponentsListEntry animeGuiComponentsListEntry = new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element));
+
+            final Button removeButton = new Button(EMPTY, createIconRemove());
+            removeButton.setTooltip(new Tooltip("remove"));
+
+            removeButton.setOnAction(event -> {
+                cmdService.executeCommand(new CmdDeleteFilterEntry(FilterEntry.valueOf(element), app));
+                filterListComponents.remove(animeGuiComponentsListEntry);
+                updateFilterListTitle();
+                showEntries(filterListGridPane, filterListComponents);
+            });
+
+            animeGuiComponentsListEntry.setRemoveButton(removeButton);
+            filterListComponents.add(animeGuiComponentsListEntry);
+        });
+
+        updateFilterListTitle();
+        showEntries(filterListGridPane, filterListComponents);
 
         boolean isExpandFilterListPane = false;
         if (!isPaneAlreadyExpaned) {
-            isPaneAlreadyExpaned = componentList.size() > 0;
+            isPaneAlreadyExpaned = filterListComponents.size() > 0;
             isExpandFilterListPane = isPaneAlreadyExpaned;
         }
 
@@ -122,14 +148,15 @@ public class SearchResultsController {
     }
 
 
-    /**
-     * @param event
-     * @return
-     */
+    private void updateFilterListTitle() {
+        filterListTitledPane.setText(String.format("%s filter list (%d)", TITLED_TAB_PANE_TITLE, filterListComponents.size()));
+    }
+
+
     private void createAnimeListEntries() {
         componentList = newArrayList();
         event.getAnimeListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
-        showEntries(animeListGridPane);
+        showEntries(animeListGridPane, componentList);
         animeListTitledPane.setText(String.format("%s anime list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
         isPaneAlreadyExpaned = componentList.size() > 0;
         animeListTitledPane.setExpanded(isPaneAlreadyExpaned);
@@ -141,12 +168,12 @@ public class SearchResultsController {
      *
      * @since 2.1.3
      */
-    private void showEntries(final GridPane gridPane) {
-        componentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
+    private void showEntries(final GridPane gridPane, final List<AnimeGuiComponentsListEntry> guiComponentList) {
+        guiComponentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
 
         gridPane.getChildren().clear();
 
-        for (final AnimeGuiComponentsListEntry entry : componentList) {
+        for (final AnimeGuiComponentsListEntry entry : guiComponentList) {
             final RowConstraints row = new RowConstraints();
             gridPane.getRowConstraints().add(row);
 
@@ -155,6 +182,11 @@ public class SearchResultsController {
 
             gridPane.add(entry.getTitleComponent(), 1, gridPane.getRowConstraints().size() - 1);
             GridPane.setMargin(entry.getTitleComponent(), new Insets(0.0, 0.0, 10.0, 15.0));
+
+            if (entry.getRemoveButton() != null) {
+                gridPane.add(entry.getRemoveButton(), 2, gridPane.getRowConstraints().size() - 1);
+                GridPane.setMargin(entry.getRemoveButton(), new Insets(0.0, 0.0, 10.0, 15.0));
+            }
         }
     }
 
