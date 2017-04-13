@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="This list contains all anime that you are planning to watch or that you are currently watching." />
+                             <Label text="This list contains all anime that you are planning to watch or that you are currently watching. You can add multiple entries by separating them with a blank." />
                              <HBox>
                                  <opaqueInsets>
                                      <Insets />

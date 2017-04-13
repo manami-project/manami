@@ -4,6 +4,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
@@ -12,9 +13,6 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.controlsfx.control.Notifications;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
@@ -96,8 +94,6 @@ public class FilterListController extends AbstractAnimeListController implements
     @FXML
     private Label lblProgressMsg;
 
-    private ValidationSupport validationSupport;
-
     private List<Anime> recommendedEntries;
 
     private Tab tab;
@@ -110,9 +106,6 @@ public class FilterListController extends AbstractAnimeListController implements
      */
     public void initialize() {
         recommendedEntries = newArrayList();
-
-        validationSupport = new ValidationSupport();
-        validationSupport.registerValidator(txtUrl, Validator.createRegexValidator("Info link must be a valid URL", "(http)s?(://).*", Severity.ERROR));
 
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
@@ -137,20 +130,26 @@ public class FilterListController extends AbstractAnimeListController implements
      */
     @FXML
     public void addEntry() {
-        InfoLink infoLink = new InfoLink(txtUrl.getText().trim());
+        final List<String> urlList = Arrays.asList(txtUrl.getText().trim().split(" "));
+        final List<InfoLink> infoLinkList = newArrayList();
+        urlList.forEach(url -> infoLinkList.add(new InfoLink(url)));
+        infoLinkList.stream().filter(infoLink -> infoLink.isValid()).forEach(this::addInfoLinkToFilterList);
 
-        if (validationSupport.getValidationResult().getErrors().size() > 0) {
-            return;
-        }
+        txtUrl.setText(EMPTY);
+        showEntries();
+    }
 
+
+    private void addInfoLinkToFilterList(final InfoLink infoLink) {
         final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(infoLink);
+        InfoLink normalizedInfoLink = null;
 
         if (extractor.isPresent()) {
-            infoLink = extractor.get().normalizeInfoLink(infoLink);
+            normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
         }
 
-        if (!app.filterEntryExists(infoLink)) {
-            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, infoLink);
+        if (!app.filterEntryExists(normalizedInfoLink)) {
+            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, normalizedInfoLink);
             retrievalService.setOnSucceeded(event -> {
                 final FilterEntry anime = FilterEntry.valueOf((Anime) event.getSource().getValue());
 
@@ -173,9 +172,6 @@ public class FilterListController extends AbstractAnimeListController implements
                 retrievalService.start();
             }
         }
-
-        txtUrl.setText(EMPTY);
-        showEntries();
     }
 
 

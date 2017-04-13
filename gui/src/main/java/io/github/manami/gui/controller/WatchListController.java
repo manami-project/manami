@@ -1,14 +1,13 @@
 package io.github.manami.gui.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static io.github.manami.gui.components.Icons.createIconDelete;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
@@ -60,8 +59,6 @@ public class WatchListController extends AbstractAnimeListController {
     /** List of all actively running services. */
     private final ObservableList<AnimeRetrievalService> serviceList = new ObservableListWrapper<>(new CopyOnWriteArrayList<>());
 
-    private ValidationSupport validationSupport;
-
     /** {@link TextField} for adding a new entry. */
     @FXML
     private TextField txtUrl;
@@ -85,9 +82,6 @@ public class WatchListController extends AbstractAnimeListController {
      * @since 2.8.0
      */
     public void initialize() {
-        validationSupport = new ValidationSupport();
-        validationSupport.registerValidator(txtUrl, Validator.createRegexValidator("Info link must be a valid URL", "(http)s?(://).*", Severity.ERROR));
-
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
             final String text = String.format("Preparing entries: %s", size);
@@ -115,20 +109,26 @@ public class WatchListController extends AbstractAnimeListController {
 
     @FXML
     public void addEntry() {
-        InfoLink infoLink = new InfoLink(txtUrl.getText().trim());
+        final List<String> urlList = Arrays.asList(txtUrl.getText().trim().split(" "));
+        final List<InfoLink> infoLinkList = newArrayList();
+        urlList.forEach(url -> infoLinkList.add(new InfoLink(url)));
+        infoLinkList.stream().filter(infoLink -> infoLink.isValid()).forEach(this::addInfoLinkToWatchList);
 
-        if (validationSupport.getValidationResult().getErrors().size() > 0) {
-            return;
-        }
+        txtUrl.setText(EMPTY);
+        showEntries();
+    }
 
+
+    private void addInfoLinkToWatchList(final InfoLink infoLink) {
         final Optional<AnimeEntryExtractor> extractor = extractors.getAnimeEntryExtractor(infoLink);
+        InfoLink normalizedInfoLink = null;
 
         if (extractor.isPresent()) {
-            infoLink = extractor.get().normalizeInfoLink(infoLink);
+            normalizedInfoLink = extractor.get().normalizeInfoLink(infoLink);
         }
 
-        if (!app.watchListEntryExists(infoLink)) {
-            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, infoLink);
+        if (!app.watchListEntryExists(normalizedInfoLink)) {
+            final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, normalizedInfoLink);
             retrievalService.setOnSucceeded(event -> {
                 final WatchListEntry anime = WatchListEntry.valueOf((Anime) event.getSource().getValue());
 
@@ -151,9 +151,6 @@ public class WatchListController extends AbstractAnimeListController {
                 retrievalService.start();
             }
         }
-
-        txtUrl.setText("");
-        showEntries();
     }
 
 
