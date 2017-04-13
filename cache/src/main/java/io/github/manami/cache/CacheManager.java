@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Named
 public final class CacheManager implements Cache {
 
+    private static final int TITLE_MAX_LENGTH = 200;
     private final DaemonRestRetrievalStrategy daemonRestRetrievalStrategy;
     private final HeadlessBrowserRetrievalStrategy headlessBrowserRetrievalStrategy;
 
@@ -86,8 +87,8 @@ public final class CacheManager implements Cache {
         try {
             cachedEntry = animeEntryCache.get(infoLink);
 
-            if (!cachedEntry.isPresent()) {
-                log.warn("No meta data entry extracted. Invalidating cache entry and refetching it.");
+            if (!cachedEntry.isPresent() || cachedEntry.get().getTitle().length() > TITLE_MAX_LENGTH) {
+                log.warn("No meta data entry extracted or title way too long. Invalidating cache entry and refetching it.");
                 animeEntryCache.invalidate(infoLink);
                 cachedEntry = animeEntryCache.get(infoLink);
                 log.warn("Result after reinitialising cache entry [{}]", cachedEntry);
