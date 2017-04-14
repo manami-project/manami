@@ -1,13 +1,15 @@
 package io.github.manami.gui.controller.callbacks;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+import io.github.manami.dto.entities.Anime;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import io.github.manami.dto.entities.Anime;
 
 /**
  * Callback for the non-editable column which shows the current row number.
- * 
+ *
  * @author manami-project
  * @since 2.0.0
  */
@@ -25,7 +27,7 @@ public class RowCountCallback implements Callback<TableColumn<Anime, Anime>, Tab
                     final Integer index = getTableRow().getIndex() + 1;
                     setText(index.toString());
                 } else {
-                    setText("");
+                    setText(EMPTY);
                 }
             }
         };

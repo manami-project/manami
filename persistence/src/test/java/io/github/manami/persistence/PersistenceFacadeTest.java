@@ -2,6 +2,7 @@ package io.github.manami.persistence;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -61,7 +62,7 @@ public class PersistenceFacadeTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
-        final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry = new FilterEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = persistenceFacade.filterAnime(entry);
@@ -249,7 +250,7 @@ public class PersistenceFacadeTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
-        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final WatchListEntry entry = new WatchListEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = persistenceFacade.watchAnime(entry);

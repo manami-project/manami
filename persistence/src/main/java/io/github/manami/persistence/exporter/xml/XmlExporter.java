@@ -1,17 +1,13 @@
 package io.github.manami.persistence.exporter.xml;
 
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
-import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.persistence.ApplicationPersistence;
-import io.github.manami.persistence.exporter.Exporter;
-import io.github.manami.persistence.utility.PathResolver;
-import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import static io.github.manami.dto.ToolVersion.getToolVersion;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,14 +18,20 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-import static io.github.manami.dto.ToolVersion.getToolVersion;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.persistence.ApplicationPersistence;
+import io.github.manami.persistence.exporter.Exporter;
+import io.github.manami.persistence.utility.PathResolver;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author manami-project
@@ -51,9 +53,10 @@ public class XmlExporter implements Exporter {
 
     /**
      * Constructor.
+     *
      * @since 2.0.0
      * @param persistence
-     * Config for the application.
+     *            Config for the application.
      */
     public XmlExporter(final ApplicationPersistence persistence) {
         this.persistence = persistence;
@@ -161,6 +164,7 @@ public class XmlExporter implements Exporter {
 
     /**
      * Method to create the dom tree.
+     *
      * @since 2.0.0
      */
     private void createDomTree() {
@@ -180,7 +184,7 @@ public class XmlExporter implements Exporter {
         doc.appendChild(root);
 
         // create transformation and css information
-        final Node xslt = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xml\" href=\"" + createXsltPath() + "\"");
+        final Node xslt = doc.createProcessingInstruction("xml-stylesheet", String.format("type=\"text/xml\" href=\"%s\"", createXsltPath()));
         doc.insertBefore(xslt, root);
 
         return root;
@@ -277,6 +281,7 @@ public class XmlExporter implements Exporter {
 
     /**
      * Write the tree into the file and save it.
+     *
      * @since 2.0.0
      */
     private void prettyPrintXML2File() {

@@ -2,6 +2,7 @@ package io.github.manami.core.services;
 
 import static java.nio.file.Files.isRegularFile;
 import static java.nio.file.Files.newDirectoryStream;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.util.Assert.notNull;
@@ -321,7 +322,7 @@ public class CheckListService extends AbstractService<Void> {
                     final Matcher matcher = pattern.matcher(path.getFileName().toString());
 
                     if (matcher.find()) {
-                        final String titleCrc = matcher.group().replace("[", "").replace("]", "");
+                        final String titleCrc = matcher.group().replace("[", EMPTY).replace("]", EMPTY);
 
                         if (!titleCrc.equalsIgnoreCase(crcSum)) {
                             fireCrcSumsDifferEvent(path);

@@ -1,5 +1,7 @@
 package io.github.manami.gui.controller.callbacks;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import javafx.scene.control.TableCell;
@@ -17,7 +19,7 @@ public class AnimeInfoLinkCallback implements Callback<TableColumn<Anime, InfoLi
             @Override
             public String toString(final InfoLink infoLink) {
                 if (infoLink == null) {
-                    return "";
+                    return EMPTY;
                 }
 
                 return infoLink.getUrl();

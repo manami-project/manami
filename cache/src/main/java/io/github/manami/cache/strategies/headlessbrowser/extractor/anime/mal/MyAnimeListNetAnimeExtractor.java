@@ -1,5 +1,6 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.regex.Matcher;
@@ -52,7 +53,7 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
         if (matcher.find()) {
             title = matcher.group();
-            title = title.replace("<h1 class=\"h1\"><span itemprop=\"name\">", "").replace("</span></h1>", "");
+            title = title.replace("<h1 class=\"h1\"><span itemprop=\"name\">", EMPTY).replace("</span></h1>", EMPTY);
             title = title.trim();
         }
 
@@ -78,8 +79,8 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
             if (matcher.find()) {
                 subStr = matcher.group();
-                subStr = subStr.replace("</a>", "");
-                subStr = subStr.substring(subStr.lastIndexOf(">")).replace(">", "");
+                subStr = subStr.replace("</a>", EMPTY);
+                subStr = subStr.substring(subStr.lastIndexOf(">")).replace(">", EMPTY);
                 subStr = subStr.trim();
                 type = AnimeType.findByName(subStr);
             }
@@ -108,7 +109,7 @@ public class MyAnimeListNetAnimeExtractor extends AbstractAnimeSitePlugin {
 
             if (matcher.find()) {
                 episodes = matcher.group();
-                episodes = episodes.replace("</span>", "").replace("</div>", "");
+                episodes = episodes.replace("</span>", EMPTY).replace("</div>", EMPTY);
                 episodes = episodes.trim();
             }
         }

@@ -1,20 +1,21 @@
 package io.github.manami.dto.entities;
 
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.UUID;
+
 import io.github.manami.dto.AnimeType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.UUID;
-
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 /**
  * Represents an Anime with all it's saved meta information.
- * 
+ *
  * @author manami-project
  * @since 1.0.0
  */
@@ -38,17 +39,17 @@ public class Anime extends AbstractMinimalEntry {
     /** Location on the HDD. */
     @Getter
     @Setter
-    private String location = "";
+    private String location = EMPTY;
 
     /** Url for a picture. */
     @Getter
     @Setter
-    private String picture = "";
+    private String picture = EMPTY;
 
 
     /**
      * Constructor awaiting all Attributes.
-     * 
+     *
      * @since 2.0.0
      * @param title
      *            Title of the anime.
@@ -73,7 +74,7 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Empty constructor.
-     * 
+     *
      * @since 1.0.0
      */
     public Anime() {
@@ -83,7 +84,7 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Constructor.
-     * 
+     *
      * @since 2.7.0
      */
     public Anime(final UUID id) {
@@ -93,7 +94,7 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Fills every attribute in target which is null.
-     * 
+     *
      * @since 2.7.0
      * @param source
      *            {@link Anime} which is being copied.
@@ -134,7 +135,7 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Copies every attribute of an anime.
-     * 
+     *
      * @since 2.6.2
      * @param source
      *            {@link Anime} which is being copied.
@@ -170,7 +171,7 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Checks if an anime entry is valid.
-     * 
+     *
      * @param anime
      * @return
      */

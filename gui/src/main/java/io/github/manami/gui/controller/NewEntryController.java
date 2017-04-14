@@ -1,5 +1,18 @@
 package io.github.manami.gui.controller;
 
+import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
@@ -15,17 +28,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-
-import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static io.github.manami.gui.utility.DialogLibrary.showBrowseForFolderDialog;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Shows the window in which a new entry can be created.
@@ -328,7 +330,7 @@ public class NewEntryController {
 
         if (matcher.find()) {
             String id = matcher.group();
-            id = id.replace("anime.php?id=", "");
+            id = id.replace("anime.php?id=", EMPTY);
             txtInfoLink.setText("http://myanimelist.net/anime/".concat(id));
         }
     }

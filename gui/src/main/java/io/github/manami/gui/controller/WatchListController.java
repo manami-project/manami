@@ -172,7 +172,7 @@ public class WatchListController extends AbstractAnimeListController {
 
     @Override
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button("", createIconDelete());
+        final Button removeButton = new Button(EMPTY, createIconDelete());
         removeButton.setTooltip(new Tooltip("delete from watch list"));
 
         componentListEntry.setRemoveButton(removeButton);

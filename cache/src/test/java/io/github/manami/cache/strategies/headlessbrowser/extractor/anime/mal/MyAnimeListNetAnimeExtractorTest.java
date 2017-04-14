@@ -1,6 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime.mal;
 
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -193,8 +194,8 @@ public class MyAnimeListNetAnimeExtractorTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void isResponsibleBlank() {
         // given
-        final InfoLink urlEmpty = new InfoLink("");
-        final InfoLink urlWhitespace = new InfoLink("");
+        final InfoLink urlEmpty = new InfoLink(EMPTY);
+        final InfoLink urlWhitespace = new InfoLink(EMPTY);
         final InfoLink urlNull = new InfoLink(null);
 
         // when

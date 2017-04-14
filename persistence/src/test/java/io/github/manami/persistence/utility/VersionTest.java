@@ -1,6 +1,7 @@
 package io.github.manami.persistence.utility;
 
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -91,7 +92,7 @@ public class VersionTest {
     public void testVersionInvalidEmptyOrNull() {
         // given
         final String versionWhitespace = "  ";
-        final String versionEmpty = "";
+        final String versionEmpty = EMPTY;
         final String versionNull = null;
 
         // when

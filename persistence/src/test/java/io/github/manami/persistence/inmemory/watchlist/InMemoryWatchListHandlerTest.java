@@ -1,6 +1,7 @@
 package io.github.manami.persistence.inmemory.watchlist;
 
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
-        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final WatchListEntry entry = new WatchListEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryWatchListHandler.watchAnime(entry);

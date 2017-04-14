@@ -5,6 +5,7 @@ import static com.google.common.collect.Maps.newConcurrentMap;
 import static io.github.manami.gui.components.Icons.createIconFilterList;
 import static io.github.manami.gui.components.Icons.createIconRemove;
 import static io.github.manami.gui.components.Icons.createIconWatchList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Collections;
@@ -237,7 +238,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnAddToFilterList = new Button("", createIconFilterList());
+        final Button btnAddToFilterList = new Button(EMPTY, createIconFilterList());
         btnAddToFilterList.setTooltip(new Tooltip("add entry to filter list"));
 
         componentListEntry.setAddToFilterListButton(btnAddToFilterList);
@@ -263,7 +264,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button btnAddToWatchlist = new Button("", createIconWatchList());
+        final Button btnAddToWatchlist = new Button(EMPTY, createIconWatchList());
         btnAddToWatchlist.setTooltip(new Tooltip("add to watch list"));
 
         componentListEntry.setAddToWatchListButton(btnAddToWatchlist);
@@ -287,7 +288,7 @@ public abstract class AbstractAnimeListController {
      *         {@link Button}.
      */
     protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button("", createIconRemove());
+        final Button removeButton = new Button(EMPTY, createIconRemove());
         removeButton.setTooltip(new Tooltip("remove"));
 
         componentListEntry.setRemoveButton(removeButton);

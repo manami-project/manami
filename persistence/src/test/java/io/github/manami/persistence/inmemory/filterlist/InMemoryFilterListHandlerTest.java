@@ -1,6 +1,7 @@
 package io.github.manami.persistence.inmemory.filterlist;
 
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class InMemoryFilterListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
-        final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry = new FilterEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryFilterListHandler.filterAnime(entry);

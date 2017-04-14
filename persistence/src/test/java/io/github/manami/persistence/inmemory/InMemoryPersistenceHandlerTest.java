@@ -2,6 +2,7 @@ package io.github.manami.persistence.inmemory;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -48,7 +49,7 @@ public class InMemoryPersistenceHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutTitle() {
         // given
-        final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry = new FilterEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
@@ -62,7 +63,7 @@ public class InMemoryPersistenceHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnimeIsEntryWithoutInfoLink() {
         // given
-        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink(""));
+        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink(EMPTY));
 
         // when
         final boolean result = inMemoryPersistenceHandler.filterAnime(entry);
@@ -227,7 +228,7 @@ public class InMemoryPersistenceHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutTitle() {
         // given
-        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final WatchListEntry entry = new WatchListEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);
@@ -241,7 +242,7 @@ public class InMemoryPersistenceHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testWatchAnimeIsEntryWithoutInfoLink() {
         // given
-        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink(""));
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink(EMPTY));
 
         // when
         final boolean result = inMemoryPersistenceHandler.watchAnime(entry);

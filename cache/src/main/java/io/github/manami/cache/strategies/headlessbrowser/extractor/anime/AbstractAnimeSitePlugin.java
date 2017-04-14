@@ -1,17 +1,19 @@
 package io.github.manami.cache.strategies.headlessbrowser.extractor.anime;
 
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG;
 import static io.github.manami.dto.entities.AbstractMinimalEntry.NO_IMG_THUMB;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility
@@ -70,7 +72,7 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
         siteContent = siteContent.trim();
 
         // get rid of newlines and doubled whitespaces
-        siteContent = siteContent.replaceAll("(\r\n|\n\r|\r|\n|\t)", "");
+        siteContent = siteContent.replaceAll("(\r\n|\n\r|\r|\n|\t)", EMPTY);
         siteContent = normalizeSpace(siteContent);
     }
 

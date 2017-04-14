@@ -2,6 +2,7 @@ package io.github.manami.cache.strategies.headlessbrowser.extractor.relatedanime
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class MyAnimeListNetRelatedAnimeExtractor implements RelatedAnimeExtracto
         String subStr = siteContent.trim();
 
         // get rid of all whitespaces
-        subStr = subStr.replaceAll("\\s", "");
+        subStr = subStr.replaceAll("\\s", EMPTY);
 
         Pattern pattern = Pattern.compile("</div>RelatedAnime</h2>(.*?)<h2>");
         Matcher matcher = pattern.matcher(subStr);

@@ -5,6 +5,7 @@ import static io.github.manami.gui.components.Icons.createIconCancel;
 import static io.github.manami.gui.components.Icons.createIconEdit;
 import static io.github.manami.gui.components.Icons.createIconRemove;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -211,7 +212,7 @@ public class CheckListController implements Observer {
             gridPane.add(entry.getMessageComponent(), 2, rowNumber);
             gridPane.add(entry.getAdditionalButtons(), 3, rowNumber);
 
-            final Button removeButton = new Button("", createIconRemove());
+            final Button removeButton = new Button(EMPTY, createIconRemove());
             entry.setRemoveButton(removeButton);
             removeButton.setTooltip(new Tooltip("remove"));
             removeButton.setOnAction(event -> {
@@ -273,7 +274,7 @@ public class CheckListController implements Observer {
 
 
     private void addReversibleCommandEventButton(final ReversibleCommandEvent event, final CheckListEntry componentListEntry) {
-        final Button button = new Button("", createIconEdit());
+        final Button button = new Button(EMPTY, createIconEdit());
         button.setTooltip(new Tooltip("update"));
 
         button.setOnAction(trigger -> {
@@ -292,7 +293,7 @@ public class CheckListController implements Observer {
     private void addCrcEventButton(final CrcEvent event, final CheckListEntry componentListEntry) {
         if (event.getPath() != null) {
 
-            final Button button = new Button("", createIconEdit());
+            final Button button = new Button(EMPTY, createIconEdit());
             button.setTooltip(new Tooltip("add CRC sum"));
 
             button.setOnAction(trigger -> {
@@ -326,7 +327,7 @@ public class CheckListController implements Observer {
             tab.setText(CHECK_LIST_TAB_TITLE);
             gridPane.getChildren().clear();
             gridPane.getRowConstraints().clear();
-            lblProgress.setText("");
+            lblProgress.setText(EMPTY);
             progressBar.setProgress(0.0);
             amountOfEntries = 0;
         });

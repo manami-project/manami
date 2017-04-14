@@ -2,6 +2,7 @@ package io.github.manami.core;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -249,7 +250,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final FilterEntry entry = new FilterEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -269,7 +270,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink(""));
+        final FilterEntry entry = new FilterEntry("Death Note", new InfoLink(EMPTY));
 
         // when
         final boolean result = app.filterAnime(entry);
@@ -498,7 +499,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("", new InfoLink("http://myanimelist.net/anime/1535"));
+        final WatchListEntry entry = new WatchListEntry(EMPTY, new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -518,7 +519,7 @@ public class ManamiTest {
 
         final Manami app = new Manami(cacheMock, new CommandService(eventBusMock), configMock, persistenceFacade, serviceRepositoryMock, eventBusMock);
 
-        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink(""));
+        final WatchListEntry entry = new WatchListEntry("Death Note", new InfoLink(EMPTY));
 
         // when
         final boolean result = app.watchAnime(entry);
@@ -1258,7 +1259,7 @@ public class ManamiTest {
 
         // when
         app.search(null);
-        app.search("");
+        app.search(EMPTY);
         app.search("   ");
 
         // then
