@@ -1,5 +1,7 @@
 package io.github.manami.cache.strategies.daemon;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,18 +27,18 @@ public class DaemonRestRetrievalStrategy implements AnimeRetrieval, RelatedAnime
 
     @Override
     public Optional<Anime> fetchAnime(final InfoLink infoLink) {
-        return null;
+        return Optional.empty();
     }
 
 
     @Override
     public Set<InfoLink> fetchRelatedAnime(final InfoLink infoLink) {
-        return null;
+        return newHashSet();
     }
 
 
     @Override
     public RecommendationList fetchRecommendations(final InfoLink infoLink) {
-        return null;
+        return new RecommendationList();
     }
 }

@@ -108,6 +108,10 @@ public class ConfigFileWatchdog {
 
 
     private void createFileIfNotExist(final Path file) throws IOException {
+        if (file == null) {
+            return;
+        }
+
         final Path fileName = file.getFileName();
 
         log.info("Checking file [{}]", fileName);
@@ -116,7 +120,7 @@ public class ConfigFileWatchdog {
             log.info("File [{}] does not exist, creating it.", fileName);
             Files.createFile(file);
 
-            final String resourceFilename = String.format("releasebuild_%s", file.getFileName().toString());
+            final String resourceFilename = String.format("releasebuild_%s", file.getFileName());
             final String resourceFileAsString = IOUtils.toString(ClassLoader.getSystemResourceAsStream(resourceFilename));
             final List<String> fileAsLines = Arrays.asList(resourceFileAsString.split("\\r?\\n"));
             Files.write(file, fileAsLines, StandardCharsets.UTF_8);

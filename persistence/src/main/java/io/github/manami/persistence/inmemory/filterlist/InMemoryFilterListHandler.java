@@ -1,6 +1,17 @@
 package io.github.manami.persistence.inmemory.filterlist;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Named;
+
 import com.google.common.collect.ImmutableList;
+
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -8,15 +19,6 @@ import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.FilterListHandler;
-
-import javax.inject.Named;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newConcurrentMap;
-import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 
 /**
  * @author manami-project
@@ -45,6 +47,10 @@ public class InMemoryFilterListHandler implements FilterListHandler {
             entry = FilterEntry.valueOf(anime);
         } else if (anime instanceof FilterEntry) {
             entry = (FilterEntry) anime;
+        }
+
+        if (entry == null) {
+            return false;
         }
 
         filterList.put(entry.getInfoLink(), entry);

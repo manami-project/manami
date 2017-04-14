@@ -87,10 +87,11 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void loadThumbnailIfNotExists(final MinimalEntry entry) {
-        MDC.put("infoLink", entry.getInfoLink().getUrl());
-        if (isInterrupt()) {
+        if (isInterrupt() || entry == null) {
             return;
         }
+
+        MDC.put("infoLink", entry.getInfoLink().getUrl());
 
         if (entry != null && (isBlank(entry.getThumbnail()) || AbstractMinimalEntry.NO_IMG_THUMB.equals(entry.getThumbnail()))) {
             final Optional<Anime> cachedAnime = cache.fetchAnime(entry.getInfoLink());
@@ -125,10 +126,11 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
      * @param entry
      */
     private void checkPictures(final MinimalEntry entry) {
-        MDC.put("infoLink", entry.getInfoLink().getUrl());
-        if (isInterrupt()) {
+        if (isInterrupt() || entry == null) {
             return;
         }
+
+        MDC.put("infoLink", entry.getInfoLink().getUrl());
 
         if (entry != null && isNotBlank(entry.getThumbnail())) {
             log.debug("Checking thumbnail.");
