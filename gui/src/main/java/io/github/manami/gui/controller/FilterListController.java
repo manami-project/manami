@@ -155,8 +155,8 @@ public class FilterListController extends AbstractAnimeListController implements
 
                 if (anime != null) {
                     cmdService.executeCommand(new CmdAddFilterEntry(anime, app));
-                    addEntryToGui(anime); // create GUI components
                 }
+
                 serviceList.remove(retrievalService);
 
                 if (!serviceList.isEmpty()) {
@@ -234,6 +234,7 @@ public class FilterListController extends AbstractAnimeListController implements
             getGridPane().getChildren().clear();
         });
 
+        recommendedEntries.clear();
         clearComponentList();
         showEntries();
     }
