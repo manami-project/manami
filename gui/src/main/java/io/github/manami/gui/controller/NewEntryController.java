@@ -5,6 +5,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.nio.file.Path;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,7 @@ import io.github.manami.core.commands.CmdAddAnime;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
 import io.github.manami.core.services.AnimeRetrievalService;
+import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
@@ -35,7 +38,7 @@ import javafx.scene.control.TextField;
  * @author manami-project
  * @since 2.0.0
  */
-public class NewEntryController {
+public class NewEntryController implements Observer {
 
     /** {@link TextField} for the title. */
     @FXML
@@ -88,6 +91,9 @@ public class NewEntryController {
     /** Command service. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
+    /** Instance of the service repository. */
+    private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
+
     /** Context configuration. */
     private final Config config = Main.CONTEXT.getBean(Config.class);
 
@@ -120,7 +126,7 @@ public class NewEntryController {
 
         txtType.setText(AnimeType.TV.getValue());
         txtEpisodes.focusedProperty().addListener((currentValue, valueBefore, valueAfter) -> {
-            if (!NumberUtils.isNumber(txtEpisodes.getText()) || txtEpisodes.getText().startsWith("-") || "0".equals(txtEpisodes.getText())) {
+            if (!NumberUtils.isParsable(txtEpisodes.getText()) || txtEpisodes.getText().startsWith("-") || "0".equals(txtEpisodes.getText())) {
                 txtEpisodes.setText("1");
             } else {
                 try {
@@ -303,23 +309,9 @@ public class NewEntryController {
             setDisableAutoCompleteWidgets(true);
 
             retrievalService = new AnimeRetrievalService(Main.CONTEXT.getBean(Cache.class), infoLink);
-            retrievalService.setOnSucceeded(event -> {
-                final Anime anime = (Anime) event.getSource().getValue();
+            retrievalService.addObserver(this);
+            serviceRepo.startService(retrievalService);
 
-                if (anime != null) {
-                    Platform.runLater(() -> {
-                        txtTitle.setText(anime.getTitle());
-                        txtEpisodes.setText(String.valueOf(anime.getEpisodes()));
-                        txtInfoLink.setText(anime.getInfoLink().getUrl());
-                        setTextfieldType(anime.getTypeAsString());
-                        checkEpisodeArrowButtons();
-                    });
-                }
-                setDisableAutoCompleteWidgets(false);
-            });
-            retrievalService.setOnCancelled(event -> setDisableAutoCompleteWidgets(false));
-            retrievalService.setOnFailed(event -> setDisableAutoCompleteWidgets(false));
-            retrievalService.start();
         }
     }
 
@@ -383,6 +375,29 @@ public class NewEntryController {
             }
 
             txtLocation.setText(location);
+        }
+    }
+
+
+    @Override
+    public void update(final Observable observable, final Object object) {
+        if (observable == null || object == null) {
+            return;
+        }
+
+        if (observable instanceof AnimeRetrievalService && object instanceof Anime) {
+            final Anime anime = (Anime) object;
+
+            if (anime != null) {
+                Platform.runLater(() -> {
+                    txtTitle.setText(anime.getTitle());
+                    txtEpisodes.setText(String.valueOf(anime.getEpisodes()));
+                    txtInfoLink.setText(anime.getInfoLink().getUrl());
+                    setTextfieldType(anime.getTypeAsString());
+                    checkEpisodeArrowButtons();
+                });
+            }
+            setDisableAutoCompleteWidgets(false);
         }
     }
 }

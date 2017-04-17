@@ -1,15 +1,15 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Queues.newConcurrentLinkedQueue;
 import static io.github.manami.gui.components.Icons.createIconDelete;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -20,14 +20,15 @@ import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.commands.CmdDeleteWatchListEntry;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.services.AnimeRetrievalService;
+import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.utility.ObservableQueue;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -40,7 +41,7 @@ import javafx.scene.layout.GridPane;
  * @author manami-project
  * @since 2.8.0
  */
-public class WatchListController extends AbstractAnimeListController {
+public class WatchListController extends AbstractAnimeListController implements Observer {
 
     public static final String WATCH_LIST_TITLE = "Watch List";
 
@@ -56,8 +57,11 @@ public class WatchListController extends AbstractAnimeListController {
     /** Instance of the main application. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
+    /** Instance of the service repository. */
+    private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
+
     /** List of all actively running services. */
-    private final ObservableList<AnimeRetrievalService> serviceList = new ObservableListWrapper<>(new CopyOnWriteArrayList<>());
+    private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>(newConcurrentLinkedQueue());
 
     /** {@link TextField} for adding a new entry. */
     @FXML
@@ -86,14 +90,16 @@ public class WatchListController extends AbstractAnimeListController {
             final int size = serviceList.size();
             final String text = String.format("Preparing entries: %s", size);
 
-            if (size == 0) {
-                progressIndicator.setVisible(false);
-                lblProgressMsg.setVisible(false);
-            } else {
-                progressIndicator.setVisible(true);
-                lblProgressMsg.setText(text);
-                lblProgressMsg.setVisible(true);
-            }
+            Platform.runLater(() -> {
+                if (size == 0) {
+                    progressIndicator.setVisible(false);
+                    lblProgressMsg.setVisible(false);
+                } else {
+                    progressIndicator.setVisible(true);
+                    lblProgressMsg.setText(text);
+                    lblProgressMsg.setVisible(true);
+                }
+            });
         });
 
         app.fetchWatchList().forEach(this::addEntryToGui);
@@ -129,23 +135,8 @@ public class WatchListController extends AbstractAnimeListController {
 
         if (!app.watchListEntryExists(normalizedInfoLink)) {
             final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, normalizedInfoLink);
-            retrievalService.setOnSucceeded(event -> {
-                final WatchListEntry anime = WatchListEntry.valueOf((Anime) event.getSource().getValue());
-
-                if (anime != null) {
-                    cmdService.executeCommand(new CmdAddWatchListEntry(anime, app));
-                    addEntryToGui(anime); // create GUI components
-                }
-                serviceList.remove(retrievalService);
-
-                if (!serviceList.isEmpty()) {
-                    serviceList.get(0).start();
-                }
-            });
-
-            retrievalService.setOnCancelled(event -> serviceList.remove(retrievalService));
-            retrievalService.setOnFailed(event -> serviceList.remove(retrievalService));
-            serviceList.add(retrievalService);
+            retrievalService.addObserver(this);
+            serviceList.offer(retrievalService);
 
             if (serviceList.size() == 1) {
                 retrievalService.start();
@@ -158,7 +149,12 @@ public class WatchListController extends AbstractAnimeListController {
      * @since 2.8.0
      */
     public void clear() {
-        Platform.runLater(() -> gridPane.getChildren().clear());
+        serviceList.clear();
+        Platform.runLater(() -> {
+            progressIndicator.setVisible(false);
+            lblProgressMsg.setVisible(false);
+            getGridPane().getChildren().clear();
+        });
         clearComponentList();
         showEntries();
     }
@@ -196,5 +192,28 @@ public class WatchListController extends AbstractAnimeListController {
     @Override
     boolean isInList(final InfoLink infoLink) {
         return infoLink.isValid() && app.watchListEntryExists(infoLink);
+    }
+
+
+    @Override
+    public void update(final Observable observable, final Object object) {
+        if (observable == null || object == null) {
+            return;
+        }
+
+        if (observable instanceof AnimeRetrievalService && object instanceof Anime) {
+            final WatchListEntry anime = WatchListEntry.valueOf((Anime) object);
+
+            if (anime != null) {
+                cmdService.executeCommand(new CmdAddWatchListEntry(anime, app));
+                addEntryToGui(anime); // create GUI components
+            }
+
+            serviceList.poll();
+
+            if (!serviceList.isEmpty()) {
+                serviceRepo.startService(serviceList.peek());
+            }
+        }
     }
 }

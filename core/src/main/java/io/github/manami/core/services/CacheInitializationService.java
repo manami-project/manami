@@ -126,6 +126,9 @@ public class CacheInitializationService extends AbstractService<Void> {
 
     @Override
     public void reset() {
+        animeExecutorService.shutdownNow();
+        relatedExecutorService.shutdownNow();
+        recomExecutorService.shutdownNow();
         cancel();
         super.reset();
     }

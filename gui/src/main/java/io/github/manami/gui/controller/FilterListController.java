@@ -10,11 +10,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.controlsfx.control.Notifications;
-
-import com.sun.javafx.collections.ObservableListWrapper;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -31,10 +28,10 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.utility.ObservableQueue;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -72,7 +69,7 @@ public class FilterListController extends AbstractAnimeListController implements
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     /** List of all actively running services. */
-    private final ObservableList<AnimeRetrievalService> serviceList = new ObservableListWrapper<>(new CopyOnWriteArrayList<>());
+    private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>();
 
     /** Root container. */
     @FXML
@@ -111,14 +108,16 @@ public class FilterListController extends AbstractAnimeListController implements
             final int size = serviceList.size();
             final String text = String.format("Preparing entries: %s", size);
 
-            if (size == 0) {
-                progressIndicator.setVisible(false);
-                lblProgressMsg.setVisible(false);
-            } else {
-                progressIndicator.setVisible(true);
-                lblProgressMsg.setText(text);
-                lblProgressMsg.setVisible(true);
-            }
+            Platform.runLater(() -> {
+                if (size == 0) {
+                    progressIndicator.setVisible(false);
+                    lblProgressMsg.setVisible(false);
+                } else {
+                    progressIndicator.setVisible(true);
+                    lblProgressMsg.setText(text);
+                    lblProgressMsg.setVisible(true);
+                }
+            });
         });
     }
 
@@ -150,26 +149,11 @@ public class FilterListController extends AbstractAnimeListController implements
 
         if (!app.filterEntryExists(normalizedInfoLink)) {
             final AnimeRetrievalService retrievalService = new AnimeRetrievalService(cache, normalizedInfoLink);
-            retrievalService.setOnSucceeded(event -> {
-                final FilterEntry anime = FilterEntry.valueOf((Anime) event.getSource().getValue());
-
-                if (anime != null) {
-                    cmdService.executeCommand(new CmdAddFilterEntry(anime, app));
-                }
-
-                serviceList.remove(retrievalService);
-
-                if (!serviceList.isEmpty()) {
-                    serviceList.get(0).start();
-                }
-            });
-
-            retrievalService.setOnCancelled(event -> serviceList.remove(retrievalService));
-            retrievalService.setOnFailed(event -> serviceList.remove(retrievalService));
-            serviceList.add(retrievalService);
+            retrievalService.addObserver(this);
+            serviceList.offer(retrievalService);
 
             if (serviceList.size() == 1) {
-                retrievalService.start();
+                serviceRepo.startService(retrievalService);
             }
         }
     }
@@ -182,9 +166,13 @@ public class FilterListController extends AbstractAnimeListController implements
 
 
     @Override
-    public void update(final Observable observer, final Object object) {
-        if (object == null) {
+    public void update(final Observable observable, final Object object) {
+        if (observable == null || object == null) {
             return;
+        }
+
+        if (observable instanceof AnimeRetrievalService && object instanceof Anime) {
+            processAnimeRetrievalResult((Anime) object);
         }
 
         // adds new Anime entry
@@ -205,6 +193,21 @@ public class FilterListController extends AbstractAnimeListController implements
                             .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RecommendedFilterListEntryNotificationEventHandler()).showInformation());
                 }
             }
+        }
+    }
+
+
+    private void processAnimeRetrievalResult(final Anime anime) {
+        final FilterEntry filterEntry = FilterEntry.valueOf(anime);
+
+        if (filterEntry != null) {
+            cmdService.executeCommand(new CmdAddFilterEntry(filterEntry, app));
+        }
+
+        serviceList.poll();
+
+        if (!serviceList.isEmpty()) {
+            serviceRepo.startService(serviceList.peek());
         }
     }
 
@@ -230,11 +233,13 @@ public class FilterListController extends AbstractAnimeListController implements
      * @since 2.7.2
      */
     public void clear() {
+        serviceList.clear();
+        recommendedEntries.clear();
+
         Platform.runLater(() -> {
             getGridPane().getChildren().clear();
         });
 
-        recommendedEntries.clear();
         clearComponentList();
         showEntries();
     }
