@@ -54,7 +54,7 @@ public class ImportMigrationPostProcessor {
      * Converts the picture links of MAL to the new CDN URL.
      */
     private void migrateTo_2_10_3() {
-        if (!documentVersion.isNewer("2.10.3")) {
+        if (documentVersion.isNewerThan("2.10.3")) {
             log.info("SKIPPING migration to 2.10.3.");
             return;
         }

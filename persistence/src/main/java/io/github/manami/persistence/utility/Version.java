@@ -26,30 +26,35 @@ public class Version {
     }
 
 
-    public boolean isNewer(final String otherVersion) {
+    public boolean isOlderThan(final String otherVersion) {
+        return !isNewerThan(otherVersion);
+    }
+
+
+    public boolean isNewerThan(final String otherVersion) {
         if (!isValid(otherVersion)) {
             throw new IllegalArgumentException(MSG_INVALID_VERSION);
         }
 
         final SplitVersion otherSplitVersion = extractVersionParts(otherVersion).get();
 
-        if (internalVersion.getMajor() < otherSplitVersion.getMajor()) {
-            return true;
-        }
-
         if (internalVersion.getMajor() > otherSplitVersion.getMajor()) {
-            return false;
+            return true;
         }
 
-        if (internalVersion.getMinor() < otherSplitVersion.getMinor()) {
-            return true;
+        if (internalVersion.getMajor() < otherSplitVersion.getMajor()) {
+            return false;
         }
 
         if (internalVersion.getMinor() > otherSplitVersion.getMinor()) {
+            return true;
+        }
+
+        if (internalVersion.getMinor() < otherSplitVersion.getMinor()) {
             return false;
         }
 
-        if (internalVersion.getBugfix() < otherSplitVersion.getBugfix()) {
+        if (internalVersion.getBugfix() > otherSplitVersion.getBugfix()) {
             return true;
         }
 

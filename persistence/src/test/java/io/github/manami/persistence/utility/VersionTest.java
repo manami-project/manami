@@ -108,80 +108,80 @@ public class VersionTest {
 
 
     @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by major version")
-    public void testIsNewerbyMajorVersion() {
+    public void testIsNewerByMajorVersion() {
         // given
         final Version version = new Version("4.0.0");
 
         // when
-        final boolean result = version.isNewer("5.0.0");
+        final boolean result = version.isNewerThan("5.0.0");
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
 
     @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by major version")
-    public void testIsNotNewerbyMajorVersion() {
+    public void testIsNotNewerByMajorVersion() {
         // given
         final Version version = new Version("5.0.0");
 
         // when
-        final boolean result = version.isNewer("4.0.0");
+        final boolean result = version.isNewerThan("4.0.0");
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
 
     @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by minor version")
-    public void testIsNewerbyMinorVersion() {
+    public void testIsNewerByMinorVersion() {
         // given
         final Version version = new Version("1.4.0");
 
         // when
-        final boolean result = version.isNewer("1.5.0");
+        final boolean result = version.isNewerThan("1.5.0");
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
 
     @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by minor version")
-    public void testIsNotNewerbyMinorVersion() {
+    public void testIsNotNewerByMinorVersion() {
         // given
         final Version version = new Version("1.5.0");
 
         // when
-        final boolean result = version.isNewer("1.4.0");
-
-        // then
-        assertFalse(result);
-    }
-
-
-    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by bugfix version")
-    public void testIsNewerbyBugfixVersion() {
-        // given
-        final Version version = new Version("1.2.4");
-
-        // when
-        final boolean result = version.isNewer("1.2.5");
+        final boolean result = version.isNewerThan("1.4.0");
 
         // then
         assertTrue(result);
     }
 
 
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is newer by bugfix version")
+    public void testIsNewerByBugfixVersion() {
+        // given
+        final Version version = new Version("1.2.4");
+
+        // when
+        final boolean result = version.isNewerThan("1.2.5");
+
+        // then
+        assertFalse(result);
+    }
+
+
     @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by bugfix version")
-    public void testIsNotNewerbyBugfixVersion() {
+    public void testIsNotNewerByBugfixVersion() {
         // given
         final Version version = new Version("1.2.5");
 
         // when
-        final boolean result = version.isNewer("1.2.4");
+        final boolean result = version.isNewerThan("1.2.4");
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
 
@@ -191,10 +191,10 @@ public class VersionTest {
         final Version version = new Version("2.10.3");
 
         // when
-        final boolean result = version.isNewer("2.10.2");
+        final boolean result = version.isNewerThan("2.10.2");
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
 
@@ -204,7 +204,7 @@ public class VersionTest {
         final Version version = new Version("2.10.3");
 
         // when
-        version.isNewer(" ? ");
+        version.isNewerThan(" ? ");
     }
 
 
@@ -228,5 +228,106 @@ public class VersionTest {
 
         // then
         assertNotNull(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by major version")
+    public void testIsOlderByMajorVersion() {
+        // given
+        final Version version = new Version("4.0.0");
+
+        // when
+        final boolean result = version.isOlderThan("5.0.0");
+
+        // then
+        assertTrue(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by major version")
+    public void testIsNotOlderByMajorVersion() {
+        // given
+        final Version version = new Version("5.0.0");
+
+        // when
+        final boolean result = version.isOlderThan("4.0.0");
+
+        // then
+        assertFalse(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by minor version")
+    public void testIsOlderByMinorVersion() {
+        // given
+        final Version version = new Version("1.4.0");
+
+        // when
+        final boolean result = version.isOlderThan("1.5.0");
+
+        // then
+        assertTrue(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by minor version")
+    public void testIsNotOlderByMinorVersion() {
+        // given
+        final Version version = new Version("1.5.0");
+
+        // when
+        final boolean result = version.isOlderThan("1.4.0");
+
+        // then
+        assertFalse(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by bugfix version")
+    public void testIsOlderByBugfixVersion() {
+        // given
+        final Version version = new Version("1.2.4");
+
+        // when
+        final boolean result = version.isOlderThan("1.2.5");
+
+        // then
+        assertTrue(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is older by bugfix version")
+    public void testIsNotOlderByBugfixVersion() {
+        // given
+        final Version version = new Version("1.2.5");
+
+        // when
+        final boolean result = version.isOlderThan("1.2.4");
+
+        // then
+        assertFalse(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version is not older.")
+    public void testIsNotOlder() {
+        // given
+        final Version version = new Version("2.10.3");
+
+        // when
+        final boolean result = version.isOlderThan("2.10.2");
+
+        // then
+        assertFalse(result);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Check the other version throws exception if it is not valid.", expectedExceptions = IllegalArgumentException.class)
+    public void testOtherVersionIsNotValidCheckingIfItsOlder() {
+        // given
+        final Version version = new Version("2.10.3");
+
+        // when
+        version.isOlderThan(" ? ");
     }
 }
