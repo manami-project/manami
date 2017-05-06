@@ -15,7 +15,11 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.10.0
  */
 @Slf4j
-public class PathResolver {
+public final class PathResolver {
+
+    private PathResolver() {
+    }
+
 
     /**
      * @since 2.10.0

@@ -1,29 +1,24 @@
 package io.github.manami.dto.entities;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Recommendation
- */
-@Data
 @ToString
 @EqualsAndHashCode
 public class Recommendation {
 
+    @Getter
     private InfoLink infoLink = null;
+
+    @Getter
+    @Setter
     private Integer amount = null;
 
 
-    public Recommendation infoLink(final InfoLink infoLink) {
+    public Recommendation(final InfoLink infoLink, final Integer amount) {
         this.infoLink = infoLink;
-        return this;
-    }
-
-
-    public Recommendation amount(final Integer amount) {
         this.amount = amount;
-        return this;
     }
 }

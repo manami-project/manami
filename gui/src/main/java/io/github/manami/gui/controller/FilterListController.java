@@ -198,10 +198,10 @@ public class FilterListController extends AbstractAnimeListController implements
 
 
     private void processAnimeRetrievalResult(final Anime anime) {
-        final FilterEntry filterEntry = FilterEntry.valueOf(anime);
+        final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(anime);
 
-        if (filterEntry != null) {
-            cmdService.executeCommand(new CmdAddFilterEntry(filterEntry, app));
+        if (filterEntry.isPresent()) {
+            cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
         }
 
         serviceList.poll();
@@ -263,10 +263,14 @@ public class FilterListController extends AbstractAnimeListController implements
     protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
         super.addFilterListButton(componentListEntry);
         componentListEntry.getAddToFilterListButton().setOnAction(event -> {
-            cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
-            recommendedEntries.remove(componentListEntry.getAnime());
-            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
-            showEntries();
+            final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(componentListEntry.getAnime());
+
+            if (filterEntry.isPresent()) {
+                cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
+                recommendedEntries.remove(componentListEntry.getAnime());
+                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+                showEntries();
+            }
         });
         return componentListEntry;
     }

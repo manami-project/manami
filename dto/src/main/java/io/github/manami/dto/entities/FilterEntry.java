@@ -1,5 +1,7 @@
 package io.github.manami.dto.entities;
 
+import java.util.Optional;
+
 /**
  * @author manami-project
  * @since 2.7.0
@@ -39,11 +41,11 @@ public class FilterEntry extends AbstractMinimalEntry {
      * @param anime
      * @return
      */
-    public static FilterEntry valueOf(final MinimalEntry anime) {
-        if (anime != null) {
-            return new FilterEntry(anime.getTitle(), anime.getThumbnail(), anime.getInfoLink());
+    public static Optional<FilterEntry> valueOf(final MinimalEntry anime) {
+        if (anime == null) {
+            return Optional.empty();
         }
 
-        return null;
+        return Optional.of(new FilterEntry(anime.getTitle(), anime.getThumbnail(), anime.getInfoLink()));
     }
 }

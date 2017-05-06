@@ -7,6 +7,7 @@ import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Named;
 
@@ -55,19 +56,19 @@ public class InMemoryWatchListHandler implements WatchListHandler {
             return false;
         }
 
-        WatchListEntry entry = null;
+        Optional<WatchListEntry> entry = Optional.empty();
 
         if (anime instanceof Anime || anime instanceof FilterEntry) {
             entry = WatchListEntry.valueOf(anime);
         } else if (anime instanceof WatchListEntry) {
-            entry = (WatchListEntry) anime;
+            entry = Optional.of((WatchListEntry) anime);
         }
 
-        if (entry == null) {
+        if (!entry.isPresent()) {
             return false;
         }
 
-        watchList.put(entry.getInfoLink(), entry);
+        watchList.put(entry.get().getInfoLink(), entry.get());
         return true;
     }
 

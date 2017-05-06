@@ -86,7 +86,7 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
                         final int numberOfRecoms = countMatches(sub, recomFlag);
                         final String fullUrl = createCleanFullUrl(curAnime);
 
-                        ret.addRecommendation(new Recommendation().infoLink(new InfoLink(fullUrl)).amount(numberOfRecoms));
+                        ret.addRecommendation(new Recommendation(new InfoLink(fullUrl), numberOfRecoms));
                         recomSite = substring(recomSite, nextAnime - 1);
                     } else {
                         recomSite = substring(recomSite, nextAnime);

@@ -9,6 +9,7 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.text.Collator;
 import java.util.List;
+import java.util.Optional;
 
 import io.github.manami.Main;
 import io.github.manami.core.Manami;
@@ -125,10 +126,15 @@ public class SearchResultsController {
             removeButton.setTooltip(new Tooltip("remove"));
 
             removeButton.setOnAction(event -> {
-                cmdService.executeCommand(new CmdDeleteFilterEntry(FilterEntry.valueOf(element), app));
-                filterListComponents.remove(animeGuiComponentsListEntry);
-                updateFilterListTitle();
-                showEntries(filterListGridPane, filterListComponents);
+                final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(element);
+
+                if (filterEntry.isPresent()) {
+
+                    cmdService.executeCommand(new CmdDeleteFilterEntry(filterEntry.get(), app));
+                    filterListComponents.remove(animeGuiComponentsListEntry);
+                    updateFilterListTitle();
+                    showEntries(filterListGridPane, filterListComponents);
+                }
             });
 
             animeGuiComponentsListEntry.setRemoveButton(removeButton);

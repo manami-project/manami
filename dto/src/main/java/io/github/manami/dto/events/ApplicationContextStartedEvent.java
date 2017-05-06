@@ -14,6 +14,10 @@ public class ApplicationContextStartedEvent {
 
 
     public ApplicationContextStartedEvent(final Stage stage) {
+        if (stage == null) {
+            throw new IllegalArgumentException("Stage cannot be null in ApplicationContextStartedEvent");
+        }
+
         this.stage = stage;
     }
 }

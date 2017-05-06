@@ -1,5 +1,7 @@
 package io.github.manami.dto.entities;
 
+import java.util.Optional;
+
 /**
  * @author manami-project
  * @since 2.7.0
@@ -33,7 +35,11 @@ public class WatchListEntry extends AbstractMinimalEntry {
      * @since 2.7.0
      * @param anime
      */
-    public static WatchListEntry valueOf(final MinimalEntry anime) {
-        return new WatchListEntry(anime.getTitle(), anime.getThumbnail(), anime.getInfoLink());
+    public static Optional<WatchListEntry> valueOf(final MinimalEntry anime) {
+        if (anime == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new WatchListEntry(anime.getTitle(), anime.getThumbnail(), anime.getInfoLink()));
     }
 }

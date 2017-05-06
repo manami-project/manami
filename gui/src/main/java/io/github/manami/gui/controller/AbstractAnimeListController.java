@@ -11,6 +11,7 @@ import static org.springframework.util.Assert.notNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.manami.Main;
@@ -244,9 +245,13 @@ public abstract class AbstractAnimeListController {
         componentListEntry.setAddToFilterListButton(btnAddToFilterList);
 
         btnAddToFilterList.setOnAction(event -> {
-            cmdService.executeCommand(new CmdAddFilterEntry(FilterEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
-            showEntries();
+            final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(componentListEntry.getAnime());
+
+            if (filterEntry.isPresent()) {
+                cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
+                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+                showEntries();
+            }
         });
 
         return componentListEntry;
@@ -270,9 +275,13 @@ public abstract class AbstractAnimeListController {
         componentListEntry.setAddToWatchListButton(btnAddToWatchlist);
 
         btnAddToWatchlist.setOnAction(event -> {
-            cmdService.executeCommand(new CmdAddWatchListEntry(WatchListEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
-            showEntries();
+            final Optional<WatchListEntry> watchListEntry = WatchListEntry.valueOf(componentListEntry.getAnime());
+
+            if (watchListEntry.isPresent()) {
+                cmdService.executeCommand(new CmdAddWatchListEntry(watchListEntry.get(), app));
+                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+                showEntries();
+            }
         });
 
         return componentListEntry;

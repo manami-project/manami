@@ -1,10 +1,12 @@
 package io.github.manami.dto.events;
 
-import io.github.manami.dto.entities.MinimalEntry;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
+import com.google.common.collect.ImmutableList;
+
+import io.github.manami.dto.entities.MinimalEntry;
 
 /**
  * Contains a {@link List} of {@link MinimalEntry} for each list type.
@@ -14,7 +16,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public class SearchResultEvent {
 
-    private String searchString;
+    private final String searchString;
     private final List<MinimalEntry> animeListSearchResultList;
     private final List<MinimalEntry> filterListSearchResultList;
     private final List<MinimalEntry> watchListSearchResultList;
@@ -23,7 +25,8 @@ public class SearchResultEvent {
     /**
      * @since 2.9.0
      */
-    public SearchResultEvent() {
+    public SearchResultEvent(final String searchString) {
+        this.searchString = searchString;
         animeListSearchResultList = newArrayList();
         filterListSearchResultList = newArrayList();
         watchListSearchResultList = newArrayList();
@@ -35,7 +38,7 @@ public class SearchResultEvent {
      * @return The list containing search results from anime list.
      */
     public List<MinimalEntry> getAnimeListSearchResultList() {
-        return animeListSearchResultList;
+        return ImmutableList.copyOf(animeListSearchResultList);
     }
 
 
@@ -44,7 +47,7 @@ public class SearchResultEvent {
      * @return The list containing search results from filter list.
      */
     public List<MinimalEntry> getFilterListSearchResultList() {
-        return filterListSearchResultList;
+        return ImmutableList.copyOf(filterListSearchResultList);
     }
 
 
@@ -53,7 +56,7 @@ public class SearchResultEvent {
      * @return The list containing search results from watch list.
      */
     public List<MinimalEntry> getWatchListSearchResultList() {
-        return watchListSearchResultList;
+        return ImmutableList.copyOf(watchListSearchResultList);
     }
 
 
@@ -66,11 +69,23 @@ public class SearchResultEvent {
     }
 
 
-    /**
-     * @since 2.10.3
-     * @param searchString
-     */
-    public void setSearchString(final String searchString) {
-        this.searchString = searchString;
+    public void addAnimeListSearchResult(final MinimalEntry entry) {
+        if (entry != null) {
+            animeListSearchResultList.add(entry);
+        }
+    }
+
+
+    public void addFilterListSearchResult(final MinimalEntry entry) {
+        if (entry != null) {
+            filterListSearchResultList.add(entry);
+        }
+    }
+
+
+    public void addWatchListSearchResult(final MinimalEntry entry) {
+        if (entry != null) {
+            watchListSearchResultList.add(entry);
+        }
     }
 }

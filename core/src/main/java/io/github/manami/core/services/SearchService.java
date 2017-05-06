@@ -1,15 +1,16 @@
 package io.github.manami.core.services;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
+
 import com.google.common.eventbus.EventBus;
+
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.persistence.PersistenceHandler;
-
-import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
 
 /**
  * @author manami-project
@@ -32,8 +33,7 @@ public class SearchService extends AbstractService<Void> {
         this.searchString = searchString;
         this.persistanceHandler = persistanceHandler;
         this.eventBus = eventBus;
-        event = new SearchResultEvent();
-        event.setSearchString(searchString);
+        event = new SearchResultEvent(searchString);
     }
 
 
@@ -70,11 +70,11 @@ public class SearchService extends AbstractService<Void> {
      */
     private void addToList(final MinimalEntry entry) {
         if (entry instanceof Anime) {
-            event.getAnimeListSearchResultList().add(entry);
+            event.addAnimeListSearchResult(entry);
         } else if (entry instanceof FilterEntry) {
-            event.getFilterListSearchResultList().add(entry);
+            event.addFilterListSearchResult(entry);
         } else if (entry instanceof WatchListEntry) {
-            event.getWatchListSearchResultList().add(entry);
+            event.addWatchListSearchResult(entry);
         }
     }
 }

@@ -174,9 +174,13 @@ public class WatchListController extends AbstractAnimeListController implements 
         componentListEntry.setRemoveButton(removeButton);
 
         removeButton.setOnAction(event -> {
-            cmdService.executeCommand(new CmdDeleteWatchListEntry(WatchListEntry.valueOf(componentListEntry.getAnime()), app));
-            getComponentList().remove(componentListEntry);
-            showEntries();
+            final Optional<WatchListEntry> watchListEntry = WatchListEntry.valueOf(componentListEntry.getAnime());
+
+            if (watchListEntry.isPresent()) {
+                cmdService.executeCommand(new CmdDeleteWatchListEntry(watchListEntry.get(), app));
+                getComponentList().remove(componentListEntry);
+                showEntries();
+            }
         });
 
         return componentListEntry;
@@ -202,11 +206,11 @@ public class WatchListController extends AbstractAnimeListController implements 
         }
 
         if (observable instanceof AnimeRetrievalService && object instanceof Anime) {
-            final WatchListEntry anime = WatchListEntry.valueOf((Anime) object);
+            final Optional<WatchListEntry> anime = WatchListEntry.valueOf((Anime) object);
 
-            if (anime != null) {
-                cmdService.executeCommand(new CmdAddWatchListEntry(anime, app));
-                addEntryToGui(anime); // create GUI components
+            if (anime.isPresent()) {
+                cmdService.executeCommand(new CmdAddWatchListEntry(anime.get(), app));
+                addEntryToGui(anime.get()); // create GUI components
             }
 
             serviceList.poll();
