@@ -17,12 +17,12 @@ public class RecommendationList {
 
 
     public Recommendation addRecommendation(final Recommendation recommendation) {
-        final Recommendation value = recommendation;
+        Recommendation value = recommendation;
 
         if (recommendations.containsKey(recommendation.getInfoLink())) {
             final int amountInList = recommendations.get(recommendation.getInfoLink()).getAmount();
             final int newAmount = value.getAmount();
-            value.setAmount(amountInList + newAmount);
+            value = new Recommendation(recommendation.getInfoLink(), amountInList + newAmount);
         }
 
         return recommendations.put(recommendation.getInfoLink(), value);

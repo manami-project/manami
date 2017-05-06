@@ -43,6 +43,30 @@ public class RecommendationListTest {
 
 
     @Test(groups = UNIT_TEST_GROUP)
+    public void testAddSameRecommendation() {
+        // given
+        final RecommendationList sut = new RecommendationList();
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+
+        final Recommendation recom1 = new Recommendation(infoLink, 103);
+        sut.addRecommendation(recom1);
+
+        final Recommendation recom2 = new Recommendation(infoLink, 2);
+
+        // when
+        sut.addRecommendation(recom2);
+
+        // then
+        assertTrue(sut.isNotEmpty());
+        assertFalse(sut.isEmpty());
+        assertNotNull(sut.asList());
+        assertEquals(sut.asList().size(), 1);
+        final Integer sum = recom1.getAmount() + recom2.getAmount();
+        assertEquals(sut.get(infoLink).getAmount(), sum);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP)
     public void testAsList() {
         // given
         final RecommendationList sut = new RecommendationList();
