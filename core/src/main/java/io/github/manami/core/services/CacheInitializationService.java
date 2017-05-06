@@ -35,9 +35,9 @@ public class CacheInitializationService extends AbstractService<Void> {
     /** The user's anime list. */
     private final List<Anime> list;
 
-    private final ExecutorService animeExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
-    private final ExecutorService relatedExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
-    private final ExecutorService recomExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
+    private ExecutorService animeExecutorService;
+    private ExecutorService relatedExecutorService;
+    private ExecutorService recomExecutorService;
 
 
     /**
@@ -50,6 +50,14 @@ public class CacheInitializationService extends AbstractService<Void> {
     public CacheInitializationService(final Cache cache, final List<Anime> list) {
         this.cache = cache;
         this.list = list;
+        initializeThreadPools();
+    }
+
+
+    private void initializeThreadPools() {
+        animeExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
+        relatedExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
+        recomExecutorService = Executors.newFixedThreadPool(MAX_THREADS);
     }
 
 
@@ -129,6 +137,7 @@ public class CacheInitializationService extends AbstractService<Void> {
         animeExecutorService.shutdownNow();
         relatedExecutorService.shutdownNow();
         recomExecutorService.shutdownNow();
+        initializeThreadPools();
         cancel();
         super.reset();
     }
