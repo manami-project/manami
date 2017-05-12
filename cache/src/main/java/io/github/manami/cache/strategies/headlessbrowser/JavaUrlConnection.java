@@ -59,7 +59,7 @@ public class JavaUrlConnection implements HeadlessBrowser {
             final CloseableHttpResponse execute = hc.execute(request);
 
             if (execute.getStatusLine().getStatusCode() == HTTP_TOO_MANY_CONNECTIONS) {
-                log.error("Too many connections");
+                log.warn("Too many connections");
                 final long waitingTime = ThreadLocalRandom.current().nextLong(MIN_WAITING_TIME, MAX_WAITING_TIME);
                 log.warn("Waiting [{}]ms then retry.", waitingTime);
                 Thread.sleep(waitingTime);
