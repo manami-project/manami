@@ -40,13 +40,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsFullEntry() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -61,12 +59,10 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutEpisodes() {
         // given
-        final Anime entry = new Anime();
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -81,12 +77,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutInfoLink() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", null);
         entry.setEpisodes(37);
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -101,12 +96,10 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutLocation() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -121,12 +114,10 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutPicture() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -141,12 +132,10 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutThumbnail() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -161,9 +150,8 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutTitle() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime(null, new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
@@ -181,13 +169,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testaddAnimeIsEntryWithoutType() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
 
         // when
         final boolean result = inMemoryAnimeListHandler.addAnime(entry);
@@ -202,13 +188,11 @@ public class InMemoryAnimeListHandlerTest {
     public void testAnimeEntryExists() {
         // given
         final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", infoLink);
         entry.setEpisodes(37);
-        entry.setInfoLink(infoLink);
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
         inMemoryAnimeListHandler.addAnime(entry);
 
@@ -235,13 +219,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testAnimeList() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
         inMemoryAnimeListHandler.addAnime(entry);
 
@@ -256,13 +238,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testRemoveFromAnimeListWorks() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
         inMemoryAnimeListHandler.addAnime(entry);
 
@@ -302,13 +282,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForNewAnimeEntry() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when
@@ -323,13 +301,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testUpdateOrCreateForModifiedAnimeEntry() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(35);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         inMemoryAnimeListHandler.addAnime(entry);
@@ -349,13 +325,11 @@ public class InMemoryAnimeListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testClearing() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         inMemoryAnimeListHandler.addAnime(entry);

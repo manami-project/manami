@@ -49,11 +49,9 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
             }
 
             if (isNotBlank(title) && type != null && episodes >= 0) {
-                ret = new Anime();
-                ret.setTitle(StringEscapeUtils.unescapeHtml4(title));
+                ret = new Anime(StringEscapeUtils.unescapeHtml4(title), normalizeInfoLink(infoLink));
                 ret.setType(type);
                 ret.setEpisodes(episodes);
-                ret.setInfoLink(normalizeInfoLink(infoLink));
                 ret.setPicture(isNoneBlank(picture) ? extractPictureLink() : NO_IMG);
                 ret.setThumbnail(isNoneBlank(thumbnail) ? extractThumbnail() : NO_IMG_THUMB);
             }

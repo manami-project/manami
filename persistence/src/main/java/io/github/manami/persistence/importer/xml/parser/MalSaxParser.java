@@ -1,17 +1,18 @@
 package io.github.manami.persistence.importer.xml.parser;
 
-import io.github.manami.dto.AnimeType;
-import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.persistence.PersistenceFacade;
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.List;
+
+import org.apache.commons.lang3.math.NumberUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import io.github.manami.dto.AnimeType;
+import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.persistence.PersistenceFacade;
 
 /**
  * @author manami-project
@@ -20,12 +21,16 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class MalSaxParser extends DefaultHandler {
 
     /** Actual anime object. */
-    private Anime actAnime = null;
+    private Anime actAnime;
 
     /** This is the builder for the text within the elements. */
     private StringBuilder strBuilder;
-
     private String statusCurrentAnime;
+
+    private InfoLink infoLink;
+    private String title;
+    private AnimeType animeType;
+    private int episodes;
 
     private final PersistenceFacade persistence;
 
@@ -36,6 +41,7 @@ public class MalSaxParser extends DefaultHandler {
 
     /**
      * Constructor awaiting a list.
+     *
      * @since 2.0.0
      * @param persistence
      */
@@ -49,12 +55,14 @@ public class MalSaxParser extends DefaultHandler {
 
     @Override
     public void startElement(final String namespaceURI, final String localName, final String qName, final Attributes attributes) throws SAXException {
-
         strBuilder = new StringBuilder();
 
         if (qName.equals("anime")) {
-            actAnime = new Anime();
-            actAnime.setLocation("/");
+            actAnime = null;
+            infoLink = null;
+            title = null;
+            animeType = null;
+            episodes = 1;
         }
     }
 
@@ -64,46 +72,43 @@ public class MalSaxParser extends DefaultHandler {
 
         switch (qName) {
             case "series_animedb_id":
-                if (!actAnime.getInfoLink().isPresent()) {
-                    actAnime.setInfoLink(new InfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim()));
-                }
+                infoLink = new InfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim());
                 break;
             case "series_title":
-                if (isBlank(actAnime.getTitle())) {
-                    actAnime.setTitle(strBuilder.toString().trim());
-                }
+                title = strBuilder.toString().trim();
                 break;
             case "series_type":
-                if (actAnime.getType() == null) {
-                    actAnime.setType(AnimeType.findByName(strBuilder.toString().trim()));
-                }
+                animeType = AnimeType.findByName(strBuilder.toString().trim());
                 break;
             case "series_episodes":
-                if (actAnime.getEpisodes() == 0 && !"unknown".equalsIgnoreCase(strBuilder.toString().trim())) {
-                    actAnime.setEpisodes(Integer.valueOf(strBuilder.toString().trim()));
+                final String episodeStr = strBuilder.toString().trim();
+                if (NumberUtils.isParsable(episodeStr)) {
+                    episodes = Integer.valueOf(episodeStr);
                 }
                 break;
             case "my_status":
                 statusCurrentAnime = strBuilder.toString().trim().toLowerCase();
                 break;
             case "anime":
-                addAnime(actAnime);
+                addAnime();
                 break;
         }
     }
 
 
-    private void addAnime(final Anime anime) {
+    private void addAnime() {
+        actAnime = new Anime(title, infoLink).type(animeType).episodes(episodes).location("/");
+
         switch (statusCurrentAnime) {
             case "completed":
-                animeListEntries.add(anime);
+                animeListEntries.add(actAnime);
                 break;
             case "watching":
             case "plan to watch":
-                watchListEntries.add(anime);
+                watchListEntries.add(actAnime);
                 break;
             case "dropped":
-                filterListEntries.add(anime);
+                filterListEntries.add(actAnime);
                 break;
             default:
                 break;

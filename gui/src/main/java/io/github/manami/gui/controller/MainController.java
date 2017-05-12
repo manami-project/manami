@@ -292,9 +292,8 @@ public class MainController implements Observer {
         colAnimeListTitle.setCellFactory(defaultCallback);
         colAnimeListTitle.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
-            final Anime oldValue = new Anime(selectedAnime.getId());
+            final Anime oldValue = copyAnime(selectedAnime);
             final String newTitle = event.getNewValue().trim();
-            copyAnime(selectedAnime, oldValue);
             executeCommand(new CmdChangeTitle(oldValue, newTitle, app));
             selectedAnime.setTitle(newTitle);
         });
@@ -304,8 +303,7 @@ public class MainController implements Observer {
         colAnimeListType.setCellFactory(new AnimeTypeCallback());
         colAnimeListType.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
-            final Anime oldValue = new Anime(selectedAnime.getId());
-            copyAnime(selectedAnime, oldValue);
+            final Anime oldValue = copyAnime(selectedAnime);
             executeCommand(new CmdChangeType(oldValue, AnimeType.findByName(event.getNewValue()), app));
             selectedAnime.setType(AnimeType.findByName(event.getNewValue()));
         });
@@ -315,8 +313,7 @@ public class MainController implements Observer {
         colAnimeListEpisodes.setCellFactory(new AnimeEpisodesCallback());
         colAnimeListEpisodes.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
-            final Anime oldValue = new Anime(selectedAnime.getId());
-            copyAnime(selectedAnime, oldValue);
+            final Anime oldValue = copyAnime(selectedAnime);
             executeCommand(new CmdChangeEpisodes(oldValue, event.getNewValue(), app));
             selectedAnime.setEpisodes(event.getNewValue());
         });
@@ -326,8 +323,7 @@ public class MainController implements Observer {
         colAnimeListLink.setCellFactory(new AnimeInfoLinkCallback());
         colAnimeListLink.setOnEditCommit(event -> {
             final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
-            final Anime oldValue = new Anime(selectedAnime.getId());
-            copyAnime(selectedAnime, oldValue);
+            final Anime oldValue = copyAnime(selectedAnime);
             final InfoLink newValue = event.getNewValue();
             executeCommand(new CmdChangeInfoLink(oldValue, newValue, app));
             selectedAnime.setInfoLink(newValue);
@@ -342,8 +338,7 @@ public class MainController implements Observer {
 
             if (isNotBlank(newLocation)) {
                 final Anime selectedAnime = tvAnimeList.getItems().get(event.getTablePosition().getRow());
-                final Anime oldValue = new Anime(selectedAnime.getId());
-                copyAnime(selectedAnime, oldValue);
+                final Anime oldValue = copyAnime(selectedAnime);
                 executeCommand(new CmdChangeLocation(oldValue, newLocation, app));
                 selectedAnime.setLocation(newLocation);
             }

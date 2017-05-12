@@ -1,5 +1,13 @@
 package io.github.manami.persistence.importer.xml.parser;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.List;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.ToolVersion;
 import io.github.manami.dto.entities.Anime;
@@ -8,13 +16,6 @@ import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.importer.xml.postprocessor.ImportMigrationPostProcessor;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author manami-project
@@ -84,12 +85,13 @@ public class ManamiSaxParser extends DefaultHandler {
      * @param attributes
      */
     private void createAnimeEntry(final Attributes attributes) {
-        final Anime actAnime = new Anime();
-        actAnime.setTitle(attributes.getValue("title").trim());
+        final String title = attributes.getValue("title").trim();
+        final InfoLink infoLink = new InfoLink(attributes.getValue("infoLink").trim());
+
+        final Anime actAnime = new Anime(title, infoLink);
         actAnime.setType(AnimeType.findByName(attributes.getValue("type").trim()));
         actAnime.setEpisodes(Integer.valueOf(attributes.getValue("episodes").trim()));
         actAnime.setLocation(attributes.getValue("location").trim());
-        actAnime.setInfoLink(new InfoLink(attributes.getValue("infoLink").trim()));
 
         animeListEntries.add(actAnime);
     }

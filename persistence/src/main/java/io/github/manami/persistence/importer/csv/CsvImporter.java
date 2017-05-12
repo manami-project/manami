@@ -1,5 +1,19 @@
 package io.github.manami.persistence.importer.csv;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvListReader;
+import org.supercsv.io.ICsvListReader;
+import org.supercsv.prefs.CsvPreference;
+
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
@@ -10,19 +24,6 @@ import io.github.manami.persistence.exporter.csv.CsvConfig;
 import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 import io.github.manami.persistence.importer.Importer;
 import lombok.extern.slf4j.Slf4j;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.ICsvListReader;
-import org.supercsv.prefs.CsvPreference;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 /**
  * @author manami-project
@@ -76,13 +77,13 @@ public class CsvImporter implements Importer {
                 infoLinkStr = infoLinkStr != null ? infoLinkStr.trim() : infoLinkStr;
                 location = isNotBlank(location) ? location.trim() : null;
 
-                InfoLink infoLink = new InfoLink(infoLinkStr);
+                final InfoLink infoLink = new InfoLink(infoLinkStr);
 
                 // create object by list type
                 final CsvConfigType csvConfigType = CsvConfigType.findByName((String) objectList.get(0));
                 switch (csvConfigType) {
                     case ANIMELIST:
-                        animeListEntries.add(new Anime(title, type, episodes, infoLink, location));
+                        animeListEntries.add(new Anime(title, infoLink).type(type).episodes(episodes).location(location));
                         break;
                     case WATCHLIST:
                         watchListEntries.add(new WatchListEntry(title, infoLink));

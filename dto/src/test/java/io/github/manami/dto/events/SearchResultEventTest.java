@@ -43,7 +43,7 @@ public class SearchResultEventTest {
         // given
         final String searchString = "Death Note";
         final SearchResultEvent sut = new SearchResultEvent(searchString);
-        final Anime anime = new Anime();
+        final Anime anime = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
 
         // when
         sut.getAnimeListSearchResultList().add(anime);
@@ -84,7 +84,7 @@ public class SearchResultEventTest {
     public void testAddingEntryToAnimeList() {
         // given
         final String searchString = "Death Note";
-        final Anime anime = new Anime();
+        final Anime anime = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         final SearchResultEvent sut = new SearchResultEvent(searchString);
 
         // when

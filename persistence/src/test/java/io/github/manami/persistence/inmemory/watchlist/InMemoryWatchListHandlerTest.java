@@ -257,13 +257,11 @@ public class InMemoryWatchListHandlerTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testFilterAnime() {
         // given
-        final Anime entry = new Anime();
+        final Anime entry = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setEpisodes(37);
-        entry.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         entry.setLocation("/death_note");
         entry.setPicture("http://cdn.myanimelist.net/images/anime/9/9453.jpg");
         entry.setThumbnail("http://cdn.myanimelist.net/images/anime/9/9453t.jpg");
-        entry.setTitle("Death Note");
         entry.setType(AnimeType.TV);
 
         // when

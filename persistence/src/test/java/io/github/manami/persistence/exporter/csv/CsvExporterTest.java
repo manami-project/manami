@@ -74,19 +74,15 @@ public class CsvExporterTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testThatAnimeListIsExportedCorrectly() throws SAXException, ParserConfigurationException, IOException {
         // given
-        final Anime bokuDake = new Anime();
+        final Anime bokuDake = new Anime("Boku dake ga Inai Machi", new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setEpisodes(12);
-        bokuDake.setInfoLink(new InfoLink("http://myanimelist.net/anime/31043"));
         bokuDake.setLocation("/anime/series/boku_dake_ga_inai_machi");
-        bokuDake.setTitle("Boku dake ga Inai Machi");
         bokuDake.setType(AnimeType.TV);
         persistenceFacade.addAnime(bokuDake);
 
-        final Anime rurouniKenshin = new Anime();
+        final Anime rurouniKenshin = new Anime("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen", new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setEpisodes(4);
-        rurouniKenshin.setInfoLink(new InfoLink("http://myanimelist.net/anime/44"));
         rurouniKenshin.setLocation("/anime/series/rurouni_kenshin");
-        rurouniKenshin.setTitle("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
         rurouniKenshin.setType(AnimeType.OVA);
         persistenceFacade.addAnime(rurouniKenshin);
 

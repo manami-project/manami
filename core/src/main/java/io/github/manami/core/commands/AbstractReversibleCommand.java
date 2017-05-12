@@ -1,7 +1,5 @@
 package io.github.manami.core.commands;
 
-import static io.github.manami.dto.entities.Anime.copyNullTarget;
-
 import io.github.manami.core.Manami;
 import io.github.manami.dto.entities.Anime;
 
@@ -32,7 +30,6 @@ public abstract class AbstractReversibleCommand implements ReversibleCommand {
     @Override
     public boolean execute() {
         app.removeAnime(oldAnime.getId());
-        copyNullTarget(oldAnime, newAnime);
         return app.addAnime(newAnime);
     }
 

@@ -3,7 +3,6 @@ package io.github.manami.persistence.inmemory.animelist;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
 import static io.github.manami.dto.entities.Anime.isValidAnime;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +75,7 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
      * @return
      */
     private boolean isInList(final InfoLink infoLink) {
-        if (infoLink.isValid()) {
+        if (infoLink != null && infoLink.isValid()) {
             for (final MinimalEntry curEntry : animeList.values()) {
                 if (infoLink.equals(curEntry.getInfoLink())) {
                     return true;

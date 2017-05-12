@@ -28,13 +28,11 @@ public class WatchListEntryTest {
     @Test(groups = UNIT_TEST_GROUP)
     public void testValueOfFromAnime() {
         // given
-        final Anime anime = new Anime();
+        final Anime anime = new Anime("Death Note", new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setEpisodes(37);
-        anime.setInfoLink(new InfoLink("http://myanimelist.net/anime/1535"));
         anime.setLocation("/anime/series/death_note");
         anime.setPicture("https://myanimelist.cdn-dena.com/images/anime/9/9453.jpg");
         anime.setThumbnail("https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg");
-        anime.setTitle("Death Note");
         anime.setType(AnimeType.TV);
 
         // when

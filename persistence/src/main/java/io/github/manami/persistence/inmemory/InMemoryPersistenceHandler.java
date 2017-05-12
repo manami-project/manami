@@ -1,5 +1,14 @@
 package io.github.manami.persistence.inmemory;
 
+import static io.github.manami.dto.entities.Anime.isValidAnime;
+import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
@@ -9,14 +18,6 @@ import io.github.manami.persistence.PersistenceHandler;
 import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.List;
-import java.util.UUID;
-
-import static io.github.manami.dto.entities.Anime.isValidAnime;
-import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 
 /**
  * @author manami-project
@@ -83,7 +84,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     @Override
     public boolean addAnime(final Anime anime) {
         if (isValidAnime(anime)) {
-            if (anime.getInfoLink().isValid()) {
+            if (anime.getInfoLink() != null && anime.getInfoLink().isValid()) {
                 filterListHandler.removeFromFilterList(anime.getInfoLink());
                 watchListHandler.removeFromWatchList(anime.getInfoLink());
             }

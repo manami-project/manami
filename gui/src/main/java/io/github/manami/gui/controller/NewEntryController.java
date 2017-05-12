@@ -227,7 +227,7 @@ public class NewEntryController implements Observer {
         final String location = txtLocation.getText().trim();
         final String type = txtType.getText().trim();
         if (validationSupport.getValidationResult().getErrors().size() == 0) {
-            cmdService.executeCommand(new CmdAddAnime(new Anime(title, AnimeType.findByName(type), episodes, infoLink, location), Main.CONTEXT.getBean(Manami.class)));
+            cmdService.executeCommand(new CmdAddAnime(new Anime(title, infoLink).type(AnimeType.findByName(type)).episodes(episodes).location(location), Main.CONTEXT.getBean(Manami.class)));
             close();
         }
     }

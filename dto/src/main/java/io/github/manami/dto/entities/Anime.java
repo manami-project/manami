@@ -2,7 +2,6 @@ package io.github.manami.dto.entities;
 
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.UUID;
@@ -47,38 +46,15 @@ public class Anime extends AbstractMinimalEntry {
     private String picture = EMPTY;
 
 
-    /**
-     * Constructor awaiting all Attributes.
-     *
-     * @since 2.0.0
-     * @param title
-     *            Title of the anime.
-     * @param type
-     *            Type.
-     * @param episodes
-     *            Number of episodes.
-     * @param infoLink
-     *            Link to a website with more information.
-     * @param location
-     *            Location on the HDD.
-     */
-    public Anime(final String title, final AnimeType type, final int episodes, final InfoLink infoLink, final String location) {
-        super.setTitle(title);
-        super.setInfoLink(infoLink);
-        this.type = type;
-        this.episodes = episodes;
-        this.location = location;
-        id = randomUUID();
+    private Anime(final UUID id) {
+        this.id = id;
     }
 
 
-    /**
-     * Empty constructor.
-     *
-     * @since 1.0.0
-     */
-    public Anime() {
+    public Anime(final String title, final InfoLink infoLink) {
         id = randomUUID();
+        super.setTitle(title);
+        super.setInfoLink(infoLink);
     }
 
 
@@ -87,70 +63,41 @@ public class Anime extends AbstractMinimalEntry {
      *
      * @since 2.7.0
      */
-    public Anime(final UUID id) {
+    public Anime(final UUID id, final String title, final InfoLink infoLink) {
         this.id = id;
+        super.setTitle(title);
+        super.setInfoLink(infoLink);
     }
 
 
-    /**
-     * Fills every attribute in target which is null.
-     *
-     * @since 2.7.0
-     * @param source
-     *            {@link Anime} which is being copied.
-     * @param target
-     *            Instance of an {@link Anime} to which the attributes are
-     *            copied to.
-     */
-    public static void copyNullTarget(final Anime source, final Anime target) {
-        if (target.getEpisodes() == 0) {
-            target.setEpisodes(source.getEpisodes());
-        }
-
-        if (!target.getInfoLink().isPresent()) {
-            target.setInfoLink(source.getInfoLink());
-        }
-
-        if (isBlank(target.getLocation())) {
-            target.setLocation(source.getLocation());
-        }
-
-        if (isBlank(target.getPicture())) {
-            target.setPicture(source.getPicture());
-        }
-
-        if (AbstractMinimalEntry.NO_IMG_THUMB.equals(target.getThumbnail())) {
-            target.setThumbnail(source.getThumbnail());
-        }
-
-        if (isBlank(target.getTitle())) {
-            target.setTitle(source.getTitle());
-        }
-
-        if (target.getType() == null) {
-            target.setType(source.getType());
-        }
+    public Anime type(final AnimeType animeType) {
+        type = animeType;
+        return this;
     }
 
 
-    /**
-     * Copies every attribute of an anime.
-     *
-     * @since 2.6.2
-     * @param source
-     *            {@link Anime} which is being copied.
-     * @param target
-     *            Instance of an {@link Anime} to which the attributes are
-     *            copied to.
-     */
-    public static void copyAnime(final Anime source, final Anime target) {
-        target.setEpisodes(source.getEpisodes());
-        target.setInfoLink(source.getInfoLink());
-        target.setLocation(source.getLocation());
-        target.setPicture(source.getPicture());
-        target.setThumbnail(source.getThumbnail());
-        target.setTitle(source.getTitle());
-        target.setType(source.getType());
+    public Anime episodes(final int episodes) {
+        setEpisodes(episodes);
+        return this;
+    }
+
+
+    public Anime location(final String location) {
+        this.location = location;
+        return this;
+    }
+
+
+    public static Anime copyAnime(final Anime source) {
+        final Anime ret = new Anime(source.getId());
+        ret.setEpisodes(source.getEpisodes());
+        ret.setInfoLink(source.getInfoLink());
+        ret.setLocation(source.getLocation());
+        ret.setPicture(source.getPicture());
+        ret.setThumbnail(source.getThumbnail());
+        ret.setTitle(source.getTitle());
+        ret.setType(source.getType());
+        return ret;
     }
 
 
