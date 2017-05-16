@@ -70,7 +70,8 @@ public class CsvImporterTest {
     assertThat(rurouniKenshin.getEpisodes()).isEqualTo(4);
     assertThat(rurouniKenshin.getInfoLink().getUrl()).isEqualTo("http://myanimelist.net/anime/44");
     assertThat(rurouniKenshin.getLocation()).isEqualTo("/anime/series/rurouni_kenshin");
-    assertThat(rurouniKenshin.getTitle()).isEqualTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
+    assertThat(rurouniKenshin.getTitle())
+        .isEqualTo("Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen");
     assertThat(rurouniKenshin.getType()).isEqualTo(AnimeType.OVA);
   }
 
@@ -91,8 +92,10 @@ public class CsvImporterTest {
 
     final WatchListEntry deathNoteRewrite = fetchWatchList.get(0);
     assertThat(deathNoteRewrite).isNotNull();
-    assertThat(deathNoteRewrite.getInfoLink().getUrl()).isEqualTo("http://myanimelist.net/anime/2994");
-    assertThat(deathNoteRewrite.getThumbnail()).isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");
+    assertThat(deathNoteRewrite.getInfoLink().getUrl())
+        .isEqualTo("http://myanimelist.net/anime/2994");
+    assertThat(deathNoteRewrite.getThumbnail())
+        .isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");
     assertThat(deathNoteRewrite.getTitle()).isEqualTo("Death Note Rewrite");
   }
 
@@ -114,7 +117,8 @@ public class CsvImporterTest {
     final FilterEntry gintama = fetchFilterList.get(0);
     assertThat(gintama).isNotNull();
     assertThat(gintama.getInfoLink().getUrl()).isEqualTo("http://myanimelist.net/anime/918");
-    assertThat(gintama.getThumbnail()).isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");
+    assertThat(gintama.getThumbnail())
+        .isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");
     assertThat(gintama.getTitle()).isEqualTo("Gintama");
   }
 }
