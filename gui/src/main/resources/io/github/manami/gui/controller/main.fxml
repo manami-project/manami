@@ -153,6 +153,7 @@
                              <KeyCodeCombination alt="UP" code="DIGIT5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>
                      </MenuItem>
+                  <MenuItem fx:id="miTagList" mnemonicParsing="false" onAction="#showTagListTab" text="Tags" />
                  </items>
               </Menu>
               <Menu mnemonicParsing="false" text="Help">

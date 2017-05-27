@@ -61,6 +61,7 @@ import io.github.manami.gui.wrapper.NewEntryControllerWrapper;
 import io.github.manami.gui.wrapper.RecommendationsControllerWrapper;
 import io.github.manami.gui.wrapper.RelatedAnimeControllerWrapper;
 import io.github.manami.gui.wrapper.SearchResultsControllerWrapper;
+import io.github.manami.gui.wrapper.TagListControllerWrapper;
 import io.github.manami.gui.wrapper.WatchListControllerWrapper;
 import io.github.manami.persistence.utility.PathResolver;
 import javafx.application.Platform;
@@ -118,6 +119,9 @@ public class MainController implements Observer {
 
     /** Tab for search results. */
     private Tab searchResultTab;
+
+    /** Tab for tag list. */
+    private Tab tagListTab;
 
     private FilterListControllerWrapper controllerWrapper;
 
@@ -229,6 +233,10 @@ public class MainController implements Observer {
     /** Menu item: "Watch List" */
     @FXML
     private MenuItem miWatchList;
+
+    /** Menu item: "Tags" */
+    @FXML
+    private MenuItem miTagList;
 
     /** Menu item: "About" */
     @FXML
@@ -903,6 +911,18 @@ public class MainController implements Observer {
         }
 
         focusActiveTab(watchListTab);
+    }
+
+
+    /**
+     * @since 2.8.0
+     */
+    public void showTagListTab() {
+        if (tagListTab == null) {
+            tagListTab = Main.CONTEXT.getBean(TagListControllerWrapper.class).getTagListTab();
+        }
+
+        focusActiveTab(tagListTab);
     }
 
 
