@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.utility.Version;
@@ -47,6 +48,35 @@ public class ImportMigrationPostProcessor {
         log.info("Starting post processing.");
 
         migrateTo_2_10_3();
+        migrateTo_2_14_2();
+    }
+
+
+    /**
+     * Converts info links from http to https (Finally MAL! Took you long
+     * enough.)
+     */
+    private void migrateTo_2_14_2() {
+        if (documentVersion.isNewerThan("2.14.2")) {
+            log.info("SKIPPING migration to 2.14.2.");
+            return;
+        }
+
+        log.info("Migrating list to version 2.14.2.");
+        animeListEntries.forEach(this::migrateMalInfoLinkToHttps);
+        filterListEntries.forEach(this::migrateMalInfoLinkToHttps);
+        watchListEntries.forEach(this::migrateMalInfoLinkToHttps);
+    }
+
+
+    private void migrateMalInfoLinkToHttps(final MinimalEntry anime) {
+        if (anime == null || anime.getInfoLink() == null || !anime.getInfoLink().isValid()) {
+            return;
+        }
+
+        if (anime.getInfoLink().getUrl().startsWith("http://myanimelist.net") || anime.getInfoLink().getUrl().startsWith("http://www.myanimelist.net")) {
+            anime.setInfoLink(new InfoLink(anime.getInfoLink().getUrl().replaceAll("http", "https")));
+        }
     }
 
 
@@ -66,6 +96,10 @@ public class ImportMigrationPostProcessor {
 
 
     private void migrateCdnUrl(final MinimalEntry anime) {
+        if (anime == null) {
+            return;
+        }
+
         final String oldCdnUrl = "http://cdn.myanimelist.net";
         final String newCdnUrl = "https://myanimelist.cdn-dena.com";
         final String thumbnail = anime.getThumbnail();
