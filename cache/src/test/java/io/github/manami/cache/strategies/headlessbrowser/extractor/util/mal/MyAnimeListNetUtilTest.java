@@ -2,6 +2,7 @@ package io.github.manami.cache.strategies.headlessbrowser.extractor.util.mal;
 
 import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -13,7 +14,7 @@ import io.github.manami.dto.entities.InfoLink;
 public class MyAnimeListNetUtilTest {
 
     private static final String DEATH_NOTE_URL_NO_PROTOCOL = MyAnimeListNetUtil.DOMAIN + "/anime/1535/Death_Note";
-    private static final String EXPECTED_DEATH_NOTE_URL = "http://myanimelist.net/anime/1535";
+    private static final String EXPECTED_DEATH_NOTE_URL = "https://myanimelist.net/anime/1535";
 
 
     @Test(groups = UNIT_TEST_GROUP)
@@ -149,6 +150,19 @@ public class MyAnimeListNetUtilTest {
 
         // then
         assertEquals(result.getUrl(), EXPECTED_DEATH_NOTE_URL);
+    }
+
+
+    @Test(groups = UNIT_TEST_GROUP, description = "Urls with http will be changed to https.")
+    public void normalizeSchemeFromHttpToHttps() {
+        // given
+        final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
+
+        // when
+        final InfoLink result = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
+
+        // then
+        assertThat(result.getUrl()).isEqualTo(EXPECTED_DEATH_NOTE_URL);
     }
 
 

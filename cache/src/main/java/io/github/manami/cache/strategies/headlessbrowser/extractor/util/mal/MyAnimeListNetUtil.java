@@ -51,6 +51,11 @@ public final class MyAnimeListNetUtil {
             }
         }
 
+        // correct deeplinks using .php=id=
+        if (isNotBlank(ret) && ret.contains(".php?id=")) {
+            ret = ret.replaceAll("\\.php\\?id=", "/");
+        }
+
         return new InfoLink(ret);
     }
 }

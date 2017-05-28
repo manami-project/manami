@@ -40,7 +40,7 @@ public class MyAnimeListNetRecommendationsExtractor implements RecommendationsEx
     public InfoLink normalizeInfoLink(final InfoLink infoLink) {
         InfoLink normalizedInfoLink = MyAnimeListNetUtil.normalizeInfoLink(infoLink);
 
-        final String patternString = String.format("http://%s/anime/[0-9]+", MyAnimeListNetUtil.DOMAIN);
+        final String patternString = String.format("https://%s/anime/[0-9]+", MyAnimeListNetUtil.DOMAIN);
 
         // no tailings
         Pattern pattern = Pattern.compile(patternString);
