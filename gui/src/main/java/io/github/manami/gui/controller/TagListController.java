@@ -3,7 +3,6 @@ package io.github.manami.gui.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -75,11 +74,14 @@ public class TagListController extends AbstractAnimeListController implements Ob
 
     @FXML
     public void addEntry() {
+        final String urlString = txtUrl.getText().trim();
+
+        if (!isValid(urlString)) {
+            return;
+        }
+
         clear();
-        final List<String> urlList = Arrays.asList(txtUrl.getText().trim().split(" "));
-        final List<InfoLink> infoLinkList = newArrayList();
-        urlList.forEach(url -> infoLinkList.add(new InfoLink(url)));
-        service = new TagRetrievalService(cache, app, infoLinkList, this);
+        service = new TagRetrievalService(cache, app, urlString, this);
         serviceRepo.startService(service);
         txtUrl.setText(EMPTY);
         Platform.runLater(() -> {
@@ -88,6 +90,23 @@ public class TagListController extends AbstractAnimeListController implements Ob
             btnCancel.setVisible(true);
             getGridPane().getChildren().clear();
         });
+    }
+
+
+    private boolean isValid(final String urlString) {
+        if (urlString.startsWith("https://myanimelist.net/anime/genre")) {
+            return true;
+        }
+
+        if (urlString.startsWith("https://myanimelist.net/anime/producer")) {
+            return true;
+        }
+
+        if (urlString.startsWith("https://myanimelist.net/anime/season")) {
+            return true;
+        }
+
+        return false;
     }
 
 

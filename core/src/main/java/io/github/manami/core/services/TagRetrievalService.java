@@ -1,6 +1,5 @@
 package io.github.manami.core.services;
 
-import java.util.List;
 import java.util.Observer;
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class TagRetrievalService extends AbstractService<Void> {
     /** Core application. */
     private final Manami app;
 
-    private final List<InfoLink> list;
+    private final String tagUrl;
 
     private final JavaUrlConnection javaUrlConnection;
 
@@ -52,10 +51,10 @@ public class TagRetrievalService extends AbstractService<Void> {
      *            Observer which is being notified about the progress. It also
      *            gets the result as a list through notification.
      */
-    public TagRetrievalService(final Cache cache, final Manami app, final List<InfoLink> list, final Observer observer) {
+    public TagRetrievalService(final Cache cache, final Manami app, final String tagUrl, final Observer observer) {
         this.app = app;
         this.cache = cache;
-        this.list = list;
+        this.tagUrl = tagUrl;
         addObserver(observer);
         javaUrlConnection = new JavaUrlConnection();
         foundAll = Sets.newHashSet();
@@ -66,7 +65,7 @@ public class TagRetrievalService extends AbstractService<Void> {
     @Override
     public Void execute() {
         log.info("############################################ START ############################################");
-        final InfoLink genre = list.get(0);
+        final InfoLink genre = new InfoLink(tagUrl);
         int pageCounter = 1;
 
         while (pageCounter > 0) {
