@@ -134,6 +134,7 @@
                              <KeyCodeCombination alt="UP" code="DIGIT2" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>
                      </MenuItem>
+                  <MenuItem fx:id="miTagList" mnemonicParsing="false" onAction="#showTagListTab" text="by MAL Tags" />
                  </items>
               </Menu>
               <Menu mnemonicParsing="false" text="List">
@@ -153,7 +154,6 @@
                              <KeyCodeCombination alt="UP" code="DIGIT5" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>
                      </MenuItem>
-                  <MenuItem fx:id="miTagList" mnemonicParsing="false" onAction="#showTagListTab" text="Tags" />
                  </items>
               </Menu>
               <Menu mnemonicParsing="false" text="Help">

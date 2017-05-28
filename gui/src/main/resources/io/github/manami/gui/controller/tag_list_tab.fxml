@@ -71,6 +71,7 @@
                                             <Font name="System Bold" size="11.0" />
                                         </font>
                                     </Label>
+                              <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="cancel" visible="false" />
                                 </children>
                              </HBox>
                          </children>

@@ -19,6 +19,7 @@ import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
@@ -58,6 +59,9 @@ public class TagListController extends AbstractAnimeListController implements Ob
     @FXML
     private Label lblProgressMsg;
 
+    @FXML
+    private Button btnCancel;
+
     private Tab tab;
 
     private TagRetrievalService service;
@@ -81,6 +85,7 @@ public class TagListController extends AbstractAnimeListController implements Ob
         Platform.runLater(() -> {
             progressIndicator.setVisible(true);
             lblProgressMsg.setVisible(true);
+            btnCancel.setVisible(true);
             getGridPane().getChildren().clear();
         });
     }
@@ -90,15 +95,12 @@ public class TagListController extends AbstractAnimeListController implements Ob
      * @since 2.8.0
      */
     public void clear() {
-        if (service != null) {
-            service.deleteObserver(this);
-            service.reset();
-        }
+        cancel();
+
         Platform.runLater(() -> {
-            progressIndicator.setVisible(false);
-            lblProgressMsg.setVisible(false);
             getGridPane().getChildren().clear();
         });
+
         clearComponentList();
         showEntries();
     }
@@ -153,5 +155,19 @@ public class TagListController extends AbstractAnimeListController implements Ob
                 lblProgressMsg.setVisible(false);
             });
         }
+    }
+
+
+    public void cancel() {
+        if (service != null) {
+            service.deleteObserver(this);
+            service.reset();
+        }
+
+        Platform.runLater(() -> {
+            progressIndicator.setVisible(false);
+            lblProgressMsg.setVisible(false);
+            btnCancel.setVisible(false);
+        });
     }
 }
