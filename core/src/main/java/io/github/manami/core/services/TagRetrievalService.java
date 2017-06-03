@@ -1,12 +1,15 @@
 package io.github.manami.core.services;
 
+import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.symmetricDifference;
+
 import java.util.Observer;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 
 import io.github.manami.cache.Cache;
 import io.github.manami.cache.strategies.headlessbrowser.JavaUrlConnection;
@@ -25,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TagRetrievalService extends AbstractService<Void> {
 
+    private static final String LOG_MSG_LAST_PAGE = "Last page. No more entries for this genre.";
+
     /** Instance of the cache. */
     private final Cache cache;
 
@@ -37,6 +42,7 @@ public class TagRetrievalService extends AbstractService<Void> {
 
     private final Set<InfoLink> foundAll;
     private Set<InfoLink> foundPerPage;
+    private Set<InfoLink> foundPreviousPage;
     private final Pattern pattern;
 
 
@@ -57,7 +63,9 @@ public class TagRetrievalService extends AbstractService<Void> {
         this.tagUrl = tagUrl;
         addObserver(observer);
         javaUrlConnection = new JavaUrlConnection();
-        foundAll = Sets.newHashSet();
+        foundAll = newHashSet();
+        foundPerPage = newHashSet();
+        foundPreviousPage = newHashSet();
         pattern = Pattern.compile("https://myanimelist\\.net/anime/[0-9]+");
     }
 
@@ -76,13 +84,20 @@ public class TagRetrievalService extends AbstractService<Void> {
 
             if (!pageAsString.contains("404 Not Found - MyAnimeList.net")) {
                 extractAnimes(pageAsString);
-                pageCounter++;
+
+                if (pageCounter == 1 || symmetricDifference(foundPerPage, foundPreviousPage).size() > 0) {
+                    pageCounter++;
+                } else {
+                    pageCounter = -1;
+                    log.info(LOG_MSG_LAST_PAGE);
+                }
             } else {
                 pageCounter = -1;
-                log.info("Last page. No more entries for this genre.");
-                log.info("############################################ STOP ############################################");
+                log.info(LOG_MSG_LAST_PAGE);
             }
         }
+
+        log.info("############################################ STOP ############################################");
 
         setChanged();
         notifyObservers(Boolean.TRUE);
@@ -92,7 +107,8 @@ public class TagRetrievalService extends AbstractService<Void> {
 
 
     private void extractAnimes(final String pageAsString) {
-        foundPerPage = Sets.newHashSet();
+        foundPreviousPage = ImmutableSet.copyOf(foundPerPage);
+        foundPerPage = newHashSet();
         final Matcher matcher = pattern.matcher(pageAsString);
 
         while (matcher.find()) {

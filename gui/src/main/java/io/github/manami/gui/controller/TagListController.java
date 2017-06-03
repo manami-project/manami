@@ -172,6 +172,7 @@ public class TagListController extends AbstractAnimeListController implements Ob
             Platform.runLater(() -> {
                 progressIndicator.setVisible(false);
                 lblProgressMsg.setVisible(false);
+                btnCancel.setVisible(false);
             });
         }
     }
