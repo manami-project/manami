@@ -46,17 +46,17 @@
       <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
-        <version>20160810</version>
+        <version>20170516</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.5</version>
+        <version>3.6</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>4.3.8.RELEASE</version>
+        <version>4.3.9.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.controlsfx</groupId>
@@ -66,7 +66,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>21.0</version>
+        <version>22.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -130,7 +130,7 @@
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.0</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
