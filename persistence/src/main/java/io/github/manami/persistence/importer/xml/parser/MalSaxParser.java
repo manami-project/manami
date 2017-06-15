@@ -72,7 +72,7 @@ public class MalSaxParser extends DefaultHandler {
 
         switch (qName) {
             case "series_animedb_id":
-                infoLink = new InfoLink("http://myanimelist.net/anime/" + strBuilder.toString().trim());
+                infoLink = new InfoLink("https://myanimelist.net/anime/" + strBuilder.toString().trim());
                 break;
             case "series_title":
                 title = strBuilder.toString().trim();

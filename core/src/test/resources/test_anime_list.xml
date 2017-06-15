@@ -2,13 +2,13 @@
 <?xml-stylesheet type="text/xml" href="../test-classes/animelist_transform.xsl"?><!DOCTYPE manami SYSTEM "../test-classes/animelist.dtd">
 <manami version="2.10.2">
   <animeList>
-    <anime episodes="12" infoLink="http://myanimelist.net/anime/31043" location="/anime/series/boku_dake_ga_inai_machi" title="Boku dake ga Inai Machi" type="TV"/>
-    <anime episodes="4" infoLink="http://myanimelist.net/anime/44" location="/anime/series/rurouni_kenshin" title="Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen" type="OVA"/>
+    <anime episodes="12" infoLink="https://myanimelist.net/anime/31043" location="/anime/series/boku_dake_ga_inai_machi" title="Boku dake ga Inai Machi" type="TV"/>
+    <anime episodes="4" infoLink="https://myanimelist.net/anime/44" location="/anime/series/rurouni_kenshin" title="Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuiokuhen" type="OVA"/>
   </animeList>
   <watchList>
-    <watchListEntry infoLink="http://myanimelist.net/anime/2994" thumbnail="https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg" title="Death Note Rewrite"/>
+    <watchListEntry infoLink="https://myanimelist.net/anime/2994" thumbnail="https://myanimelist.cdn-dena.com/images/anime/13/8518t.jpg" title="Death Note Rewrite"/>
   </watchList>
   <filterList>
-    <filterEntry infoLink="http://myanimelist.net/anime/918" thumbnail="https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg" title="Gintama"/>
+    <filterEntry infoLink="https://myanimelist.net/anime/918" thumbnail="https://myanimelist.cdn-dena.com/images/anime/2/10038t.jpg" title="Gintama"/>
   </filterList>
 </manami>
