@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="This list contains all animeof a specific tag." />
+                             <Label text="Experimental. This list contains all anime of a specific tag. You can add the Link of a genre, studio or season from MAL." />
                              <HBox>
                                  <opaqueInsets>
                                      <Insets />

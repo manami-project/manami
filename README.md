@@ -15,6 +15,7 @@ Manami let's you create an index file for the anime that you already watched and
     * The basic file format is XML
 * Recommendation search
 * Related anime finder
+* Search genres, studios and seasons
 * Check your list for inconsistency
 * Use a filter list to narrow your search results down
 * Use a watch list with anime you are currently watching or you plan to watch
