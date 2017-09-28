@@ -31,7 +31,7 @@
                               <Insets />
                           </BorderPane.margin>
                          <children>
-                             <Label text="Experimental. This list contains all anime of a specific tag. You can add the Link of a genre, studio or season from MAL." />
+                             <Label text="EXPERIMENTAL!: This list contains all anime of a specific tag. You can add the Link of a genre, studio or season from MAL." />
                              <HBox>
                                  <opaqueInsets>
                                      <Insets />
@@ -40,7 +40,7 @@
                                      <Insets top="10.0" />
                                  </VBox.margin>
                                 <children>
-                                    <Label text="Add new URL:">
+                                    <Label text="Tag URL:">
                                         <HBox.margin>
                                             <Insets right="10.0" top="3.0" />
                                         </HBox.margin>
@@ -53,7 +53,7 @@
                                             <Insets right="10.0" />
                                         </HBox.margin>
                                     </TextField>
-                                    <Button defaultButton="true" mnemonicParsing="false" onAction="#addEntry" text="add">
+                                    <Button defaultButton="true" mnemonicParsing="false" onAction="#addEntry" text="search">
                                         <HBox.margin>
                                             <Insets right="10.0" />
                                         </HBox.margin>
