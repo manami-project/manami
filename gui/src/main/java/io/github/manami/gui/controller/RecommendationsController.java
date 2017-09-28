@@ -83,7 +83,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
     /** Service instance. */
     private RecommendationsRetrievalService service;
 
-    List<MinimalEntry> originalOrder = newArrayList();
+    private final List<MinimalEntry> originalOrder = newArrayList();
 
 
     /**

@@ -65,6 +65,8 @@ public class TagListController extends AbstractAnimeListController implements Ob
 
     private TagRetrievalService service;
 
+    private final List<Anime> originalOrder = newArrayList();
+
 
     @Override
     protected GridPane getGridPane() {
@@ -132,7 +134,9 @@ public class TagListController extends AbstractAnimeListController implements Ob
 
     @Override
     protected List<AnimeGuiComponentsListEntry> sortComponentEntries() {
-        return newArrayList(getComponentList().values());
+        final List<AnimeGuiComponentsListEntry> correctedOrder = newArrayList();
+        originalOrder.forEach(entry -> correctedOrder.add(getComponentList().get(entry.getInfoLink())));
+        return correctedOrder;
     }
 
 
@@ -164,6 +168,7 @@ public class TagListController extends AbstractAnimeListController implements Ob
 
         if (observable instanceof TagRetrievalService && object instanceof Anime) {
             final Anime anime = (Anime) object;
+            originalOrder.add(anime);
             addEntryToGui(anime); // create GUI components
             showEntries();
         }
