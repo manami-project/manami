@@ -56,17 +56,17 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>4.3.9.RELEASE</version>
+        <version>4.3.11.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.controlsfx</groupId>
         <artifactId>controlsfx</artifactId>
-        <version>8.40.12</version>
+        <version>8.40.13</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>22.0</version>
+        <version>23.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -76,7 +76,7 @@
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.16.16</version>
+        <version>1.16.18</version>
       </dependency>
       <dependency>
         <groupId>org.testng</groupId>
@@ -153,12 +153,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
+        <version>3.7.0</version>
         <configuration>
           <source>${java.target.version}</source>
           <target>${java.target.version}</target>
