@@ -10,19 +10,24 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 
 import org.controlsfx.control.Notifications;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
+import io.github.manami.core.commands.CmdAddFilterEntry;
+import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.services.RecommendationsRetrievalService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
@@ -83,7 +88,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
     /** Service instance. */
     private RecommendationsRetrievalService service;
 
-    private final List<MinimalEntry> originalOrder = newArrayList();
+    private final List<Anime> originalOrder = newArrayList();
 
 
     /**
@@ -111,7 +116,7 @@ public class RecommendationsController extends AbstractAnimeListController imple
         final Path file = showExportDialog(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainStage(), JSON_FILTER);
         final List<Anime> exportList = newArrayList();
 
-        originalOrder.forEach(entry -> exportList.add((Anime) entry));
+        originalOrder.forEach(entry -> exportList.add(entry));
 
         app.exportList(exportList, file);
     }
@@ -256,5 +261,57 @@ public class RecommendationsController extends AbstractAnimeListController imple
         });
         clearComponentList();
         showProgressControls(false);
+    }
+
+
+    @Override
+    protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
+        super.addFilterListButton(componentListEntry);
+
+        componentListEntry.getAddToFilterListButton().setOnAction(event -> {
+            final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(componentListEntry.getAnime());
+
+            if (filterEntry.isPresent()) {
+                originalOrder.remove(componentListEntry.getAnime());
+                cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
+                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+                showEntries();
+            }
+        });
+
+        return componentListEntry;
+    }
+
+
+    @Override
+    protected AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
+        super.addWatchListButton(componentListEntry);
+
+        componentListEntry.getAddToWatchListButton().setOnAction(event -> {
+            final Optional<WatchListEntry> watchListEntry = WatchListEntry.valueOf(componentListEntry.getAnime());
+
+            if (watchListEntry.isPresent()) {
+                originalOrder.remove(componentListEntry.getAnime());
+                cmdService.executeCommand(new CmdAddWatchListEntry(watchListEntry.get(), app));
+                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+                showEntries();
+            }
+        });
+
+        return componentListEntry;
+    }
+
+
+    @Override
+    protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
+        super.addRemoveButton(componentListEntry);
+
+        componentListEntry.getRemoveButton().setOnAction(event -> {
+            originalOrder.remove(componentListEntry.getAnime());
+            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
+            showEntries();
+        });
+
+        return componentListEntry;
     }
 }

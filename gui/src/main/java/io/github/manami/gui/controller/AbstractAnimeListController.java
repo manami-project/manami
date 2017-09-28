@@ -56,7 +56,7 @@ public abstract class AbstractAnimeListController {
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
 
     /** Instance of the main application. */
-    private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
+    protected final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     /** List of all GUI components. */
     private final Map<InfoLink, AnimeGuiComponentsListEntry> componentList;
