@@ -3,6 +3,7 @@ package io.github.manami.gui.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -224,7 +225,10 @@ public class FilterListController extends AbstractAnimeListController implements
      */
     public void startRecommendedFilterEntrySearch() {
         final List<FilterEntry> filterList = newArrayList(app.fetchFilterList());
-        Collections.shuffle(filterList);
+        Collections.shuffle(filterList, new SecureRandom());
+        Collections.shuffle(filterList, new SecureRandom());
+        Collections.shuffle(filterList, new SecureRandom());
+        Collections.shuffle(filterList, new SecureRandom());
         serviceRepo.startService(new RelatedAnimeFinderService(cache, app, filterList, this));
     }
 

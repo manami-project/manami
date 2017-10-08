@@ -4,6 +4,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
 import static com.google.common.collect.Maps.newConcurrentMap;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,7 +91,10 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
             }
         });
 
-        Collections.shuffle(urlList);
+        Collections.shuffle(urlList, new SecureRandom());
+        Collections.shuffle(urlList, new SecureRandom());
+        Collections.shuffle(urlList, new SecureRandom());
+        Collections.shuffle(urlList, new SecureRandom());
 
         final List<Callable<Void>> taskList = newArrayList();
 

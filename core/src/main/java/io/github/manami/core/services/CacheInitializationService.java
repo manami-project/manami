@@ -3,6 +3,7 @@ package io.github.manami.core.services;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.springframework.util.Assert.notNull;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,10 @@ public class CacheInitializationService extends AbstractService<Void> {
             // Create copy of anime list and shuffle it
             final List<Anime> shuffledList = newArrayList(ImmutableList.copyOf(list));
 
-            Collections.shuffle(shuffledList);
+            Collections.shuffle(shuffledList, new SecureRandom());
+            Collections.shuffle(shuffledList, new SecureRandom());
+            Collections.shuffle(shuffledList, new SecureRandom());
+            Collections.shuffle(shuffledList, new SecureRandom());
 
             final List<Callable<Void>> animeTaskList = newArrayList();
 
