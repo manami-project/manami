@@ -139,7 +139,7 @@
   <properties>
     <slf4j.version>1.7.25</slf4j.version>
     <java.target.version>1.8</java.target.version>
-    <manami.version>2.15.0</manami.version>
+    <manami.version>2.15.1</manami.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
