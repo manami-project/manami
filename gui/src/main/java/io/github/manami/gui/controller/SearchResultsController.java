@@ -72,8 +72,9 @@ public class SearchResultsController {
     private Label lblHeading;
 
     /** List of all GUI components. */
-    private List<AnimeGuiComponentsListEntry> componentList;
+    private List<AnimeGuiComponentsListEntry> animeListComponents;
     private List<AnimeGuiComponentsListEntry> filterListComponents;
+    private List<AnimeGuiComponentsListEntry> watchListComponents;
     private SearchResultEvent event;
     private boolean isPaneAlreadyExpaned;
 
@@ -99,16 +100,14 @@ public class SearchResultsController {
 
 
     private void createWatchListEntries() {
-        componentList = newArrayList();
-
-        event.getWatchListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
-
-        showEntries(watchListGridPane, componentList);
-        watchListTitledPane.setText(String.format("%s watch list (%d)", TITLED_TAB_PANE_TITLE, watchListGridPane.getChildrenUnmodifiable().size()));
+        watchListComponents = newArrayList();
+        event.getWatchListSearchResultList().forEach(element -> watchListComponents.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
+        showEntries(watchListGridPane, watchListComponents);
+        watchListTitledPane.setText(String.format("%s watch list (%d)", TITLED_TAB_PANE_TITLE, watchListComponents.size()));
 
         boolean isExpandWatchListPane = false;
         if (!isPaneAlreadyExpaned) {
-            isPaneAlreadyExpaned = componentList.size() > 0;
+            isPaneAlreadyExpaned = watchListComponents.size() > 0;
             isExpandWatchListPane = isPaneAlreadyExpaned;
         }
 
@@ -160,11 +159,11 @@ public class SearchResultsController {
 
 
     private void createAnimeListEntries() {
-        componentList = newArrayList();
-        event.getAnimeListSearchResultList().forEach(element -> componentList.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
-        showEntries(animeListGridPane, componentList);
-        animeListTitledPane.setText(String.format("%s anime list (%d)", TITLED_TAB_PANE_TITLE, componentList.size()));
-        isPaneAlreadyExpaned = componentList.size() > 0;
+        animeListComponents = newArrayList();
+        event.getAnimeListSearchResultList().forEach(element -> animeListComponents.add(new AnimeGuiComponentsListEntry(element, getPictureComponent(element), getTitleComponent(element))));
+        showEntries(animeListGridPane, animeListComponents);
+        animeListTitledPane.setText(String.format("%s anime list (%d)", TITLED_TAB_PANE_TITLE, animeListComponents.size()));
+        isPaneAlreadyExpaned = animeListComponents.size() > 0;
         animeListTitledPane.setExpanded(isPaneAlreadyExpaned);
     }
 
