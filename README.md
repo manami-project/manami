@@ -2,8 +2,6 @@
 
 [![License: GNU Affero General Public License v3 (AGPLv3)](https://img.shields.io/badge/license-AGPLv3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0.de.html) [![Build Status](https://travis-ci.org/manami-project/manami.svg?branch=development)](https://travis-ci.org/manami-project/manami) [![codecov](https://codecov.io/gh/manami-project/manami/branch/development/graph/badge.svg)](https://codecov.io/gh/manami-project/manami/branch/development) [![Dependency Status](https://www.versioneye.com/user/projects/57d4f9e3c07f2e0044bd6040/badge.svg)](https://www.versioneye.com/user/projects/57d4f9e3c07f2e0044bd6040)
 
-[![](http://codescene.io/projects/2088/status.svg) Get more details at **codescene.io**.](http://codescene.io/projects/2088/jobs/latest-successful/results)
-
 ## What does it do?
 Manami let's you create an index file for the anime that you already watched and stored on your hard drive. Additionally based on this list you can search for related anime and recommendations.
 
@@ -31,3 +29,7 @@ Manami is not meant to be an alternative to MAL. It should be seen as an extensi
 * Download the *.jar file of the latest [release](https://github.com/manami-project/manami/releases) 
 * No installation or additional setup needed. Just Download the *.jar and start it by double click
     * or via console: java -jar manami.jar
+
+
+
+[![](http://codescene.io/projects/2088/status.svg) Get more details at **codescene.io**.](http://codescene.io/projects/2088/jobs/latest-successful/results)
