@@ -1,6 +1,7 @@
 package io.github.manami.cache.strategies.headlessbrowser;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.http.HttpVersion.HTTP_1_1;
 
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -44,14 +45,12 @@ public class JavaUrlConnection implements HeadlessBrowser {
         final CloseableHttpClient hc = HttpClients.custom().setHttpProcessor(HttpProcessorBuilder.create().build()).build();
         final HttpGet request = new HttpGet(infoLink.getUrl());
 
-        newArrayList(request.getAllHeaders()).forEach(header -> {
-            request.removeHeader(header);
-        });
+        newArrayList(request.getAllHeaders()).forEach(request::removeHeader);
 
-        request.setProtocolVersion(HttpVersion.HTTP_1_1);
+        request.setProtocolVersion(HTTP_1_1);
         request.setHeader("Host", "myanimelist.net");
-        request.setHeader("User-Agent", "curl/7.53.0");
-        request.setHeader("Accept", "*/*");
+        request.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:66.0) Gecko/20100101 Firefox/66.0");
+        request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
         String ret = null;
 
@@ -72,7 +71,7 @@ public class JavaUrlConnection implements HeadlessBrowser {
 
             ret = EntityUtils.toString(execute.getEntity());
         } catch (final IOException | InterruptedException e) {
-            log.error("An error occured during download of infosite: ", e);
+            log.error("An error occurred during download of infosite: ", e);
         }
 
         return ret;

@@ -1,26 +1,42 @@
 package io.github.manami.cache;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.slf4j.MDC;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.http.HttpVersion.HTTP_1_1;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import io.github.manami.cache.strategies.daemon.DaemonRestRetrievalStrategy;
+import com.google.gson.Gson;
+import io.github.manami.cache.populate.AdbEntry;
+import io.github.manami.cache.populate.AnimeOfflineDatabase;
 import io.github.manami.cache.strategies.headlessbrowser.HeadlessBrowserRetrievalStrategy;
+import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.RecommendationList;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import javax.inject.Inject;
+import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HttpProcessorBuilder;
+import org.slf4j.MDC;
 
 /**
  * Facade for all inquiries against a cache.
@@ -32,7 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 public final class CacheManager implements Cache {
 
     private static final int TITLE_MAX_LENGTH = 200;
-    private final DaemonRestRetrievalStrategy daemonRestRetrievalStrategy;
     private final HeadlessBrowserRetrievalStrategy headlessBrowserRetrievalStrategy;
 
     /**
@@ -55,25 +70,73 @@ public final class CacheManager implements Cache {
 
 
     @Inject
-    public CacheManager(final DaemonRestRetrievalStrategy daemonRestRetrievalStrategy, final HeadlessBrowserRetrievalStrategy headlessBrowserRetrievalStrategy) {
-        this.daemonRestRetrievalStrategy = daemonRestRetrievalStrategy;
+    public CacheManager(final HeadlessBrowserRetrievalStrategy headlessBrowserRetrievalStrategy) {
         this.headlessBrowserRetrievalStrategy = headlessBrowserRetrievalStrategy;
         buildAnimeCache();
         buildRelatedAnimeCache();
         buildRecommendationsCache();
+
+        new Thread(() -> {
+            try {
+                populateCache();
+            } catch (Exception e) {
+                log.error("Unable to populate cache.", e);
+            }
+        }).start();
     }
 
+    private void populateCache() throws IOException, URISyntaxException {
+        final CloseableHttpClient hc = HttpClients
+            .custom().setHttpProcessor(HttpProcessorBuilder.create().build()).build();
+        final HttpGet request = new HttpGet(new URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json").toURI());
 
-    /**
-     * Checks whether a {@link DaemonRestRetrievalStrategy} instance is up an
-     * running.
-     *
-     * @return
-     */
-    private boolean isDaemonAvailable() {
-        return daemonRestRetrievalStrategy.isAvailable();
+        newArrayList(request.getAllHeaders()).forEach(request::removeHeader);
+
+        request.setProtocolVersion(HTTP_1_1);
+        request.setHeader("Host", "raw.githubusercontent.com");
+        request.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:66.0) Gecko/20100101 Firefox/66.0");
+        request.setHeader("Accept", "application/json");
+
+        final CloseableHttpResponse execute = hc.execute(request);
+
+        if (execute.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new IllegalStateException("Cache data download failed.");
+        }
+
+        List<AdbEntry> adbEntries = new Gson().fromJson(
+            new InputStreamReader(execute.getEntity().getContent(), UTF_8),
+            AnimeOfflineDatabase.class
+        ).data
+            .parallelStream()
+            .peek(it -> it.sources = it.sources.stream()
+                .filter(source -> source.startsWith("https://myanimelist.net"))
+                .collect(toList()))
+            .filter(it -> it.sources.size() == 1)
+            .collect(toList());
+
+        adbEntries.parallelStream()
+            .map(it -> {
+                Anime anime = new Anime(it.title, new InfoLink(it.sources.get(0)));
+                anime.setType(AnimeType.findByName(it.type));
+                anime.setEpisodes(it.episodes);
+                anime.setPicture(it.picture);
+                anime.setThumbnail(it.thumbnail);
+                anime.setLocation("/");
+
+                Set<InfoLink> relations = it.relations.stream()
+                    .filter(source -> source.startsWith("https://myanimelist.net"))
+                    .map(InfoLink::new)
+                    .collect(toSet());
+
+                return Pair.of(anime, relations);
+            })
+            .filter( it -> Anime.isValidAnime(it.getKey()))
+            .map( it -> {
+                relatedAnimeCache.put(it.getKey().getInfoLink(), it.getValue());
+                return it.getKey();
+            })
+            .forEach( it -> animeEntryCache.put(it.getInfoLink(), Optional.of(it)));
     }
-
 
     @Override
     public Optional<Anime> fetchAnime(final InfoLink infoLink) {
@@ -157,10 +220,6 @@ public final class CacheManager implements Cache {
 
             @Override
             public Optional<Anime> load(final InfoLink infoLink) throws Exception {
-                if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchAnime(infoLink);
-                }
-
                 return headlessBrowserRetrievalStrategy.fetchAnime(infoLink);
             }
         });
@@ -172,10 +231,7 @@ public final class CacheManager implements Cache {
 
             @Override
             public Set<InfoLink> load(final InfoLink infoLink) throws Exception {
-                if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchRelatedAnime(infoLink);
-                }
-
+                log.debug("no cache hit for {}", infoLink);
                 return headlessBrowserRetrievalStrategy.fetchRelatedAnime(infoLink);
             }
         });
@@ -187,10 +243,6 @@ public final class CacheManager implements Cache {
 
             @Override
             public RecommendationList load(final InfoLink infoLink) throws Exception {
-                if (isDaemonAvailable()) {
-                    return daemonRestRetrievalStrategy.fetchRecommendations(infoLink);
-                }
-
                 return headlessBrowserRetrievalStrategy.fetchRecommendations(infoLink);
             }
         });

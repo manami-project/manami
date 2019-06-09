@@ -1,13 +1,11 @@
 package io.github.manami.core.services;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.collections.FXCollections;
 import javax.inject.Named;
 
-import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServiceRepository implements Observer {
 
-    private final ObservableList<BackgroundService> runningServices = new ObservableListWrapper<>(newArrayList());
+    private final ObservableList<BackgroundService> runningServices = FXCollections.observableArrayList();
 
 
     public void startService(final BackgroundService service) {

@@ -3,6 +3,7 @@ package io.github.manami.gui.wrapper;
 import static io.github.manami.gui.controller.SearchResultsController.SEARCH_RESULTS_TAB_TITLE;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
+import javafx.fxml.FXMLLoader;
 import javax.inject.Named;
 
 import org.springframework.core.io.ClassPathResource;
@@ -12,7 +13,6 @@ import com.google.common.eventbus.Subscribe;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.gui.controller.SearchResultsController;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
