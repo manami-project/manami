@@ -1,6 +1,7 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static io.github.manami.dto.entities.Anime.copyAnime;
 import static io.github.manami.gui.components.Icons.createIconDelete;
 import static io.github.manami.gui.components.Icons.createIconExit;
@@ -29,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -596,7 +598,7 @@ public class MainController implements Observer {
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
-        final List<String> suggestions = newArrayList();
+        final Set<String> suggestions = newHashSet();
         app.fetchAnimeList().forEach(e -> suggestions.add(e.getTitle()));
         app.fetchFilterList().forEach(e -> suggestions.add(e.getTitle()));
         app.fetchWatchList().forEach(e -> suggestions.add(e.getTitle()));
