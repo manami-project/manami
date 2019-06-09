@@ -1,81 +1,162 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
-import java.util.List;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.Manami;
+import io.github.manami.core.commands.CmdAddFilterEntry;
+import io.github.manami.core.commands.CmdAddWatchListEntry;
+import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.TagRetrievalService;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.dto.entities.WatchListEntry;
+import io.github.manami.gui.utility.HyperlinkBuilder;
+import io.github.manami.gui.utility.ReadOnlyObservableValue;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
-/**
- * @author manami-project
- * @since 2.8.0
- */
-public class TagListController extends AbstractAnimeListController implements Observer {
+import static io.github.manami.gui.components.Icons.createIconFilterList;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.components.Icons.createIconWatchList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+
+public class TagListController implements Observer {
 
     public static final String TAG_LIST_TITLE = "Tags";
 
-    /** Instance of the application. */
+    private Tab tab;
+    private TagRetrievalService service;
+    private Map<InfoLink, SoftReference<Image>> imageCache = new HashMap<>();
+
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
-
-    /** Instance of the cache. */
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
-
-    /** Instance of the service repository. */
+    private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
 
-    /** {@link TextField} for adding a new entry. */
     @FXML
     private TextField txtUrl;
 
-    /** {@link GridPane} which shows the results. */
     @FXML
-    private GridPane gridPane;
-
-    /** Moving circle indicating a process. */
-    @FXML
-    private ProgressIndicator progressIndicator;
-
-    /** Showing the amount of services running in the background. */
-    @FXML
-    private Label lblProgressMsg;
+    private HBox hBoxProgress;
 
     @FXML
-    private Button btnCancel;
+    private TableView<Anime> contentTable;
 
-    private Tab tab;
+    @FXML
+    private TableColumn<Anime, ImageView> colImage;
 
-    private TagRetrievalService service;
+    @FXML
+    private TableColumn<Anime, Hyperlink> colTitle;
 
-    private final List<Anime> originalOrder = newArrayList();
+    @FXML
+    private TableColumn<Anime, HBox> colActions;
 
 
-    @Override
-    protected GridPane getGridPane() {
-        return gridPane;
+    public void initialize() {
+        colImage.setCellValueFactory(p -> new ReadOnlyObservableValue<ImageView>() {
+
+            @Override
+            public ImageView getValue() {
+                ImageView cachedImageView = new ImageView(loadImage(p.getValue()));
+                cachedImageView.setCache(true);
+                return cachedImageView;
+            }
+        });
+
+        colTitle.setCellValueFactory(p -> new ReadOnlyObservableValue<Hyperlink>() {
+
+            @Override
+            public Hyperlink getValue() {
+                Hyperlink title = HyperlinkBuilder.buildFrom(p.getValue().getTitle(), p.getValue().getInfoLink().toString());
+                title.setFont(Font.font(24.0));
+                return title;
+            }
+        });
+
+        colTitle.setComparator((o1, o2) -> o1.getText().compareToIgnoreCase(o2.getText()));
+
+        colActions.setCellValueFactory(p -> new ReadOnlyObservableValue<HBox>() {
+
+            @Override
+            public HBox getValue() {
+                return createActionButtons(p.getValue());
+            }
+        });
+    }
+
+    private Image loadImage(Anime anime) {
+        if (imageCache.containsKey(anime.getInfoLink())) {
+            return imageCache.get(anime.getInfoLink()).get();
+        }
+
+        Image image = new Image(anime.getPicture(), true);
+        imageCache.put(anime.getInfoLink(), new SoftReference<>(image));
+
+        return image;
+    }
+
+    private HBox createActionButtons(Anime anime) {
+        final Button btnAddToWatchlist = new Button(EMPTY, createIconWatchList());
+        btnAddToWatchlist.setTooltip(new Tooltip("add to watch list"));
+        btnAddToWatchlist.setOnAction(event -> {
+            WatchListEntry.valueOf(anime).ifPresent(e -> {
+                cmdService.executeCommand(new CmdAddWatchListEntry(e, app));
+                contentTable.getItems().remove(anime);
+                updateTabTitle();
+            });
+        });
+
+        final Button btnAddToFilterList = new Button(EMPTY, createIconFilterList());
+        btnAddToFilterList.setTooltip(new Tooltip("add entry to filter list"));
+        btnAddToFilterList.setOnAction(event -> {
+            FilterEntry.valueOf(anime).ifPresent(e -> {
+                cmdService.executeCommand(new CmdAddFilterEntry(e, app));
+                contentTable.getItems().remove(anime);
+                updateTabTitle();
+            });
+        });
+
+        final Button removeButton = new Button(EMPTY, createIconRemove());
+        removeButton.setTooltip(new Tooltip("remove"));
+        removeButton.setOnAction(event -> {
+            contentTable.getItems().remove(anime);
+            updateTabTitle();
+        });
+
+
+        final HBox hBox = new HBox();
+        hBox.setStyle("-fx-alignment: CENTER");
+        hBox.setSpacing(5.0);
+        hBox.getChildren().add(btnAddToFilterList);
+        hBox.getChildren().add(btnAddToWatchlist);
+        hBox.getChildren().add(removeButton);
+
+        return hBox;
     }
 
 
     @FXML
-    public void addEntry() {
+    public void search() {
         final String urlString = txtUrl.getText().trim();
 
         if (!isValid(urlString)) {
@@ -83,14 +164,13 @@ public class TagListController extends AbstractAnimeListController implements Ob
         }
 
         clear();
+
         service = new TagRetrievalService(cache, app, urlString, this);
         serviceRepo.startService(service);
-        txtUrl.setText(EMPTY);
+
         Platform.runLater(() -> {
-            progressIndicator.setVisible(true);
-            lblProgressMsg.setVisible(true);
-            btnCancel.setVisible(true);
-            getGridPane().getChildren().clear();
+            txtUrl.setText(EMPTY);
+            hBoxProgress.setVisible(true);
         });
     }
 
@@ -104,59 +184,18 @@ public class TagListController extends AbstractAnimeListController implements Ob
             return true;
         }
 
-        if (urlString.startsWith("https://myanimelist.net/anime/season")) {
-            return true;
-        }
-
-        return false;
+        return urlString.startsWith("https://myanimelist.net/anime/season");
     }
 
 
-    /**
-     * @since 2.8.0
-     */
     public void clear() {
         cancel();
-
-        Platform.runLater(() -> {
-            getGridPane().getChildren().clear();
-        });
-
-        clearComponentList();
-        showEntries();
+        contentTable.getItems().clear();
     }
 
 
     public void setTab(final Tab tab) {
         this.tab = tab;
-    }
-
-
-    @Override
-    protected List<AnimeGuiComponentsListEntry> sortComponentEntries() {
-        final List<AnimeGuiComponentsListEntry> correctedOrder = newArrayList();
-        originalOrder.forEach(entry -> correctedOrder.add(getComponentList().get(entry.getInfoLink())));
-        return correctedOrder;
-    }
-
-
-    @Override
-    protected void updateChildren() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", TAG_LIST_TITLE, getComponentList().size())));
-    }
-
-
-    @Override
-    protected List<? extends MinimalEntry> getEntryList() {
-        // not needed for this controller
-        return null;
-    }
-
-
-    @Override
-    boolean isInList(final InfoLink infoLink) {
-        // not needed for this controller
-        return false;
     }
 
 
@@ -167,19 +206,20 @@ public class TagListController extends AbstractAnimeListController implements Ob
         }
 
         if (observable instanceof TagRetrievalService && object instanceof Anime) {
-            final Anime anime = (Anime) object;
-            originalOrder.add(anime);
-            addEntryToGui(anime); // create GUI components
-            showEntries();
+            contentTable.getItems().add((Anime) object);
+            updateTabTitle();
         }
 
         if (observable instanceof TagRetrievalService && object instanceof Boolean) {
             Platform.runLater(() -> {
-                progressIndicator.setVisible(false);
-                lblProgressMsg.setVisible(false);
-                btnCancel.setVisible(false);
+                hBoxProgress.setVisible(false);
             });
         }
+    }
+
+
+    private void updateTabTitle() {
+        Platform.runLater(() -> tab.setText(String.format("%s (%s)", TAG_LIST_TITLE, contentTable.getItems().size())));
     }
 
 
@@ -190,9 +230,7 @@ public class TagListController extends AbstractAnimeListController implements Ob
         }
 
         Platform.runLater(() -> {
-            progressIndicator.setVisible(false);
-            lblProgressMsg.setVisible(false);
-            btnCancel.setVisible(false);
+            hBoxProgress.setVisible(false);
         });
     }
 }

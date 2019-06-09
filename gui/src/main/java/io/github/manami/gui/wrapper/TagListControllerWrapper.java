@@ -19,10 +19,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.8.0
- */
+
 @Named
 @Slf4j
 public class TagListControllerWrapper {
@@ -31,16 +28,8 @@ public class TagListControllerWrapper {
     private TagListController tagListController;
 
 
-    /**
-     * @since 2.7.2
-     */
     private void init() {
         tagListTab = new Tab(TAG_LIST_TITLE);
-        tagListTab.setOnSelectionChanged(event -> {
-            if (tagListTab.isSelected()) {
-                tagListController.showEntries();
-            }
-        });
 
         Parent pane;
         try {
@@ -64,20 +53,6 @@ public class TagListControllerWrapper {
 
         tagListController.clear();
     }
-
-
-    @Subscribe
-    @AllowConcurrentEvents
-    public void changeEvent(final AnimeListChangedEvent event) {
-        if (tagListController == null) {
-            init();
-        }
-
-        if (tagListTab.isSelected()) {
-            tagListController.showEntries();
-        }
-    }
-
 
     /**
      * @since 2.7.2
