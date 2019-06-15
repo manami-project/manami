@@ -63,7 +63,7 @@
                                                 </Label>
                                        </children>
                                     </VBox>
-                                          <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" visible="false">
+                                          <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" text="Cancel" visible="false">
                                               <VBox.margin>
                                                   <Insets top="30.0" />
                                               </VBox.margin>

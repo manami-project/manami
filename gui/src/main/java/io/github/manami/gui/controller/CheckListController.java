@@ -1,18 +1,11 @@
 package io.github.manami.gui.controller;
 
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
-import static io.github.manami.gui.components.Icons.createIconEdit;
-import static io.github.manami.gui.components.Icons.createIconRemove;
-import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import org.controlsfx.control.Notifications;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Observable;
 import java.util.Observer;
-
-import org.controlsfx.control.Notifications;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -47,6 +40,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static io.github.manami.gui.components.Icons.createIconEdit;
+import static io.github.manami.gui.components.Icons.createIconRemove;
+import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @author manami-project
@@ -118,7 +117,6 @@ public class CheckListController implements Observer {
     public void initialize() {
         btnStart.setOnAction(event -> start());
 
-        btnCancel.setGraphic(createIconCancel());
         btnCancel.setTooltip(new Tooltip("cancel"));
         btnCancel.setOnAction(event -> cancel());
     }

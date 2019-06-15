@@ -14,7 +14,7 @@
                <Insets left="10.0" right="10.0" />
            </padding>
          <content>
-            <VBox spacing="40.0">
+            <VBox spacing="30.0">
                <children>
                   <VBox spacing="30.0">
                      <children>
@@ -35,33 +35,33 @@
                         </HBox>
                              <Label text="Recommendations based on user recommendations on myanimelist.net. Sorted with highest priority on top.">
                                  <VBox.margin>
-                                     <Insets bottom="30.0" />
+                                     <Insets />
                                  </VBox.margin>
                              </Label>
                             <VBox alignment="CENTER">
                                <children>
                                     <Button fx:id="btnStart" defaultButton="true" mnemonicParsing="false" onAction="#start" text="Start Search" />
-                              <HBox fx:id="hBoxProgress" alignment="CENTER" visible="false">
+                              <HBox fx:id="hBoxProgress" alignment="TOP_CENTER" visible="false">
                                  <children>
-                                    <VBox alignment="CENTER" spacing="5.0">
+                                    <HBox spacing="5.0">
                                        <children>
-                                          <HBox spacing="5.0">
+                                          <VBox alignment="CENTER" spacing="5.0">
                                              <children>
                                                       <ProgressBar fx:id="progressBar" prefHeight="25.0" prefWidth="220.0" />
-                                                      <Button cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel">
-                                                          <VBox.margin>
-                                                              <Insets top="30.0" />
-                                                          </VBox.margin>
-                                                      </Button>
+                                                      <Label fx:id="lblProgress" text="preparing">
+                                                          <font>
+                                                              <Font name="System Bold" size="11.0" />
+                                                          </font>
+                                                      </Label>
                                              </children>
-                                          </HBox>
-                                                <Label fx:id="lblProgress" text="preparing">
-                                                    <font>
-                                                        <Font name="System Bold" size="11.0" />
-                                                    </font>
-                                                </Label>
+                                          </VBox>
+                                                <Button alignment="TOP_CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#cancel" text="Cancel">
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </Button>
                                        </children>
-                                    </VBox>
+                                    </HBox>
                                  </children>
                               </HBox>
                                </children>

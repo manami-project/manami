@@ -1,14 +1,11 @@
 package io.github.manami.gui.controller;
 
-import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
-import static io.github.manami.gui.components.Icons.createIconCancel;
+import org.controlsfx.control.Notifications;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
-import org.controlsfx.control.Notifications;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -17,8 +14,7 @@ import io.github.manami.core.services.RelatedAnimeFinderService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -26,54 +22,37 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-/**
- * Controller for finding related anime. Opening as a new tab.
- *
- * @author manami-project
- * @since 2.3.0
- */
-public class RelatedAnimeController extends AbstractAnimeListController implements Observer {
+import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+
+
+public class RelatedAnimeController implements Observer {
 
     public static final String RELATED_ANIME_TAB_TITLE = "Related Anime";
 
-    /** Application */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
-
-    /** The corresponding background service. */
-    private RelatedAnimeFinderService service;
-
-    /** Instance of the service repository. */
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
 
-    /** Container holding all the progress components. */
-    @FXML
-    private VBox vBoxProgress;
+    private RelatedAnimeFinderService service;
 
-    /** Progress bar */
+    @FXML
+    private TableView<Anime> contentTable;
+
+    @FXML
+    private HBox hBoxProgress;
+
     @FXML
     private ProgressBar progressBar;
 
-    /** Label showing how many entries have been processed. */
     @FXML
     private Label lblProgress;
 
-    /** Button for starting the search. */
     @FXML
     private Button btnStart;
 
-    /** Button to cancel the service. */
-    @FXML
-    private Button btnCancel;
-
-    /** {@link GridPane} containing the results. */
-    @FXML
-    private GridPane gridPane;
-
-    /** Instance of the tab in which the pane is being shown. */
     private Tab tab;
 
 
@@ -83,23 +62,21 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
      * @since 2.3.0
      */
     public void initialize() {
-        btnStart.setOnAction(event -> start());
+        new AnimeTableBuilder(contentTable)
+                .withTitleSortable(true)
+                .withAddToWatchListButton(true)
+                .withAddToFilterListButton(true)
+                .withRemoveButton(true)
+                .withListChangedEvent((a) -> updateTabTitle());
 
-        btnCancel.setGraphic(createIconCancel());
-        btnCancel.setTooltip(new Tooltip("cancel"));
-        btnCancel.setOnAction(event -> cancel());
+
+        btnStart.setOnAction(event -> start());
     }
 
-
-    /**
-     * Starts the service.
-     *
-     * @since 2.3.0
-     */
-    private void start() {
+    public void start() {
         service = new RelatedAnimeFinderService(Main.CONTEXT.getBean(Cache.class), app, app.fetchAnimeList(), this);
         showProgressControls(true);
-        clearComponentList();
+        contentTable.getItems().clear();
         serviceRepo.startService(service);
     }
 
@@ -129,8 +106,7 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
      */
     private void showProgressControls(final boolean value) {
         Platform.runLater(() -> {
-            vBoxProgress.setVisible(value);
-            btnCancel.setVisible(value);
+            hBoxProgress.setVisible(value);
             btnStart.setVisible(!value);
         });
     }
@@ -157,31 +133,27 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
 
         // adds new Anime entries
         if (object instanceof ArrayList) {
-            final ArrayList<Anime> list = (ArrayList<Anime>) object;
+            final List<Anime> list = (ArrayList<Anime>) object;
             if (list.size() > 0) {
-                list.forEach(this::addEntryToGui);
-                showEntries();
+                contentTable.getItems().addAll(list);
             }
         }
 
         // Processing is done
         if (object instanceof Boolean) {
             showProgressControls(false);
-            Platform.runLater(() -> Notifications.create().title("Search for related anime finished").text("Finished search for related anime.").hideAfter(NOTIFICATION_DURATION)
+            Platform.runLater(() -> Notifications.create()
+                    .title("Search for related anime finished")
+                    .text("Finished search for related anime.")
+                    .hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RelatedAnimeNotificationEventHandler()).showInformation());
         }
     }
 
 
-    @Override
-    public void updateChildren() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", RELATED_ANIME_TAB_TITLE, getComponentList().size())));
-    }
-
-
-    @Override
-    protected GridPane getGridPane() {
-        return gridPane;
+    private Void updateTabTitle() {
+        Platform.runLater(() -> tab.setText(String.format("%s (%s)", RELATED_ANIME_TAB_TITLE, contentTable.getItems().size())));
+        return null;
     }
 
 
@@ -190,31 +162,13 @@ public class RelatedAnimeController extends AbstractAnimeListController implemen
     }
 
 
-    @Override
-    protected List<? extends MinimalEntry> getEntryList() {
-        // not needed for this controller
-        return null;
-    }
-
-
-    @Override
-    boolean isInList(final InfoLink infoLink) {
-        // not needed for this controller
-        return false;
-    }
-
-
-    /**
-     * @since 2.8.2
-     */
     public void clear() {
         Platform.runLater(() -> {
             tab.setText(RELATED_ANIME_TAB_TITLE);
-            gridPane.getChildren().clear();
             lblProgress.setText("Preparing");
             progressBar.setProgress(-1);
         });
-        clearComponentList();
+        contentTable.getItems().clear();
         showProgressControls(false);
     }
 }
