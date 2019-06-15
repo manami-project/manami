@@ -48,7 +48,7 @@ public class TagListController implements Observer {
 
 
     public void initialize() {
-        new AnimeTableBuilder(contentTable)
+        new AnimeTableBuilder<>(contentTable)
                 .withPicture(imageCache::loadPicture)
                 .withTitleSortable(true)
                 .withAddToWatchListButton(true)
@@ -111,7 +111,7 @@ public class TagListController implements Observer {
         if (observable instanceof TagRetrievalService && object instanceof Anime) {
             Anime anime = (Anime) object;
 
-            if (containedEntries.contains(anime.getInfoLink())) {
+            if (!containedEntries.contains(anime.getInfoLink())) {
                 containedEntries.add(anime.getInfoLink());
                 contentTable.getItems().add(anime);
                 updateTabTitle();

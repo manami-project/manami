@@ -81,7 +81,7 @@ public class FilterListController implements Observer {
      * @since 2.1.0
      */
     public void initialize() {
-        new AnimeTableBuilder(contentTable)
+        new AnimeTableBuilder<>(contentTable)
                 .withPicture(imageCache::loadThumbnail)
                 .withTitleSortable(true)
                 .withAddToWatchListButton(false)

@@ -69,7 +69,7 @@ public class RelatedAnimeController implements Observer {
      * @since 2.3.0
      */
     public void initialize() {
-        new AnimeTableBuilder(contentTable)
+        new AnimeTableBuilder<>(contentTable)
                 .withPicture(imageCache::loadPicture)
                 .withTitleSortable(true)
                 .withAddToWatchListButton(true)

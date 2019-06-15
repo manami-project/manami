@@ -6,10 +6,12 @@ import static io.github.manami.gui.components.Icons.createIconDelete;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
+import java.util.Set;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -26,6 +28,8 @@ import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.utility.AnimeTableBuilder;
+import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.utility.ObservableQueue;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -33,51 +37,39 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
-/**
- * @author manami-project
- * @since 2.8.0
- */
-public class WatchListController extends AbstractAnimeListController implements Observer {
+public class WatchListController implements Observer {
 
     public static final String WATCH_LIST_TITLE = "Watch List";
 
-    /** Instance of the application. */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
-
-    /** Contains all possible extractors. */
     private final ExtractorList extractors = Main.CONTEXT.getBean(ExtractorList.class);
-
-    /** Instance of the cache. */
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
-
-    /** Instance of the main application. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
-
-    /** Instance of the service repository. */
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
-
-    /** List of all actively running services. */
+    private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>(newConcurrentLinkedQueue());
+    private final Set<InfoLink> containedEntries = new HashSet<>();
 
-    /** {@link TextField} for adding a new entry. */
+    @FXML
+    private TableView<WatchListEntry> contentTable;
+
     @FXML
     private TextField txtUrl;
 
-    /** {@link GridPane} which shows the results. */
     @FXML
-    private GridPane gridPane;
+    private HBox hBoxProgress;
 
-    /** Moving circle indicating a process. */
-    @FXML
-    private ProgressIndicator progressIndicator;
-
-    /** Showing the amount of services running in the background. */
     @FXML
     private Label lblProgressMsg;
+
+    private Tab tab;
 
 
     /**
@@ -86,42 +78,47 @@ public class WatchListController extends AbstractAnimeListController implements 
      * @since 2.8.0
      */
     public void initialize() {
+        new AnimeTableBuilder<>(contentTable)
+                .withPicture(imageCache::loadThumbnail)
+                .withTitleSortable(true)
+                .withAddToWatchListButton(false)
+                .withAddToFilterListButton(false)
+                .withRemoveButton(false)
+                .withDeleteButton((a) -> { cmdService.executeCommand(new CmdDeleteWatchListEntry(a, app)); return null; })
+                .withListChangedEvent((a) -> updateTabTitle());
+
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
             final String text = String.format("Preparing entries: %s", size);
 
             Platform.runLater(() -> {
                 if (size == 0) {
-                    progressIndicator.setVisible(false);
-                    lblProgressMsg.setVisible(false);
+                    hBoxProgress.setVisible(false);
                 } else {
-                    progressIndicator.setVisible(true);
+                    hBoxProgress.setVisible(true);
                     lblProgressMsg.setText(text);
-                    lblProgressMsg.setVisible(true);
                 }
             });
         });
 
         app.fetchWatchList().forEach(this::addEntryToGui);
-        showEntries();
     }
 
-
-    @Override
-    protected GridPane getGridPane() {
-        return gridPane;
+    private void addEntryToGui(WatchListEntry watchListEntry) {
+        if (!containedEntries.contains(watchListEntry.getInfoLink())) {
+            contentTable.getItems().add(watchListEntry);
+            containedEntries.add(watchListEntry.getInfoLink());
+        }
     }
-
 
     @FXML
     public void addEntry() {
         final List<String> urlList = Arrays.asList(txtUrl.getText().trim().split(" "));
         final List<InfoLink> infoLinkList = newArrayList();
         urlList.forEach(url -> infoLinkList.add(new InfoLink(url)));
-        infoLinkList.stream().filter(infoLink -> infoLink.isValid()).forEach(this::addInfoLinkToWatchList);
+        infoLinkList.stream().filter(InfoLink::isValid).forEach(this::addInfoLinkToWatchList);
 
         txtUrl.setText(EMPTY);
-        showEntries();
     }
 
 
@@ -145,57 +142,25 @@ public class WatchListController extends AbstractAnimeListController implements 
     }
 
 
-    /**
-     * @since 2.8.0
-     */
+    private Void updateTabTitle() {
+        Platform.runLater(() -> tab.setText(String.format("%s (%s)", WATCH_LIST_TITLE, contentTable.getItems().size())));
+        return null;
+    }
+
+
     public void clear() {
-        serviceList.clear();
         Platform.runLater(() -> {
-            progressIndicator.setVisible(false);
-            lblProgressMsg.setVisible(false);
-            getGridPane().getChildren().clear();
-        });
-        clearComponentList();
-        showEntries();
-    }
-
-
-    @Override
-    protected AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        return componentListEntry;
-    }
-
-
-    @Override
-    protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        final Button removeButton = new Button(EMPTY, createIconDelete());
-        removeButton.setTooltip(new Tooltip("delete from watch list"));
-
-        componentListEntry.setRemoveButton(removeButton);
-
-        removeButton.setOnAction(event -> {
-            final Optional<WatchListEntry> watchListEntry = WatchListEntry.valueOf(componentListEntry.getAnime());
-
-            if (watchListEntry.isPresent()) {
-                cmdService.executeCommand(new CmdDeleteWatchListEntry(watchListEntry.get(), app));
-                getComponentList().remove(componentListEntry);
-                showEntries();
-            }
+            hBoxProgress.setVisible(false);
         });
 
-        return componentListEntry;
+        serviceList.clear();
+        containedEntries.clear();
+        contentTable.getItems().clear();
     }
 
 
-    @Override
-    protected List<? extends MinimalEntry> getEntryList() {
-        return Main.CONTEXT.getBean(Manami.class).fetchWatchList();
-    }
-
-
-    @Override
-    boolean isInList(final InfoLink infoLink) {
-        return infoLink.isValid() && app.watchListEntryExists(infoLink);
+    public void setTab(final Tab tab) {
+        this.tab = tab;
     }
 
 

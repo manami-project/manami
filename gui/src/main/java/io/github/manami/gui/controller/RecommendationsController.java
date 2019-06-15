@@ -72,7 +72,7 @@ public class RecommendationsController implements Observer {
      * @since 2.4.0
      */
     public void initialize() {
-        new AnimeTableBuilder(contentTable)
+        new AnimeTableBuilder<>(contentTable)
                 .withPicture(imageCache::loadPicture)
                 .withTitleSortable(false)
                 .withAddToWatchListButton(true)
@@ -133,7 +133,7 @@ public class RecommendationsController implements Observer {
             if (state.getAnime() != null) {
                 Anime anime = (Anime) object;
 
-                if (containedEntries.contains(anime.getInfoLink())) {
+                if (!containedEntries.contains(anime.getInfoLink())) {
                     containedEntries.add(anime.getInfoLink());
                     contentTable.getItems().add(anime);
                     updateTabTitle();
