@@ -96,15 +96,10 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="contentTable" cache="true" style="-fx-selection-bar: #e1e7f5; -fx-selection-bar-non-focused: #ebebeb;">
+                        <TableView fx:id="contentTable">
                            <VBox.margin>
                               <Insets top="40.0" />
                            </VBox.margin>
-                           <columns>
-                              <TableColumn fx:id="colImage" editable="false" minWidth="225.0" prefWidth="-1.0" sortable="false" text="Image" />
-                              <TableColumn fx:id="colTitle" editable="false" minWidth="400.0" prefWidth="-1.0" style="-fx-alignment: CENTER-LEFT;" text="Title" />
-                              <TableColumn fx:id="colActions" editable="false" minWidth="200.0" prefWidth="-1.0" sortable="false" text="Actions" />
-                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
