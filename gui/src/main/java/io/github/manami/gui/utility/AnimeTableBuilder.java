@@ -31,7 +31,7 @@ public class AnimeTableBuilder {
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
 
-    private TableView table;
+    private TableView<Anime> table;
     private TableColumn<Anime, ImageView> colImage = new TableColumn<>("Image");
     private TableColumn<Anime, Hyperlink> colTitle = new TableColumn<>("Title");
     private TableColumn<Anime, HBox> colActions = new TableColumn<>("Actions");
@@ -43,7 +43,7 @@ public class AnimeTableBuilder {
     private boolean showAddToFilterListButton = true;
     private boolean showRemoveButton = true;
 
-    public AnimeTableBuilder(TableView table) {
+    public AnimeTableBuilder(TableView<Anime> table) {
         this.table = table;
         initDefaults();
     }
@@ -81,6 +81,7 @@ public class AnimeTableBuilder {
         });
         colTitle.setSortable(true);
         colTitle.setEditable(false);
+        colTitle.setStyle("-fx-alignment: CENTER-LEFT;");
         colTitle.setComparator((o1, o2) -> o1.getText().compareToIgnoreCase(o2.getText()));
         table.getColumns().add(colTitle);
     }

@@ -3,8 +3,10 @@ package io.github.manami.gui.controller;
 import org.controlsfx.control.Notifications;
 
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -14,6 +16,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
@@ -39,6 +42,7 @@ public class RecommendationsController implements Observer {
     private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
+    private final Set<InfoLink> containedEntries = new HashSet<>();
 
     @FXML
     private TableView<Anime> contentTable;
@@ -127,7 +131,14 @@ public class RecommendationsController implements Observer {
             final double percent = ((done * 100.00) / all) / 100.00;
 
             if (state.getAnime() != null) {
-                contentTable.getItems().add(state.getAnime());
+                Anime anime = (Anime) object;
+
+                if (containedEntries.contains(anime.getInfoLink())) {
+                    containedEntries.add(anime.getInfoLink());
+                    contentTable.getItems().add(anime);
+                    updateTabTitle();
+                }
+
                 Platform.runLater(() -> {
                     progressBar.setProgress(percent);
                     lblProgress.setText(String.format("Loading %s / %s", done, all));
@@ -148,8 +159,10 @@ public class RecommendationsController implements Observer {
             Platform.runLater(() -> {
                 progressBar.setProgress(percent);
                 lblProgress.setText(String.format("Calculating %s / %s", done, all));
-                showExportButtonIfPossible();
             });
+
+            showExportButtonIfPossible();
+
             return;
         }
 
@@ -166,7 +179,7 @@ public class RecommendationsController implements Observer {
 
     private void showExportButtonIfPossible() {
         if (!contentTable.getItems().isEmpty() && !btnExport.isVisible()) {
-            btnExport.setVisible(true);
+            Platform.runLater(() -> btnExport.setVisible(true));
         }
     }
 
@@ -191,7 +204,9 @@ public class RecommendationsController implements Observer {
             progressBar.setProgress(-1);
             btnExport.setVisible(false);
         });
+
         contentTable.getItems().clear();
+        containedEntries.clear();
         showProgressControls(false);
     }
 }

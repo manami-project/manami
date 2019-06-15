@@ -1,7 +1,9 @@
 package io.github.manami.gui.controller;
 
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -9,6 +11,7 @@ import io.github.manami.core.Manami;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.TagRetrievalService;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import javafx.application.Platform;
@@ -29,6 +32,7 @@ public class TagListController implements Observer {
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
     private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
+    private final Set<InfoLink> containedEntries = new HashSet<>();
 
     @FXML
     private TextField txtUrl;
@@ -89,6 +93,7 @@ public class TagListController implements Observer {
     public void clear() {
         cancel();
         contentTable.getItems().clear();
+        containedEntries.clear();
     }
 
 
@@ -104,8 +109,13 @@ public class TagListController implements Observer {
         }
 
         if (observable instanceof TagRetrievalService && object instanceof Anime) {
-            contentTable.getItems().add((Anime) object);
-            updateTabTitle();
+            Anime anime = (Anime) object;
+
+            if (containedEntries.contains(anime.getInfoLink())) {
+                containedEntries.add(anime.getInfoLink());
+                contentTable.getItems().add(anime);
+                updateTabTitle();
+            }
         }
 
         if (observable instanceof TagRetrievalService && object instanceof Boolean) {

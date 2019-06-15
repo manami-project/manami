@@ -3,9 +3,12 @@ package io.github.manami.gui.controller;
 import org.controlsfx.control.Notifications;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.github.manami.Main;
 import io.github.manami.cache.Cache;
@@ -14,6 +17,7 @@ import io.github.manami.core.services.RelatedAnimeFinderService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
@@ -25,9 +29,10 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import static io.github.manami.core.config.Config.NOTIFICATION_DURATION;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 
 public class RelatedAnimeController implements Observer {
@@ -37,8 +42,7 @@ public class RelatedAnimeController implements Observer {
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
     private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
-
-    private RelatedAnimeFinderService service;
+    private final Set<InfoLink> containedEntries = new HashSet<>();
 
     @FXML
     private TableView<Anime> contentTable;
@@ -56,6 +60,7 @@ public class RelatedAnimeController implements Observer {
     private Button btnStart;
 
     private Tab tab;
+    private RelatedAnimeFinderService service;
 
 
     /**
@@ -136,9 +141,14 @@ public class RelatedAnimeController implements Observer {
 
         // adds new Anime entries
         if (object instanceof ArrayList) {
-            final List<Anime> list = (ArrayList<Anime>) object;
+            final List<Anime> list = ((ArrayList<Anime>) object).stream()
+                    .filter(e -> e.getInfoLink().isValid())
+                    .filter(e -> !containedEntries.contains(e.getInfoLink()))
+                    .collect(toList());
+
             if (list.size() > 0) {
                 contentTable.getItems().addAll(list);
+                containedEntries.addAll(list.stream().map(Anime::getInfoLink).collect(toSet()));
             }
         }
 
@@ -171,7 +181,10 @@ public class RelatedAnimeController implements Observer {
             lblProgress.setText("Preparing");
             progressBar.setProgress(-1);
         });
+
         contentTable.getItems().clear();
+        containedEntries.clear();
+
         showProgressControls(false);
     }
 }

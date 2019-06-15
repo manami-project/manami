@@ -3,19 +3,18 @@ package io.github.manami.gui.controller;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.shuffle;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.controlsfx.control.Notifications;
 
@@ -32,8 +31,6 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.MinimalEntry;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.utility.ObservableQueue;
@@ -42,14 +39,9 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
@@ -66,7 +58,7 @@ public class FilterListController implements Observer {
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
     private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>();
-    private final Set<InfoLink> containsEntries = new HashSet<>();
+    private final Set<InfoLink> containedEntries = new HashSet<>();
 
     @FXML
     private TableView<Anime> contentTable;
@@ -162,11 +154,13 @@ public class FilterListController implements Observer {
         // adds new Anime entry
         if (object instanceof ArrayList) {
             final List<Anime> list = ((ArrayList<Anime>) object).stream()
-                    .filter(e -> !containsEntry(e.getInfoLink()))
+                    .filter(e -> e.getInfoLink().isValid())
+                    .filter(e -> !containedEntries.contains(e.getInfoLink()))
                     .collect(toList());
 
             if (list.size() > 0) {
                 contentTable.getItems().addAll(list);
+                containedEntries.addAll(list.stream().map(Anime::getInfoLink).collect(toSet()));
                 final int numOfEntriesAdded = list.size();
 
                 if (numOfEntriesAdded > 0) {
@@ -214,16 +208,7 @@ public class FilterListController implements Observer {
     public void clear() {
         serviceList.clear();
         contentTable.getItems().clear();
-        containsEntries.clear();
-    }
-
-
-    private boolean containsEntry(final InfoLink infoLink) {
-        if (!infoLink.isValid()) {
-            return false;
-        }
-
-        return containsEntries.contains(infoLink);
+        containedEntries.clear();
     }
 
     public void setTab(final Tab tab) {
