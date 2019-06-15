@@ -1,16 +1,21 @@
 package io.github.manami.gui.controller;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.shuffle;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.controlsfx.control.Notifications;
 
@@ -29,6 +34,8 @@ import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
+import io.github.manami.gui.utility.AnimeTableBuilder;
+import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.utility.ObservableQueue;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
@@ -37,62 +44,41 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
-/**
- * Controller for adding and removing entries to the filter list.
- *
- * @author manami-project
- * @since 2.1.0
- */
-public class FilterListController extends AbstractAnimeListController implements Observer {
+
+public class FilterListController implements Observer {
 
     public final static String FILTER_LIST_TITLE = "Filter List";
 
-    /** Instance of the application. */
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
-
-    /** Instance of the cache. */
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
-
-    /** Contains all possible extractors. */
+    private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ExtractorList extractors = Main.CONTEXT.getBean(ExtractorList.class);
-
-    /** Instance of the service repository. */
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
-
-    /** Instance of the main application. */
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
 
-    /** List of all actively running services. */
     private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>();
+    private final Set<InfoLink> containsEntries = new HashSet<>();
 
-    /** Root container. */
     @FXML
-    private AnchorPane anchor;
+    private TableView<Anime> contentTable;
 
-    /** {@link GridPane} which shows the results. */
     @FXML
-    private GridPane recomGridPane;
+    private HBox hBoxProgress;
 
-    /** {@link TextField} for adding a new entry. */
     @FXML
     private TextField txtUrl;
 
-    /** Moving circle indicating a process. */
-    @FXML
-    private ProgressIndicator progressIndicator;
-
-    /** Showing the amount of services running in the background. */
     @FXML
     private Label lblProgressMsg;
-
-    private List<Anime> recommendedEntries;
 
     private Tab tab;
 
@@ -103,7 +89,13 @@ public class FilterListController extends AbstractAnimeListController implements
      * @since 2.1.0
      */
     public void initialize() {
-        recommendedEntries = newArrayList();
+        new AnimeTableBuilder(contentTable)
+                .withPicture(imageCache::loadThumbnail)
+                .withTitleSortable(true)
+                .withAddToWatchListButton(false)
+                .withAddToFilterListButton(true)
+                .withRemoveButton(true)
+                .withListChangedEvent((a) -> updateTabTitle());
 
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
@@ -111,12 +103,10 @@ public class FilterListController extends AbstractAnimeListController implements
 
             Platform.runLater(() -> {
                 if (size == 0) {
-                    progressIndicator.setVisible(false);
-                    lblProgressMsg.setVisible(false);
+                    hBoxProgress.setVisible(false);
                 } else {
-                    progressIndicator.setVisible(true);
+                    hBoxProgress.setVisible(true);
                     lblProgressMsg.setText(text);
-                    lblProgressMsg.setVisible(true);
                 }
             });
         });
@@ -133,10 +123,9 @@ public class FilterListController extends AbstractAnimeListController implements
         final List<String> urlList = Arrays.asList(txtUrl.getText().trim().split(" "));
         final List<InfoLink> infoLinkList = newArrayList();
         urlList.forEach(url -> infoLinkList.add(new InfoLink(url)));
-        infoLinkList.stream().filter(infoLink -> infoLink.isValid()).forEach(this::addInfoLinkToFilterList);
+        infoLinkList.stream().filter(InfoLink::isValid).forEach(this::addInfoLinkToFilterList);
 
         txtUrl.setText(EMPTY);
-        showEntries();
     }
 
 
@@ -161,12 +150,6 @@ public class FilterListController extends AbstractAnimeListController implements
 
 
     @Override
-    protected GridPane getGridPane() {
-        return recomGridPane;
-    }
-
-
-    @Override
     public void update(final Observable observable, final Object object) {
         if (observable == null || object == null) {
             return;
@@ -178,19 +161,20 @@ public class FilterListController extends AbstractAnimeListController implements
 
         // adds new Anime entry
         if (object instanceof ArrayList) {
-            final List<Anime> list = (ArrayList<Anime>) object;
-
-            recommendedEntries.addAll(list);
+            final List<Anime> list = ((ArrayList<Anime>) object).stream()
+                    .filter(e -> !containsEntry(e.getInfoLink()))
+                    .collect(toList());
 
             if (list.size() > 0) {
-                final long numOfEntriesAdded = list.stream().filter(e -> !containsEntry(e.getInfoLink())).count();
+                contentTable.getItems().addAll(list);
+                final int numOfEntriesAdded = list.size();
 
-                showEntries();
-
-                if (numOfEntriesAdded > 0L) {
+                if (numOfEntriesAdded > 0) {
                     final String strEntry = (numOfEntriesAdded > 1) ? "entries" : "entry";
                     final String text = (numOfEntriesAdded > 1) ? "Found " + numOfEntriesAdded + " new anime which you might want to filter." : "A new anime was found which you might want to filter";
-                    Platform.runLater(() -> Notifications.create().title("New recommended filter " + strEntry).text(text).hideAfter(Duration.seconds(6.0))
+                    Platform.runLater(() -> Notifications.create()
+                            .title("New recommended filter " + strEntry)
+                            .text(text).hideAfter(Duration.seconds(6.0))
                             .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RecommendedFilterListEntryNotificationEventHandler()).showInformation());
                 }
             }
@@ -201,9 +185,7 @@ public class FilterListController extends AbstractAnimeListController implements
     private void processAnimeRetrievalResult(final Anime anime) {
         final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(anime);
 
-        if (filterEntry.isPresent()) {
-            cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
-        }
+        filterEntry.ifPresent(entry -> cmdService.executeCommand(new CmdAddFilterEntry(entry, app)));
 
         serviceList.poll();
 
@@ -213,116 +195,36 @@ public class FilterListController extends AbstractAnimeListController implements
     }
 
 
-    @Override
-    public void showEntries() {
-        super.showEntries();
-        Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", recommendedEntries.size())));
+    private Void updateTabTitle() {
+        Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", contentTable.getItems().size())));
+        return null;
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     public void startRecommendedFilterEntrySearch() {
         final List<FilterEntry> filterList = newArrayList(app.fetchFilterList());
-        Collections.shuffle(filterList, new SecureRandom());
-        Collections.shuffle(filterList, new SecureRandom());
-        Collections.shuffle(filterList, new SecureRandom());
-        Collections.shuffle(filterList, new SecureRandom());
+        shuffle(filterList, new SecureRandom());
+        shuffle(filterList, new SecureRandom());
+        shuffle(filterList, new SecureRandom());
+        shuffle(filterList, new SecureRandom());
         serviceRepo.startService(new RelatedAnimeFinderService(cache, app, filterList, this));
     }
 
 
-    /**
-     * @since 2.7.2
-     */
     public void clear() {
         serviceList.clear();
-        recommendedEntries.clear();
-
-        Platform.runLater(() -> {
-            getGridPane().getChildren().clear();
-        });
-
-        clearComponentList();
-        showEntries();
+        contentTable.getItems().clear();
+        containsEntries.clear();
     }
 
 
-    @Override
-    protected ImageView getPictureComponent(final MinimalEntry anime) {
-        final ImageView thumbnail = new ImageView(new Image(anime.getThumbnail(), true));
-        thumbnail.setCache(true);
-        return thumbnail;
-    }
-
-
-    @Override
-    public AnimeGuiComponentsListEntry addWatchListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        return componentListEntry;
-    }
-
-
-    @Override
-    protected AnimeGuiComponentsListEntry addFilterListButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        super.addFilterListButton(componentListEntry);
-        componentListEntry.getAddToFilterListButton().setOnAction(event -> {
-            final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(componentListEntry.getAnime());
-
-            if (filterEntry.isPresent()) {
-                cmdService.executeCommand(new CmdAddFilterEntry(filterEntry.get(), app));
-                recommendedEntries.remove(componentListEntry.getAnime());
-                getComponentList().remove(componentListEntry.getAnime().getInfoLink());
-                showEntries();
-            }
-        });
-        return componentListEntry;
-    }
-
-
-    @Override
-    protected AnimeGuiComponentsListEntry addRemoveButton(final AnimeGuiComponentsListEntry componentListEntry) {
-        super.addRemoveButton(componentListEntry);
-        componentListEntry.getRemoveButton().setOnAction(event -> {
-            recommendedEntries.remove(componentListEntry.getAnime());
-            getComponentList().remove(componentListEntry.getAnime().getInfoLink());
-            showEntries();
-        });
-        return componentListEntry;
-    }
-
-
-    @Override
-    protected List<? extends MinimalEntry> getEntryList() {
-        return recommendedEntries;
-    }
-
-
-    @Override
-    boolean isInList(final InfoLink infoLink) {
-        return infoLink.isValid() && app.filterEntryExists(infoLink);
-    }
-
-
-    /**
-     * @since 2.7.0
-     * @param infoLink
-     * @return
-     */
-    public boolean containsEntry(final InfoLink infoLink) {
+    private boolean containsEntry(final InfoLink infoLink) {
         if (!infoLink.isValid()) {
             return false;
         }
 
-        for (final AnimeGuiComponentsListEntry element : getComponentList().values()) {
-            if (element.getAnime().getInfoLink().getUrl().equalsIgnoreCase(infoLink.getUrl())) {
-                return true;
-            }
-        }
-
-        return false;
+        return containsEntries.contains(infoLink);
     }
-
 
     public void setTab(final Tab tab) {
         this.tab = tab;

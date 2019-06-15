@@ -1,5 +1,6 @@
 package io.github.manami.gui.wrapper;
 
+import static io.github.manami.gui.controller.FilterListController.FILTER_LIST_TITLE;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 
 import javax.inject.Named;
@@ -32,12 +33,7 @@ public class FilterListControllerWrapper {
      * @since 2.7.2
      */
     private void init() {
-        filterTab = new Tab(FilterListController.FILTER_LIST_TITLE);
-        filterTab.setOnSelectionChanged(event -> {
-            if (filterTab.isSelected()) {
-                filterListController.showEntries();
-            }
-        });
+        filterTab = new Tab(FILTER_LIST_TITLE);
 
         Parent pane;
         try {

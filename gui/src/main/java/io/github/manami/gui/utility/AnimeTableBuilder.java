@@ -157,6 +157,11 @@ public class AnimeTableBuilder {
         return btnAddToWatchlist;
     }
 
+    public AnimeTableBuilder withPicture(Function<Anime, Image> pictureLoadFunction) {
+        this.pictureLoadFunction = pictureLoadFunction;
+        return this;
+    }
+
     public AnimeTableBuilder withListChangedEvent(Function<Anime, Void> event) {
         this.listChangedFunction = event;
         return this;

@@ -15,6 +15,7 @@ import io.github.manami.core.services.events.AdvancedProgressState;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.gui.utility.AnimeTableBuilder;
+import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -35,6 +36,7 @@ public class RecommendationsController implements Observer {
     public static final String RECOMMENDATIONS_TAB_TITLE = "Recommendations";
 
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
+    private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
 
@@ -67,6 +69,7 @@ public class RecommendationsController implements Observer {
      */
     public void initialize() {
         new AnimeTableBuilder(contentTable)
+                .withPicture(imageCache::loadPicture)
                 .withTitleSortable(false)
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)

@@ -10,6 +10,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.TagRetrievalService;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.gui.utility.AnimeTableBuilder;
+import io.github.manami.gui.utility.ImageCache;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -26,6 +27,7 @@ public class TagListController implements Observer {
 
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
     private final Cache cache = Main.CONTEXT.getBean(Cache.class);
+    private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
 
     @FXML
@@ -43,6 +45,7 @@ public class TagListController implements Observer {
 
     public void initialize() {
         new AnimeTableBuilder(contentTable)
+                .withPicture(imageCache::loadPicture)
                 .withTitleSortable(true)
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)

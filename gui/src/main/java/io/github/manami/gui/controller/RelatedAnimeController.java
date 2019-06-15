@@ -15,6 +15,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.gui.utility.AnimeTableBuilder;
+import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -34,6 +35,7 @@ public class RelatedAnimeController implements Observer {
     public static final String RELATED_ANIME_TAB_TITLE = "Related Anime";
 
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
+    private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final ServiceRepository serviceRepo = Main.CONTEXT.getBean(ServiceRepository.class);
 
     private RelatedAnimeFinderService service;
@@ -63,6 +65,7 @@ public class RelatedAnimeController implements Observer {
      */
     public void initialize() {
         new AnimeTableBuilder(contentTable)
+                .withPicture(imageCache::loadPicture)
                 .withTitleSortable(true)
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)
