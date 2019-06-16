@@ -137,7 +137,7 @@ public class RecommendationsController implements Observer {
             final double percent = ((done * 100.00) / all) / 100.00;
 
             if (state.getAnime() != null) {
-                Anime anime = (Anime) object;
+                Anime anime = state.getAnime();
 
                 if (!containedEntries.contains(anime.getInfoLink())) {
                     containedEntries.add(anime.getInfoLink());
