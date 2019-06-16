@@ -87,7 +87,10 @@ public class FilterListController implements Observer {
                 .withAddToWatchListButton(false)
                 .withAddToFilterListButton(true)
                 .withRemoveButton(true)
-                .withListChangedEvent((a) -> updateTabTitle());
+                .withListChangedEvent((a) -> {
+                    Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", contentTable.getItems().size())));
+                    return null;
+                });
 
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
@@ -186,12 +189,6 @@ public class FilterListController implements Observer {
         if (!serviceList.isEmpty()) {
             serviceRepo.startService(serviceList.peek());
         }
-    }
-
-
-    private Void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", contentTable.getItems().size())));
-        return null;
     }
 
 

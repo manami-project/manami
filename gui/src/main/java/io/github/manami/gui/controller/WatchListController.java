@@ -84,8 +84,16 @@ public class WatchListController implements Observer {
                 .withAddToWatchListButton(false)
                 .withAddToFilterListButton(false)
                 .withRemoveButton(false)
-                .withDeleteButton((a) -> { cmdService.executeCommand(new CmdDeleteWatchListEntry(a, app)); return null; })
-                .withListChangedEvent((a) -> updateTabTitle());
+                .withDeleteButton((a) -> {
+                    containedEntries.remove(a);
+                    contentTable.getItems().remove(a);
+                    cmdService.executeCommand(new CmdDeleteWatchListEntry(a, app));
+                    return null;
+                })
+                .withListChangedEvent((a) -> {
+                    Platform.runLater(() -> tab.setText(String.format("%s (%s)", WATCH_LIST_TITLE, contentTable.getItems().size())));
+                    return null;
+                });
 
         serviceList.addListener((ListChangeListener<AnimeRetrievalService>) arg0 -> {
             final int size = serviceList.size();
@@ -139,12 +147,6 @@ public class WatchListController implements Observer {
                 retrievalService.start();
             }
         }
-    }
-
-
-    private Void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", WATCH_LIST_TITLE, contentTable.getItems().size())));
-        return null;
     }
 
 

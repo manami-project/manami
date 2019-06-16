@@ -10,6 +10,7 @@ import io.github.manami.core.commands.CommandService;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
@@ -179,8 +180,8 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
         return this;
     }
 
-    public AnimeTableBuilder<T> withListChangedEvent(Function<T, Void> event) {
-        this.listChangedFunction = event;
+    public AnimeTableBuilder<T> withListChangedEvent(Function<T, Void> listChangedFunction) {
+        table.getItems().addListener((ListChangeListener<T>) listener -> listChangedFunction.apply(null));
         return this;
     }
 

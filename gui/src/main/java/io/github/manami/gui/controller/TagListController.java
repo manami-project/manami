@@ -54,7 +54,10 @@ public class TagListController implements Observer {
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)
                 .withRemoveButton(true)
-                .withListChangedEvent((a) -> updateTabTitle());
+                .withListChangedEvent((a) -> {
+                    Platform.runLater(() -> tab.setText(String.format("%s (%s)", TAG_LIST_TITLE, contentTable.getItems().size())));
+                    return null;
+                });
     }
 
     @FXML
@@ -114,19 +117,12 @@ public class TagListController implements Observer {
             if (!containedEntries.contains(anime.getInfoLink())) {
                 containedEntries.add(anime.getInfoLink());
                 contentTable.getItems().add(anime);
-                updateTabTitle();
             }
         }
 
         if (observable instanceof TagRetrievalService && object instanceof Boolean) {
             Platform.runLater(() -> hBoxProgress.setVisible(false));
         }
-    }
-
-
-    private Void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", TAG_LIST_TITLE, contentTable.getItems().size())));
-        return null;
     }
 
 

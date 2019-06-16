@@ -75,7 +75,10 @@ public class RelatedAnimeController implements Observer {
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)
                 .withRemoveButton(true)
-                .withListChangedEvent((a) -> updateTabTitle());
+                .withListChangedEvent((a) -> {
+                    Platform.runLater(() -> tab.setText(String.format("%s (%s)", RELATED_ANIME_TAB_TITLE, contentTable.getItems().size())));
+                    return null;
+                });
 
 
         btnStart.setOnAction(event -> start());
@@ -161,12 +164,6 @@ public class RelatedAnimeController implements Observer {
                     .hideAfter(NOTIFICATION_DURATION)
                     .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RelatedAnimeNotificationEventHandler()).showInformation());
         }
-    }
-
-
-    private Void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", RELATED_ANIME_TAB_TITLE, contentTable.getItems().size())));
-        return null;
     }
 
 

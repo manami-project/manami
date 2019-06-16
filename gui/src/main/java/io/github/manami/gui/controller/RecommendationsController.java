@@ -78,7 +78,10 @@ public class RecommendationsController implements Observer {
                 .withAddToWatchListButton(true)
                 .withAddToFilterListButton(true)
                 .withRemoveButton(true)
-                .withListChangedEvent((a) -> updateTabTitle());
+                .withListChangedEvent((a) -> {
+                    Platform.runLater(() -> tab.setText(String.format("Filter List (%s)", contentTable.getItems().size())));
+                    return null;
+                });
     }
 
 
@@ -136,7 +139,6 @@ public class RecommendationsController implements Observer {
                 if (!containedEntries.contains(anime.getInfoLink())) {
                     containedEntries.add(anime.getInfoLink());
                     contentTable.getItems().add(anime);
-                    updateTabTitle();
                 }
 
                 Platform.runLater(() -> {
@@ -181,12 +183,6 @@ public class RecommendationsController implements Observer {
         if (!contentTable.getItems().isEmpty() && !btnExport.isVisible()) {
             Platform.runLater(() -> btnExport.setVisible(true));
         }
-    }
-
-
-    private Void updateTabTitle() {
-        Platform.runLater(() -> tab.setText(String.format("%s (%s)", RECOMMENDATIONS_TAB_TITLE, contentTable.getItems().size())));
-        return null;
     }
 
 
