@@ -15,17 +15,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.7.2
- */
 @Named
 @Slf4j
 public class NewEntryControllerWrapper {
 
-	/**
-	 * @since 2.7.2
-	 */
 	public void showNewEntryStage() {
 		final Stage newEntryStage = new Stage(StageStyle.UTILITY);
 		newEntryStage.setResizable(false);

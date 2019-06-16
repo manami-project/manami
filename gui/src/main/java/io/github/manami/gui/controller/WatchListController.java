@@ -194,6 +194,8 @@ public class WatchListController implements Observer {
                     contentTable.getItems().add(e);
                 });
 
+        if (contentTable.getItems().isEmpty()) return;
+
         Map<InfoLink, WatchListEntry> mappedWatchListEntries = currentWatchList.stream()
                 .collect(toMap(WatchListEntry::getInfoLink, (a) ->a));
 
@@ -203,11 +205,11 @@ public class WatchListController implements Observer {
 
         entriesToBeDeletedFromTable.forEach(containedEntry -> {
                     containedEntries.remove(containedEntry);
-                    Optional<WatchListEntry> entryInTable = contentTable.getItems()
+                    contentTable.getItems()
                             .stream()
                             .filter(tableEntry -> tableEntry.getInfoLink().equals(containedEntry))
-                            .findFirst();
-                    entryInTable.ifPresent(contentTable.getItems()::remove);
+                            .findFirst()
+                            .ifPresent(contentTable.getItems()::remove);
                 });
     }
 }

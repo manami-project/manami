@@ -7,8 +7,10 @@ import javax.inject.Named;
 
 import org.springframework.core.io.ClassPathResource;
 
+import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
+import io.github.manami.dto.events.AnimeListChangedEvent;
 import io.github.manami.dto.events.OpenedFileChangedEvent;
 import io.github.manami.gui.controller.RelatedAnimeController;
 import javafx.fxml.FXMLLoader;
@@ -17,10 +19,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.7.2
- */
 @Named
 @Slf4j
 public class RelatedAnimeControllerWrapper {
@@ -45,9 +43,6 @@ public class RelatedAnimeControllerWrapper {
     }
 
 
-    /**
-     * @return the relatedAnimeTab
-     */
     public Tab getRelatedAnimeTab() {
         if (relatedAnimeTab == null) {
             init();
@@ -57,17 +52,23 @@ public class RelatedAnimeControllerWrapper {
     }
 
 
-    /**
-     * @since 2.8.2
-     * @param event
-     *            Event which is fired when a file is opened.
-     */
     @Subscribe
-    public void changeEvent(final OpenedFileChangedEvent event) {
+    public void openFileEvent(final OpenedFileChangedEvent event) {
         if (relatedAnimeController == null) {
             init();
         }
 
         relatedAnimeController.clear();
+    }
+
+
+    @Subscribe
+    @AllowConcurrentEvents
+    public void changeEvent(final AnimeListChangedEvent event) {
+        if (relatedAnimeController == null) {
+            init();
+        }
+
+        relatedAnimeController.synchronizeWithLists();
     }
 }

@@ -1,5 +1,7 @@
 package io.github.manami.gui.controller;
 
+import com.google.common.collect.Streams;
+
 import org.controlsfx.control.Notifications;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.events.ProgressState;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
+import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.wrapper.MainControllerWrapper;
@@ -183,5 +186,28 @@ public class RelatedAnimeController implements Observer {
         containedEntries.clear();
 
         showProgressControls(false);
+    }
+
+
+    public void synchronizeWithLists() {
+        if (contentTable.getItems().isEmpty()) return;
+
+        Streams.concat(
+                app.fetchAnimeList().stream(),
+                app.fetchWatchList().stream(),
+                app.fetchFilterList().stream()
+        )
+                .map(MinimalEntry::getInfoLink)
+                .filter(InfoLink::isValid)
+                .forEach(e -> {
+                    if (containedEntries.contains(e)) {
+                        containedEntries.remove(e);
+                        contentTable.getItems()
+                                .stream()
+                                .filter(tableEntry -> tableEntry.getInfoLink().equals(e))
+                                .findFirst()
+                                .ifPresent(contentTable.getItems()::remove);
+                    }
+                });
     }
 }

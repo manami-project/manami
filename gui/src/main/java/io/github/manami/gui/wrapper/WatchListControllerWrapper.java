@@ -19,10 +19,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.8.0
- */
+
 @Named
 @Slf4j
 public class WatchListControllerWrapper {
@@ -31,9 +28,6 @@ public class WatchListControllerWrapper {
 	private WatchListController watchListController;
 
 
-	/**
-	 * @since 2.7.2
-	 */
 	private void init() {
 		watchListTab = new Tab(WATCH_LIST_TITLE);
 
@@ -72,10 +66,6 @@ public class WatchListControllerWrapper {
 	}
 
 
-	/**
-	 * @since 2.7.2
-	 * @return the filterTab
-	 */
 	public Tab getWatchListTab() {
 		if (watchListTab == null) {
 			init();

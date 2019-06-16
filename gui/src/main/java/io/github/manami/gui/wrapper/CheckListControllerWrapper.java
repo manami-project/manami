@@ -17,10 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.7.2
- */
+
 @Named
 @Slf4j
 public class CheckListControllerWrapper {
@@ -29,9 +26,6 @@ public class CheckListControllerWrapper {
 	private CheckListController checkListController;
 
 
-	/**
-	 * @since 2.7.2
-	 */
 	private void init() {
 		checkListTab = new Tab(CHECK_LIST_TAB_TITLE);
 		Parent pane;
@@ -48,10 +42,6 @@ public class CheckListControllerWrapper {
 	}
 
 
-	/**
-	 * @since 2.7.2
-	 * @return the checkListTab
-	 */
 	public Tab getCheckListTab() {
 		if (checkListTab == null) {
 			init();
@@ -61,11 +51,6 @@ public class CheckListControllerWrapper {
 	}
 
 
-	/**
-	 * @since 2.8.2
-	 * @param event
-	 *            Event which is fired when a file is opened.
-	 */
 	@Subscribe
 	public void changeEvent(final OpenedFileChangedEvent event) {
 		if (checkListController == null) {

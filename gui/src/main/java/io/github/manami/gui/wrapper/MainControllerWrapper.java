@@ -24,10 +24,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.7.2
- */
+
 @Named
 @Slf4j
 public class MainControllerWrapper {
@@ -50,9 +47,6 @@ public class MainControllerWrapper {
 	}
 
 
-	/**
-	 * @since 2.7.2
-	 */
 	private void init() {
 		mainStage.setMaximized(true);
 		mainStage.setTitle(APPNAME);
@@ -97,10 +91,6 @@ public class MainControllerWrapper {
 	}
 
 
-	/**
-	 * @since 2.9.0
-	 * @param isDirty
-	 */
 	public void setDirty(final boolean isDirty) {
 		if (isDirty) {
 			if (config.getFile() != null) {

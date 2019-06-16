@@ -18,10 +18,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.9.0
- */
+
 @Named
 @Slf4j
 public class SearchResultsControllerWrapper {
@@ -49,10 +46,6 @@ public class SearchResultsControllerWrapper {
     }
 
 
-    /**
-     * @since 2.9.0
-     * @return the search result tab
-     */
     public Tab getSearchResultsTab() {
         if (searchResultTab == null) {
             init();
@@ -62,11 +55,6 @@ public class SearchResultsControllerWrapper {
     }
 
 
-    /**
-     * @since 2.9.0
-     * @param event
-     *            Event which is fired when a file is opened.
-     */
     @Subscribe
     public void searchResultEvent(final SearchResultEvent event) throws InterruptedException {
         Platform.runLater(() -> {

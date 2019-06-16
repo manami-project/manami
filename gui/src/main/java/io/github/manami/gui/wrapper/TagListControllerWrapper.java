@@ -46,7 +46,7 @@ public class TagListControllerWrapper {
 
 
     @Subscribe
-    public void changeEvent(final OpenedFileChangedEvent event) {
+    public void openFileEvent(final OpenedFileChangedEvent event) {
         if (tagListController == null) {
             init();
         }
@@ -54,10 +54,18 @@ public class TagListControllerWrapper {
         tagListController.clear();
     }
 
-    /**
-     * @since 2.7.2
-     * @return the filterTab
-     */
+
+    @Subscribe
+    @AllowConcurrentEvents
+    public void changeEvent(final AnimeListChangedEvent event) {
+        if (tagListController == null) {
+            init();
+        }
+
+        tagListController.synchronizeWithLists();
+    }
+
+
     public Tab getTagListTab() {
         if (tagListTab == null) {
             init();
