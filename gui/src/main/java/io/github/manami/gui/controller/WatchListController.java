@@ -1,13 +1,9 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Queues.newConcurrentLinkedQueue;
-import static io.github.manami.gui.components.Icons.createIconDelete;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
@@ -25,24 +21,24 @@ import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
-import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
-import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
 import io.github.manami.gui.utility.AnimeTableBuilder;
 import io.github.manami.gui.utility.ImageCache;
 import io.github.manami.gui.utility.ObservableQueue;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Queues.newConcurrentLinkedQueue;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class WatchListController implements Observer {
 
@@ -186,5 +182,32 @@ public class WatchListController implements Observer {
                 serviceRepo.startService(serviceList.peek());
             }
         }
+    }
+
+    public void synchronizeTableViewWithWatchList() {
+        List<WatchListEntry> currentWatchList = app.fetchWatchList();
+
+        currentWatchList.stream()
+                .filter(e -> !containedEntries.contains(e.getInfoLink()))
+                .forEach(e -> {
+                    containedEntries.add(e.getInfoLink());
+                    contentTable.getItems().add(e);
+                });
+
+        Map<InfoLink, WatchListEntry> mappedWatchListEntries = currentWatchList.stream()
+                .collect(toMap(WatchListEntry::getInfoLink, (a) ->a));
+
+        List<InfoLink> entriesToBeDeletedFromTable = containedEntries.stream()
+                .filter(a -> !mappedWatchListEntries.containsKey(a))
+                .collect(toList());
+
+        entriesToBeDeletedFromTable.forEach(containedEntry -> {
+                    containedEntries.remove(containedEntry);
+                    Optional<WatchListEntry> entryInTable = contentTable.getItems()
+                            .stream()
+                            .filter(tableEntry -> tableEntry.getInfoLink().equals(containedEntry))
+                            .findFirst();
+                    entryInTable.ifPresent(contentTable.getItems()::remove);
+                });
     }
 }

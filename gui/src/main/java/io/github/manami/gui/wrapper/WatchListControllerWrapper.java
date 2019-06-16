@@ -67,6 +67,8 @@ public class WatchListControllerWrapper {
 		if (watchListController == null) {
 			init();
 		}
+
+		watchListController.synchronizeTableViewWithWatchList();
 	}
 
 
