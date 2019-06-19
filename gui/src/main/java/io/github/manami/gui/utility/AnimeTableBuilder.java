@@ -10,6 +10,8 @@ import io.github.manami.core.commands.CommandService;
 import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -29,9 +31,14 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class AnimeTableBuilder<T extends MinimalEntry> {
 
+    private final static double COLUMN_SPACER = 20.0;
+
     private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
+    private final SimpleDoubleProperty imageColWidth = new SimpleDoubleProperty(100.0);
+    private final SimpleDoubleProperty titleColWidth = new SimpleDoubleProperty(100.0);
+    private final SimpleDoubleProperty actionColWidth = new SimpleDoubleProperty(100.0);
 
     private TableView<T> table;
     private TableColumn<T, ImageView> colImage = new TableColumn<>("Image");
@@ -59,16 +66,34 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
         initActionColumnWithDefaults();
     }
 
+    private void addWidthListenerForTitleCol() {
+        ChangeListener<Number> listener = ((observable, oldValue, newValue) -> {
+            titleColWidth.set(table.getWidth() - imageColWidth.get() - actionColWidth.get() - 10);
+        });
+
+        imageColWidth.addListener(listener);
+        actionColWidth.addListener(listener);
+    }
+
     private void initActionColumnWithDefaults() {
         colActions.setCellValueFactory(p -> new ReadOnlyObservableValue<HBox>() {
 
             @Override
             public HBox getValue() {
-                return createActionButtons(p.getValue());
+                HBox actionButtons = createActionButtons(p.getValue());
+                actionButtons.widthProperty().addListener((observable, oldValue, newValue) -> {
+                    if (actionColWidth.get() < newValue.doubleValue()) {
+                        actionColWidth.set(newValue.doubleValue() + COLUMN_SPACER);
+                    }
+                });
+
+                return actionButtons;
             }
         });
         colActions.setSortable(false);
         colActions.setEditable(false);
+        colActions.setResizable(false);
+        colActions.prefWidthProperty().bind(actionColWidth);
         table.getColumns().add(colActions);
     }
 
@@ -84,9 +109,13 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
         });
         colTitle.setSortable(true);
         colTitle.setEditable(false);
+        colTitle.setResizable(false);
+        colTitle.prefWidthProperty().bind(titleColWidth);
         colTitle.setStyle("-fx-alignment: CENTER-LEFT;");
         colTitle.setComparator((o1, o2) -> o1.getText().compareToIgnoreCase(o2.getText()));
         table.getColumns().add(colTitle);
+
+        addWidthListenerForTitleCol();
     }
 
     private void initImageColumnWithDefaults() {
@@ -94,13 +123,23 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
 
             @Override
             public ImageView getValue() {
-                ImageView cachedImageView = new ImageView(pictureLoadFunction.apply(p.getValue()));
+                Image image = pictureLoadFunction.apply(p.getValue());
+                ImageView cachedImageView = new ImageView(image);
                 cachedImageView.setCache(true);
+
+                image.widthProperty().addListener((observable, oldValue, newValue) -> {
+                    if (imageColWidth.get() < newValue.doubleValue()) {
+                        imageColWidth.set(newValue.doubleValue() + COLUMN_SPACER);
+                    }
+                });
+
                 return cachedImageView;
             }
         });
         colImage.setSortable(false);
         colImage.setEditable(false);
+        colImage.setResizable(false);
+        colImage.prefWidthProperty().bind(imageColWidth);
         table.getColumns().add(colImage);
     }
 
