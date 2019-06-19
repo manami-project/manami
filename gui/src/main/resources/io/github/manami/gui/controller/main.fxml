@@ -118,8 +118,6 @@
                              <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                          </accelerator>
                      </MenuItem>
-                     <SeparatorMenuItem mnemonicParsing="false" />
-                     <MenuItem fx:id="miDeleteEntry" disable="true" mnemonicParsing="false" onAction="#deleteEntry" text="Delete" />
                  </items>
               </Menu>
               <Menu mnemonicParsing="false" text="Find">

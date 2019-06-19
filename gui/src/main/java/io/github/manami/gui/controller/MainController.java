@@ -1,6 +1,5 @@
 package io.github.manami.gui.controller;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static io.github.manami.dto.entities.Anime.copyAnime;
 import static io.github.manami.gui.components.Icons.createIconDelete;
@@ -95,160 +94,105 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MainController implements Observer {
 
-    /** Instance of the main application. */
-    final private Manami app = Main.CONTEXT.getBean(Manami.class);
+    private final Manami app = Main.CONTEXT.getBean(Manami.class);
+    private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
+    private final MainControllerWrapper mainControllerWrapper = Main.CONTEXT.getBean(MainControllerWrapper.class);
+    private final Config config = Main.CONTEXT.getBean(Config.class);
 
-    /** Instance of the main application. */
-    final private CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
-
-    /** Instance of the gui configuration. */
-    final private MainControllerWrapper mainControllerWrapper = Main.CONTEXT.getBean(MainControllerWrapper.class);
-
-    /** Instance of the application configuration. */
-    final private Config config = Main.CONTEXT.getBean(Config.class);
-
-    /** Tab for the filter list. */
     private Tab filterTab;
-
-    /** Tab for the related anime. */
     private Tab relatedAnimeTab;
-
-    /** Tab for the recommendations. */
     private Tab recommendationsTab;
-
-    /** Tab for the check list. */
     private Tab checkListTab;
-
-    /** Tab for search results. */
     private Tab searchResultTab;
-
-    /** Tab for tag list. */
     private Tab tagListTab;
-
-    private FilterListControllerWrapper controllerWrapper;
-
-    /** Tab for the watch list. */
     private Tab watchListTab;
-
+    private FilterListControllerWrapper controllerWrapper;
     private AutoCompletionBinding<String> autoCompletionBinding;
 
-    /** Table for anime list. */
     @FXML
     private TableView<Anime> tvAnimeList;
 
-    /** Column: row number */
     @FXML
     private TableColumn<Anime, Anime> colAnimeListNumber;
 
-    /** Column: title */
     @FXML
     private TableColumn<Anime, String> colAnimeListTitle;
 
-    /** Column: type */
     @FXML
     private TableColumn<Anime, String> colAnimeListType;
 
-    /** Column: episodes */
     @FXML
     private TableColumn<Anime, Integer> colAnimeListEpisodes;
 
-    /** Column: info link */
     @FXML
     private TableColumn<Anime, InfoLink> colAnimeListLink;
 
-    /** Column: location on hard drive */
     @FXML
     private TableColumn<Anime, String> colAnimeListLocation;
 
-    /** Tab pane holding all tabs. */
     @FXML
     private TabPane tabPane;
 
-    /** Tab for anime list. */
     @FXML
     private Tab tabAnimeList;
 
-    /** Menu item: "New List" */
     @FXML
     private MenuItem miNewList;
 
-    /** Menu item: "New Entry" */
     @FXML
     private MenuItem miNewEntry;
 
-    /** Menu item: "Open" */
     @FXML
     private MenuItem miOpen;
 
-    /** Menu item: "Import" */
     @FXML
     private MenuItem miImport;
 
-    /** Menu item: "Check List" */
     @FXML
     private MenuItem miCheckList;
 
-    /** Menu item: "Save" */
     @FXML
     private MenuItem miSave;
 
-    /** Menu item: "Save as" */
     @FXML
     private MenuItem miSaveAs;
 
-    /** Menu item: "Exit" */
     @FXML
     private MenuItem miExit;
 
-    /** Menu item: "Redo" */
     @FXML
     private MenuItem miRedo;
 
-    /** Menu item: "Undo" */
     @FXML
     private MenuItem miUndo;
 
-    /** Menu item: "Export" */
     @FXML
     private MenuItem miExport;
 
-    /** Menu item: "Delete" */
-    @FXML
-    private MenuItem miDeleteEntry;
-
-    /** Contextmenu item: "Delete" */
     @FXML
     private MenuItem cmiDeleteEntry;
 
-    /** Menu item: "Related Anime" */
     @FXML
     private MenuItem miRelatedAnime;
 
-    /** Menu item: "Recommendations" */
     @FXML
     private MenuItem miRecommendations;
 
-    /** Menu item: "Filter List" */
     @FXML
     private MenuItem miFilterList;
 
-    /** Menu item: "Watch List" */
     @FXML
     private MenuItem miWatchList;
 
-    /** Menu item: "Tags" */
     @FXML
     private MenuItem miTagList;
 
-    /** Menu item: "About" */
     @FXML
     private MenuItem miAbout;
 
-    /** Textfield for searching an anime. */
     @FXML
     private TextField txtSearchString;
 
-    /** Button which starts the search. */
     @FXML
     private Button btnSearch;
 
@@ -256,8 +200,6 @@ public class MainController implements Observer {
     /**
      * Initializes the table view for the anime list. Including column mapping
      * an so on.
-     *
-     * @since 2.0.0
      */
     public void initialize() {
         initFilterTab();
@@ -285,9 +227,6 @@ public class MainController implements Observer {
                 }
             }
         });
-
-        // Only show button for deletion if the animelist is focused
-        tabAnimeList.setOnSelectionChanged(event -> miDeleteEntry.setDisable(!tabAnimeList.isSelected()));
 
         // Callbacks
         final Callback<TableColumn<Anime, String>, TableCell<Anime, String>> defaultCallback = new DefaultCallback();
@@ -359,9 +298,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.9.1
-     */
     private void initMenuItemGlyphs() {
         miNewList.setGraphic(createIconFileText());
         miNewEntry.setGraphic(createIconFile());
@@ -372,15 +308,11 @@ public class MainController implements Observer {
         miExit.setGraphic(createIconExit());
         miUndo.setGraphic(createIconUndo());
         miRedo.setGraphic(createIconRedo());
-        miDeleteEntry.setGraphic(createIconDelete());
         miAbout.setGraphic(createIconQuestion());
         cmiDeleteEntry.setGraphic(createIconDelete());
     }
 
 
-    /**
-     * @since 2.9.0
-     */
     private void search() {
         Platform.runLater(() -> {
             txtSearchString.setText(EMPTY);
@@ -393,8 +325,6 @@ public class MainController implements Observer {
     /**
      * Enables or disables those menu items which depend on the existence of
      * entries.
-     *
-     * @since 2.0.0
      */
     private void checkEntryRelevantMenuItems() {
         final boolean isAnimeListEmpty = app.fetchAnimeList().size() == 0;
@@ -402,7 +332,6 @@ public class MainController implements Observer {
             miCheckList.setDisable(isAnimeListEmpty);
             miRelatedAnime.setDisable(isAnimeListEmpty);
             miRecommendations.setDisable(isAnimeListEmpty);
-            miDeleteEntry.setDisable(isAnimeListEmpty);
             cmiDeleteEntry.setDisable(isAnimeListEmpty);
         });
 
@@ -417,8 +346,6 @@ public class MainController implements Observer {
 
     /**
      * Checks whether to set the dirty flag or not.
-     *
-     * @since 2.0.0
      */
     private void checkDirtyFlagAnimeListTab() {
         Platform.runLater(() -> mainControllerWrapper.setDirty(cmdService.isUnsaved()));
@@ -428,8 +355,6 @@ public class MainController implements Observer {
     /**
      * Consists of different aspects to check. It's possible that the GUI needs
      * to react to changing circumstances. This method sums up all the checks.
-     *
-     * @since 2.0.0
      */
     public void checkGui() {
         checkEntryRelevantMenuItems();
@@ -444,8 +369,6 @@ public class MainController implements Observer {
     /**
      * This method check if the command stacks are empty and either dis- or
      * enables the corresponding menu items.
-     *
-     * @since 2.0.0
      */
     private void checkCommandMenuItems() {
         Platform.runLater(() -> {
@@ -457,8 +380,6 @@ public class MainController implements Observer {
 
     /**
      * Deletes a specific entry.
-     *
-     * @since 2.0.0
      */
     public void deleteEntry() {
         final Anime entry = tvAnimeList.getSelectionModel().getSelectedItem();
@@ -475,8 +396,6 @@ public class MainController implements Observer {
 
     /**
      * Undoes the last command.
-     *
-     * @since 2.0.0
      */
     public void undo() {
         cmdService.undo();
@@ -486,8 +405,6 @@ public class MainController implements Observer {
 
     /**
      * Redoes the last undone command.
-     *
-     * @since 2.0.0
      */
     public void redo() {
         cmdService.redo();
@@ -497,8 +414,6 @@ public class MainController implements Observer {
 
     /**
      * Exports the current list.
-     *
-     * @since 2.0.0
      */
     public void export() {
         final Path file = showExportDialog(mainControllerWrapper.getMainStage());
@@ -510,8 +425,6 @@ public class MainController implements Observer {
 
     /**
      * Interface for operations that need a secure execution context.
-     *
-     * @since 2.0.0
      */
     private interface ExecutionContext {
 
@@ -522,8 +435,6 @@ public class MainController implements Observer {
     /**
      * Checks whether the current state is dirty and only executes the given
      * Method if it's not.
-     *
-     * @since 2.0.0
      * @param execCtx
      *            Lambda function trigger
      * @param file
@@ -547,8 +458,6 @@ public class MainController implements Observer {
 
     /**
      * Creates a new, empty list.
-     *
-     * @since 2.0.0
      */
     public void newList() {
         safelyExecuteMethod(file -> {
@@ -567,8 +476,6 @@ public class MainController implements Observer {
 
     /**
      * Opens a new file.
-     *
-     * @since 2.0.0
      */
     public void open() {
         final Path selectedFile = showOpenFileDialog(mainControllerWrapper.getMainStage());
@@ -591,9 +498,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.9.1
-     */
     private void updateAutoCompletion() {
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
@@ -606,11 +510,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * Imports a file.
-     *
-     * @since 2.0.0
-     */
     public void importFile() {
         final Path selectedFile = showImportFileDialog(mainControllerWrapper.getMainStage());
 
@@ -626,8 +525,6 @@ public class MainController implements Observer {
     /**
      * Saves an already opened file or shows the save as dialog if the file does
      * not exist yet.
-     *
-     * @since 2.0.0
      */
     public void save() {
         final Path file = config.getFile();
@@ -644,8 +541,6 @@ public class MainController implements Observer {
 
     /**
      * Show a save as dialog and then saves the data to the file.
-     *
-     * @since 2.0.0
      */
     public void saveAs() {
         Path file = showSaveAsFileDialog(mainControllerWrapper.getMainStage());
@@ -667,8 +562,6 @@ public class MainController implements Observer {
     /**
      * Workaround to refresh the table view. This especially comes in handy
      * whenever you update an existing item.
-     *
-     * @since 2.0.0
      */
     private void refreshTableView() {
         Platform.runLater(() -> {
@@ -682,8 +575,6 @@ public class MainController implements Observer {
 
     /**
      * Terminates the application.
-     *
-     * @since 2.0.0
      */
     public void exit() {
         safelyExecuteMethod(file -> {
@@ -695,8 +586,6 @@ public class MainController implements Observer {
 
     /**
      * Sets the focus of the {@link TabPane} to the given {@link Tab}.
-     *
-     * @since 2.2.0
      * @param activeTab
      *            {@link Tab} which will gain focus.
      */
@@ -714,8 +603,6 @@ public class MainController implements Observer {
     /**
      * Initializes the filter tab, as well as starts the filter list
      * recommendation search.
-     *
-     * @since 2.5.1
      */
     private void initFilterTab() {
         controllerWrapper = Main.CONTEXT.getBean(FilterListControllerWrapper.class);
@@ -728,8 +615,6 @@ public class MainController implements Observer {
 
     /**
      * Opens the filter list tab.
-     *
-     * @since 2.2.0
      */
     public void showFilterTab() {
         focusActiveTab(filterTab);
@@ -738,8 +623,6 @@ public class MainController implements Observer {
 
     /**
      * Cancels and resets the related anime finder.
-     *
-     * @since 2.3.0
      */
     private void cancelAndResetBackgroundServices() {
         Main.CONTEXT.getBean(ServiceRepository.class).cancelAllServices();
@@ -748,8 +631,6 @@ public class MainController implements Observer {
 
     /**
      * Opens the related anime tab.
-     *
-     * @since 2.3.0
      */
     public void showRelatedAnimeTab() {
         if (relatedAnimeTab == null) {
@@ -769,9 +650,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.6.0
-     */
     public void showCheckListTab() {
         if (checkListTab == null) {
             checkListTab = Main.CONTEXT.getBean(CheckListControllerWrapper.class).getCheckListTab();
@@ -788,8 +666,6 @@ public class MainController implements Observer {
 
     /**
      * Whenever a user clicks on a notification.
-     *
-     * @since 2.5.1
      */
     private void onClickOnNotification(final Tab tab) {
         if (tab != null) {
@@ -802,9 +678,6 @@ public class MainController implements Observer {
     /**
      * An event which is handled whenever a notification for recommended filter
      * list entries is being clicked.
-     *
-     * @since 2.5.1
-     * @author manami-project
      */
     class RecommendedFilterListEntryNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -817,9 +690,6 @@ public class MainController implements Observer {
     /**
      * An event which is handled whenever a notification for related anime is
      * being clicked.
-     *
-     * @since 2.5.1
-     * @author manami-project
      */
     class RelatedAnimeNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -832,9 +702,6 @@ public class MainController implements Observer {
     /**
      * An event which is handled whenever a notification for recommendations is
      * being clicked.
-     *
-     * @since 2.5.1
-     * @author manami-project
      */
     class RecommendationsNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -847,9 +714,6 @@ public class MainController implements Observer {
     /**
      * An event which is handled whenever a notification for recommendations is
      * being clicked.
-     *
-     * @since 2.5.1
-     * @author manami-project
      */
     class CheckListNotificationEventHandler implements EventHandler<ActionEvent> {
 
@@ -860,10 +724,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.6.4
-     * @param command
-     */
     private void executeCommand(final ReversibleCommand command) {
         cmdService.executeCommand(command);
         checkGui();
@@ -883,9 +743,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     public void refreshEntriesInGui() {
         Platform.runLater(() -> {
             tvAnimeList.getItems().clear();
@@ -896,17 +753,11 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.7.2
-     */
     public void showAbout() {
         Main.CONTEXT.getBean(AboutController.class).showAbout();
     }
 
 
-    /**
-     * @since 2.8.0
-     */
     public void showWatchListTab() {
         if (watchListTab == null) {
             watchListTab = Main.CONTEXT.getBean(WatchListControllerWrapper.class).getWatchListTab();
@@ -916,9 +767,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.8.0
-     */
     public void showTagListTab() {
         if (tagListTab == null) {
             tagListTab = Main.CONTEXT.getBean(TagListControllerWrapper.class).getTagListTab();
@@ -928,10 +776,6 @@ public class MainController implements Observer {
     }
 
 
-    /**
-     * @since 2.8.2
-     * @return the tabAnimeList
-     */
     public Tab getTabAnimeList() {
         return tabAnimeList;
     }
@@ -940,8 +784,6 @@ public class MainController implements Observer {
     /**
      * Resizes a {@link TableView} so that the column size automatically fits
      * it's content.
-     *
-     * @since 2.8.2
      */
     private void autoSizeTableViewColumns() {
         final List<TableColumn<Anime, ?>> colList = tvAnimeList.getColumns();
@@ -960,8 +802,6 @@ public class MainController implements Observer {
 
     /**
      * Determines the longest string within a column and returns it.
-     *
-     * @since 2.8.2
      * @return The longest string by chars of this column.
      */
     private String determineLongestText(final TableColumn<Anime, ?> tableColumn) {
@@ -986,8 +826,6 @@ public class MainController implements Observer {
 
     /**
      * Opens the related anime tab.
-     *
-     * @since 2.9.0
      */
     public void showSearchResultTab() {
         if (searchResultTab == null) {
