@@ -36,9 +36,9 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
     private final ImageCache imageCache = Main.CONTEXT.getBean(ImageCache.class);
     private final CommandService cmdService = Main.CONTEXT.getBean(CommandService.class);
     private final Manami app = Main.CONTEXT.getBean(Manami.class);
-    private final SimpleDoubleProperty imageColWidth = new SimpleDoubleProperty(100.0);
-    private final SimpleDoubleProperty titleColWidth = new SimpleDoubleProperty(100.0);
-    private final SimpleDoubleProperty actionColWidth = new SimpleDoubleProperty(100.0);
+    private final SimpleDoubleProperty imageColWidth = new SimpleDoubleProperty(0.0);
+    private final SimpleDoubleProperty titleColWidth = new SimpleDoubleProperty(0.0);
+    private final SimpleDoubleProperty actionColWidth = new SimpleDoubleProperty(0.0);
 
     private TableView<T> table;
     private TableColumn<T, ImageView> colImage = new TableColumn<>("Image");
