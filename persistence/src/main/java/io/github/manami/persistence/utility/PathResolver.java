@@ -9,9 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Class to create, check and resolve an absolute path to a relative path if
  * necessary.
- *
- * @author manami-project
- * @since 2.10.0
  */
 @Slf4j
 public final class PathResolver {
@@ -20,9 +17,6 @@ public final class PathResolver {
   }
 
 
-  /**
-   * @since 2.10.0
-   */
   public static Optional<Path> buildPath(final String path, final Path currentWorkingDir) {
     Path dir = Paths.get(path);
 
@@ -37,9 +31,6 @@ public final class PathResolver {
   }
 
 
-  /**
-   * @since 2.10.0
-   */
   public static String buildRelativizedPath(final String path, final Path currentWorkingDir) {
     final Optional<Path> optDir = buildPath(path, currentWorkingDir);
 
@@ -57,8 +48,6 @@ public final class PathResolver {
 
   /**
    * Creates a relative path.
-   *
-   * @since 2.6.0
    */
   private static Path createRelativePath(final Path dir, final Path currentWorkingDir) {
     Path ret = null;

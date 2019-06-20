@@ -14,7 +14,7 @@ import org.json.JSONTokener;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -23,16 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Imports a list from a valid JSON file.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Slf4j
 public class JsonImporter implements Importer {
 
     private final PersistenceFacade persistence;
     private final List<Anime> animeListEntries;
-    private final List<FilterEntry> filterListEntries;
+    private final List<FilterListEntry> filterListEntries;
     private final List<WatchListEntry> watchListEntries;
 
 
@@ -69,10 +66,6 @@ public class JsonImporter implements Importer {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param jsonArr
-     */
     private void extractAnimeList(final JSONArray jsonArr) {
         final JSONArray animeListArr = jsonArr.getJSONArray(0);
 
@@ -96,10 +89,6 @@ public class JsonImporter implements Importer {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param jsonArr
-     */
     private void extractWatchList(final JSONArray jsonArr) {
         final JSONArray animeListArr = jsonArr.getJSONArray(1);
 
@@ -119,10 +108,6 @@ public class JsonImporter implements Importer {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param jsonArr
-     */
     private void extractFilterList(final JSONArray jsonArr) {
         final JSONArray animeListArr = jsonArr.getJSONArray(2);
 
@@ -133,7 +118,7 @@ public class JsonImporter implements Importer {
             infoLink = (infoLink != null) ? infoLink.trim() : infoLink;
 
             if (isNotBlank(title) && isNotBlank(infoLink)) {
-                filterListEntries.add(new FilterEntry(title, thumbnail, new InfoLink(infoLink)));
+                filterListEntries.add(new FilterListEntry(title, thumbnail, new InfoLink(infoLink)));
             } else {
                 log.debug("Could not import '{}', because the type is unknown.", title);
             }

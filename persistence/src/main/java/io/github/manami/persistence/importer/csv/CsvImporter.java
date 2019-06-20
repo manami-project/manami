@@ -16,7 +16,7 @@ import org.supercsv.prefs.CsvPreference;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -25,10 +25,6 @@ import io.github.manami.persistence.exporter.csv.CsvConfig.CsvConfigType;
 import io.github.manami.persistence.importer.Importer;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.0.0
- */
 @Slf4j
 public class CsvImporter implements Importer {
 
@@ -37,15 +33,10 @@ public class CsvImporter implements Importer {
 
     private final PersistenceFacade persistence;
     private final List<Anime> animeListEntries;
-    private final List<FilterEntry> filterListEntries;
+    private final List<FilterListEntry> filterListEntries;
     private final List<WatchListEntry> watchListEntries;
 
 
-    /**
-     * Constructor
-     *
-     * @since 2.0.0
-     */
     public CsvImporter(final PersistenceFacade persistence) {
         this.persistence = persistence;
         csvConfig = new CsvConfig();
@@ -89,7 +80,7 @@ public class CsvImporter implements Importer {
                         watchListEntries.add(new WatchListEntry(title, infoLink));
                         break;
                     case FILTERLIST:
-                        filterListEntries.add(new FilterEntry(title, infoLink));
+                        filterListEntries.add(new FilterListEntry(title, infoLink));
                         break;
 
                     default:

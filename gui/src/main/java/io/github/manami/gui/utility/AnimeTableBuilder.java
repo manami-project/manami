@@ -7,7 +7,7 @@ import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdAddFilterEntry;
 import io.github.manami.core.commands.CmdAddWatchListEntry;
 import io.github.manami.core.commands.CommandService;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -191,7 +191,7 @@ public class AnimeTableBuilder<T extends MinimalEntry> {
         final Button btnAddToFilterList = new Button(EMPTY, createIconFilterList());
         btnAddToFilterList.setTooltip(new Tooltip("add entry to filter list"));
         btnAddToFilterList.setOnAction(event -> {
-            FilterEntry.valueOf(anime).ifPresent(e -> {
+            FilterListEntry.valueOf(anime).ifPresent(e -> {
                 cmdService.executeCommand(new CmdAddFilterEntry(e, app));
                 table.getItems().remove(anime);
                 listChangedFunction.apply(anime);

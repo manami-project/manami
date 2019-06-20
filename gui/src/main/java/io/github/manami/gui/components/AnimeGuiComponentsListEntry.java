@@ -12,9 +12,6 @@ import lombok.Setter;
  * picture, link with title and the possibility to remove the entry. This was
  * created so the lists don't need to render everything new whenever entries are
  * added or removed.
- *
- * @author manami-project
- * @since 2.1.3
  */
 public class AnimeGuiComponentsListEntry {
 
@@ -47,14 +44,9 @@ public class AnimeGuiComponentsListEntry {
 
 
     /**
-     * @since 2.3.0
-     * @param anime
-     *            {@link MinimalEntry} which is being shown.
-     * @param pictureComponent
-     *            Picture of the {@link MinimalEntry} already wrapped in a
-     *            JavaFX component.
-     * @param titleComponent
-     *            Hyperlink containing the title.
+     * @param anime {@link MinimalEntry} which is being shown.
+     * @param pictureComponent Picture of the {@link MinimalEntry} already wrapped in a JavaFX component.
+     * @param titleComponent Hyperlink containing the title.
      */
     public AnimeGuiComponentsListEntry(final MinimalEntry anime, final ImageView pictureComponent, final Hyperlink titleComponent) {
         this.pictureComponent = pictureComponent;

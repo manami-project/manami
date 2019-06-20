@@ -10,10 +10,6 @@ import javax.inject.Named;
 import javafx.collections.ObservableList;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.5.0
- */
 @Named
 @Slf4j
 public class ServiceRepository implements Observer {
@@ -51,9 +47,6 @@ public class ServiceRepository implements Observer {
     }
 
 
-    /**
-     * @since 2.7.2
-     */
     public void cancelAllServices() {
         synchronized (runningServices) {
             while (!runningServices.isEmpty()) {
@@ -63,10 +56,6 @@ public class ServiceRepository implements Observer {
     }
 
 
-    /**
-     * @since 2.5.0
-     * @param service
-     */
     private void safelyStartService(final BackgroundService service) {
         service.addObserver(this);
         runningServices.add(service);

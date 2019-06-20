@@ -1,25 +1,19 @@
 package io.github.manami.core.commands;
 
 import io.github.manami.core.Manami;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
+
 public class CmdDeleteFilterEntry extends AbstractReversibleCommand {
 
-    private final FilterEntry entry;
+    private final FilterListEntry entry;
 
 
     /**
-     * Constructor
-     *
-     * @since 2.7.0
-     * @param entry {@link FilterEntry} that is supposed to be deleted.
+     * @param entry {@link FilterListEntry} that is supposed to be deleted.
      * @param application Instance of the application which reveals access to the persistence functionality.
      */
-    public CmdDeleteFilterEntry(final FilterEntry entry, final Manami application) {
+    public CmdDeleteFilterEntry(final FilterListEntry entry, final Manami application) {
         this.entry = entry;
         app = application;
     }

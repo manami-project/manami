@@ -5,10 +5,6 @@ import io.github.manami.core.commands.CmdChangeEpisodes;
 import io.github.manami.core.commands.ReversibleCommand;
 import io.github.manami.dto.entities.Anime;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 public class EpisodesDifferEvent extends AbstractEvent implements ReversibleCommandEvent {
 
     private final CmdChangeEpisodes cmd;

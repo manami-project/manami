@@ -14,9 +14,6 @@ import lombok.Setter;
 /**
  * Command service keeps track of actions and is responsible for knowing if a
  * file is dirty or not.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Named
 public class CommandService {
@@ -36,11 +33,6 @@ public class CommandService {
     private final EventBus eventBus;
 
 
-    /**
-     * Creates a new instance.
-     *
-     * @since 2.0.0
-     */
     @Inject
     public CommandService(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -52,9 +44,7 @@ public class CommandService {
     /**
      * Executes a specific command.
      *
-     * @since 2.0.0
-     * @param command
-     *            {@link Command} to execute.
+     * @param command {@link Command} to execute.
      */
     public void executeCommand(final ReversibleCommand command) {
         if (command.execute()) {
@@ -67,8 +57,6 @@ public class CommandService {
 
     /**
      * Undoes the last reversible action.
-     *
-     * @since 2.0.0
      */
     public void undo() {
         if (!done.empty()) {
@@ -82,8 +70,6 @@ public class CommandService {
 
     /**
      * Redoes the last reversible action.
-     *
-     * @since 2.0.0
      */
     public void redo() {
         if (!undone.empty()) {
@@ -97,8 +83,6 @@ public class CommandService {
 
     /**
      * Check if the last executed command was the last one before saving.
-     *
-     * @since 2.0.0
      */
     private void checkDirtyFlag() {
         isUnsaved = !(done.empty() || (!done.empty() && done.peek().isLastSaved()));
@@ -107,8 +91,6 @@ public class CommandService {
 
     /**
      * Clears the stack of done and undone commands.
-     *
-     * @since 2.0.0
      */
     public void clearAll() {
         done.clear();
@@ -119,8 +101,6 @@ public class CommandService {
 
     /**
      * Sets the last executed command anew.
-     *
-     * @since 2.0.0
      */
     public void resetDirtyFlag() {
         for (final ReversibleCommand cmd : done) {
@@ -139,8 +119,6 @@ public class CommandService {
 
     /**
      * Checks whether the stack for executed commands is empty or not.
-     *
-     * @since 2.0.0
      * @return True if no {@link Command} has been executed.
      */
     public boolean isEmptyDoneCommands() {
@@ -150,8 +128,6 @@ public class CommandService {
 
     /**
      * Checks whether the stack for undone commands is empty or not.
-     *
-     * @since 2.0.0
      * @return True if no {@link Command} has been made undone.
      */
     public boolean isEmptyUndoneCommands() {

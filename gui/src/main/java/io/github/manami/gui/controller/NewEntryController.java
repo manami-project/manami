@@ -34,9 +34,6 @@ import javafx.scene.control.TextField;
 
 /**
  * Shows the window in which a new entry can be created.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public class NewEntryController implements Observer {
 
@@ -105,8 +102,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Called on Construction
-     *
-     * @since 2.0.0
      */
     public void initialize() {
         validationSupport = new ValidationSupport();
@@ -151,8 +146,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Changes the type to the previous entry.
-     *
-     * @since 2.0.0
      */
     public void typeUp() {
         if (typeIndex > 0) {
@@ -165,8 +158,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Changes the type to the next entry.
-     *
-     * @since 2.0.0
      */
     public void typeDown() {
         if (typeIndex < AnimeType.values().length - 1) {
@@ -179,8 +170,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Increases the number of episodes by one.
-     *
-     * @since 2.0.0
      */
     public void increaseEpisodes() {
         final Integer value = Integer.valueOf(txtEpisodes.getText()) + 1;
@@ -193,8 +182,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Decreases the number of episodes by one.
-     *
-     * @since 2.0.0
      */
     public void decreaseEpisodes() {
         final Integer value = Integer.valueOf(txtEpisodes.getText()) - 1;
@@ -207,8 +194,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Closes the window without saving anything.
-     *
-     * @since 2.0.0
      */
     public void close() {
         Platform.runLater(() -> btnCancel.getParent().getScene().getWindow().hide());
@@ -217,8 +202,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Adds a new entry to the list.
-     *
-     * @since 2.0.0
      */
     public void add() {
         final String title = txtTitle.getText().trim();
@@ -235,8 +218,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Checks which button to activate or deactivate.
-     *
-     * @since 2.0.0
      */
     private void checkTypeArrowButtons() {
         final int upperLimit = AnimeType.values().length - 1;
@@ -257,8 +238,6 @@ public class NewEntryController implements Observer {
 
     /**
      * Checks whether or not to disable the episode decrease button.
-     *
-     * @since 2.2.0
      */
     private void checkEpisodeArrowButtons() {
         final int episodes = Integer.parseInt(txtEpisodes.getText());
@@ -275,8 +254,7 @@ public class NewEntryController implements Observer {
     /**
      * Sets the type in the textfield based on the given value.
      *
-     * @param value
-     *            Type of the {@link Anime}
+     * @param value Type of the {@link Anime}
      */
     private void setTextfieldType(final String value) {
         String curListElement;
@@ -295,8 +273,6 @@ public class NewEntryController implements Observer {
     /**
      * Checks the currently given value of the textfield and tries to
      * automatically fill out the form.
-     *
-     * @since 2.0.0
      */
     private void autoFillForm() {
         AnimeRetrievalService retrievalService;
@@ -332,10 +308,7 @@ public class NewEntryController implements Observer {
      * Enables or disables all widgets on the scene which are filled by
      * autocomplete.
      *
-     * @since 2.0.0
-     * @param value
-     *            Disables the component if the value is true and enables them
-     *            if the value is false.
+     * @param value Disables the component if the value is true and enables them if the value is false.
      */
     private void setDisableAutoCompleteWidgets(final boolean value) {
         Platform.runLater(() -> {

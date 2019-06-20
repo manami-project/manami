@@ -21,9 +21,6 @@ import lombok.extern.slf4j.Slf4j;
  * This service is called whenever a new list is opened. It creates cache
  * entries if necessary.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
- *
- * @author manami-project
- * @since 2.2.0
  */
 @Slf4j
 public class CacheInitializationService extends AbstractService<Void> {
@@ -41,13 +38,6 @@ public class CacheInitializationService extends AbstractService<Void> {
     private ExecutorService recomExecutorService;
 
 
-    /**
-     * Constructor awaiting a cache.
-     *
-     * @since 2.2.0
-     * @param cache
-     *            Cache
-     */
     public CacheInitializationService(final Cache cache, final List<Anime> list) {
         this.cache = cache;
         this.list = list;

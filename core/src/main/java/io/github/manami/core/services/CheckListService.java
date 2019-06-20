@@ -40,7 +40,7 @@ import io.github.manami.core.services.events.TitleDifferEvent;
 import io.github.manami.core.services.events.TypeDifferEvent;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.utility.PathResolver;
@@ -53,7 +53,7 @@ public class CheckListService extends AbstractService<Void> {
     private final Cache cache;
     private final List<Anime> animeList;
     private final List<WatchListEntry> watchList;
-    private final List<FilterEntry> filterList;
+    private final List<FilterListEntry> filterList;
     private final CheckListConfig config;
     private Path currentWorkingDir = null;
     private int currentProgress = 0;
@@ -248,8 +248,8 @@ public class CheckListService extends AbstractService<Void> {
     private void checkFilterListTitles() {
         for (int index = 0; index < filterList.size() && !isInterrupt(); index++) {
             updateProgress();
-            final FilterEntry filterEntry = filterList.get(index);
-            final Optional<Anime> optCachedEntry = cache.fetchAnime(filterEntry.getInfoLink());
+            final FilterListEntry filterListEntry = filterList.get(index);
+            final Optional<Anime> optCachedEntry = cache.fetchAnime(filterListEntry.getInfoLink());
 
             if (!optCachedEntry.isPresent()) {
                 continue;
@@ -257,12 +257,12 @@ public class CheckListService extends AbstractService<Void> {
 
             final Anime cachedEntry = optCachedEntry.get();
 
-            if (!filterEntry.getTitle().equals(cachedEntry.getTitle())) {
+            if (!filterListEntry.getTitle().equals(cachedEntry.getTitle())) {
                 app.updateOrCreate(
-                        new FilterEntry(
+                        new FilterListEntry(
                                 cachedEntry.getTitle(),
-                                filterEntry.getThumbnail(),
-                                filterEntry.getInfoLink()
+                                filterListEntry.getThumbnail(),
+                                filterListEntry.getInfoLink()
                         )
                 );
             }

@@ -45,7 +45,7 @@ public class WatchListEntryTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testValueOfFromFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 

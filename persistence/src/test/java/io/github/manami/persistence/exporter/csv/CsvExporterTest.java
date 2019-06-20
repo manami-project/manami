@@ -23,7 +23,7 @@ import com.google.common.eventbus.EventBus;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -89,7 +89,7 @@ public class CsvExporterTest {
         final WatchListEntry deathNoteRewrite = new WatchListEntry("Death Note Rewrite", "https://cdn.myanimelist.net/images/anime/13/8518t.jpg", new InfoLink("https://myanimelist.net/anime/2994"));
         persistenceFacade.watchAnime(deathNoteRewrite);
 
-        final FilterEntry gintama = new FilterEntry("Gintama", "https://cdn.myanimelist.net/images/anime/2/10038t.jpg", new InfoLink("https://myanimelist.net/anime/918"));
+        final FilterListEntry gintama = new FilterListEntry("Gintama", "https://cdn.myanimelist.net/images/anime/2/10038t.jpg", new InfoLink("https://myanimelist.net/anime/918"));
         persistenceFacade.filterAnime(gintama);
 
         final ClassPathResource resource = new ClassPathResource(TEST_ANIME_LIST_FILE);

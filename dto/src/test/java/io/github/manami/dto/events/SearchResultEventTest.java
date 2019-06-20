@@ -4,7 +4,7 @@ import static io.github.manami.dto.TestConst.UNIT_TEST_GROUP;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import org.testng.annotations.Test;
@@ -54,7 +54,7 @@ public class SearchResultEventTest {
     // given
     final String searchString = "Death Note";
     final SearchResultEvent sut = new SearchResultEvent(searchString);
-    final FilterEntry entry = new FilterEntry(searchString,
+    final FilterListEntry entry = new FilterListEntry(searchString,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -113,7 +113,7 @@ public class SearchResultEventTest {
   public void testAddingEntryToFilterList() {
     // given
     final String searchString = "Death Note";
-    final FilterEntry entry = new FilterEntry(searchString,
+    final FilterListEntry entry = new FilterListEntry(searchString,
         new InfoLink("http://myanimelist.net/anime/1535"));
     final SearchResultEvent sut = new SearchResultEvent(searchString);
 

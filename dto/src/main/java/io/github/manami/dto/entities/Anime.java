@@ -14,9 +14,6 @@ import lombok.ToString;
 
 /**
  * Represents an Anime with all it's saved meta information.
- *
- * @author manami-project
- * @since 1.0.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -58,11 +55,6 @@ public class Anime extends AbstractMinimalEntry {
     }
 
 
-    /**
-     * Constructor.
-     *
-     * @since 2.7.0
-     */
     public Anime(final UUID id, final String title, final InfoLink infoLink) {
         this.id = id;
         super.setTitle(title);
@@ -101,9 +93,6 @@ public class Anime extends AbstractMinimalEntry {
     }
 
 
-    /**
-     * @since 2.0.0 @return the type
-     */
     public String getTypeAsString() {
         return (type != null) ? type.getValue() : null;
     }
@@ -118,9 +107,6 @@ public class Anime extends AbstractMinimalEntry {
 
     /**
      * Checks if an anime entry is valid.
-     *
-     * @param anime
-     * @return
      */
     public static boolean isValidAnime(final Anime anime) {
         boolean ret = anime != null;

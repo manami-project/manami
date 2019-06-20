@@ -7,10 +7,6 @@ import lombok.ToString;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-/**
- * @author manami-project
- * @since 2.7.3
- */
 @ToString
 public abstract class AbstractMinimalEntry implements MinimalEntry {
 

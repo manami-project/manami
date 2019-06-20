@@ -11,7 +11,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.ToolVersion;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -29,7 +29,7 @@ public class ManamiSaxParser extends DefaultHandler {
     private final PersistenceFacade persistence;
 
     private final List<Anime> animeListEntries;
-    private final List<FilterEntry> filterListEntries;
+    private final List<FilterListEntry> filterListEntries;
     private final List<WatchListEntry> watchListEntries;
 
     private ImportMigrationPostProcessor importMigrationPostProcessor;
@@ -80,10 +80,6 @@ public class ManamiSaxParser extends DefaultHandler {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param attributes
-     */
     private void createAnimeEntry(final Attributes attributes) {
         final String title = attributes.getValue("title").trim();
         final InfoLink infoLink = new InfoLink(attributes.getValue("infoLink").trim());
@@ -97,20 +93,12 @@ public class ManamiSaxParser extends DefaultHandler {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param attributes
-     */
     private void createFilterEntry(final Attributes attributes) {
-        final FilterEntry entry = new FilterEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), new InfoLink(attributes.getValue("infoLink").trim()));
+        final FilterListEntry entry = new FilterListEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), new InfoLink(attributes.getValue("infoLink").trim()));
         filterListEntries.add(entry);
     }
 
 
-    /**
-     * @since 2.8.0
-     * @param attributes
-     */
     private void createWatchListEntry(final Attributes attributes) {
         final WatchListEntry entry = new WatchListEntry(attributes.getValue("title").trim(), attributes.getValue("thumbnail").trim(), new InfoLink(attributes.getValue("infoLink").trim()));
         watchListEntries.add(entry);

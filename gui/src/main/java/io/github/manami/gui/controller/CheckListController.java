@@ -47,10 +47,6 @@ import static io.github.manami.gui.components.Icons.createIconRemove;
 import static io.github.manami.gui.utility.DialogLibrary.showExceptionDialog;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 @Slf4j
 public class CheckListController implements Observer {
 
@@ -111,8 +107,6 @@ public class CheckListController implements Observer {
 
     /**
      * Called from FXML when creating the Object.
-     *
-     * @since 2.4.0
      */
     public void initialize() {
         btnStart.setOnAction(event -> start());
@@ -145,8 +139,6 @@ public class CheckListController implements Observer {
 
     /**
      * Stops the service if necessary and resets the GUI.
-     *
-     * @since 2.4.0
      */
     public void cancel() {
         if (service != null) {
@@ -317,9 +309,6 @@ public class CheckListController implements Observer {
     }
 
 
-    /**
-     * @since 2.8.2
-     */
     public void clear() {
         Platform.runLater(() -> {
             tab.setText(CHECK_LIST_TAB_TITLE);

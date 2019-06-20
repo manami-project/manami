@@ -10,10 +10,6 @@ import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 public class CheckListEntry {
 
     /** Image of the anime. */

@@ -31,9 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Extracts and counts recommendations for a list of anime.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
- *
- * @author manami-project
- * @since 2.4.0
  */
 @Slf4j
 public class RecommendationsRetrievalService extends AbstractService<List<Anime>> {
@@ -67,12 +64,6 @@ public class RecommendationsRetrievalService extends AbstractService<List<Anime>
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
 
-    /**
-     * @since 2.5.0
-     * @param app
-     * @param cache
-     * @param observer
-     */
     public RecommendationsRetrievalService(final Manami app, final Cache cache, final Observer observer) {
         extractor = new MyAnimeListNetAnimeExtractor();
         urlList = newCopyOnWriteArrayList();

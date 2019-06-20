@@ -16,9 +16,6 @@ import javafx.stage.Stage;
 
 /**
  * Entry point of the application.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public class Main extends Application {
 
@@ -29,9 +26,7 @@ public class Main extends Application {
 
 
     /**
-     * @param args
-     *            Command line arguments.
-     * @since 2.0.0
+     * @param args Command line arguments.
      */
     public static void main(final String[] args) throws IOException {
         new ConfigFileWatchdog(Paths.get(".")).validate();

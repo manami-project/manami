@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import com.google.common.eventbus.EventBus;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -95,7 +95,7 @@ public class JsonExporterTest {
         new InfoLink("http://myanimelist.net/anime/2994"));
     persistenceFacade.watchAnime(deathNoteRewrite);
 
-    final FilterEntry gintama = new FilterEntry("Gintama",
+    final FilterListEntry gintama = new FilterListEntry("Gintama",
         "http://cdn.myanimelist.net/images/anime/2/10038t.jpg",
         new InfoLink("http://myanimelist.net/anime/918"));
     persistenceFacade.filterAnime(gintama);

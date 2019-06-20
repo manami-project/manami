@@ -6,9 +6,6 @@ import io.github.manami.dto.entities.InfoLink;
 
 /**
  * Extracts an {@link Anime} from a given prior downloaded website.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public interface AnimeEntryExtractor extends AnimeExtractor {
 
@@ -16,11 +13,8 @@ public interface AnimeEntryExtractor extends AnimeExtractor {
      * Returns an instance of the requested {@link Anime} or null in case of an
      * invalid link.
      *
-     * @since 2.0.0
-     * @param InfoLink
-     *            infoLink
-     * @param sitecontent
-     *            Content of the info link website.
+     * @param infoLink infoLink
+     * @param sitecontent Content of the info link website.
      * @return Object of type {@link Anime} with every information or null in
      *         case of an invalid link.
      */

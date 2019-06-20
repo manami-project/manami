@@ -70,8 +70,6 @@ public class WatchListController implements Observer {
 
     /**
      * Fills the GUI with all the entries which are already in the database.
-     *
-     * @since 2.8.0
      */
     public void initialize() {
         new AnimeTableBuilder<>(contentTable)

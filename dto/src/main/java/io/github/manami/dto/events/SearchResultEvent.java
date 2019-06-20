@@ -10,9 +10,6 @@ import io.github.manami.dto.entities.MinimalEntry;
 
 /**
  * Contains a {@link List} of {@link MinimalEntry} for each list type.
- *
- * @author manami-project
- * @since 2.9.0
  */
 public class SearchResultEvent {
 
@@ -22,9 +19,6 @@ public class SearchResultEvent {
     private final List<MinimalEntry> watchListSearchResultList;
 
 
-    /**
-     * @since 2.9.0
-     */
     public SearchResultEvent(final String searchString) {
         this.searchString = searchString;
         animeListSearchResultList = newArrayList();
@@ -34,7 +28,6 @@ public class SearchResultEvent {
 
 
     /**
-     * @since 2.9.0
      * @return The list containing search results from anime list.
      */
     public List<MinimalEntry> getAnimeListSearchResultList() {
@@ -43,7 +36,6 @@ public class SearchResultEvent {
 
 
     /**
-     * @since 2.9.0
      * @return The list containing search results from filter list.
      */
     public List<MinimalEntry> getFilterListSearchResultList() {
@@ -52,7 +44,6 @@ public class SearchResultEvent {
 
 
     /**
-     * @since 2.9.0
      * @return The list containing search results from watch list.
      */
     public List<MinimalEntry> getWatchListSearchResultList() {
@@ -61,7 +52,6 @@ public class SearchResultEvent {
 
 
     /**
-     * @since 2.10.3
      * @return the searchString
      */
     public String getSearchString() {

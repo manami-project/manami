@@ -14,7 +14,7 @@ public class FilterEntryTest {
     // given
 
     // when
-    final Optional<FilterEntry> result = FilterEntry.valueOf(null);
+    final Optional<FilterListEntry> result = FilterListEntry.valueOf(null);
 
     // then
     assertThat(result.isPresent()).isFalse();
@@ -32,7 +32,7 @@ public class FilterEntryTest {
     anime.setType(AnimeType.TV);
 
     // when
-    final Optional<FilterEntry> result = FilterEntry.valueOf(anime);
+    final Optional<FilterListEntry> result = FilterListEntry.valueOf(anime);
 
     // then
     assertThat(result.isPresent()).isTrue();
@@ -50,7 +50,7 @@ public class FilterEntryTest {
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
-    final Optional<FilterEntry> result = FilterEntry.valueOf(entry);
+    final Optional<FilterListEntry> result = FilterListEntry.valueOf(entry);
 
     // then
     assertThat(result.isPresent()).isTrue();

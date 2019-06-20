@@ -5,7 +5,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.util.List;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -17,13 +17,13 @@ public class ImportMigrationPostProcessor {
 
     private Version documentVersion;
     private final List<Anime> animeListEntries;
-    private final List<FilterEntry> filterListEntries;
+    private final List<FilterListEntry> filterListEntries;
     private final List<WatchListEntry> watchListEntries;
     private final String currentToolVersion;
     private final String originalDocumentVersionString;
 
 
-    public ImportMigrationPostProcessor(final String currentToolVersion, final String documentVersion, final List<Anime> animeListEntries, final List<FilterEntry> filterListEntries, final List<WatchListEntry> watchListEntries) {
+    public ImportMigrationPostProcessor(final String currentToolVersion, final String documentVersion, final List<Anime> animeListEntries, final List<FilterListEntry> filterListEntries, final List<WatchListEntry> watchListEntries) {
         this.currentToolVersion = currentToolVersion;
         originalDocumentVersionString = documentVersion;
         this.animeListEntries = animeListEntries;

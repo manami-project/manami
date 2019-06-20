@@ -18,9 +18,6 @@ import org.xml.sax.XMLReader;
 
 /**
  * Importer for opening xml files which are specific for this application.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public class XmlImporter implements Importer {
 
@@ -31,9 +28,6 @@ public class XmlImporter implements Importer {
 
     /**
      * Strategy for XML import.
-     *
-     * @author manami-project
-     * @since 2.0.0
      */
     public enum XmlStrategy {
         /**
@@ -47,11 +41,6 @@ public class XmlImporter implements Importer {
     }
 
 
-    /**
-     * @since 2.0.0
-     * @param strategy
-     *            Strategy
-     */
     public XmlImporter(final XmlStrategy strategy, final PersistenceFacade persistence) {
         this.strategy = strategy;
         this.persistence = persistence;
@@ -74,8 +63,6 @@ public class XmlImporter implements Importer {
 
     /**
      * Creates a parser from the given strategy.
-     *
-     * @since 2.0.0
      * @return Parser
      */
     private ContentHandler createParserFromStrategy() {

@@ -8,9 +8,6 @@ import io.github.manami.dto.entities.InfoLink;
 
 /**
  * Retrieves an entity of an {@link Anime} by providing the info link URL.
- *
- * @author manami-project
- * @since 2.2.0
  */
 public class AnimeRetrievalService extends AbstractService<Void> implements BackgroundService {
 
@@ -25,10 +22,7 @@ public class AnimeRetrievalService extends AbstractService<Void> implements Back
 
 
     /**
-     * Constructor.
-     *
-     * @param infoLink
-     *            Info link URL of the anime.
+     * @param infoLink Info link URL of the anime.
      */
     public AnimeRetrievalService(final Cache cache, final InfoLink infoLink) {
         this.cache = cache;

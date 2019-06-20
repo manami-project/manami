@@ -19,10 +19,6 @@ import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.persistence.AnimeListHandler;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
 @Named
 public class InMemoryAnimeListHandler implements AnimeListHandler {
 
@@ -59,21 +55,11 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param anime
-     * @return
-     */
     private boolean isInList(final Anime anime) {
         return animeList.containsKey(anime.getId()) || isInList(anime.getInfoLink());
     }
 
 
-    /**
-     * @since 2.7.0
-     * @param infoLink
-     * @return
-     */
     private boolean isInList(final InfoLink infoLink) {
         if (infoLink != null && infoLink.isValid()) {
             for (final MinimalEntry curEntry : animeList.values()) {
@@ -97,9 +83,6 @@ public class InMemoryAnimeListHandler implements AnimeListHandler {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     public void clear() {
         animeList.clear();
     }

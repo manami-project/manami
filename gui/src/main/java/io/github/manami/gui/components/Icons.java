@@ -11,9 +11,6 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  * It's not possible to use constants for the glyphs, because if you try it a
  * glyph is only shown once in the entire GUI. Thats why you have to instantiate
  * each glyph every time.
- *
- * @author manami-project
- * @since 2.9.1
  */
 public class Icons {
 

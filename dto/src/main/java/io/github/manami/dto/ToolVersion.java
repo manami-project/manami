@@ -7,16 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains the current tool version.
- *
- * @author manami-project
- * @since 2.1.0
  */
 @Slf4j
 public final class ToolVersion {
 
-    /**
-     * @since 2.7.0
-     */
     public static String getToolVersion() {
         final String propertiesPath = "/META-INF/maven/io.github.manami/persistence/pom.properties";
 

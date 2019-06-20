@@ -28,9 +28,6 @@ public class SearchResultsControllerWrapper {
     private boolean isFirstInvocation = true;
 
 
-    /**
-     * @since 2.7.2
-     */
     private void init() {
         searchResultTab = new Tab(SEARCH_RESULTS_TAB_TITLE);
         Parent pane;
@@ -74,9 +71,6 @@ public class SearchResultsControllerWrapper {
     /**
      * This dirty hack is needed, because otherwise the title panes won't expand
      * on first invocation.
-     * 
-     * @param event
-     * @throws InterruptedException
      */
     private void reexecuteAfterWaitingTime(final SearchResultEvent event) throws InterruptedException {
         isFirstInvocation = false;

@@ -14,9 +14,6 @@ import lombok.Getter;
 /**
  * Contains the path for all configuration files as well as the path for the
  * currently opened anime list file.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Named
 public class Config {
@@ -30,11 +27,6 @@ public class Config {
     private final EventBus eventBus;
 
 
-    /**
-     * Constructor.
-     *
-     * @since 2.0.0
-     */
     @Inject
     public Config(final EventBus eventBus) {
         this.eventBus = eventBus;
@@ -42,9 +34,7 @@ public class Config {
 
 
     /**
-     * @since 2.0.0
-     * @param file
-     *            the file to set
+     * @param file the file to set
      */
     public void setFile(final Path file) {
         this.file = file;

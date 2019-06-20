@@ -8,8 +8,6 @@ import com.google.common.eventbus.EventBus;
 
 /**
  * Configuration bean for the spring context.
- * @author manami-project
- * @since 2.0.0
  */
 @Configuration
 @ComponentScan("io.github.manami")

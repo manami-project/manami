@@ -1,14 +1,14 @@
 package io.github.manami.core.commands;
 
 import io.github.manami.core.Manami;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 
 public class CmdDeleteDeadFilterListEntry extends AbstractReversibleCommand {
 
-    private final FilterEntry entry;
+    private final FilterListEntry entry;
 
 
-    public CmdDeleteDeadFilterListEntry(final FilterEntry entry, final Manami application) {
+    public CmdDeleteDeadFilterListEntry(final FilterListEntry entry, final Manami application) {
         this.entry = entry;
         app = application;
     }

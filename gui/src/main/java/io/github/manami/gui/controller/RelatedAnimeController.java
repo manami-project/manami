@@ -68,8 +68,6 @@ public class RelatedAnimeController implements Observer {
 
     /**
      * Called from FXML when creating the Object.
-     *
-     * @since 2.3.0
      */
     public void initialize() {
         new AnimeTableBuilder<>(contentTable)
@@ -97,8 +95,6 @@ public class RelatedAnimeController implements Observer {
 
     /**
      * Stops the service if necessary and resets the GUI.
-     *
-     * @since 2.3.0
      */
     public void cancel() {
         if (service != null) {
@@ -113,10 +109,7 @@ public class RelatedAnimeController implements Observer {
      * Shows the progress components and hides the start button or the other way
      * round.
      *
-     * @since 2.3.0
-     * @param value
-     *            Shows the progress components if the value is true and hides
-     *            the start button.
+     * @param value Shows the progress components if the value is true and hides the start button.
      */
     private void showProgressControls(final boolean value) {
         Platform.runLater(() -> {

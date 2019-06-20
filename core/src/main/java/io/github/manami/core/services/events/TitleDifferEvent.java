@@ -5,10 +5,6 @@ import io.github.manami.core.commands.CmdChangeTitle;
 import io.github.manami.dto.entities.Anime;
 import lombok.Getter;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 public class TitleDifferEvent extends AbstractEvent implements ReversibleCommandEvent {
 
     @Getter

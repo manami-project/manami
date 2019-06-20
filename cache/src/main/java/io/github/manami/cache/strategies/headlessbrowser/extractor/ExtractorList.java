@@ -12,9 +12,6 @@ import java.util.Optional;
 
 /**
  * Contains a list of all [{@link AnimeExtractor}s.
- *
- * @author manami-project
- * @since 2.1.2
  */
 @Named
 public class ExtractorList {
@@ -26,9 +23,7 @@ public class ExtractorList {
     /**
      * Constructor injecting the list of all annotated extractors.
      *
-     * @since 2.1.2
-     * @param extractors
-     *            List of extractors.
+     * @param extractors List of extractors.
      */
     @Inject
     public ExtractorList(@Extractor final List<AnimeExtractor> extractors) {
@@ -42,10 +37,7 @@ public class ExtractorList {
     /**
      * Returns the first extractor that claims responsibility.
      *
-     * @since 2.3.0
-     * @param infoLink
-     *            An instance of the first {@link AnimeEntryExtractor} claiming
-     *            responsibility.
+     * @param infoLink An instance of the first {@link AnimeEntryExtractor} claiming responsibility.
      * @return First {@link AnimeEntryExtractor} which is responsible.
      */
     public Optional<AnimeEntryExtractor> getAnimeEntryExtractor(final InfoLink infoLink) {
@@ -62,11 +54,7 @@ public class ExtractorList {
     /**
      * Returns the first extractor that claims responsibility.
      *
-     * @since 2.10.6
-     * @param infoLink
-     *            An instance of the first {@link RelatedAnimeExtractor}
-     *            claiming
-     *            responsibility.
+     * @param infoLink An instance of the first {@link RelatedAnimeExtractor} claiming responsibility.
      * @return First {@link RelatedAnimeExtractor} which is responsible.
      */
     public Optional<RelatedAnimeExtractor> getRelatedAnimeExtractor(final InfoLink infoLink) {
@@ -94,11 +82,7 @@ public class ExtractorList {
     /**
      * Returns the first extractor that claims responsibility.
      *
-     * @since 2.10.6
-     * @param url
-     *            An instance of the first {@link RecommendationsExtractor}
-     *            claiming
-     *            responsibility.
+     * @param url An instance of the first {@link RecommendationsExtractor} claiming responsibility.
      * @return First {@link RecommendationsExtractor} which is responsible.
      */
     public Optional<RecommendationsExtractor> getRecommendationsExtractor(final InfoLink url) {

@@ -2,7 +2,7 @@ package io.github.manami.persistence;
 
 import com.google.common.eventbus.EventBus;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -19,8 +19,6 @@ import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 /**
  * This is a facade which is used by the application to hide which strategy is
  * actually used.
- * @author manami-project
- * @since 2.0.0
  */
 @Named
 public class PersistenceFacade implements PersistenceHandler {
@@ -34,9 +32,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
     /**
      * Constructor injecting the currently used strategy.
-     * @since 2.0.0
-     * @param strategy
-     * Currently used strategy.
+     * @param strategy Currently used strategy.
      */
     @Inject
     public PersistenceFacade(@Named("inMemoryStrategy") final PersistenceHandler strategy, final EventBus eventBus) {
@@ -59,7 +55,7 @@ public class PersistenceFacade implements PersistenceHandler {
 
 
     @Override
-    public List<FilterEntry> fetchFilterList() {
+    public List<FilterListEntry> fetchFilterList() {
         return strategy.fetchFilterList();
     }
 

@@ -27,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Finds related anime in info site links.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
- *
- * @author manami-project
- * @since 2.3.0
  */
 @Slf4j
 public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Anime>> {
@@ -56,15 +53,10 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
 
 
     /**
-     * @param cache
-     *            Instance of the cache.
-     * @param app
-     *            Instance of the manami app.
-     * @param list
-     *            List which being checked for related anime.
-     * @param observer
-     *            Observer which is being notified about the progress. It also
-     *            gets the result as a list through notification.
+     * @param cache Instance of the cache.
+     * @param app Instance of the manami app.
+     * @param list List which being checked for related anime.
+     * @param observer Observer which is being notified about the progress. It also gets the result as a list through notification.
      */
     public RelatedAnimeFinderService(final Cache cache, final Manami app, final List<? extends MinimalEntry> list, final Observer observer) {
         this.app = app;

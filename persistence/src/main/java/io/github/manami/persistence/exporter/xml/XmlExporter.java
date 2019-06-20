@@ -26,17 +26,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
 import io.github.manami.persistence.utility.PathResolver;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.0.0
- */
 @Slf4j
 public class XmlExporter implements Exporter {
 
@@ -52,11 +48,7 @@ public class XmlExporter implements Exporter {
 
 
     /**
-     * Constructor.
-     *
-     * @since 2.0.0
-     * @param persistence
-     *            Config for the application.
+     * @param persistence Config for the application.
      */
     public XmlExporter(final ApplicationPersistence persistence) {
         this.persistence = persistence;
@@ -97,10 +89,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.10.0
-     * @return
-     */
     private String createConfigFilePath() {
         String appDir = XmlExporter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
@@ -124,10 +112,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.10.0
-     * @return
-     */
     private String createDtdPath() {
         String relativeConfigPath = createConfigFilePath();
 
@@ -143,10 +127,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.10.0
-     * @return
-     */
     private String createXsltPath() {
         String relativeConfigPath = createConfigFilePath();
 
@@ -164,8 +144,6 @@ public class XmlExporter implements Exporter {
 
     /**
      * Method to create the dom tree.
-     *
-     * @since 2.0.0
      */
     private void createDomTree() {
         final Element root = createRootElement();
@@ -175,9 +153,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private Element createRootElement() {
         final Element root = doc.createElement("manami");
         root.setAttribute("version", getToolVersion());
@@ -191,9 +166,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private void createAnimeList(final Element parent) {
         final Element elementAnimeList = doc.createElement("animeList");
         Element actAnime;
@@ -225,9 +197,6 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private void createWatchList(final Element parent) {
         final Element elementWatchList = doc.createElement("watchList");
         Element actEntry;
@@ -252,14 +221,11 @@ public class XmlExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private void createFilterList(final Element parent) {
         final Element elementFilterList = doc.createElement("filterList");
         Element actEntry;
 
-        for (final FilterEntry anime : persistence.fetchFilterList()) {
+        for (final FilterListEntry anime : persistence.fetchFilterList()) {
             // element "anime"
             actEntry = doc.createElement("filterEntry");
 
@@ -281,8 +247,6 @@ public class XmlExporter implements Exporter {
 
     /**
      * Write the tree into the file and save it.
-     *
-     * @since 2.0.0
      */
     private void prettyPrintXML2File() {
         final TransformerFactory tfactory = TransformerFactory.newInstance();

@@ -8,9 +8,6 @@ import java.lang.annotation.Target;
  * TYPE: For declaration
  * PARAMETER: For constructor injection
  * FIELD: For field injection
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Target(value = { ElementType.TYPE, ElementType.PARAMETER, ElementType.FIELD })
 public @interface Extractor {

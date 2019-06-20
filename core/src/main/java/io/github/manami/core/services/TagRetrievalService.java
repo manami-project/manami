@@ -21,9 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Finds related anime in info site links.
  * Always start {@link BackgroundService}s using the {@link ServiceRepository}!
- *
- * @author manami-project
- * @since 2.3.0
  */
 @Slf4j
 public class TagRetrievalService extends AbstractService<Void> {

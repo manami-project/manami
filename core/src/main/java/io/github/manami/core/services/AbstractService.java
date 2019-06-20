@@ -7,10 +7,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
-/**
- * @author manami-project
- * @since 2.5.0
- */
+
 public abstract class AbstractService<E> extends Observable implements BackgroundService {
 
     protected Service<E> service;
@@ -35,10 +32,6 @@ public abstract class AbstractService<E> extends Observable implements Backgroun
     }
 
 
-    /**
-     * @since 2.5.0
-     * @return the failureEvent
-     */
     protected EventHandler<WorkerStateEvent> getSuccessEvent() {
         return event -> {
             interrupt = true;
@@ -48,10 +41,6 @@ public abstract class AbstractService<E> extends Observable implements Backgroun
     }
 
 
-    /**
-     * @since 2.5.0
-     * @return the failureEvent
-     */
     protected EventHandler<WorkerStateEvent> getFailureEvent() {
         return event -> {
             interrupt = true;
@@ -67,18 +56,11 @@ public abstract class AbstractService<E> extends Observable implements Backgroun
     }
 
 
-    /**
-     * @since 2.5.1
-     * @return the run
-     */
     public boolean isInterrupt() {
         return interrupt;
     }
 
 
-    /**
-     * @since 2.9.0
-     */
     @Override
     public void start() {
         reset();
@@ -104,8 +86,5 @@ public abstract class AbstractService<E> extends Observable implements Backgroun
     }
 
 
-    /**
-     * @since 2.9.0
-     */
     abstract protected E execute();
 }

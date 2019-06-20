@@ -23,9 +23,6 @@ import io.github.manami.dto.entities.RecommendationList;
  * This class provides access to the anime meta data. The data are taken
  * directly from the respective website using a headless browser to render the
  * page an extract the relavant data.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Named
 public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, RelatedAnimeRetrieval, RecommendationsRetrieval {
@@ -35,9 +32,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
 
     /**
-     * @since 2.2.0
-     * @param extractors
-     *            List of extractors
+     * @param extractors List of extractors
      */
     @Inject
     public HeadlessBrowserRetrievalStrategy(final ExtractorList extractors) {
@@ -54,9 +49,7 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
     /**
      * Either gets the content from
      *
-     * @since 2.0.0
-     * @param infoLink
-     *            URL to download.
+     * @param infoLink URL to download.
      * @return Raw XML of the downloaded site.
      */
     private String downloadSiteContent(final InfoLink infoLink) {
@@ -66,9 +59,6 @@ public class HeadlessBrowserRetrievalStrategy implements AnimeRetrieval, Related
 
     /**
      * Downloads an infoLink and returns an anime.
-     *
-     * @since 2.5.1
-     * @return
      */
     private Anime downloadAndExtractAnime(final InfoLink infoLink) {
         Anime ret = null;

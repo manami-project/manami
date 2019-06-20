@@ -10,9 +10,6 @@ import io.github.manami.dto.entities.Anime;
 
 /**
  * Callback which is executed whenever the type is being changed.
- * 
- * @author manami-project
- * @since 2.0.0
  */
 public class AnimeTypeCallback implements Callback<TableColumn<Anime, String>, TableCell<Anime, String>> {
 

@@ -13,7 +13,7 @@ import com.google.common.eventbus.EventBus;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.dto.events.AnimeListChangedEvent;
@@ -59,7 +59,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutTitle() {
     // given
-    final FilterEntry entry = new FilterEntry(EMPTY,
+    final FilterListEntry entry = new FilterListEntry(EMPTY,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -75,7 +75,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutInfoLink() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note", null);
+    final FilterListEntry entry = new FilterListEntry("Death Note", null);
 
     // when
     final boolean result = persistenceFacade.filterAnime(entry);
@@ -90,7 +90,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutThumbnail() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -106,7 +106,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsFullEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -124,7 +124,7 @@ public class PersistenceFacadeTest {
   public void testFilterEntryExists() {
     // given
     final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
-    final FilterEntry entry = new FilterEntry("Death Note", infoLink);
+    final FilterListEntry entry = new FilterListEntry("Death Note", infoLink);
     persistenceFacade.filterAnime(entry);
 
     // when
@@ -152,12 +152,12 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeList() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         new InfoLink("http://myanimelist.net/anime/1535"));
     persistenceFacade.filterAnime(entry);
 
     // when
-    final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
+    final List<FilterListEntry> fetchFilterList = persistenceFacade.fetchFilterList();
 
     // then
     assertThat(fetchFilterList.size()).isEqualTo(1);
@@ -183,7 +183,7 @@ public class PersistenceFacadeTest {
   public void testRemoveFromFilterListWorks() {
     // given
     final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
-    final FilterEntry entry = new FilterEntry("Death Note", infoLink);
+    final FilterListEntry entry = new FilterListEntry("Death Note", infoLink);
     persistenceFacade.filterAnime(entry);
 
     // when
@@ -613,10 +613,10 @@ public class PersistenceFacadeTest {
     entry.setType(AnimeType.TV);
     persistenceFacade.addAnime(entry);
 
-    final FilterEntry filterEntry = new FilterEntry("Gintama",
+    final FilterListEntry filterListEntry = new FilterListEntry("Gintama",
         "http://cdn.myanimelist.net/images/anime/3/72078t.jpg",
         new InfoLink("http://myanimelist.net/anime/28977"));
-    persistenceFacade.filterAnime(filterEntry);
+    persistenceFacade.filterAnime(filterListEntry);
 
     final WatchListEntry watchEntry = new WatchListEntry("Steins;Gate",
         "http://cdn.myanimelist.net/images/anime/5/73199t.jpg",
@@ -651,19 +651,19 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testThatAddFilterListWorks() {
     // given
-    final List<FilterEntry> list = newArrayList();
+    final List<FilterListEntry> list = newArrayList();
 
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
     list.add(entry);
 
-    final FilterEntry gintama = new FilterEntry("Gintama",
+    final FilterListEntry gintama = new FilterListEntry("Gintama",
         "http://cdn.myanimelist.net/images/anime/3/72078t.jpg",
         new InfoLink("http://myanimelist.net/anime/28977"));
     list.add(gintama);
 
-    final FilterEntry steinsGate = new FilterEntry("Steins;Gate",
+    final FilterListEntry steinsGate = new FilterListEntry("Steins;Gate",
         "http://cdn.myanimelist.net/images/anime/5/73199t.jpg",
         new InfoLink("http://myanimelist.net/anime/9253"));
     list.add(steinsGate);
@@ -828,7 +828,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testUpdateOrCreateForNewFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -845,7 +845,7 @@ public class PersistenceFacadeTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testUpdateOrCreateForModifiedFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB,
+    final FilterListEntry entry = new FilterListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     persistenceFacade.filterAnime(entry);

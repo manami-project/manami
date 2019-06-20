@@ -1,7 +1,7 @@
 package io.github.manami.persistence.exporter.csv;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
@@ -23,9 +23,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Exports a list to a csv file.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Slf4j
 public class CsvExporter implements Exporter {
@@ -38,11 +35,6 @@ public class CsvExporter implements Exporter {
     private ICsvListWriter listWriter;
 
 
-    /**
-     * Constructor
-     *
-     * @since 2.0.0
-     */
     public CsvExporter(final ApplicationPersistence persistence) {
         this.persistence = persistence;
         config = new CsvConfig();
@@ -72,10 +64,6 @@ public class CsvExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     * @throws IOException
-     */
     private void writeAnimeList() throws IOException {
         final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
@@ -99,9 +87,6 @@ public class CsvExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private void writeWatchList() throws IOException {
         final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
@@ -125,15 +110,12 @@ public class CsvExporter implements Exporter {
     }
 
 
-    /**
-     * @since 2.7.0
-     */
     private void writeFilterList() throws IOException {
         final List<List<String>> mappedEntryList = newArrayList();
         List<String> curEntry;
 
         // Map Anime Objects to a list
-        for (final FilterEntry entry : persistence.fetchFilterList()) {
+        for (final FilterListEntry entry : persistence.fetchFilterList()) {
             curEntry = newArrayList();
             curEntry.add(FILTERLIST.getValue());
             curEntry.add(entry.getTitle());

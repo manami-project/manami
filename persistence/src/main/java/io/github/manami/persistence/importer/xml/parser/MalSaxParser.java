@@ -14,10 +14,6 @@ import io.github.manami.dto.entities.Anime;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.persistence.PersistenceFacade;
 
-/**
- * @author manami-project
- * @since 2.0.0
- */
 public class MalSaxParser extends DefaultHandler {
 
     /** Actual anime object. */
@@ -39,12 +35,6 @@ public class MalSaxParser extends DefaultHandler {
     private final List<Anime> watchListEntries;
 
 
-    /**
-     * Constructor awaiting a list.
-     *
-     * @since 2.0.0
-     * @param persistence
-     */
     public MalSaxParser(final PersistenceFacade persistence) {
         this.persistence = persistence;
         animeListEntries = newArrayList();

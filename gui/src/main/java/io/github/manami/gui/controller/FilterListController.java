@@ -31,7 +31,7 @@ import io.github.manami.core.services.AnimeRetrievalService;
 import io.github.manami.core.services.RelatedAnimeFinderService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.gui.utility.AnimeTableBuilder;
@@ -80,8 +80,6 @@ public class FilterListController implements Observer {
 
     /**
      * Fills the GUI with all the entries which are already in the database.
-     *
-     * @since 2.1.0
      */
     public void initialize() {
         new AnimeTableBuilder<>(contentTable)
@@ -113,8 +111,6 @@ public class FilterListController implements Observer {
 
     /**
      * Adds a new entry to the filter list.
-     *
-     * @since 2.1.0
      */
     @FXML
     public void addEntry() {
@@ -183,7 +179,7 @@ public class FilterListController implements Observer {
 
 
     private void processAnimeRetrievalResult(final Anime anime) {
-        final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(anime);
+        final Optional<FilterListEntry> filterEntry = FilterListEntry.valueOf(anime);
 
         filterEntry.ifPresent(entry -> cmdService.executeCommand(new CmdAddFilterEntry(entry, app)));
 
@@ -196,7 +192,7 @@ public class FilterListController implements Observer {
 
 
     public void startRecommendedFilterEntrySearch() {
-        final List<FilterEntry> filterList = newArrayList(app.fetchFilterList());
+        final List<FilterListEntry> filterList = newArrayList(app.fetchFilterList());
         shuffle(filterList, new SecureRandom());
         shuffle(filterList, new SecureRandom());
         shuffle(filterList, new SecureRandom());

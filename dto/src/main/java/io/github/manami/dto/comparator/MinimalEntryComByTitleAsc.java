@@ -6,10 +6,6 @@ import java.util.Comparator;
 
 import io.github.manami.dto.entities.MinimalEntry;
 
-/**
- * @author manami-project
- * @since 2.7.2
- */
 public class MinimalEntryComByTitleAsc implements Comparator<MinimalEntry> {
 
     @Override

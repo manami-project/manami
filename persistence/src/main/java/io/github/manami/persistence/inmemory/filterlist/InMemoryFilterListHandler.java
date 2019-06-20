@@ -7,7 +7,7 @@ import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import com.google.common.collect.ImmutableList;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -18,14 +18,10 @@ import java.util.Map;
 import java.util.Optional;
 import javax.inject.Named;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
 @Named
 public class InMemoryFilterListHandler implements FilterListHandler {
 
-  private final Map<InfoLink, FilterEntry> filterList;
+  private final Map<InfoLink, FilterListEntry> filterList;
 
 
   public InMemoryFilterListHandler() {
@@ -39,12 +35,12 @@ public class InMemoryFilterListHandler implements FilterListHandler {
       return false;
     }
 
-    Optional<FilterEntry> entry = Optional.empty();
+    Optional<FilterListEntry> entry = Optional.empty();
 
     if (anime instanceof Anime || anime instanceof WatchListEntry) {
-      entry = FilterEntry.valueOf(anime);
-    } else if (anime instanceof FilterEntry) {
-      entry = Optional.ofNullable((FilterEntry) anime);
+      entry = FilterListEntry.valueOf(anime);
+    } else if (anime instanceof FilterListEntry) {
+      entry = Optional.ofNullable((FilterListEntry) anime);
     }
 
     if (!entry.isPresent()) {
@@ -57,8 +53,8 @@ public class InMemoryFilterListHandler implements FilterListHandler {
 
 
   @Override
-  public List<FilterEntry> fetchFilterList() {
-    final List<FilterEntry> sortList = newArrayList(filterList.values());
+  public List<FilterListEntry> fetchFilterList() {
+    final List<FilterListEntry> sortList = newArrayList(filterList.values());
     Collections.sort(sortList, new MinimalEntryComByTitleAsc());
     return ImmutableList.copyOf(sortList);
   }
@@ -80,15 +76,12 @@ public class InMemoryFilterListHandler implements FilterListHandler {
   }
 
 
-  /**
-   * @since 2.7.0
-   */
   public void clear() {
     filterList.clear();
   }
 
 
-  public void updateOrCreate(final FilterEntry entry) {
+  public void updateOrCreate(final FilterListEntry entry) {
     if (isValidMinimalEntry(entry)) {
       filterList.put(entry.getInfoLink(), entry);
     }

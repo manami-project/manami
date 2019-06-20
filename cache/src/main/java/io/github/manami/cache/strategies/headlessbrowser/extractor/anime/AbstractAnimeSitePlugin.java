@@ -18,9 +18,6 @@ import io.github.manami.dto.entities.InfoLink;
 /**
  * Abstract class for anime site plugins. Their task is to give the possibility
  * to extract information such as the title, episodes, type, etc.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
 
@@ -63,8 +60,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
 
     /**
      * Trims the parameter string.
-     *
-     * @since 2.0.0
      */
     private void trimContent() {
         siteContent = siteContent.trim();
@@ -78,7 +73,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Checks whether the gathered anime is a valid.
      *
-     * @since 2.0.0
      * @return true if it's a valid info link site.
      */
     protected abstract boolean isValidInfoLink();
@@ -87,7 +81,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Extracts the anime's title.
      *
-     * @since 2.0.0
      * @return Title
      */
     protected abstract String extractTitle();
@@ -96,7 +89,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Extracts the anime's type.
      *
-     * @since 2.0.0
      * @return Type
      */
     protected abstract AnimeType extractType();
@@ -105,7 +97,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Extracts the number of episodes.
      *
-     * @since 2.0.0
      * @return Number of episodes.
      */
     protected abstract String extractEpisodes();
@@ -114,7 +105,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Extracts a URL for a picture.
      *
-     * @since 2.1.0
      * @return Picture (big)
      */
     protected abstract String extractPictureLink();
@@ -123,7 +113,6 @@ public abstract class AbstractAnimeSitePlugin implements AnimeEntryExtractor {
     /**
      * Extracts a URL for a picture in thumbnail size.
      *
-     * @since 2.1.1
      * @return Picture (thumbnail size)
      */
     protected abstract String extractThumbnail();

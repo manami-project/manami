@@ -7,7 +7,7 @@ import static io.github.manami.dto.entities.MinimalEntry.isValidMinimalEntry;
 import com.google.common.collect.ImmutableList;
 import io.github.manami.dto.comparator.MinimalEntryComByTitleAsc;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -18,10 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.inject.Named;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
 @Named
 public class InMemoryWatchListHandler implements WatchListHandler {
 
@@ -55,7 +51,7 @@ public class InMemoryWatchListHandler implements WatchListHandler {
 
     Optional<WatchListEntry> entry = Optional.empty();
 
-    if (anime instanceof Anime || anime instanceof FilterEntry) {
+    if (anime instanceof Anime || anime instanceof FilterListEntry) {
       entry = WatchListEntry.valueOf(anime);
     } else if (anime instanceof WatchListEntry) {
       entry = Optional.ofNullable((WatchListEntry) anime);
@@ -80,9 +76,6 @@ public class InMemoryWatchListHandler implements WatchListHandler {
   }
 
 
-  /**
-   * @since 2.7.0
-   */
   public void clear() {
     watchList.clear();
   }

@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import java.io.IOException;
@@ -238,7 +238,7 @@ public class InMemoryWatchListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testWatchListEntryNotAddedBecauseItAlreadyExists() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
     inMemoryWatchListHandler.watchAnime(entry);
@@ -255,7 +255,7 @@ public class InMemoryWatchListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testWatchFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 

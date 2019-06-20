@@ -5,9 +5,6 @@ import io.github.manami.dto.entities.Anime;
 
 /**
  * Abstract reversible command.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public abstract class AbstractReversibleCommand implements ReversibleCommand {
 

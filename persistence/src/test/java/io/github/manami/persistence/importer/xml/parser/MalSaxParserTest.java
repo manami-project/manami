@@ -19,7 +19,7 @@ import com.google.common.eventbus.EventBus;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.importer.xml.XmlImporter;
@@ -113,18 +113,18 @@ public class MalSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<FilterEntry> fetchFilterList = persistenceFacade.fetchFilterList();
+        final List<FilterListEntry> fetchFilterList = persistenceFacade.fetchFilterList();
         assertThat(fetchFilterList).isNotNull();
         assertThat(fetchFilterList.isEmpty()).isFalse();
         assertThat(fetchFilterList.size()).isEqualTo(2);
 
-        final FilterEntry matanteiLokiRagnarok = fetchFilterList.get(0);
+        final FilterListEntry matanteiLokiRagnarok = fetchFilterList.get(0);
         assertThat(matanteiLokiRagnarok).isNotNull();
         assertThat(matanteiLokiRagnarok.getInfoLink().getUrl()).isEqualTo("https://myanimelist.net/anime/335");
         assertThat(matanteiLokiRagnarok.getThumbnail()).isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");
         assertThat(matanteiLokiRagnarok.getTitle()).isEqualTo("Matantei Loki Ragnarok");
 
-        final FilterEntry saiunkokuMonogatari = fetchFilterList.get(1);
+        final FilterListEntry saiunkokuMonogatari = fetchFilterList.get(1);
         assertThat(saiunkokuMonogatari).isNotNull();
         assertThat(saiunkokuMonogatari.getInfoLink().getUrl()).isEqualTo("https://myanimelist.net/anime/957");
         assertThat(saiunkokuMonogatari.getThumbnail()).isEqualTo("https://myanimelist.cdn-dena.com/images/qm_50.gif");

@@ -1,26 +1,19 @@
 package io.github.manami.core.commands;
 
 import io.github.manami.core.Manami;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
 public class CmdAddFilterEntry extends AbstractReversibleCommand {
 
     private final Manami app;
-    private final FilterEntry entry;
+    private final FilterListEntry entry;
 
 
     /**
-     * Constructor
-     *
-     * @since 2.7.0
      * @param entry Anime that is being added.
      * @param application Instance of the application which reveals access to the persistence functionality.
      */
-    public CmdAddFilterEntry(final FilterEntry entry, final Manami application) {
+    public CmdAddFilterEntry(final FilterListEntry entry, final Manami application) {
         this.entry = entry;
         app = application;
     }

@@ -19,7 +19,7 @@ import com.google.common.eventbus.EventBus;
 
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import io.github.manami.persistence.importer.xml.XmlImporter;
@@ -107,12 +107,12 @@ public class ManamiSaxParserTest {
         xmlImporter.importFile(file);
 
         // then
-        final List<FilterEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
+        final List<FilterListEntry> fetchFilterList = inMemoryPersistenceHandler.fetchFilterList();
         assertThat(fetchFilterList).isNotNull();
         assertThat(fetchFilterList.isEmpty()).isFalse();
         assertThat(fetchFilterList.size()).isEqualTo(1);
 
-        final FilterEntry gintama = fetchFilterList.get(0);
+        final FilterListEntry gintama = fetchFilterList.get(0);
         assertThat(gintama).isNotNull();
         assertThat(gintama.getInfoLink().getUrl()).isEqualTo("https://myanimelist.net/anime/918");
         assertThat(gintama.getTitle()).isEqualTo("Gintama");

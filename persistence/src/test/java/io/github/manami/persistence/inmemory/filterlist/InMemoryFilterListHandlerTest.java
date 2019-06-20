@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.WatchListEntry;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutTitle() {
     // given
-    final FilterEntry entry = new FilterEntry(EMPTY,
+    final FilterListEntry entry = new FilterListEntry(EMPTY,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -57,7 +57,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutInfoLink() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note", null);
+    final FilterListEntry entry = new FilterListEntry("Death Note", null);
 
     // when
     final boolean result = inMemoryFilterListHandler.filterAnime(entry);
@@ -71,7 +71,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsEntryWithoutThumbnail() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -86,7 +86,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeIsFullEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -103,7 +103,7 @@ public class InMemoryFilterListHandlerTest {
   public void testFilterEntryExists() {
     // given
     final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
-    final FilterEntry entry = new FilterEntry("Death Note", infoLink);
+    final FilterListEntry entry = new FilterListEntry("Death Note", infoLink);
     inMemoryFilterListHandler.filterAnime(entry);
 
     // when
@@ -130,12 +130,12 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterAnimeList() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         new InfoLink("http://myanimelist.net/anime/1535"));
     inMemoryFilterListHandler.filterAnime(entry);
 
     // when
-    final List<FilterEntry> fetchFilterList = inMemoryFilterListHandler.fetchFilterList();
+    final List<FilterListEntry> fetchFilterList = inMemoryFilterListHandler.fetchFilterList();
 
     // then
     assertThat(fetchFilterList.size()).isEqualTo(1);
@@ -146,7 +146,7 @@ public class InMemoryFilterListHandlerTest {
   public void testRemoveFromFilterListWorks() {
     // given
     final InfoLink infoLink = new InfoLink("http://myanimelist.net/anime/1535");
-    final FilterEntry entry = new FilterEntry("Death Note", infoLink);
+    final FilterListEntry entry = new FilterListEntry("Death Note", infoLink);
     inMemoryFilterListHandler.filterAnime(entry);
 
     // when
@@ -185,7 +185,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testUpdateOrCreateForNewFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -201,7 +201,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testUpdateOrCreateForModifiedFilterEntry() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB,
+    final FilterListEntry entry = new FilterListEntry("Death Note", AbstractMinimalEntry.NO_IMG_THUMB,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     inMemoryFilterListHandler.filterAnime(entry);
@@ -222,7 +222,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testClearing() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
     inMemoryFilterListHandler.filterAnime(entry);
@@ -238,7 +238,7 @@ public class InMemoryFilterListHandlerTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterEntryNotAddedBecauseItAlreadyExists() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "http://cdn.myanimelist.net/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
     inMemoryFilterListHandler.filterAnime(entry);

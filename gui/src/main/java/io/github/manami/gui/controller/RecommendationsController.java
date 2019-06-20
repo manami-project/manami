@@ -71,8 +71,6 @@ public class RecommendationsController implements Observer {
 
     /**
      * Called from FXML when creating the Object.
-     *
-     * @since 2.4.0
      */
     public void initialize() {
         new AnimeTableBuilder<>(contentTable)
@@ -112,8 +110,6 @@ public class RecommendationsController implements Observer {
 
     /**
      * Stops the service if necessary and resets the GUI.
-     *
-     * @since 2.4.0
      */
     public void cancel() {
         if (service != null) {

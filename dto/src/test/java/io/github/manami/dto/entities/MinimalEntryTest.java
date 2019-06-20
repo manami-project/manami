@@ -24,7 +24,7 @@ public class MinimalEntryTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterEntryIsValid() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -39,7 +39,7 @@ public class MinimalEntryTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterEntryNotValidMissingTitle() {
     // given
-    final FilterEntry entry = new FilterEntry(null,
+    final FilterListEntry entry = new FilterListEntry(null,
         "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg",
         new InfoLink("http://myanimelist.net/anime/1535"));
 
@@ -54,7 +54,7 @@ public class MinimalEntryTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterEntryIsValidMissingThumbnail() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note", null,
+    final FilterListEntry entry = new FilterListEntry("Death Note", null,
         new InfoLink("http://myanimelist.net/anime/1535"));
 
     // when
@@ -68,7 +68,7 @@ public class MinimalEntryTest {
   @Test(groups = UNIT_TEST_GROUP)
   public void testFilterEntryNotValidMissingInfoLink() {
     // given
-    final FilterEntry entry = new FilterEntry("Death Note",
+    final FilterListEntry entry = new FilterListEntry("Death Note",
         "https://myanimelist.cdn-dena.com/images/anime/9/9453t.jpg", null);
 
     // when

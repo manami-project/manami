@@ -29,10 +29,7 @@ public class JavaUrlConnection implements HeadlessBrowser {
 
     /**
      * Downloads the site and returns it.
-     *
-     * @since 2.12.9
-     * @param infoLink
-     *            URL
+     * @param infoLink URL
      * @return Plain xml text of the website.
      */
     public String pageAsString(final InfoLink infoLink) {

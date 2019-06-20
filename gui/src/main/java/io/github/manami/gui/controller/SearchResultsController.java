@@ -15,7 +15,7 @@ import io.github.manami.Main;
 import io.github.manami.core.Manami;
 import io.github.manami.core.commands.CmdDeleteFilterEntry;
 import io.github.manami.core.commands.CommandService;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.events.SearchResultEvent;
 import io.github.manami.gui.components.AnimeGuiComponentsListEntry;
@@ -34,10 +34,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.9.0
- */
 @Slf4j
 public class SearchResultsController {
 
@@ -79,10 +75,6 @@ public class SearchResultsController {
     private boolean isPaneAlreadyExpaned;
 
 
-    /**
-     * @since 2.9.0
-     * @param event
-     */
     public void showResults(final SearchResultEvent event) {
         if (event == null) {
             return;
@@ -125,7 +117,7 @@ public class SearchResultsController {
             removeButton.setTooltip(new Tooltip("remove"));
 
             removeButton.setOnAction(event -> {
-                final Optional<FilterEntry> filterEntry = FilterEntry.valueOf(element);
+                final Optional<FilterListEntry> filterEntry = FilterListEntry.valueOf(element);
 
                 if (filterEntry.isPresent()) {
 
@@ -170,8 +162,6 @@ public class SearchResultsController {
 
     /**
      * Adds all {@link AnimeGuiComponentsListEntry}s to the {@link GridPane}.
-     *
-     * @since 2.1.3
      */
     private void showEntries(final GridPane gridPane, final List<AnimeGuiComponentsListEntry> guiComponentList) {
         guiComponentList.sort((a, b) -> Collator.getInstance().compare(a.getTitleComponent().getText(), b.getTitleComponent().getText()));
@@ -199,8 +189,7 @@ public class SearchResultsController {
     /**
      * Creates a GUI component for a picture.
      *
-     * @param anime
-     *            {@link Anime} to show.
+     * @param anime {@link Anime} to show.
      * @return GUI component with the {@link Anime}s picture.
      */
     protected ImageView getPictureComponent(final MinimalEntry anime) {
@@ -213,10 +202,8 @@ public class SearchResultsController {
     /**
      * Creates a GUI component for the title.
      *
-     * @param anime
-     *            {@link Anime} to show.
-     * @return A {@link Hyperlink} that has the title as text and the info link
-     *         as target.
+     * @param anime {@link Anime} to show.
+     * @return A {@link Hyperlink} that has the title as text and the info link as target.
      */
     protected Hyperlink getTitleComponent(final MinimalEntry anime) {
         final Hyperlink title = new Hyperlink(anime.getTitle());

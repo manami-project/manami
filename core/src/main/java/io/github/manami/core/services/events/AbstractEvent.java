@@ -4,10 +4,6 @@ import io.github.manami.dto.entities.Anime;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 public class AbstractEvent implements Event {
 
     @Getter

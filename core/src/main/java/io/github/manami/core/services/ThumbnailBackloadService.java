@@ -16,7 +16,7 @@ import org.slf4j.MDC;
 import io.github.manami.cache.Cache;
 import io.github.manami.dto.entities.AbstractMinimalEntry;
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
@@ -89,8 +89,8 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     private void updateThumbnail(final MinimalEntry entry, final Anime cachedAnime) {
         MinimalEntry updatedEntry = null;
 
-        if (entry instanceof FilterEntry) {
-            updatedEntry = new FilterEntry(entry.getTitle(), cachedAnime.getThumbnail(), entry.getInfoLink());
+        if (entry instanceof FilterListEntry) {
+            updatedEntry = new FilterListEntry(entry.getTitle(), cachedAnime.getThumbnail(), entry.getInfoLink());
         } else if (entry instanceof WatchListEntry) {
             updatedEntry = new WatchListEntry(entry.getTitle(), cachedAnime.getThumbnail(), entry.getInfoLink());
         }

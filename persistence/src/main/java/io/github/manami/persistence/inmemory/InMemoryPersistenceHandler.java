@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.InfoLink;
 import io.github.manami.dto.entities.MinimalEntry;
 import io.github.manami.dto.entities.WatchListEntry;
@@ -19,10 +19,6 @@ import io.github.manami.persistence.inmemory.animelist.InMemoryAnimeListHandler;
 import io.github.manami.persistence.inmemory.filterlist.InMemoryFilterListHandler;
 import io.github.manami.persistence.inmemory.watchlist.InMemoryWatchListHandler;
 
-/**
- * @author manami-project
- * @since 2.7.0
- */
 @Named("inMemoryStrategy")
 public class InMemoryPersistenceHandler implements PersistenceHandler {
 
@@ -31,12 +27,6 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
     private final InMemoryWatchListHandler watchListHandler;
 
 
-    /**
-     * @since 2.7.0
-     * @param animeListHandler
-     * @param filterListHandler
-     * @param watchListHandler
-     */
     @Inject
     public InMemoryPersistenceHandler(final InMemoryAnimeListHandler animeListHandler, final InMemoryFilterListHandler filterListHandler, final InMemoryWatchListHandler watchListHandler) {
         this.animeListHandler = animeListHandler;
@@ -60,7 +50,7 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
 
     @Override
-    public List<FilterEntry> fetchFilterList() {
+    public List<FilterListEntry> fetchFilterList() {
         return filterListHandler.fetchFilterList();
     }
 
@@ -187,8 +177,8 @@ public class InMemoryPersistenceHandler implements PersistenceHandler {
 
         if (entry instanceof Anime) {
             animeListHandler.updateOrCreate((Anime) entry);
-        } else if (entry instanceof FilterEntry) {
-            filterListHandler.updateOrCreate((FilterEntry) entry);
+        } else if (entry instanceof FilterListEntry) {
+            filterListHandler.updateOrCreate((FilterListEntry) entry);
         } else if (entry instanceof WatchListEntry) {
             watchListHandler.updateOrCreate((WatchListEntry) entry);
         }

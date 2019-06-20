@@ -8,7 +8,7 @@ import java.util.List;
 import org.json.JSONWriter;
 
 import io.github.manami.dto.entities.Anime;
-import io.github.manami.dto.entities.FilterEntry;
+import io.github.manami.dto.entities.FilterListEntry;
 import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.ApplicationPersistence;
 import io.github.manami.persistence.exporter.Exporter;
@@ -16,9 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Exports a list to valid json.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Slf4j
 public class JsonExporter implements Exporter {
@@ -52,7 +49,7 @@ public class JsonExporter implements Exporter {
             writer.endArray();
             writer.array();
 
-            for (final FilterEntry element : persistence.fetchFilterList()) {
+            for (final FilterListEntry element : persistence.fetchFilterList()) {
                 writer.object().key("thumbnail").value(element.getThumbnail()).key("title").value(element.getTitle()).key("infoLink").value(element.getInfoLink()).endObject();
             }
 

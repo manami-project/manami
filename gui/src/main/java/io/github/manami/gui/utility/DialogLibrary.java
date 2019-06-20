@@ -19,9 +19,6 @@ import javafx.stage.Stage;
 
 /**
  * Contains pre configured {@link FileChooser} dialogs.
- *
- * @author manami-project
- * @since 2.0.0
  */
 public final class DialogLibrary {
 
@@ -44,7 +41,6 @@ public final class DialogLibrary {
     /**
      * Opens a {@link FileChooser} for opening a file and handles all the logic.
      *
-     * @since 2.0.0
      * @param stage
      *            The main stage.
      * @return {@link Path} of the file to open or null.
@@ -63,7 +59,6 @@ public final class DialogLibrary {
      * Opens a {@link FileChooser} for importing a file and handles all the
      * logic.
      *
-     * @since 2.0.0
      * @param stage
      *            The main stage.
      * @return {@link Path} of the file to import or null.
@@ -81,7 +76,6 @@ public final class DialogLibrary {
     /**
      * Opens a {@link FileChooser} for saving a file and handles all the logic.
      *
-     * @since 2.0.0
      * @param stage
      *            The main stage.
      * @return {@link Path} of the newly created file or null.
@@ -100,7 +94,6 @@ public final class DialogLibrary {
      * Opens a {@link FileChooser} for exporting a file and handles all the
      * logic.
      *
-     * @since 2.0.0
      * @param stage
      *            The main stage.
      * @return {@link Path} for the newly created file or null.
@@ -114,8 +107,7 @@ public final class DialogLibrary {
      * Opens a {@link FileChooser} for exporting a file and handles all the
      * logic.
      *
-     * @since 2.10.0
-     * @param stage
+     *  @param stage
      *            The main stage.
      * @return {@link Path} for the newly created file or null.
      */
@@ -133,7 +125,6 @@ public final class DialogLibrary {
      * Shows the dialog in which the user has to choose between saving the
      * changes, not saving the changes and canceling the action.
      *
-     * @since 2.0.0
      * @return A number which indicates whether to save or not. -1="cancel"
      *         0="don't save" 1="save"
      */
@@ -161,11 +152,6 @@ public final class DialogLibrary {
     }
 
 
-    /**
-     * @since 2.6.0
-     * @param stage
-     * @return
-     */
     public static Path showBrowseForFolderDialog(final Stage stage) {
         final DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Browse for directory...");
@@ -175,10 +161,6 @@ public final class DialogLibrary {
     }
 
 
-    /**
-     * @since 2.8.2
-     * @param exception
-     */
     public static void showExceptionDialog(final Exception exception) {
         final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
