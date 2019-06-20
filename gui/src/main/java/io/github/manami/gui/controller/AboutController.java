@@ -8,9 +8,6 @@ import javafx.scene.control.Alert;
 
 /**
  * Controller showing a window with application information.
- *
- * @author manami-project
- * @since 2.0.0
  */
 @Named
 public class AboutController {

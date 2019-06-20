@@ -40,20 +40,20 @@ import io.github.manami.core.services.events.TitleDifferEvent;
 import io.github.manami.core.services.events.TypeDifferEvent;
 import io.github.manami.dto.AnimeType;
 import io.github.manami.dto.entities.Anime;
+import io.github.manami.dto.entities.FilterEntry;
 import io.github.manami.dto.entities.MinimalEntry;
+import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.utility.PathResolver;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.6.0
- */
 @Slf4j
 public class CheckListService extends AbstractService<Void> {
 
     private static final String MSG_DEAD_INFOLINK = "The infoLink seems to not exist anymore for %s.";
     private final Cache cache;
-    private final List<Anime> list;
+    private final List<Anime> animeList;
+    private final List<WatchListEntry> watchList;
+    private final List<FilterEntry> filterList;
     private final CheckListConfig config;
     private Path currentWorkingDir = null;
     private int currentProgress = 0;
@@ -62,23 +62,18 @@ public class CheckListService extends AbstractService<Void> {
 
 
     /**
-     * Constructor.
-     *
-     * @since 2.6.0
-     * @param config
-     *            Contains the configuration which features to check.
-     * @param file
-     *            Currently opened file.
-     * @param cache
-     *            Cache
-     * @param observer
-     *            Observer
+     * @param config Contains the configuration which features to check.
+     * @param file Currently opened file.
+     * @param cache Cache
+     * @param observer Observer
      */
     public CheckListService(final CheckListConfig config, final Path file, final Cache cache, final Manami app, final Observer observer) {
         this.config = config;
         this.cache = cache;
         this.app = app;
-        list = app.fetchAnimeList();
+        animeList = app.fetchAnimeList();
+        watchList = app.fetchWatchList();
+        filterList = app.fetchFilterList();
         addObserver(observer);
 
         if (file != null) {
@@ -89,7 +84,7 @@ public class CheckListService extends AbstractService<Void> {
 
     @Override
     public Void execute() {
-        notNull(list, "List of anime cannot be null");
+        notNull(animeList, "List of anime cannot be null");
 
         countProgressMax();
 
@@ -113,16 +108,13 @@ public class CheckListService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.6.1
-     */
     private void countProgressMax() {
         if (config.isCheckLocations()) {
-            progressMax += list.size();
+            progressMax += animeList.size();
         }
 
         if (config.isCheckCrc()) {
-            for (final Anime entry : list) {
+            for (final Anime entry : animeList) {
                 final String location = entry.getLocation();
 
                 if (isNotBlank(location)) {
@@ -145,12 +137,12 @@ public class CheckListService extends AbstractService<Void> {
         }
 
         if (config.isCheckMetaData()) {
-            progressMax += list.size();
+            progressMax += animeList.size() + filterList.size();
         }
 
         if (config.isCheckDeadEntries()) {
-            progressMax += app.fetchWatchList().size();
-            progressMax += app.fetchFilterList().size();
+            progressMax += watchList.size();
+            progressMax += filterList.size();
         }
     }
 
@@ -158,14 +150,12 @@ public class CheckListService extends AbstractService<Void> {
     /**
      * Checks every entry. A location must be set, exist and contain at least
      * one file.
-     *
-     * @since 2.6.0
      */
     private void checkLocations() {
         try {
-            for (int index = 0; index < list.size() && !isInterrupt(); index++) {
+            for (int index = 0; index < animeList.size() && !isInterrupt(); index++) {
                 updateProgress();
-                final Anime anime = list.get(index);
+                final Anime anime = animeList.get(index);
                 log.debug("Checking location of {}", anime.getTitle());
 
                 // 01 - Is location set?
@@ -218,9 +208,6 @@ public class CheckListService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.6.1
-     */
     private void updateProgress() {
         currentProgress++;
         setChanged();
@@ -229,9 +216,63 @@ public class CheckListService extends AbstractService<Void> {
 
 
     private void checkMetaData() {
-        for (int index = 0; index < list.size() && !isInterrupt(); index++) {
+        checkMetaDataOfAnimeListEntries();
+        checkFilterListTitles();
+        checkWatchListTitles();
+    }
+
+    private void checkWatchListTitles() {
+        for (int index = 0; index < watchList.size() && !isInterrupt(); index++) {
             updateProgress();
-            final Anime anime = list.get(index);
+            final WatchListEntry watchListEntry = watchList.get(index);
+            final Optional<Anime> optCachedEntry = cache.fetchAnime(watchListEntry.getInfoLink());
+
+            if (!optCachedEntry.isPresent()) {
+                continue;
+            }
+
+            final Anime cachedEntry = optCachedEntry.get();
+
+            if (!watchListEntry.getTitle().equals(cachedEntry.getTitle())) {
+                app.updateOrCreate(
+                        new WatchListEntry(
+                                cachedEntry.getTitle(),
+                                watchListEntry.getThumbnail(),
+                                watchListEntry.getInfoLink()
+                        )
+                );
+            }
+        }
+    }
+
+    private void checkFilterListTitles() {
+        for (int index = 0; index < filterList.size() && !isInterrupt(); index++) {
+            updateProgress();
+            final FilterEntry filterEntry = filterList.get(index);
+            final Optional<Anime> optCachedEntry = cache.fetchAnime(filterEntry.getInfoLink());
+
+            if (!optCachedEntry.isPresent()) {
+                continue;
+            }
+
+            final Anime cachedEntry = optCachedEntry.get();
+
+            if (!filterEntry.getTitle().equals(cachedEntry.getTitle())) {
+                app.updateOrCreate(
+                        new FilterEntry(
+                                cachedEntry.getTitle(),
+                                filterEntry.getThumbnail(),
+                                filterEntry.getInfoLink()
+                        )
+                );
+            }
+        }
+    }
+
+    private void checkMetaDataOfAnimeListEntries() {
+        for (int index = 0; index < animeList.size() && !isInterrupt(); index++) {
+            updateProgress();
+            final Anime anime = animeList.get(index);
 
             if (!anime.getInfoLink().isValid()) {
                 continue;
@@ -287,8 +328,8 @@ public class CheckListService extends AbstractService<Void> {
 
 
     private void checkCrc() {
-        for (int index = 0; index < list.size() && !isInterrupt(); index++) {
-            final Anime anime = list.get(index);
+        for (int index = 0; index < animeList.size() && !isInterrupt(); index++) {
+            final Anime anime = animeList.get(index);
             if (isBlank(anime.getLocation())) {
                 continue;
             }
@@ -394,10 +435,6 @@ public class CheckListService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.10.0
-     * @param anime
-     */
     private void fireRelativizePathEvent(final Anime anime) {
         final String newValue = PathResolver.buildRelativizedPath(anime.getLocation(), currentWorkingDir);
 
@@ -433,10 +470,6 @@ public class CheckListService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @param currentEntry
-     * @return
-     */
     private void checkEntryForDeadLink(final MinimalEntry currentEntry) {
         updateProgress();
 

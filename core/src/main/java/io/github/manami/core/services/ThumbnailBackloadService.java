@@ -22,10 +22,7 @@ import io.github.manami.dto.entities.WatchListEntry;
 import io.github.manami.persistence.PersistenceFacade;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author manami-project
- * @since 2.8.2
- */
+
 @Slf4j
 public class ThumbnailBackloadService extends AbstractService<Void> {
 
@@ -36,22 +33,12 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     private CloseableHttpClient httpclient;
 
 
-    /**
-     * Constructor awaiting a cache.
-     *
-     * @since 2.8.2
-     * @param cache
-     *            Cache
-     */
     public ThumbnailBackloadService(final Cache cache, final PersistenceFacade persistence) {
         this.cache = cache;
         this.persistence = persistence;
     }
 
 
-    /**
-     * @since 2.8.2
-     */
     @Override
     protected Void execute() {
         notNull(cache, "Cache cannot be null");
@@ -82,10 +69,6 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.9.0
-     * @param entry
-     */
     private void loadThumbnailIfNotExists(final MinimalEntry entry) {
         if (isInterrupt() || entry == null) {
             return;
@@ -103,11 +86,6 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.9.0
-     * @param entry
-     * @param cachedAnime
-     */
     private void updateThumbnail(final MinimalEntry entry, final Anime cachedAnime) {
         MinimalEntry updatedEntry = null;
 
@@ -121,10 +99,6 @@ public class ThumbnailBackloadService extends AbstractService<Void> {
     }
 
 
-    /**
-     * @since 2.9.0
-     * @param entry
-     */
     private void checkPictures(final MinimalEntry entry) {
         if (isInterrupt() || entry == null) {
             return;
