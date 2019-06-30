@@ -32,13 +32,6 @@ public class ServiceRepository implements Observer {
                     if (isAlreadyRunning) {
                         curService.cancel();
                     }
-
-                    final boolean isManuallyStartedService = runningServices.size() >= 3;
-
-                    if (curService instanceof CacheInitializationService && isManuallyStartedService) {
-                        log.info("Stopping cache init service.");
-                        curService.cancel();
-                    }
                 }
             }
 
@@ -66,7 +59,7 @@ public class ServiceRepository implements Observer {
     @Override
     public void update(final Observable observable, final Object obj) {
         // we only want to know if a service succeeded or failed
-        if (obj != null && observable != null && obj instanceof Boolean) {
+        if (observable != null && obj instanceof Boolean) {
             synchronized (runningServices) {
                 runningServices.remove(observable);
             }

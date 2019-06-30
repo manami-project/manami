@@ -18,7 +18,6 @@ import com.google.common.eventbus.EventBus;
 import io.github.manami.cache.Cache;
 import io.github.manami.core.commands.CommandService;
 import io.github.manami.core.config.Config;
-import io.github.manami.core.services.CacheInitializationService;
 import io.github.manami.core.services.SearchService;
 import io.github.manami.core.services.ServiceRepository;
 import io.github.manami.core.services.ThumbnailBackloadService;
@@ -115,7 +114,6 @@ public class Manami implements ApplicationPersistence {
         new XmlImporter(XmlStrategy.MANAMI, persistence).importFile(file);
         config.setFile(file);
         serviceRepo.startService(new ThumbnailBackloadService(cache, persistence));
-        serviceRepo.startService(new CacheInitializationService(cache, persistence.fetchAnimeList()));
     }
 
 
