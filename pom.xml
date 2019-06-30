@@ -159,7 +159,7 @@
   <properties>
     <slf4j.version>1.7.26</slf4j.version>
     <java.target.version>1.8</java.target.version>
-    <manami.version>2.17.3</manami.version>
+    <manami.version>2.17.4</manami.version>
     <javafx.version>12.0.1</javafx.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
