@@ -133,12 +133,25 @@ public class RelatedAnimeFinderService extends AbstractService<Map<InfoLink, Ani
             relatedAnimeList.forEach(e -> log.trace("{}", e));
         }
 
-        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !animeToCheck.contains(e)).filter(e -> !checkedAnime.contains(e)).filter(e -> !app.filterEntryExists(e)).forEach(animeToCheck::push);
-        relatedAnimeList.stream().filter(e -> e.isValid()).filter(e -> !relatedAnime.containsKey(e)).filter(e -> !app.animeEntryExists(e)).filter(e -> !app.watchListEntryExists(e)).filter(e -> !app.filterEntryExists(e)).forEach(e -> {
-            final Anime curAnime = cache.fetchAnime(e).get();
-            relatedAnime.put(e, curAnime);
-            showAnimeList.add(curAnime);
-        });
+        relatedAnimeList.stream()
+                .filter(InfoLink::isValid)
+                .filter(e -> !animeToCheck.contains(e))
+                .filter(e -> !checkedAnime.contains(e))
+                .filter(e -> !app.filterEntryExists(e))
+                .forEach(animeToCheck::push);
+
+        relatedAnimeList.stream()
+                .filter(InfoLink::isValid)
+                .filter(e -> !relatedAnime.containsKey(e))
+                .filter(e -> !app.animeEntryExists(e))
+                .filter(e -> !app.watchListEntryExists(e))
+                .filter(e -> !app.filterEntryExists(e))
+                .forEach(e -> {
+                    cache.fetchAnime(e).ifPresent(curAnime -> {
+                        relatedAnime.put(e, curAnime);
+                        showAnimeList.add(curAnime);
+                    });
+                });
 
         setChanged();
         notifyObservers(showAnimeList);
