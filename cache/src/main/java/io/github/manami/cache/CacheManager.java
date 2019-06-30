@@ -176,7 +176,7 @@ public final class CacheManager implements Cache {
         try {
             ret = relatedAnimeCache.get(infoLink);
 
-            if (ret == null || ret.isEmpty()) {
+            if (ret == null) {
                 log.warn("No related anime in cache. Invalidating cache entry and refetching it.");
                 relatedAnimeCache.invalidate(infoLink);
                 ret = relatedAnimeCache.get(infoLink);
