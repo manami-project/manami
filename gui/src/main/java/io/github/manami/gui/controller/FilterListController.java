@@ -3,12 +3,14 @@ package io.github.manami.gui.controller;
 import com.google.common.collect.Streams;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.shuffle;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -62,6 +64,8 @@ public class FilterListController implements Observer {
 
     private final ObservableQueue<AnimeRetrievalService> serviceList = new ObservableQueue<>();
     private final Set<InfoLink> containedEntries = new HashSet<>();
+    private LocalDateTime lastInfo;
+    private int newEntriesSinceLastInfo = 0;
 
     @FXML
     private TableView<Anime> contentTable;
@@ -82,6 +86,8 @@ public class FilterListController implements Observer {
      * Fills the GUI with all the entries which are already in the database.
      */
     public void initialize() {
+        lastInfo = now();
+
         new AnimeTableBuilder<>(contentTable)
                 .withPicture(imageCache::loadThumbnail)
                 .withTitleSortable(true)
@@ -163,15 +169,19 @@ public class FilterListController implements Observer {
             if (list.size() > 0) {
                 contentTable.getItems().addAll(list);
                 containedEntries.addAll(list.stream().map(Anime::getInfoLink).collect(toSet()));
-                final int numOfEntriesAdded = list.size();
+                newEntriesSinceLastInfo += list.size();
 
-                if (numOfEntriesAdded > 0) {
-                    final String strEntry = (numOfEntriesAdded > 1) ? "entries" : "entry";
-                    final String text = (numOfEntriesAdded > 1) ? "Found " + numOfEntriesAdded + " new anime which you might want to filter." : "A new anime was found which you might want to filter";
+                long differenceInSeconds = java.time.Duration.between(lastInfo, now()).getSeconds();
+
+                if (newEntriesSinceLastInfo > 0 && differenceInSeconds > 10L) {
+                    final String strEntry = (newEntriesSinceLastInfo > 1) ? "entries" : "entry";
+                    final String text = (newEntriesSinceLastInfo > 1) ? "Found " + newEntriesSinceLastInfo + " new anime which you might want to filter." : "A new anime was found which you might want to filter";
                     Platform.runLater(() -> Notifications.create()
                             .title("New recommended filter " + strEntry)
                             .text(text).hideAfter(Duration.seconds(6.0))
                             .onAction(Main.CONTEXT.getBean(MainControllerWrapper.class).getMainController().new RecommendedFilterListEntryNotificationEventHandler()).showInformation());
+                    lastInfo = now();
+                    newEntriesSinceLastInfo = 0;
                 }
             }
         }
