@@ -101,9 +101,9 @@ public class RecommendationsController implements Observer {
 
 
     public void start() {
+        clear();
         service = new RecommendationsRetrievalService(app, cache, this);
         showProgressControls(true);
-        contentTable.getItems().clear();
         serviceRepo.startService(service);
     }
 
