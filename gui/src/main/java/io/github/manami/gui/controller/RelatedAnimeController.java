@@ -146,7 +146,7 @@ public class RelatedAnimeController implements Observer {
                     .collect(toList());
 
             if (list.size() > 0) {
-                contentTable.getItems().addAll(list);
+                Platform.runLater(()->contentTable.getItems().addAll(list));
                 containedEntries.addAll(list.stream().map(Anime::getInfoLink).collect(toSet()));
             }
         }

@@ -119,7 +119,7 @@ public class TagListController implements Observer {
 
             if (!containedEntries.contains(anime.getInfoLink())) {
                 containedEntries.add(anime.getInfoLink());
-                contentTable.getItems().add(anime);
+                Platform.runLater(()->contentTable.getItems().add(anime));
             }
         }
 

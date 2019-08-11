@@ -28,6 +28,7 @@ import io.github.manami.gui.utility.ObservableQueue;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
@@ -108,7 +109,7 @@ public class WatchListController implements Observer {
 
     private void addEntryToGui(WatchListEntry watchListEntry) {
         if (!containedEntries.contains(watchListEntry.getInfoLink())) {
-            contentTable.getItems().add(watchListEntry);
+            Platform.runLater(()->contentTable.getItems().add(watchListEntry));
             containedEntries.add(watchListEntry.getInfoLink());
         }
     }
@@ -189,7 +190,7 @@ public class WatchListController implements Observer {
                 .filter(e -> !containedEntries.contains(e.getInfoLink()))
                 .forEach(e -> {
                     containedEntries.add(e.getInfoLink());
-                    contentTable.getItems().add(e);
+                    Platform.runLater(()->contentTable.getItems().add(e));
                 });
 
         if (contentTable.getItems().isEmpty()) return;
