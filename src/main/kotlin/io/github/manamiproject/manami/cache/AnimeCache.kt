@@ -26,15 +26,15 @@ class AnimeCache(
                 SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
                 NotifyCacheLoader()
         )
-) : Cache<URL, Anime> {
+) : Cache<URL, Anime?> {
 
-    private val entries = ConcurrentHashMap<URL, Anime>()
+    private val entries = ConcurrentHashMap<URL, Anime?>()
 
     override fun fetch(key: URL): Anime? {
         return entries[key] ?: loadEntry(key)
     }
 
-    override fun populate(key: URL, value: Anime) {
+    override fun populate(key: URL, value: Anime?) {
         if (!entries.containsKey(key)) {
             entries[key] = value
         } else {

@@ -74,7 +74,18 @@ internal class KitsuCacheLoaderTest {
                     "やはり俺の青春ラブコメはまちがっている。完"
             ))
             addRelations(listOf(URL("https://kitsu.io/anime/8478")))
-            addTags(listOf("asia", "comedy", "drama", "earth", "friendship", "high school", "japan", "present", "romance", "slice of life"))
+            addTags(listOf(
+                    "asia",
+                    "comedy",
+                    "drama",
+                    "earth",
+                    "friendship",
+                    "high school",
+                    "japan",
+                    "present",
+                    "romance",
+                    "slice of life"
+            ))
         }
 
         val testHttpClient = object: HttpClient by TestHttpClient {

@@ -23,6 +23,7 @@ dependencies {
     api("io.github.manamiproject:modb-kitsu:1.0.5")
     api("io.github.manamiproject:modb-mal:1.0.5")
     api("io.github.manamiproject:modb-notify:1.0.5")
+    api("io.github.manamiproject:modb-db-parser:1.0.0")
 
     testImplementation("io.github.manamiproject:modb-test:1.0.1")
 }

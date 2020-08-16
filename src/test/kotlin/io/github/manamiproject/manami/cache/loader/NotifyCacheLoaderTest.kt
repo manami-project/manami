@@ -69,7 +69,8 @@ internal class NotifyCacheLoaderTest {
                     "My youth romantic comedy is wrong as I expected 3",
                     "Oregairu 3",
                     "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
-                    "やはり俺の青春ラブコメはまちがっている。第3期"))
+                    "やはり俺の青春ラブコメはまちがっている。第3期"
+            ))
             addRelations(listOf(URL("https://notify.moe/anime/Pk0AtFmmg")))
             addTags(listOf("comedy", "drama", "romance", "school", "slice of life"))
         }
