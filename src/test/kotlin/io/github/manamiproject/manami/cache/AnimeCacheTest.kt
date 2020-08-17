@@ -65,6 +65,21 @@ internal class AnimeCacheTest {
         }
 
         @Test
+        fun `a key can also return null`() {
+            // given
+            val source = URL("https://example.org/anime/1535")
+
+            val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
+            cache.populate(source, null)
+
+            // when
+            val result = cache.fetch(URL("https://example.org/anime/1535"))
+
+            // then
+            assertThat(result).isNull()
+        }
+
+        @Test
         fun `return null if the key doesn't exist in the cache and there is no matching cache loader to populate the cache`() {
             // given
             val cache = AnimeCache(cacheLoader = emptyList())

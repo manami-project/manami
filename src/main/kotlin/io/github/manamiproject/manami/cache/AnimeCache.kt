@@ -18,7 +18,7 @@ import io.github.manamiproject.modb.mal.MalDownloader
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 
-class AnimeCache(
+internal class AnimeCache(
         private val cacheLoader: List<CacheLoader> = listOf(
                 SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbConverter()),
                 SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetConverter()),
@@ -28,15 +28,23 @@ class AnimeCache(
         )
 ) : Cache<URL, Anime?> {
 
-    private val entries = ConcurrentHashMap<URL, Anime?>()
+    private val entries = ConcurrentHashMap<URL, Container>()
 
     override fun fetch(key: URL): Anime? {
-        return entries[key] ?: loadEntry(key)
+        return when(val entry = entries[key]) {
+            is Present -> entry.value
+            Empty -> null
+            null -> loadEntry(key)
+        }
     }
 
     override fun populate(key: URL, value: Anime?) {
         if (!entries.containsKey(key)) {
-            entries[key] = value
+            entries[key] = if (value == null) {
+                Empty
+            } else {
+                Present(value)
+            }
         } else {
             log.warn("Not populating cache with key [{}], because it already exists", key)
         }
@@ -69,3 +77,7 @@ class AnimeCache(
         private val log by LoggerDelegate()
     }
 }
+
+private sealed class Container
+private class Present(val value: Anime) : Container()
+private object Empty: Container()

@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.cache
 
-interface Cache<KEY, VALUE> {
+internal interface Cache<KEY, VALUE> {
 
     fun fetch(key: KEY): VALUE?
 

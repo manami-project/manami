@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.createDirectory
 import io.github.manamiproject.modb.core.extensions.deleteIfExists
 import io.github.manamiproject.modb.core.extensions.writeToFile
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.kitsu.*
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +18,7 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 
-class KitsuCacheLoader(
+internal class KitsuCacheLoader(
         private val kitsuConfig: MetaDataProviderConfig = KitsuConfig,
         private val animeDownloader: Downloader = KitsuDownloader(config = kitsuConfig),
         private val relationsDownloader: Downloader = KitsuDownloader(config = KitsuRelationsConfig),
@@ -32,6 +33,8 @@ class KitsuCacheLoader(
 ) : CacheLoader {
 
     override fun loadAnime(url: URL): Anime {
+        log.debug("Loading anime from [{}]", url)
+
         val id = kitsuConfig.extractAnimeId(url)
 
         val job1 = GlobalScope.launch { loadRelations(id) }
@@ -61,5 +64,9 @@ class KitsuCacheLoader(
 
     private fun loadTags(id: AnimeId) {
         tagsDownloader.download(id).writeToFile(tagsDir.resolve("$id.${kitsuConfig.fileSuffix()}"))
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
     }
 }

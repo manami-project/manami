@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.createDirectory
 import io.github.manamiproject.modb.core.extensions.deleteIfExists
 import io.github.manamiproject.modb.core.extensions.writeToFile
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyConverter
@@ -17,7 +18,7 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 
-class NotifyCacheLoader(
+internal class NotifyCacheLoader(
         private val notifyConfig: MetaDataProviderConfig = NotifyConfig,
         private val animeDownloader: Downloader = NotifyDownloader(config = notifyConfig),
         private val relationsDownloader: Downloader = NotifyDownloader(config = NotifyRelationsConfig),
@@ -26,6 +27,8 @@ class NotifyCacheLoader(
 ) : CacheLoader {
 
     override fun loadAnime(url: URL): Anime {
+        log.debug("Loading anime from [{}]", url)
+
         val id = notifyConfig.extractAnimeId(url)
 
         loadRelations(id)
@@ -44,5 +47,9 @@ class NotifyCacheLoader(
 
     private fun loadRelations(id: AnimeId) {
         relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${notifyConfig.fileSuffix()}"))
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
     }
 }
