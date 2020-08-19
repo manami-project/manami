@@ -1,0 +1,30 @@
+package io.github.manamiproject.manami.gui.main
+
+import io.github.manamiproject.manami.gui.extensions.focus
+import javafx.scene.layout.Priority.ALWAYS
+import tornadofx.*
+
+class MainWindow : View("Manami") {
+
+    private val menuView: MenuView by inject()
+    private val searchBoxView: SearchBoxView by inject()
+    private val tabPaneView: TabPaneView by inject()
+
+    init {
+        this.primaryStage.isMaximized = true
+    }
+
+    override val root = vbox {
+        hgrow = ALWAYS
+        vgrow = ALWAYS
+
+        hbox {
+            hgrow = ALWAYS
+
+            add(menuView.root)
+            add(searchBoxView.root)
+        }
+
+        add(tabPaneView.root)
+    }.apply { focus() }
+}

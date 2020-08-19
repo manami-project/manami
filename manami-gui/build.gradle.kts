@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.3.72" // Kotlin JVM plugin to add support for Kotlin.
-    application // Apply the application plugin to add support for building a CLI application.
+    kotlin("jvm")
+    id("org.openjfx.javafxplugin") version("0.0.9")
 }
 
 repositories {
@@ -10,9 +10,17 @@ repositories {
     }
 }
 
-subprojects {
-    group = "io.github.manamiproject"
-    version = "1.0"
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(project(":manami-app"))
+    implementation("no.tornado:tornadofx:1.7.20")
+}
+
+javafx {
+    version = "14"
+    modules = listOf(
+            "javafx.controls"
+    )
 }
 
 val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
@@ -36,8 +44,3 @@ tasks.withType<Test> {
 object Versions {
     const val JVM_TARGET = "11"
 }
-
-//application {
-    // Define the main class for the application.
-//    mainClassName = "io.github.manamiproject.manami.AppKt"
-//}
