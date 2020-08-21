@@ -1,20 +1,13 @@
 package io.github.manamiproject.manami.app
 
-import io.github.manamiproject.modb.core.extensions.RegularFile
+import io.github.manamiproject.manami.app.export.ExportHandler
+import io.github.manamiproject.manami.app.file.FileHandler
+import io.github.manamiproject.manami.app.import.ImportHandler
+import io.github.manamiproject.manami.app.search.SearchHandler
+import io.github.manamiproject.manami.app.state.StateHandler
 
-interface ManamiApp {
-
-    fun newList()
-    fun open(file: RegularFile)
-
-    fun import(file: RegularFile)
-    fun export(file: RegularFile)
-
-    fun save()
-    fun saveAs(file: RegularFile)
-
-    fun undo()
-    fun redo()
-
-    fun search(searchString: String)
-}
+interface ManamiApp: SearchHandler,
+        FileHandler,
+        ImportHandler,
+        ExportHandler,
+        StateHandler

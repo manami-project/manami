@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.app.Manami
+import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
@@ -34,9 +34,11 @@ class SearchBoxView: View() {
 
 class SearchBoxController: Controller() {
 
+    private val manamiAccess: ManamiAccess by inject()
+
     fun search(searchString: String) {
         runAsync {
-            Manami.search(searchString)
+            manamiAccess.search(searchString)
         }
         fire(ShowSearchTabRequest)
     }

@@ -1,12 +1,12 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.app.Manami
-import io.github.manamiproject.manami.app.ManamiApp
+import io.github.manamiproject.manami.app.export.FileFormat
+import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
-import io.github.manamiproject.manami.gui.recommendatios.ShowRecommendationsTabRequest
+import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
@@ -27,7 +27,7 @@ class MenuView : View() {
 
         menu("File") {
             item("New") {
-                action { controller.newList() }
+                action { controller.newFile() }
             }
             item("Open") {
                 action { controller.open(PathChooser.showOpenFileDialog(primaryStage)) }
@@ -101,18 +101,18 @@ class MenuView : View() {
 
 class MenuController : Controller() {
 
-    private val manami: ManamiApp = Manami
+    private val manamiAccess: ManamiAccess by inject()
 
-    fun newList() {
+    fun newFile() {
         runAsync {
-            Manami.newList()
+            manamiAccess.newFile()
         }
     }
 
     fun open(file: RegularFile?) {
         if (file != null) {
             runAsync {
-                manami.open(file)
+                manamiAccess.open(file)
             }
         }
     }
@@ -120,7 +120,7 @@ class MenuController : Controller() {
     fun import(file: RegularFile?) {
         if (file != null) {
             runAsync {
-                manami.import(file)
+                manamiAccess.import(file)
             }
         }
     }
@@ -128,34 +128,34 @@ class MenuController : Controller() {
     fun export(file: RegularFile?) {
         if (file != null) {
             runAsync {
-                manami.export(file)
+                manamiAccess.export(file, FileFormat.JSON)
             }
         }
     }
 
     fun save() {
         runAsync {
-            manami.save()
+            manamiAccess.save()
         }
     }
 
     fun saveAs(file: RegularFile?) {
         if (file != null) {
             runAsync {
-                manami.saveAs(file)
+                manamiAccess.saveAs(file)
             }
         }
     }
 
     fun undo() {
         runAsync {
-            manami.undo()
+            manamiAccess.undo()
         }
     }
 
     fun redo() {
         runAsync {
-            manami.redo()
+            manamiAccess.redo()
         }
     }
 
