@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.3.72" // Kotlin JVM plugin to add support for Kotlin.
+    kotlin("jvm") version "1.4.0" // Kotlin JVM plugin to add support for Kotlin.
     application // Apply the application plugin to add support for building a CLI application.
 }
 
