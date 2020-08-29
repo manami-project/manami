@@ -28,7 +28,7 @@ internal class AnimeCache(
         )
 ) : Cache<URL, Anime?> {
 
-    private val entries = ConcurrentHashMap<URL, Container>()
+    private val entries = ConcurrentHashMap<URL, CacheEntry>()
 
     override fun fetch(key: URL): Anime? {
         return when(val entry = entries[key]) {
@@ -78,6 +78,6 @@ internal class AnimeCache(
     }
 }
 
-private sealed class Container
-private class Present(val value: Anime) : Container()
-private object Empty: Container()
+private sealed class CacheEntry
+private class Present(val value: Anime) : CacheEntry()
+private object Empty: CacheEntry()
