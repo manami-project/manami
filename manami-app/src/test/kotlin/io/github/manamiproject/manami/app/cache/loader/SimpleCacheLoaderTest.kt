@@ -53,8 +53,8 @@ internal class SimpleCacheLoaderTest {
         }
 
         val testConverter = object: AnimeConverter by TestAnimeConverter {
-            override fun convert(source: String): Anime {
-                return if (source == "{ }") anime else shouldNotBeInvoked()
+            override fun convert(rawContent: String): Anime {
+                return if (rawContent == "{ }") anime else shouldNotBeInvoked()
             }
         }
 

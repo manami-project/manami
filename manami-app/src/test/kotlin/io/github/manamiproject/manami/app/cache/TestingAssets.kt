@@ -33,7 +33,7 @@ internal object TestDownloader: Downloader {
 }
 
 internal object TestAnimeConverter: AnimeConverter {
-    override fun convert(source: String): Anime = shouldNotBeInvoked()
+    override fun convert(rawContent: String): Anime = shouldNotBeInvoked()
 }
 
 internal object TestHttpClient: HttpClient {
