@@ -34,7 +34,7 @@ tasks.withType<Test> {
 }
 
 object Versions {
-    const val JVM_TARGET = "11"
+    const val JVM_TARGET = "14"
 }
 
 //application {

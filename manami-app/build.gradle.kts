@@ -28,7 +28,7 @@ dependencies {
 }
 
 object Versions {
-    const val JVM_TARGET = "11"
+    const val JVM_TARGET = "14"
 }
 
 val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
