@@ -149,13 +149,13 @@ class MenuController : Controller() {
 
     fun undo() {
         runAsync {
-            manamiAccess.undo()
+            //TODO manamiAccess.undo()
         }
     }
 
     fun redo() {
         runAsync {
-            manamiAccess.redo()
+            //TODO manamiAccess.redo()
         }
     }
 

@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.import.parser.Parser
+import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
@@ -19,6 +20,7 @@ internal class DefaultImportHandler(
 
         val parser = parserList.find { it.handles() == file.fileSuffix() } ?: throw IllegalArgumentException("No suitable parser for file type [${file.fileSuffix()}]")
         val content = parser.parse(file)
+        GenericReversibleCommand(command = CmdAddEntriesFromParsedFile(parsedFile = content)).execute()
     }
 
     private fun hasOnlyOneParserPerSuffix(): Boolean {

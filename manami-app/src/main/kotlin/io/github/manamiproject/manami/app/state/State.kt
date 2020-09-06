@@ -1,17 +1,49 @@
 package io.github.manamiproject.manami.app.state
 
+import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.models.Anime
 import java.net.URL
 
-interface State {
+internal interface State {
 
-    fun upsertAnimeListEntry(anime: Anime)
-    fun removeAnimeListEntry(anime: Anime)
+    fun animeList(): List<AnimeListEntry>
 
+    fun watchList(): Set<URL>
+
+    fun ignoreList(): Set<URL>
+
+    fun createSnapshot(): Snapshot
+
+    fun restore(snapshot: Snapshot)
+
+    fun clear()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fun addAllAnimeListEntries(anime: Set<AnimeListEntry>)
+    fun upsertAnimeListEntry(anime: AnimeListEntry)
+    fun removeAnimeListEntry(anime: AnimeListEntry)
+
+    fun addAllWatchListEntries(anime: Set<URL>)
     fun upsertWatchListEntry(url: URL)
     fun removeWatchListEntry(url: URL)
 
+    fun addAllIgnoreListEntries(anime: Set<URL>)
     fun upsertIgnoreListEntry(url: URL)
     fun removeIgnoreListEntry(url: URL)
 
