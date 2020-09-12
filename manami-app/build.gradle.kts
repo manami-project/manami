@@ -12,19 +12,15 @@ repositories {
 dependencies {
     api(kotlin("stdlib-jdk8"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
-    implementation("io.github.manamiproject:modb-core") {
-        version {
-            strictly("2.2.0")
-        }
-    }
-    api("io.github.manamiproject:modb-anidb:1.0.7")
-    api("io.github.manamiproject:modb-anime-planet:1.0.3")
-    api("io.github.manamiproject:modb-kitsu:1.0.7")
-    api("io.github.manamiproject:modb-mal:1.0.7")
-    api("io.github.manamiproject:modb-notify:1.0.7")
-    api("io.github.manamiproject:modb-db-parser:1.0.2")
+    implementation("io.github.manamiproject:modb-core:2.2.1")
+    api("io.github.manamiproject:modb-anidb:1.0.8")
+    api("io.github.manamiproject:modb-anime-planet:1.0.4")
+    api("io.github.manamiproject:modb-kitsu:1.0.8")
+    api("io.github.manamiproject:modb-mal:1.0.8")
+    api("io.github.manamiproject:modb-notify:1.0.8")
+    api("io.github.manamiproject:modb-db-parser:1.0.3")
 
-    testImplementation("io.github.manamiproject:modb-test:1.0.2")
+    testImplementation("io.github.manamiproject:modb-test:1.0.3")
 }
 
 object Versions {
