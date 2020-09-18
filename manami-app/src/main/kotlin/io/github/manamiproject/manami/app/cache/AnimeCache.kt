@@ -7,6 +7,9 @@ import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
 import io.github.manamiproject.modb.anidb.AnidbDownloader
+import io.github.manamiproject.modb.anilist.AnilistConfig
+import io.github.manamiproject.modb.anilist.AnilistConverter
+import io.github.manamiproject.modb.anilist.AnilistDownloader
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
@@ -21,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
 internal class AnimeCache(
         private val cacheLoader: List<CacheLoader> = listOf(
                 SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbConverter()),
+                SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistConverter()),
                 SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetConverter()),
                 KitsuCacheLoader(),
                 SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
