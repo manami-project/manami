@@ -1,6 +1,6 @@
-package io.github.manamiproject.manami.app.import
+package io.github.manamiproject.manami.app.fileimport
 
-import io.github.manamiproject.manami.app.import.parser.Parser
+import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.test.tempDirectory
@@ -30,10 +30,10 @@ internal class DefaultImportHandlerTest {
         fun `throws exception if there is more than one parser handling a file suffix`() {
             // given
             val json1 = object: Parser by TestParser {
-                override fun handles(): FileSuffix = "json"
+                override fun handlesSuffix(): FileSuffix = "json"
             }
             val json2 = object: Parser by TestParser {
-                override fun handles(): FileSuffix = "json"
+                override fun handlesSuffix(): FileSuffix = "json"
             }
 
             // when
@@ -53,7 +53,7 @@ internal class DefaultImportHandlerTest {
         fun `throws exception if the given file doesn't exist`() {
             // given
             val testParser = object: Parser by TestParser {
-                override fun handles(): FileSuffix = "json"
+                override fun handlesSuffix(): FileSuffix = "json"
             }
 
             val nonExistentFile = Paths.get("non-existent-file.json")
@@ -73,7 +73,7 @@ internal class DefaultImportHandlerTest {
             tempDirectory {
                 // given
                 val testParser = object: Parser by TestParser {
-                    override fun handles(): FileSuffix = "json"
+                    override fun handlesSuffix(): FileSuffix = "json"
                 }
 
                 val importHandler = DefaultImportHandler(listOf(testParser))
@@ -93,7 +93,7 @@ internal class DefaultImportHandlerTest {
             tempDirectory {
                 // given
                 val testParser = object: Parser by TestParser {
-                    override fun handles(): FileSuffix = "json"
+                    override fun handlesSuffix(): FileSuffix = "json"
                 }
 
                 val fileWithUnsupportedFileSuffix = tempDir.resolve("test.abc").createFile()

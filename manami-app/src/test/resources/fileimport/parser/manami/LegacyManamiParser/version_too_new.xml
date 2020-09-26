@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xml" href="animelist_transform.xsl"?><!DOCTYPE manami SYSTEM "src/test/resources/fileimport/parser/manami/LegacyManamiParser/animelist.dtd">
+<manami version="3.0.0">
+  <animeList/>
+  <watchList/>
+  <filterList/>
+</manami>

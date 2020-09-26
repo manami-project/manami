@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app.commands
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.History
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.Source
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
@@ -83,11 +84,11 @@ internal class GenericReversibleCommandTest {
         // given
         val initialAnimeList = setOf(
                 AnimeListEntry(
-                    source = URL("https://myanimelist.net/anime/1535"),
+                    source = Source(URL("https://myanimelist.net/anime/1535")),
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
-                    location = Paths.get("."),
+                    location = ".",
                 )
         )
         val initialWatchList = setOf(URL("https://myanimelist.net/anime/5114"))
@@ -102,11 +103,11 @@ internal class GenericReversibleCommandTest {
                 InternalState.addAllAnimeListEntries(
                         setOf(
                                 AnimeListEntry(
-                                        source = URL("https://myanimelist.net/anime/28851"),
+                                        source = Source(URL("https://myanimelist.net/anime/28851")),
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = Movie,
-                                        location = Paths.get("."),
+                                        location = ".",
                                 )
                         )
                 )

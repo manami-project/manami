@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.import
+package io.github.manamiproject.manami.app.fileimport
 
 import io.github.manamiproject.modb.core.extensions.RegularFile
 

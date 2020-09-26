@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xml" href="animelist_transform.xsl"?><!DOCTYPE manami SYSTEM "src/test/resources/fileimport/parser/manami/LegacyManamiParser/animelist.dtd">
+<manami version="2.17.6">
+  <animeList>
+    <anime episodes="1" infoLink="https://myanimelist.net/anime/12079" location="some/relative/path/black_rock_shooter" title="Black★Rock Shooter" type="Music"/>
+  </animeList>
+  <watchList/>
+  <filterList/>
+</manami>

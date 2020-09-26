@@ -24,7 +24,7 @@ object PathChooser {
     fun showImportFileDialog(stage: Stage): RegularFile? {
         val fileChooser = FileChooser().apply {
             title = "Import file..."
-            extensionFilters.addAll(JSON_FILTER)
+            extensionFilters.addAll(JSON_FILTER, XML_FILTER)
         }
 
         return fileChooser.showOpenDialog(stage).let { it?.toPath() }

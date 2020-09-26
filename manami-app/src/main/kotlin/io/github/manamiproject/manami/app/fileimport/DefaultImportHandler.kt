@@ -1,13 +1,14 @@
-package io.github.manamiproject.manami.app.import
+package io.github.manamiproject.manami.app.fileimport
 
-import io.github.manamiproject.manami.app.import.parser.Parser
+import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
+import io.github.manamiproject.manami.app.fileimport.parser.manami.LegacyManamiParser
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 
 internal class DefaultImportHandler(
-        private val parserList: List<Parser> = listOf()
+        private val parserList: List<Parser> = listOf(LegacyManamiParser())
 ) : ImportHandler {
 
     init {
@@ -18,12 +19,12 @@ internal class DefaultImportHandler(
     override fun import(file: RegularFile) {
         require(file.regularFileExists()) { "Given path doesn't exist or is not a file [${file.toAbsolutePath()}]" }
 
-        val parser = parserList.find { it.handles() == file.fileSuffix() } ?: throw IllegalArgumentException("No suitable parser for file type [${file.fileSuffix()}]")
+        val parser = parserList.find { it.handlesSuffix() == file.fileSuffix() } ?: throw IllegalArgumentException("No suitable parser for file type [${file.fileSuffix()}]")
         val content = parser.parse(file)
         GenericReversibleCommand(command = CmdAddEntriesFromParsedFile(parsedFile = content)).execute()
     }
 
     private fun hasOnlyOneParserPerSuffix(): Boolean {
-        return parserList.groupBy { it.handles() }.filter { it.value.size > 1 }.count() == 0
+        return parserList.groupBy { it.handlesSuffix() }.filter { it.value.size > 1 }.count() == 0
     }
 }
