@@ -24,7 +24,7 @@ internal class SimpleCacheLoader(
         return converter.convert(rawContent)
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

@@ -49,7 +49,7 @@ internal class NotifyCacheLoader(
         relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${notifyConfig.fileSuffix()}"))
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

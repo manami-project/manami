@@ -25,7 +25,7 @@ internal class DeadEntriesCachePopulator(
         }
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

@@ -66,7 +66,7 @@ internal class KitsuCacheLoader(
         tagsDownloader.download(id).writeToFile(tagsDir.resolve("$id.${kitsuConfig.fileSuffix()}"))
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

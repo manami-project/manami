@@ -77,7 +77,7 @@ internal class AnimeCache(
         return anime
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }
