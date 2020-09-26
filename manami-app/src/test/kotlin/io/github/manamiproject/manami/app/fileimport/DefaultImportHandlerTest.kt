@@ -1,16 +1,31 @@
 package io.github.manamiproject.manami.app.fileimport
 
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.fileimport.parser.Parser
+import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.modb.core.config.FileSuffix
+import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.createFile
+import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.net.URL
 import java.nio.file.Paths
 
 internal class DefaultImportHandlerTest {
+
+    @AfterEach
+    fun afterEach() {
+        InternalState.clear()
+        CommandHistory.clear()
+    }
 
     @Nested
     inner class ConstructorTests {
@@ -106,6 +121,85 @@ internal class DefaultImportHandlerTest {
 
                 // then
                 assertThat(result).hasMessage("No suitable parser for file type [abc]")
+            }
+        }
+
+        @Test
+        fun `successfully import file, set state using a reversible command`() {
+            tempDirectory {
+                // given
+                val animeListEntry1 = AnimeListEntry(
+                        title = "H2O: Footprints in the Sand",
+                        episodes = 4,
+                        type = Anime.Type.Special,
+                        location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
+                )
+                val animeListEntry2 = AnimeListEntry(
+                        source = Source(URL("https://myanimelist.net/anime/57")),
+                        title = "Beck",
+                        episodes = 26,
+                        type = Anime.Type.TV,
+                        location = "some/relative/path/beck",
+                )
+
+                val watchListEntry1 = URL("https://myanimelist.net/anime/37989")
+                val watchListEntry2 = URL("https://myanimelist.net/anime/40059")
+
+                val ignoreListEntry1 = URL("https://myanimelist.net/anime/28981")
+                val ignoreListEntry2 = URL("https://myanimelist.net/anime/33245")
+                val ignoreListEntry3 = URL("https://myanimelist.net/anime/35923")
+                val ignoreListEntry4 = URL("https://myanimelist.net/anime/31139")
+                val ignoreListEntry5 = URL("https://myanimelist.net/anime/37747")
+
+                val testParser = object : Parser {
+                    override fun handlesSuffix(): FileSuffix = "xml"
+                    override fun parse(file: RegularFile): ParsedFile {
+                        return ParsedFile(
+                                animeListEntries = setOf(
+                                        animeListEntry1,
+                                        animeListEntry2,
+                                ),
+                                watchListEntries = setOf(
+                                        watchListEntry1,
+                                        watchListEntry2,
+                                ),
+                                ignoreListEntries = setOf(
+                                        ignoreListEntry1,
+                                        ignoreListEntry2,
+                                        ignoreListEntry3,
+                                        ignoreListEntry4,
+                                        ignoreListEntry5,
+                                ),
+                        )
+                    }
+                }
+
+                val defaultImportHandler = DefaultImportHandler(
+                    parserList = listOf(testParser)
+                )
+
+                val dummyTestFile = tempDir.resolve("test.xml").createFile()
+
+                // when
+                defaultImportHandler.import(dummyTestFile)
+
+                // then
+                assertThat(InternalState.animeList()).containsExactlyInAnyOrder(
+                        animeListEntry1,
+                        animeListEntry2,
+                )
+                assertThat(InternalState.watchList()).containsExactlyInAnyOrder(
+                        watchListEntry1,
+                        watchListEntry2,
+                )
+                assertThat(InternalState.ignoreList()).containsExactlyInAnyOrder(
+                        ignoreListEntry1,
+                        ignoreListEntry2,
+                        ignoreListEntry3,
+                        ignoreListEntry4,
+                        ignoreListEntry5,
+                )
+                assertThat(CommandHistory.isUndoPossible()).isTrue()
             }
         }
     }

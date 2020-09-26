@@ -1,6 +1,5 @@
-package io.github.manamiproject.manami.app.commands
+package io.github.manamiproject.manami.app.commands.history
 
-import io.github.manamiproject.manami.app.commands.history.SimpleEventStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
