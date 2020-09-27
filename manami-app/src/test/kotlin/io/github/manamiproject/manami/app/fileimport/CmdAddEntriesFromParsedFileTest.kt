@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.fileimport
 
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
@@ -27,7 +27,7 @@ internal class CmdAddEntriesFromParsedFileTest {
                 location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
         )
         val animeListEntry2 = AnimeListEntry(
-                source = Source(URL("https://myanimelist.net/anime/57")),
+                link = Link(URL("https://myanimelist.net/anime/57")),
                 title = "Beck",
                 episodes = 26,
                 type = Anime.Type.TV,

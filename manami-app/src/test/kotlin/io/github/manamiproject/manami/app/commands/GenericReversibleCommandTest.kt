@@ -1,9 +1,9 @@
 package io.github.manamiproject.manami.app.commands
 
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.commands.history.History
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
@@ -16,14 +16,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URL
-import java.nio.file.Paths
 
 internal class GenericReversibleCommandTest {
 
     @BeforeEach
     fun beforeEach() {
         InternalState.clear()
-        CommandHistory.clear()
+        DefaultCommandHistory.clear()
     }
 
     @Test
@@ -60,7 +59,7 @@ internal class GenericReversibleCommandTest {
         }
 
         var isAddedToHistory = false
-        val testCommandHistory = object: History by TestHistory {
+        val testCommandHistory = object: CommandHistory by TestCommandHistory {
             override fun push(command: ReversibleCommand) { isAddedToHistory = true }
         }
 
@@ -84,7 +83,7 @@ internal class GenericReversibleCommandTest {
         // given
         val initialAnimeList = setOf(
                 AnimeListEntry(
-                    source = Source(URL("https://myanimelist.net/anime/1535")),
+                    link = Link(URL("https://myanimelist.net/anime/1535")),
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
@@ -103,7 +102,7 @@ internal class GenericReversibleCommandTest {
                 InternalState.addAllAnimeListEntries(
                         setOf(
                                 AnimeListEntry(
-                                        source = Source(URL("https://myanimelist.net/anime/28851")),
+                                        link = Link(URL("https://myanimelist.net/anime/28851")),
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = Movie,

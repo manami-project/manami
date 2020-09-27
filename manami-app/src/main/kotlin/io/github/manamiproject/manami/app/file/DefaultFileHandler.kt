@@ -1,33 +1,71 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 
-internal class DefaultFileHandler(private val state: State = InternalState) : FileHandler {
+internal class DefaultFileHandler(
+        private val state: State = InternalState,
+        private val commandHistory: CommandHistory = DefaultCommandHistory,
+        private val parser: Parser = FileParser(),
+) : FileHandler {
 
-    override fun newFile() {
-        log.info("Creating new file.")
-        state.closeFile()
+    override fun newFile(ignoreUnsavedChanged: Boolean) {
+        log.info("Creating new file having [ignoreUnsavedChanged={}]", ignoreUnsavedChanged)
+
+        if (!ignoreUnsavedChanged) {
+            check(commandHistory.isSaved()) { "Cannot create a new list, because there are unsaved changes." }
+        }
+
+        CmdNewList(
+            state = state,
+            commandHistory = commandHistory,
+        ).execute()
     }
 
-    override fun open(file: RegularFile) {
-        log.info("Opening file [{}]", file)
-        check(file.regularFileExists())
-        state.openedFile(file)
+    override fun open(file: RegularFile, ignoreUnsavedChanged: Boolean) {
+        log.info("Opening file [{}] having [ignoreUnsavedChanged={}]", file, ignoreUnsavedChanged)
+
+        if (!ignoreUnsavedChanged) {
+            check(commandHistory.isSaved()) { "Cannot open file, because there are unsaved changes." }
+        }
+
+        val parsedFile = parser.parse(file)
+
+        CmdOpenFile(
+            state = state,
+            commandHistory = commandHistory,
+            parsedFile = parsedFile,
+            file = file,
+        ).execute()
     }
+
+    override fun isSaved(): Boolean = commandHistory.isSaved()
+
+    override fun isUnsaved(): Boolean = commandHistory.isUnsaved()
 
     override fun save() {
-        TODO("Not yet implemented")
+        TODO("actually save data")
+        commandHistory.save()
     }
 
     override fun saveAs(file: RegularFile) {
         TODO("Not yet implemented")
     }
 
-    companion object {
+    override fun isUndoPossible(): Boolean = commandHistory.isUndoPossible()
+
+    override fun undo() = commandHistory.undo()
+
+    override fun isRedoPossible(): Boolean = commandHistory.isRedoPossible()
+
+    override fun redo() = commandHistory.redo()
+
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

@@ -27,9 +27,21 @@ internal object InternalState : State {
 
     override fun animeList(): List<AnimeListEntry> = animeList.toList()
 
+    override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
+        animeList.addAll(anime)
+    }
+
     override fun watchList(): Set<URL> = watchList.toSet()
 
+    override fun addAllWatchListEntries(anime: Set<URL>) {
+        watchList.addAll(anime)
+    }
+
     override fun ignoreList(): Set<URL> = ignoreList.toSet()
+
+    override fun addAllIgnoreListEntries(anime: Set<URL>) {
+        ignoreList.addAll(anime)
+    }
 
     override fun createSnapshot(): Snapshot = StateSnapshot(
         animeList = animeList(),
@@ -53,62 +65,6 @@ internal object InternalState : State {
         watchList.clear()
         ignoreList.clear()
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
-        animeList.addAll(anime)
-    }
-
-    override fun upsertAnimeListEntry(anime: AnimeListEntry) {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeAnimeListEntry(anime: AnimeListEntry) {
-        TODO("Not yet implemented")
-    }
-
-    override fun addAllWatchListEntries(anime: Set<URL>) {
-        watchList.addAll(anime)
-    }
-
-
-    override fun upsertWatchListEntry(url: URL) {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeWatchListEntry(url: URL) {
-        TODO("Not yet implemented")
-    }
-
-    override fun addAllIgnoreListEntries(anime: Set<URL>) {
-        ignoreList.addAll(anime)
-    }
-
-    override fun upsertIgnoreListEntry(url: URL) {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeIgnoreListEntry(url: URL) {
-        TODO("Not yet implemented")
-    }
-
 }
 
 private sealed class OpenedFile

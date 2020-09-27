@@ -2,29 +2,23 @@ package io.github.manamiproject.manami.app.commands.history
 
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
 
-internal object CommandHistory : History {
+internal interface CommandHistory {
 
-    private val history: EventStream<ReversibleCommand> = SimpleEventStream()
+    fun push(command: ReversibleCommand)
 
-    override fun push(command: ReversibleCommand) = history.add(command)
+    fun isUndoPossible(): Boolean
 
-    override fun isUndoPossible(): Boolean = history.hasPrevious()
+    fun undo()
 
-    override fun undo() {
-        if (isUndoPossible()) {
-            history.element().undo()
-            history.previous()
-        }
-    }
+    fun isRedoPossible(): Boolean
 
-    override fun isRedoPossible(): Boolean = history.hasNext()
+    fun redo()
 
-    override fun redo() {
-        if (isRedoPossible()) {
-            history.next()
-            history.element().execute()
-        }
-    }
+    fun isSaved(): Boolean
 
-    override fun clear() =  history.clear()
+    fun isUnsaved(): Boolean
+
+    fun save()
+
+    fun clear()
 }

@@ -1,12 +1,16 @@
 package io.github.manamiproject.manami.gui.animelist
 
-import tornadofx.Workspace
+import javafx.scene.Parent
+import tornadofx.*
 
-class AnimeListWorkspace : Workspace() {
+class AnimeListWorkspace : View() {
 
     private val animelist: Animelist by inject()
 
-    override fun onBeforeShow() {
-        add(animelist.root)
+    override val root: Parent = pane {
+        hbox {
+            button("Add Entry")
+            animelist
+        }
     }
 }

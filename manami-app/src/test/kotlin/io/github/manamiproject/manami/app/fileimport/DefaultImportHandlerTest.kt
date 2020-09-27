@@ -1,10 +1,10 @@
 package io.github.manamiproject.manami.app.fileimport
 
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
@@ -24,7 +24,7 @@ internal class DefaultImportHandlerTest {
     @AfterEach
     fun afterEach() {
         InternalState.clear()
-        CommandHistory.clear()
+        DefaultCommandHistory.clear()
     }
 
     @Nested
@@ -135,7 +135,7 @@ internal class DefaultImportHandlerTest {
                         location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
                 )
                 val animeListEntry2 = AnimeListEntry(
-                        source = Source(URL("https://myanimelist.net/anime/57")),
+                        link = Link(URL("https://myanimelist.net/anime/57")),
                         title = "Beck",
                         episodes = 26,
                         type = Anime.Type.TV,
@@ -199,7 +199,7 @@ internal class DefaultImportHandlerTest {
                         ignoreListEntry4,
                         ignoreListEntry5,
                 )
-                assertThat(CommandHistory.isUndoPossible()).isTrue()
+                assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             }
         }
     }

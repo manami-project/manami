@@ -14,5 +14,7 @@ internal interface EventStream<T> {
 
     fun next(): Boolean
 
+    fun crop()
+
     fun clear()
 }

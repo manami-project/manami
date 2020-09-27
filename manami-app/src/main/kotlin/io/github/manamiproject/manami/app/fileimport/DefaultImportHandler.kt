@@ -2,13 +2,13 @@ package io.github.manamiproject.manami.app.fileimport
 
 import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.fileimport.parser.manami.LegacyManamiParser
+import io.github.manamiproject.manami.app.fileimport.parser.manami.ManamiLegacyFileParser
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 
 internal class DefaultImportHandler(
-        private val parserList: List<Parser> = listOf(LegacyManamiParser())
+        private val parserList: List<Parser> = listOf(ManamiLegacyFileParser())
 ) : ImportHandler {
 
     init {

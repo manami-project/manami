@@ -3,8 +3,8 @@ package io.github.manamiproject.manami.app.fileimport.parser.manami
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.NoSource
-import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.models.NoLink
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
@@ -16,11 +16,11 @@ import org.xml.sax.helpers.DefaultHandler
 import java.net.URL
 import javax.xml.parsers.SAXParserFactory
 
-internal class LegacyManamiParser: Parser {
+internal class ManamiLegacyFileParser : Parser {
 
     private val saxParser = SAXParserFactory.newInstance().newSAXParser()
     private val versionHandler = ManamiVersionHandler()
-    private val documentHandler = LegacyManamiHandler()
+    private val documentHandler = ManamiLegacyFileHandler()
 
     override fun handlesSuffix(): FileSuffix = "xml"
 
@@ -40,7 +40,7 @@ internal class LegacyManamiParser: Parser {
     }
 }
 
-private class LegacyManamiHandler : DefaultHandler() {
+private class ManamiLegacyFileHandler : DefaultHandler() {
 
     private var strBuilder = StringBuilder()
     private val animeListEntries = mutableSetOf<AnimeListEntry>()
@@ -63,11 +63,11 @@ private class LegacyManamiHandler : DefaultHandler() {
     }
 
     private fun createAnimeEntry(attributes: Attributes) {
-        val source = attributes.getValue("infoLink").trim().let {
+        val link = attributes.getValue("infoLink").trim().let {
             if (it.isBlank()) {
-                NoSource
+                NoLink
             } else {
-                Source(URL(it))
+                Link(URL(it))
             }
         }
 
@@ -81,7 +81,7 @@ private class LegacyManamiHandler : DefaultHandler() {
 
         animeListEntries.add(
             AnimeListEntry(
-                source = source,
+                link = link,
                 title = attributes.getValue("title").trim(),
                 episodes = attributes.getValue("episodes").trim().toInt(),
                 type = type,

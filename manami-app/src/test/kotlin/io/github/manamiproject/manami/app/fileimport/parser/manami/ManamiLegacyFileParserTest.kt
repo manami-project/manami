@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.fileimport.parser.manami
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Source
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.core.models.Anime.Type.Special
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URL
 
-internal class LegacyManamiParserTest {
+internal class ManamiLegacyFileParserTest {
 
     @Test
     fun `handles XML files`() {
         // given
-        val parser = LegacyManamiParser()
+        val parser = ManamiLegacyFileParser()
 
         // when
         val result = parser.handlesSuffix()
@@ -30,7 +30,7 @@ internal class LegacyManamiParserTest {
     fun `throws exception if the given path is a directory`() {
         tempDirectory {
             // given
-            val parser = LegacyManamiParser()
+            val parser = ManamiLegacyFileParser()
 
             // when
             val result = assertThrows<IllegalArgumentException> {
@@ -46,7 +46,7 @@ internal class LegacyManamiParserTest {
     fun `throws exception if the given path does not exist`() {
         tempDirectory {
             // given
-            val parser = LegacyManamiParser()
+            val parser = ManamiLegacyFileParser()
             val file = tempDir.resolve("test.xml")
 
             // when
@@ -63,7 +63,7 @@ internal class LegacyManamiParserTest {
     fun `given suffix is not supported`() {
         tempDirectory {
             // given
-            val parser = LegacyManamiParser()
+            val parser = ManamiLegacyFileParser()
             val file = tempDir.resolve("test.json").createFile()
 
             // when
@@ -79,7 +79,7 @@ internal class LegacyManamiParserTest {
     @Test
     fun `throws exception if the version is too new`() {
         // given
-        val parser = LegacyManamiParser()
+        val parser = ManamiLegacyFileParser()
         val file = testResource("fileimport/parser/manami/LegacyManamiParser/version_too_new.xml")
 
         // when
@@ -94,7 +94,7 @@ internal class LegacyManamiParserTest {
     @Test
     fun `correctly parse file`() {
         // given
-        val parser = LegacyManamiParser()
+        val parser = ManamiLegacyFileParser()
         val file = testResource("fileimport/parser/manami/LegacyManamiParser/correctly_parse_entries.xml")
 
         // when
@@ -109,7 +109,7 @@ internal class LegacyManamiParserTest {
                     location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
                 ),
                 AnimeListEntry(
-                    source = Source(URL("https://myanimelist.net/anime/57")),
+                    link = Link(URL("https://myanimelist.net/anime/57")),
                     title = "Beck",
                     episodes = 26,
                     type = TV,
@@ -132,7 +132,7 @@ internal class LegacyManamiParserTest {
     @Test
     fun `type 'music' gets converted to 'special'`() {
         // given
-        val parser = LegacyManamiParser()
+        val parser = ManamiLegacyFileParser()
         val file = testResource("fileimport/parser/manami/LegacyManamiParser/convert_type_music_to_special.xml")
 
         // when
@@ -141,7 +141,7 @@ internal class LegacyManamiParserTest {
         // then
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
                 AnimeListEntry(
-                        source = Source(URL("https://myanimelist.net/anime/12079")),
+                        link = Link(URL("https://myanimelist.net/anime/12079")),
                         title = "Black★Rock Shooter",
                         episodes = 1,
                         type = Special,

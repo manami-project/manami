@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT manami (animeList, watchList, ignoreList)>
+<!ATTLIST manami version CDATA #REQUIRED>
+
+<!ELEMENT animeList (animeListEntry*)>
+<!ELEMENT animeListEntry EMPTY>
+<!ATTLIST animeListEntry episodes CDATA #REQUIRED
+link CDATA #IMPLIED
+location CDATA #REQUIRED
+title CDATA #REQUIRED
+type CDATA #REQUIRED>
+
+<!ELEMENT watchList (watchListEntry*)>
+<!ELEMENT watchListEntry EMPTY>
+<!ATTLIST watchListEntry link CDATA #REQUIRED>
+
+<!ELEMENT ignoreList (ignoreListEntry*)>
+<!ELEMENT ignoreListEntry EMPTY>
+<!ATTLIST ignoreListEntry link CDATA #REQUIRED>

@@ -375,4 +375,43 @@ internal class SimpleEventStreamTest {
             assertThat(result).isTrue()
         }
     }
+
+    @Nested
+    inner class CropTests {
+
+        @Test
+        fun `does nothing on an empty stream`() {
+            // given
+            val eventStream = SimpleEventStream<String>()
+
+            // when
+            eventStream.crop()
+
+            // then
+            assertThat(eventStream.hasPrevious()).isFalse()
+            assertThat(eventStream.hasNext()).isFalse()
+        }
+
+        @Test
+        fun `removes all elements past the current cursor position`() {
+            // given
+            val eventStream = SimpleEventStream<String>().apply {
+                add("1")
+                add("2")
+                add("3")
+                add("4")
+                add("5")
+                previous()
+                previous()
+                previous()
+            }
+
+            // when
+            eventStream.crop()
+
+            // then
+            assertThat(eventStream.element()).isEqualTo("2")
+            assertThat(eventStream.hasNext()).isFalse()
+        }
+    }
 }

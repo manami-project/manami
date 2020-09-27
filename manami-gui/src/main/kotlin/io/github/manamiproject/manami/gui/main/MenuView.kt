@@ -3,6 +3,8 @@ package io.github.manamiproject.manami.gui.main
 import io.github.manamiproject.manami.app.fileexport.FileFormat
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
+import io.github.manamiproject.manami.gui.components.Alerts
+import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.*
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
@@ -104,15 +106,41 @@ class MenuController : Controller() {
     private val manamiAccess: ManamiAccess by inject()
 
     fun newFile() {
-        runAsync {
-            manamiAccess.newFile()
+        val action = if (manamiAccess.isUnsaved()) {
+            Alerts.unsavedChangedAlert()
+        } else {
+            NONE
+        }
+
+        if (action == YES) {
+            save()
+        }
+
+        if (action != CANCEL) {
+            runAsync {
+                manamiAccess.newFile(ignoreUnsavedChanged = action == NO)
+            }
         }
     }
 
     fun open(file: RegularFile?) {
-        if (file != null) {
+        if (file == null) {
+            return
+        }
+
+        val action = if (manamiAccess.isUnsaved()) {
+            Alerts.unsavedChangedAlert()
+        } else {
+            NONE
+        }
+
+        if (action == YES) {
+            save()
+        }
+
+        if (action != CANCEL) {
             runAsync {
-                manamiAccess.open(file)
+                manamiAccess.open(file = file, ignoreUnsavedChanged = action == NO)
             }
         }
     }
@@ -149,13 +177,13 @@ class MenuController : Controller() {
 
     fun undo() {
         runAsync {
-            //TODO manamiAccess.undo()
+            manamiAccess.undo()
         }
     }
 
     fun redo() {
         runAsync {
-            //TODO manamiAccess.redo()
+            manamiAccess.redo()
         }
     }
 

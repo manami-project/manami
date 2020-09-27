@@ -48,6 +48,12 @@ internal class SimpleEventStream<T> : EventStream<T> {
         }
     }
 
+    override fun crop() {
+        while (hasNext()) {
+            elements.removeAt(cursorIndex + 1)
+        }
+    }
+
     override fun clear() {
         elements.clear()
         elements.add(InitialState)

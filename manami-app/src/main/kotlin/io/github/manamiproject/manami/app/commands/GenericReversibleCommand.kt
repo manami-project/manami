@@ -1,14 +1,14 @@
 package io.github.manamiproject.manami.app.commands
 
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.commands.history.History
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 
 internal class GenericReversibleCommand(
         private val state: State = InternalState,
-        private val commandHistory: History = CommandHistory,
+        private val commandHistory: CommandHistory = DefaultCommandHistory,
         private val command: Command,
 ) : ReversibleCommand {
 
