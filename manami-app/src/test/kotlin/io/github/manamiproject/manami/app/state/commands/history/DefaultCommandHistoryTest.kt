@@ -1,7 +1,7 @@
-package io.github.manamiproject.manami.app.commands.history
+package io.github.manamiproject.manami.app.state.commands.history
 
-import io.github.manamiproject.manami.app.commands.ReversibleCommand
-import io.github.manamiproject.manami.app.commands.TestReversibleCommand
+import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.state.commands.TestReversibleCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested

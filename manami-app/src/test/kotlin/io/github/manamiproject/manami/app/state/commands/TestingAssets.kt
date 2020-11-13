@@ -1,6 +1,6 @@
-package io.github.manamiproject.manami.app.commands
+package io.github.manamiproject.manami.app.state.commands
 
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 
 internal object TestReversibleCommand : ReversibleCommand {

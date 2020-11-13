@@ -1,8 +1,7 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.Link
@@ -10,7 +9,6 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URL

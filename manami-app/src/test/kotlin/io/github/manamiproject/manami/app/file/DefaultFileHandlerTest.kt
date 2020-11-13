@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.fileimport.TestParser
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.fileimport.parser.Parser

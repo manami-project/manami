@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.fileimport
 
-import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
 import io.github.manamiproject.manami.app.fileimport.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry

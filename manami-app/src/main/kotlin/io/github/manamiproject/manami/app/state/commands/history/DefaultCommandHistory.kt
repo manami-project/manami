@@ -1,6 +1,6 @@
-package io.github.manamiproject.manami.app.commands.history
+package io.github.manamiproject.manami.app.state.commands.history
 
-import io.github.manamiproject.manami.app.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
 
 internal object DefaultCommandHistory : CommandHistory {
 
