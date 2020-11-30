@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.app.state
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.state.events.AnimeListChangedEvent
+import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
@@ -29,6 +31,7 @@ internal object InternalState : State {
 
     override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
         animeList.addAll(anime)
+        EventBus.post(AnimeListChangedEvent)
     }
 
     override fun watchList(): Set<URL> = watchList.toSet()

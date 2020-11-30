@@ -20,6 +20,7 @@ internal class SimpleEventStream<T> : EventStream<T> {
     }
 
     override fun element(): T {
+        @Suppress("UNCHECKED_CAST")
         return when(val element = elements[cursorIndex]) {
             InitialState -> throw IllegalStateException("Cannot retrieve element from empty EventStream.")
             is Event<*> -> element.element as T
