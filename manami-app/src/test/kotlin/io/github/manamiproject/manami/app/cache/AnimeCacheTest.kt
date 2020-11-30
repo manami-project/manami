@@ -7,7 +7,7 @@ import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.net.URL
+import java.net.URI
 
 internal class AnimeCacheTest {
 
@@ -22,7 +22,7 @@ internal class AnimeCacheTest {
             val testCacheLoader = object: CacheLoader by TestCacheLoader {
                 override fun hostname(): Hostname = "example.org"
 
-                override fun loadAnime(url: URL): Anime {
+                override fun loadAnime(uri: URI): Anime {
                     loadExternallyHasBeenTriggered = true
                     return Anime("Death Note")
                 }
@@ -30,7 +30,7 @@ internal class AnimeCacheTest {
             val cache = AnimeCache(cacheLoader = listOf(testCacheLoader))
 
             // when
-            cache.fetch(URL("https://example.org/anime/1535"))
+            cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
             assertThat(loadExternallyHasBeenTriggered).isTrue()
@@ -40,7 +40,7 @@ internal class AnimeCacheTest {
         fun `trigger cache hit if the cache has been populated beforehand`() {
             // given
             var timesLoadExternallyHasBeenTriggered = 0
-            val source = URL("https://example.org/anime/1535")
+            val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
                 addSources(listOf(source))
             }
@@ -48,7 +48,7 @@ internal class AnimeCacheTest {
             val testCacheLoader = object: CacheLoader by TestCacheLoader {
                 override fun hostname(): Hostname = "example.org"
 
-                override fun loadAnime(url: URL): Anime {
+                override fun loadAnime(uri: URI): Anime {
                     timesLoadExternallyHasBeenTriggered++
                     return anime
                 }
@@ -57,7 +57,7 @@ internal class AnimeCacheTest {
             cache.fetch(source)
 
             // when
-            val result = cache.fetch(URL("https://example.org/anime/1535"))
+            val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
             assertThat(timesLoadExternallyHasBeenTriggered).isOne()
@@ -67,13 +67,13 @@ internal class AnimeCacheTest {
         @Test
         fun `a key can also return null`() {
             // given
-            val source = URL("https://example.org/anime/1535")
+            val source = URI("https://example.org/anime/1535")
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
             cache.populate(source, null)
 
             // when
-            val result = cache.fetch(URL("https://example.org/anime/1535"))
+            val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
             assertThat(result).isNull()
@@ -85,7 +85,7 @@ internal class AnimeCacheTest {
             val cache = AnimeCache(cacheLoader = emptyList())
 
             // when
-            val result = cache.fetch(URL("https://example.org/anime/1535"))
+            val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
             assertThat(result).isNull()
@@ -98,7 +98,7 @@ internal class AnimeCacheTest {
         @Test
         fun `populate cache`() {
             // given
-            val source = URL("https://example.org/anime/1535")
+            val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
                 addSources(listOf(source))
             }
@@ -116,7 +116,7 @@ internal class AnimeCacheTest {
         @Test
         fun `don't override an existing entry`() {
             // given
-            val source = URL("https://example.org/anime/1535")
+            val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
                 addSources(listOf(source))
             }
@@ -143,12 +143,12 @@ internal class AnimeCacheTest {
         @Test
         fun `clear all entries`() {
             // given
-            val source1 = URL("https://example.org/anime/1")
+            val source1 = URI("https://example.org/anime/1")
             val anime1 = Anime("Entry1").apply {
                 addSources(listOf(source1))
             }
 
-            val source2 = URL("https://example.org/anime/2")
+            val source2 = URI("https://example.org/anime/2")
             val anime2 = Anime("Entry2").apply {
                 addSources(listOf(source2))
             }
@@ -158,8 +158,8 @@ internal class AnimeCacheTest {
 
             val testCacheLoader = object: CacheLoader by TestCacheLoader {
                 override fun hostname(): Hostname = "example.org"
-                override fun loadAnime(url: URL): Anime {
-                    return when(url) {
+                override fun loadAnime(uri: URI): Anime {
+                    return when(uri) {
                         source1 -> {
                             loadCacheHasBeenTriggeredFor1 = true
                             anime1

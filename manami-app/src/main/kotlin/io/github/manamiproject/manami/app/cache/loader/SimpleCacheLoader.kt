@@ -6,6 +6,7 @@ import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
+import java.net.URI
 import java.net.URL
 
 internal class SimpleCacheLoader(
@@ -16,10 +17,10 @@ internal class SimpleCacheLoader(
 
     override fun hostname(): Hostname = config.hostname()
 
-    override fun loadAnime(url: URL): Anime {
-        log.debug("Loading anime from [{}]", url)
+    override fun loadAnime(uri: URI): Anime {
+        log.debug("Loading anime from [{}]", uri)
 
-        val id = config.extractAnimeId(url)
+        val id = config.extractAnimeId(uri)
         val rawContent = downloader.download(id)
         return converter.convert(rawContent)
     }

@@ -6,14 +6,15 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser
 import io.github.manamiproject.modb.dbparser.DatabaseFileParser
 import io.github.manamiproject.modb.dbparser.ExternalResourceParser
+import java.net.URI
 import java.net.URL
 
 internal class AnimeCachePopulator(
         private val url: URL = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json"),
         private val parser: ExternalResourceParser<Anime> = DatabaseFileParser(fileParser = AnimeDatabaseJsonStringParser())
-) : CachePopulator<URL, Anime?> {
+) : CachePopulator<URI, Anime?> {
 
-    override fun populate(cache: Cache<URL, Anime?>) {
+    override fun populate(cache: Cache<URI, Anime?>) {
         log.info("Populating cache with anime from [{}].", url)
 
         parser.parse(url).forEach { anime ->

@@ -18,7 +18,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.mal.MalConverter
 import io.github.manamiproject.modb.mal.MalDownloader
-import java.net.URL
+import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 
 internal class AnimeCache(
@@ -30,11 +30,11 @@ internal class AnimeCache(
                 SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
                 NotifyCacheLoader()
         )
-) : Cache<URL, Anime?> {
+) : Cache<URI, Anime?> {
 
-    private val entries = ConcurrentHashMap<URL, CacheEntry>()
+    private val entries = ConcurrentHashMap<URI, CacheEntry>()
 
-    override fun fetch(key: URL): Anime? {
+    override fun fetch(key: URI): Anime? {
         return when(val entry = entries[key]) {
             is Present -> entry.value
             Empty -> null
@@ -42,7 +42,7 @@ internal class AnimeCache(
         }
     }
 
-    override fun populate(key: URL, value: Anime?) {
+    override fun populate(key: URI, value: Anime?) {
         if (!entries.containsKey(key)) {
             entries[key] = if (value == null) {
                 Empty
@@ -59,17 +59,17 @@ internal class AnimeCache(
         entries.clear()
     }
 
-    private fun loadEntry(url: URL): Anime? {
-        log.info("No cache hit for [{}]", url)
+    private fun loadEntry(uri: URI): Anime? {
+        log.info("No cache hit for [{}]", uri)
 
-        val cacheLoader = cacheLoader.find { url.toString().contains(it.hostname()) }
+        val cacheLoader = cacheLoader.find { uri.toString().contains(it.hostname()) }
 
         if (cacheLoader == null) {
-            log.warn("Unable to find a CacheLoader for URL [{}]", url)
+            log.warn("Unable to find a CacheLoader for URI [{}]", uri)
             return null
         }
 
-        val anime = cacheLoader.loadAnime(url)
+        val anime = cacheLoader.loadAnime(uri)
         anime.sources.forEach {
             populate(it, anime)
         }

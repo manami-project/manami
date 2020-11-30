@@ -14,6 +14,7 @@ import io.github.manamiproject.modb.kitsu.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.net.URI
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
@@ -32,10 +33,10 @@ internal class KitsuCacheLoader(
         )
 ) : CacheLoader {
 
-    override fun loadAnime(url: URL): Anime {
-        log.debug("Loading anime from [{}]", url)
+    override fun loadAnime(uri: URI): Anime {
+        log.debug("Loading anime from [{}]", uri)
 
-        val id = kitsuConfig.extractAnimeId(url)
+        val id = kitsuConfig.extractAnimeId(uri)
 
         val job1 = GlobalScope.launch { loadRelations(id) }
         val job2 = GlobalScope.launch { loadTags(id) }

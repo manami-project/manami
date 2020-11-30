@@ -12,7 +12,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.net.URL
+import java.net.URI
 
 internal class SimpleCacheLoaderTest {
 
@@ -42,7 +42,7 @@ internal class SimpleCacheLoaderTest {
         val anime = Anime("Death Note")
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
-            override fun extractAnimeId(url: URL): AnimeId = "1535"
+            override fun extractAnimeId(uri: URI): AnimeId = "1535"
             override fun hostname(): Hostname = "example.org"
         }
 
@@ -65,7 +65,7 @@ internal class SimpleCacheLoaderTest {
         )
 
         // when
-        val result = simpleCacheLoader.loadAnime(URL("https://example.org/anime/1535"))
+        val result = simpleCacheLoader.loadAnime(URI("https://example.org/anime/1535"))
 
         // then
         assertThat(result).isEqualTo(anime)

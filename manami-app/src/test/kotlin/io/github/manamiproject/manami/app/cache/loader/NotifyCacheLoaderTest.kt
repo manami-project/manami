@@ -22,6 +22,7 @@ import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 
 internal class NotifyCacheLoaderTest {
@@ -59,11 +60,11 @@ internal class NotifyCacheLoaderTest {
                         season = SUMMER,
                         _year = 2020
                 ),
-                picture = URL("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
-                thumbnail = URL("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
+                picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
+                thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
                 duration = Duration(24, MINUTES)
         ).apply {
-            addSources(listOf(URL("https://notify.moe/anime/3lack4eiR")))
+            addSources(listOf(URI("https://notify.moe/anime/3lack4eiR")))
             addSynonyms(listOf(
                     "My Teen Romantic Comedy SNAFU 3",
                     "My youth romantic comedy is wrong as I expected 3",
@@ -71,7 +72,7 @@ internal class NotifyCacheLoaderTest {
                     "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
                     "やはり俺の青春ラブコメはまちがっている。第3期"
             ))
-            addRelations(listOf(URL("https://notify.moe/anime/Pk0AtFmmg")))
+            addRelations(listOf(URI("https://notify.moe/anime/Pk0AtFmmg")))
             addTags(listOf("comedy", "drama", "romance", "school", "slice of life"))
         }
 
@@ -99,7 +100,7 @@ internal class NotifyCacheLoaderTest {
         )
 
         // when
-        val result = notifyCacheLoader.loadAnime(URL("https://notify.moe/anime/3lack4eiR"))
+        val result = notifyCacheLoader.loadAnime(URI("https://notify.moe/anime/3lack4eiR"))
 
         // then
         assertThat(result).isEqualTo(expectedAnime)

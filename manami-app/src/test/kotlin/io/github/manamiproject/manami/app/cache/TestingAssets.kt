@@ -12,19 +12,20 @@ import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.httpclient.RequestBody
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
+import java.net.URI
 import java.net.URL
 
 internal object TestCacheLoader : CacheLoader {
     override fun hostname(): Hostname = shouldNotBeInvoked()
-    override fun loadAnime(url: URL): Anime = shouldNotBeInvoked()
+    override fun loadAnime(uri: URI): Anime = shouldNotBeInvoked()
 }
 
 internal object MetaDataProviderTestConfig: MetaDataProviderConfig {
     override fun isTestContext(): Boolean = shouldNotBeInvoked()
     override fun hostname(): Hostname = shouldNotBeInvoked()
-    override fun buildAnimeLinkUrl(id: AnimeId): URL = shouldNotBeInvoked()
-    override fun buildDataDownloadUrl(id: String): URL = shouldNotBeInvoked()
-    override fun extractAnimeId(url: URL): AnimeId = shouldNotBeInvoked()
+    override fun buildAnimeLink(id: AnimeId): URI = shouldNotBeInvoked()
+    override fun buildDataDownloadLink(id: String): URI = shouldNotBeInvoked()
+    override fun extractAnimeId(uri: URI): AnimeId = shouldNotBeInvoked()
     override fun fileSuffix(): FileSuffix = shouldNotBeInvoked()
 }
 

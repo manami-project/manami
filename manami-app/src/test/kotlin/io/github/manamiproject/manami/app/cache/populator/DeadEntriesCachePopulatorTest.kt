@@ -12,6 +12,7 @@ import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 
 internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
@@ -23,7 +24,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "example.org"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = URL("https://${hostname()}/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = URI("https://${hostname()}/anime/$id")
         }
 
         val animeCachePopulator = DeadEntriesCachePopulator(
@@ -51,7 +52,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
         animeCachePopulator.populate(testCache)
 
         // then
-        assertThat(testCache.fetch(URL("https://example.org/anime/12449"))).isNull()
-        assertThat(testCache.fetch(URL("https://example.org/anime/65562"))).isNull()
+        assertThat(testCache.fetch(URI("https://example.org/anime/12449"))).isNull()
+        assertThat(testCache.fetch(URI("https://example.org/anime/65562"))).isNull()
     }
 }

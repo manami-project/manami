@@ -14,7 +14,7 @@ import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyConverter
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -26,10 +26,10 @@ internal class NotifyCacheLoader(
         private val converter: AnimeConverter = NotifyConverter(relationsDir = relationsDir)
 ) : CacheLoader {
 
-    override fun loadAnime(url: URL): Anime {
-        log.debug("Loading anime from [{}]", url)
+    override fun loadAnime(uri: URI): Anime {
+        log.debug("Loading anime from [{}]", uri)
 
-        val id = notifyConfig.extractAnimeId(url)
+        val id = notifyConfig.extractAnimeId(uri)
 
         loadRelations(id)
 

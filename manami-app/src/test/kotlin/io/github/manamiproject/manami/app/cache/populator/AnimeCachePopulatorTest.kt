@@ -14,6 +14,7 @@ import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 
 internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
@@ -30,17 +31,19 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                         season = FALL,
                         _year = 2006
                 ),
-                picture = URL("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
-                thumbnail = URL("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
         ).apply {
-            addSources(listOf(
-                    URL("https://anidb.net/anime/4563"),
-                    URL("https://anilist.co/anime/1535"),
-                    URL("https://anime-planet.com/anime/death-note"),
-                    URL("https://kitsu.io/anime/1376"),
-                    URL("https://myanimelist.net/anime/1535"),
-                    URL("https://notify.moe/anime/0-A-5Fimg")
-            ))
+            addSources(
+                listOf(
+                    URI("https://anidb.net/anime/4563"),
+                    URI("https://anilist.co/anime/1535"),
+                    URI("https://anime-planet.com/anime/death-note"),
+                    URI("https://kitsu.io/anime/1376"),
+                    URI("https://myanimelist.net/anime/1535"),
+                    URI("https://notify.moe/anime/0-A-5Fimg")
+                )
+            )
             addSynonyms(listOf(
                     "DEATH NOTE",
                     "DN",
@@ -60,16 +63,18 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     "死亡笔记",
                     "데스노트"
             ))
-            addRelations(listOf(
-                    URL("https://anidb.net/anime/8146"),
-                    URL("https://anidb.net/anime/8147"),
-                    URL("https://anilist.co/anime/2994"),
-                    URL("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
-                    URL("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
-                    URL("https://kitsu.io/anime/2707"),
-                    URL("https://myanimelist.net/anime/2994"),
-                    URL("https://notify.moe/anime/DBBU5Kimg")
-            ))
+            addRelations(
+                listOf(
+                    URI("https://anidb.net/anime/8146"),
+                    URI("https://anidb.net/anime/8147"),
+                    URI("https://anilist.co/anime/2994"),
+                    URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
+                    URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
+                    URI("https://kitsu.io/anime/2707"),
+                    URI("https://myanimelist.net/anime/2994"),
+                    URI("https://notify.moe/anime/DBBU5Kimg")
+                )
+            )
             addTags(listOf(
                     "alternative present",
                     "amnesia",
@@ -136,11 +141,11 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         animeCachePopulator.populate(testCache)
 
         // then
-        assertThat(testCache.fetch(URL("https://anidb.net/anime/4563"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URL("https://anilist.co/anime/1535"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URL("https://anime-planet.com/anime/death-note"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URL("https://kitsu.io/anime/1376"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URL("https://myanimelist.net/anime/1535"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URL("https://notify.moe/anime/0-A-5Fimg"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://anidb.net/anime/4563"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://anilist.co/anime/1535"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://anime-planet.com/anime/death-note"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://kitsu.io/anime/1376"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://myanimelist.net/anime/1535"))).isEqualTo(expectedAnime)
+        assertThat(testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg"))).isEqualTo(expectedAnime)
     }
 }

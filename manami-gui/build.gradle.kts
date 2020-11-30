@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
     implementation(project(":manami-app"))
     implementation("no.tornado:tornadofx:1.7.20")
 }

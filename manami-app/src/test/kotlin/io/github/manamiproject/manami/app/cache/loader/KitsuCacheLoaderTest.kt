@@ -23,6 +23,7 @@ import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 
 internal class KitsuCacheLoaderTest {
@@ -61,11 +62,11 @@ internal class KitsuCacheLoaderTest {
                         season = SUMMER,
                         _year = 2020
                 ),
-                picture = URL("https://media.kitsu.io/anime/poster_images/42194/small.jpg?1592953088"),
-                thumbnail = URL("https://media.kitsu.io/anime/poster_images/42194/tiny.jpg?1592953088"),
+                picture = URI("https://media.kitsu.io/anime/poster_images/42194/small.jpg?1592953088"),
+                thumbnail = URI("https://media.kitsu.io/anime/poster_images/42194/tiny.jpg?1592953088"),
                 duration = Duration(24, MINUTES)
         ).apply {
-            addSources(listOf(URL("https://kitsu.io/anime/42194")))
+            addSources(listOf(URI("https://kitsu.io/anime/42194")))
             addSynonyms(listOf(
                     "My Teen Romantic Comedy SNAFU 3",
                     "My Teen Romantic Comedy SNAFU Climax",
@@ -73,7 +74,7 @@ internal class KitsuCacheLoaderTest {
                     "Oregairu 3",
                     "やはり俺の青春ラブコメはまちがっている。完"
             ))
-            addRelations(listOf(URL("https://kitsu.io/anime/8478")))
+            addRelations(listOf(URI("https://kitsu.io/anime/8478")))
             addTags(listOf(
                     "asia",
                     "comedy",
@@ -117,7 +118,7 @@ internal class KitsuCacheLoaderTest {
         )
 
         // when
-        val result = notifyCacheLoader.loadAnime(URL("https://kitsu.io/anime/42194"))
+        val result = notifyCacheLoader.loadAnime(URI("https://kitsu.io/anime/42194"))
 
         // then
         assertThat(result).isEqualTo(expectedAnime)
