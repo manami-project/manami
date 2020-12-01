@@ -85,6 +85,7 @@ internal class EventBusTest {
             sleep(500)
             assertThat(testSubscriber.hasBeenInvoked).isFalse()
             assertThat(remainingSubscriber.hasBeenInvoked).isTrue()
+            EventBus.unsubscribe(remainingSubscriber)
         }
     }
 }
