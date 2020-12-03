@@ -88,7 +88,7 @@ internal class GenericReversibleCommandTest {
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
-                    location = ".",
+                    location = URI("."),
                 )
         )
         val initialWatchList = setOf(URL("https://myanimelist.net/anime/5114"))
@@ -107,7 +107,7 @@ internal class GenericReversibleCommandTest {
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = Movie,
-                                        location = ".",
+                                        location = URI("."),
                                 )
                         )
                 )

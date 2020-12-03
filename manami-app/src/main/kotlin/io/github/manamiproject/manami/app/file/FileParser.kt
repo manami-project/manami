@@ -80,7 +80,7 @@ private class ManamiFileHandler : DefaultHandler() {
                         title = attributes.getValue("title").trim(),
                         episodes = attributes.getValue("episodes").trim().toInt(),
                         type = Anime.Type.valueOf(attributes.getValue("type").trim()),
-                        location = attributes.getValue("location").trim(),
+                        location = URI(attributes.getValue("location").trim()),
                 )
         )
     }

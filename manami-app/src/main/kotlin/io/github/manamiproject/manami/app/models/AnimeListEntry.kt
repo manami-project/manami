@@ -10,7 +10,7 @@ data class AnimeListEntry(
         private val title: Title,
         private val episodes: Episodes,
         private val type: Anime.Type,
-        private val location: String,
+        private val location: URI,
 )
 
 sealed class LinkEntry

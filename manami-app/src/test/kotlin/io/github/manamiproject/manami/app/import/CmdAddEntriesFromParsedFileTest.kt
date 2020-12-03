@@ -25,14 +25,14 @@ internal class CmdAddEntriesFromParsedFileTest {
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
                 type = Anime.Type.Special,
-                location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
+                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
         )
         val animeListEntry2 = AnimeListEntry(
                 link = Link(URI("https://myanimelist.net/anime/57")),
                 title = "Beck",
                 episodes = 26,
                 type = Anime.Type.TV,
-                location = "some/relative/path/beck",
+                location = URI("some/relative/path/beck"),
         )
 
         val watchListEntry1 = URL("https://myanimelist.net/anime/37989")

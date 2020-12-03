@@ -50,7 +50,7 @@ internal class CmdOpenFileTest {
                             title = "Beck",
                             episodes = 26,
                             type = Anime.Type.TV,
-                            location = "some/relative/path/beck",
+                            location = URI("some/relative/path/beck"),
                     )
             ),
             watchListEntries = setOf(URL("https://myanimelist.net/anime/40059")),

@@ -107,14 +107,14 @@ internal class ManamiLegacyFileParserTest {
                     title = "H2O: Footprints in the Sand",
                     episodes = 4,
                     type = Special,
-                    location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
+                    location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 ),
                 AnimeListEntry(
                     link = Link(URI("https://myanimelist.net/anime/57")),
                     title = "Beck",
                     episodes = 26,
                     type = TV,
-                    location = "some/relative/path/beck",
+                    location = URI("some/relative/path/beck"),
                 )
         )
         assertThat(result.watchListEntries).containsExactlyInAnyOrder(
@@ -146,7 +146,7 @@ internal class ManamiLegacyFileParserTest {
                         title = "Black★Rock Shooter",
                         episodes = 1,
                         type = Special,
-                        location = "some/relative/path/black_rock_shooter",
+                        location = URI("some/relative/path/black_rock_shooter"),
                 ),
         )
     }
