@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.test.testResource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.net.URI
 import java.net.URL
 
 internal class ManamiLegacyFileParserTest {
@@ -109,7 +110,7 @@ internal class ManamiLegacyFileParserTest {
                     location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
                 ),
                 AnimeListEntry(
-                    link = Link(URL("https://myanimelist.net/anime/57")),
+                    link = Link(URI("https://myanimelist.net/anime/57")),
                     title = "Beck",
                     episodes = 26,
                     type = TV,
@@ -141,7 +142,7 @@ internal class ManamiLegacyFileParserTest {
         // then
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
                 AnimeListEntry(
-                        link = Link(URL("https://myanimelist.net/anime/12079")),
+                        link = Link(URI("https://myanimelist.net/anime/12079")),
                         title = "Black★Rock Shooter",
                         episodes = 1,
                         type = Special,

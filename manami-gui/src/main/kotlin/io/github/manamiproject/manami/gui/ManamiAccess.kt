@@ -3,7 +3,6 @@ package io.github.manamiproject.manami.gui
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.state.events.AnimeListChangedEvent
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import tornadofx.Controller
 import tornadofx.FXEvent
 

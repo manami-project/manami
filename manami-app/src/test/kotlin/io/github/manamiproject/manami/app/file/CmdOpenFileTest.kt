@@ -11,6 +11,7 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 import java.nio.file.Paths
 
@@ -45,7 +46,7 @@ internal class CmdOpenFileTest {
         val parsedFile = ParsedFile(
             animeListEntries = setOf(
                     AnimeListEntry(
-                            link = Link(URL("https://myanimelist.net/anime/57")),
+                            link = Link(URI("https://myanimelist.net/anime/57")),
                             title = "Beck",
                             episodes = 26,
                             type = Anime.Type.TV,

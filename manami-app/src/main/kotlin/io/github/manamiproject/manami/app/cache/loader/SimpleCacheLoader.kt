@@ -7,7 +7,6 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
-import java.net.URL
 
 internal class SimpleCacheLoader(
         private val config: MetaDataProviderConfig,

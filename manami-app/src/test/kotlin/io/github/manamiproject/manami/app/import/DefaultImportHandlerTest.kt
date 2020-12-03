@@ -1,11 +1,11 @@
 package io.github.manamiproject.manami.app.import
 
-import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.manami.app.state.InternalState
+import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.createFile
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.net.URI
 import java.net.URL
 import java.nio.file.Paths
 
@@ -135,7 +136,7 @@ internal class DefaultImportHandlerTest {
                         location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
                 )
                 val animeListEntry2 = AnimeListEntry(
-                        link = Link(URL("https://myanimelist.net/anime/57")),
+                        link = Link(URI("https://myanimelist.net/anime/57")),
                         title = "Beck",
                         episodes = 26,
                         type = Anime.Type.TV,

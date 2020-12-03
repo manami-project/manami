@@ -1,13 +1,13 @@
 package io.github.manamiproject.manami.app.state.commands
 
-import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
 import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.models.Anime.Type.Movie
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.net.URI
 import java.net.URL
 
 internal class GenericReversibleCommandTest {
@@ -83,7 +84,7 @@ internal class GenericReversibleCommandTest {
         // given
         val initialAnimeList = setOf(
                 AnimeListEntry(
-                    link = Link(URL("https://myanimelist.net/anime/1535")),
+                    link = Link(URI("https://myanimelist.net/anime/1535")),
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
@@ -102,7 +103,7 @@ internal class GenericReversibleCommandTest {
                 InternalState.addAllAnimeListEntries(
                         setOf(
                                 AnimeListEntry(
-                                        link = Link(URL("https://myanimelist.net/anime/28851")),
+                                        link = Link(URI("https://myanimelist.net/anime/28851")),
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = Movie,

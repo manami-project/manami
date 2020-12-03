@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.models
 
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Episodes
-import java.net.URL
+import java.net.URI
 
 data class AnimeListEntry(
         private val link: LinkEntry = NoLink,
@@ -14,4 +14,4 @@ data class AnimeListEntry(
 
 sealed class LinkEntry
 object NoLink: LinkEntry()
-data class Link(val url: URL): LinkEntry()
+data class Link(val uri: URI): LinkEntry()

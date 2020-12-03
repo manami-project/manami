@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import java.net.URI
 import java.net.URL
 
 internal class CmdAddEntriesFromParsedFileTest {
@@ -27,7 +28,7 @@ internal class CmdAddEntriesFromParsedFileTest {
                 location = "some/relative/path/h2o_-_footprints_in_the_sand_special",
         )
         val animeListEntry2 = AnimeListEntry(
-                link = Link(URL("https://myanimelist.net/anime/57")),
+                link = Link(URI("https://myanimelist.net/anime/57")),
                 title = "Beck",
                 episodes = 26,
                 type = Anime.Type.TV,

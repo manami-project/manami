@@ -5,8 +5,8 @@ import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.import.parser.manami.ManamiVersionHandler
 import io.github.manamiproject.manami.app.import.parser.manami.SemanticVersion
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.NoLink
 import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.models.NoLink
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
@@ -15,6 +15,7 @@ import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
+import java.net.URI
 import java.net.URL
 import javax.xml.parsers.SAXParserFactory
 
@@ -69,7 +70,7 @@ private class ManamiFileHandler : DefaultHandler() {
             if (it.isBlank()) {
                 NoLink
             } else {
-                Link(URL(it))
+                Link(URI(it))
             }
         }
 
