@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.app.fileexport.FileFormat
+import io.github.manamiproject.manami.app.export.FileFormat
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.Alerts

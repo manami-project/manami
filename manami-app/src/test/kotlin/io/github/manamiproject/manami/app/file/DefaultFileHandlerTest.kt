@@ -2,9 +2,9 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.fileimport.TestParser
-import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
-import io.github.manamiproject.manami.app.fileimport.parser.Parser
+import io.github.manamiproject.manami.app.import.TestParser
+import io.github.manamiproject.manami.app.import.parser.ParsedFile
+import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState

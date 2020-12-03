@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.file
 import io.github.manamiproject.manami.app.state.commands.Command
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
+import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.RegularFile

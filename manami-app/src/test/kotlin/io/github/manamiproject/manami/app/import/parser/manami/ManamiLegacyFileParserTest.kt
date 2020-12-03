@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.fileimport.parser.manami
+package io.github.manamiproject.manami.app.import.parser.manami
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.Link

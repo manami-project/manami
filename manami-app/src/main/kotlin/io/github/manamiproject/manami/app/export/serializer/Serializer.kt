@@ -1,14 +1,14 @@
-package io.github.manamiproject.manami.app.fileimport.parser
+package io.github.manamiproject.manami.app.export.serializer
 
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 
-interface Parser {
+interface Serializer {
 
-    fun parse(file: RegularFile): ParsedFile
+    fun serialize(file: RegularFile)
 
     /**
      * @return The supported file suffix without a dot. **Example** _json_
      */
-    fun handlesSuffix(): FileSuffix
+    fun handles(): FileSuffix
 }

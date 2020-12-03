@@ -1,8 +1,8 @@
-package io.github.manamiproject.manami.app.fileimport
+package io.github.manamiproject.manami.app.import
 
-import io.github.manamiproject.manami.app.fileimport.parser.Parser
+import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.fileimport.parser.manami.ManamiLegacyFileParser
+import io.github.manamiproject.manami.app.import.parser.manami.ManamiLegacyFileParser
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists

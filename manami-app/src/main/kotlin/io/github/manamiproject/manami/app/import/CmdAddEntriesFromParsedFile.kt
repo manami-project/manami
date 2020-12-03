@@ -1,7 +1,7 @@
-package io.github.manamiproject.manami.app.fileimport
+package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.state.commands.Command
-import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
+import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 

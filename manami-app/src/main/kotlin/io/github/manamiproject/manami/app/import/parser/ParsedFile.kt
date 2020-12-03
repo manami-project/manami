@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.fileimport.parser
+package io.github.manamiproject.manami.app.import.parser
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import java.net.URL

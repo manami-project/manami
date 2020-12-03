@@ -1,9 +1,9 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.fileimport.parser.ParsedFile
-import io.github.manamiproject.manami.app.fileimport.parser.Parser
-import io.github.manamiproject.manami.app.fileimport.parser.manami.ManamiVersionHandler
-import io.github.manamiproject.manami.app.fileimport.parser.manami.SemanticVersion
+import io.github.manamiproject.manami.app.import.parser.ParsedFile
+import io.github.manamiproject.manami.app.import.parser.Parser
+import io.github.manamiproject.manami.app.import.parser.manami.ManamiVersionHandler
+import io.github.manamiproject.manami.app.import.parser.manami.SemanticVersion
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.NoLink
 import io.github.manamiproject.manami.app.models.Link

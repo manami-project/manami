@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.fileimport.parser.manami
+package io.github.manamiproject.manami.app.import.parser.manami
 
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler

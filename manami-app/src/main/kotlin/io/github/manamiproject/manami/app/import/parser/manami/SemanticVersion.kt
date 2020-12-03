@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.fileimport.parser.manami
+package io.github.manamiproject.manami.app.import.parser.manami
 
 internal data class SemanticVersion(private val version: String = "0.0.0") {
 
