@@ -6,7 +6,7 @@ import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 
-internal class CmdNewList(
+internal class CmdNewFile(
         private val state: State = InternalState,
         private val commandHistory: CommandHistory = DefaultCommandHistory,
 ) : Command {

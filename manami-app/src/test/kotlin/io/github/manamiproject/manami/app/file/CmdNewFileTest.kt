@@ -7,7 +7,7 @@ import io.github.manamiproject.manami.app.state.TestState
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class CmdNewListTest {
+internal class CmdNewFileTest {
 
     @Test
     fun `clears command history, closes file and clears internal state`() {
@@ -25,7 +25,7 @@ internal class CmdNewListTest {
             override fun clear() { hasClearHistoryBeenCalled = true }
         }
 
-        val command = CmdNewList(testState, testCommandHistory)
+        val command = CmdNewFile(testState, testCommandHistory)
 
         // when
         command.execute()

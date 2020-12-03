@@ -21,7 +21,7 @@ internal class DefaultFileHandler(
             check(commandHistory.isSaved()) { "Cannot create a new list, because there are unsaved changes." }
         }
 
-        CmdNewList(
+        CmdNewFile(
             state = state,
             commandHistory = commandHistory,
         ).execute()
