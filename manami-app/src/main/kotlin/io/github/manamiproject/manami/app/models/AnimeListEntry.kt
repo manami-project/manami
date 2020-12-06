@@ -12,7 +12,3 @@ data class AnimeListEntry(
         private val type: Anime.Type,
         private val location: URI,
 )
-
-sealed class LinkEntry
-object NoLink: LinkEntry()
-data class Link(val uri: URI): LinkEntry()

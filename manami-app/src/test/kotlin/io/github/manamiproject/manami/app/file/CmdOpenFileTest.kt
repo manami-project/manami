@@ -1,18 +1,18 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
-import java.net.URL
 import java.nio.file.Paths
 
 internal class CmdOpenFileTest {
@@ -25,16 +25,16 @@ internal class CmdOpenFileTest {
         var hasClearHistoryBeenCalled = false
         var openedFile = Paths.get(".")
         val animeListEntries = mutableListOf<AnimeListEntry>()
-        val watchListEntries = mutableListOf<URL>()
-        val ignoreListEntries = mutableListOf<URL>()
+        val watchListEntries = mutableListOf<WatchListEntry>()
+        val ignoreListEntries = mutableListOf<IgnoreListEntry>()
 
         val testState = object: State by TestState {
             override fun closeFile() { hasCloseFileBeenCalled = true }
             override fun clear() { hasClearStateBeenCalled = true }
             override fun openedFile(file: RegularFile) { openedFile = file }
             override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) { animeListEntries.addAll(anime) }
-            override fun addAllWatchListEntries(anime: Set<URL>) { watchListEntries.addAll(anime) }
-            override fun addAllIgnoreListEntries(anime: Set<URL>) { ignoreListEntries.addAll(anime) }
+            override fun addAllWatchListEntries(anime: Set<WatchListEntry>) { watchListEntries.addAll(anime) }
+            override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) { ignoreListEntries.addAll(anime) }
         }
 
         val testCommandHistory = object: CommandHistory by TestCommandHistory {
@@ -43,18 +43,30 @@ internal class CmdOpenFileTest {
 
         val notExistingTestFile = Paths.get(".").resolve("test.xml")
 
-        val parsedFile = ParsedFile(
+        val parsedFile = ParsedManamiFile(
             animeListEntries = setOf(
                     AnimeListEntry(
-                            link = Link(URI("https://myanimelist.net/anime/57")),
+                            link = Link("https://myanimelist.net/anime/57"),
                             title = "Beck",
                             episodes = 26,
                             type = Anime.Type.TV,
                             location = URI("some/relative/path/beck"),
                     )
             ),
-            watchListEntries = setOf(URL("https://myanimelist.net/anime/40059")),
-            ignoreListEntries = setOf(URL("https://myanimelist.net/anime/31139")),
+            watchListEntries = setOf(
+                WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/40059"),
+                    title = "Golden Kamuy 3rd Season",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                )
+            ),
+            ignoreListEntries = setOf(
+                IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/31139"),
+                    title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg")
+                )
+            )
         )
 
         val command = CmdOpenFile(

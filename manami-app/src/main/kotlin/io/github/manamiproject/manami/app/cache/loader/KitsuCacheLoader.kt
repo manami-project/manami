@@ -12,7 +12,7 @@ import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.kitsu.*
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.net.URI
 import java.nio.file.Files
@@ -37,8 +37,8 @@ internal class KitsuCacheLoader(
 
         val id = kitsuConfig.extractAnimeId(uri)
 
-        val job1 = GlobalScope.launch { loadRelations(id) }
-        val job2 = GlobalScope.launch { loadTags(id) }
+        val job1 = GlobalScope.async { loadRelations(id) }
+        val job2 = GlobalScope.async { loadTags(id) }
 
         runBlocking {
             job1.join()

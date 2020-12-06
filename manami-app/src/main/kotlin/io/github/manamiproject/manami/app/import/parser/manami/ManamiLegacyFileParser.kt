@@ -14,10 +14,9 @@ import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
-import java.net.URL
 import javax.xml.parsers.SAXParserFactory
 
-internal class ManamiLegacyFileParser : Parser {
+internal class ManamiLegacyFileParser : Parser<ParsedFile> {
 
     private val saxParser = SAXParserFactory.newInstance().newSAXParser()
     private val versionHandler = ManamiVersionHandler()
@@ -45,8 +44,8 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
 
     private var strBuilder = StringBuilder()
     private val animeListEntries = mutableSetOf<AnimeListEntry>()
-    private val watchListEntries = mutableSetOf<URL>()
-    private val ignoreListEntries = mutableSetOf<URL>()
+    private val watchListEntries = mutableSetOf<URI>()
+    private val ignoreListEntries = mutableSetOf<URI>()
     var parsedFile = ParsedFile()
 
     override fun characters(ch: CharArray, start: Int, length: Int) {
@@ -58,8 +57,8 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
 
         when (qName) {
             "anime" -> createAnimeEntry(attributes)
-            "watchListEntry" -> watchListEntries.add(URL(attributes.getValue("infoLink").trim()))
-            "filterEntry" -> ignoreListEntries.add(URL(attributes.getValue("infoLink").trim()))
+            "watchListEntry" -> watchListEntries.add(URI(attributes.getValue("infoLink").trim()))
+            "filterEntry" -> ignoreListEntries.add(URI(attributes.getValue("infoLink").trim()))
         }
     }
 
@@ -68,7 +67,7 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
             if (it.isBlank()) {
                 NoLink
             } else {
-                Link(URI(it))
+                Link(it)
             }
         }
 

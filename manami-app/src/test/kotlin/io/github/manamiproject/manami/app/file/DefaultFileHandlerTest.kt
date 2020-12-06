@@ -1,19 +1,18 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.import.TestParser
-import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.net.URL
 import java.nio.file.Paths
 
 internal class DefaultFileHandlerTest {
@@ -90,15 +89,15 @@ internal class DefaultFileHandlerTest {
                 override fun clear() { isCommandExecuted = true }
             }
 
-            val testParser = object: Parser by TestParser {
-                override fun parse(file: RegularFile): ParsedFile = ParsedFile()
+            val testParser = object: Parser<ParsedManamiFile> by TestManamiFileParser {
+                override fun parse(file: RegularFile): ParsedManamiFile = ParsedManamiFile()
             }
 
             val testState = object: State by TestState{
                 override fun clear() { }
                 override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) { }
-                override fun addAllWatchListEntries(anime: Set<URL>) { }
-                override fun addAllIgnoreListEntries(anime: Set<URL>) { }
+                override fun addAllWatchListEntries(anime: Set<WatchListEntry>) { }
+                override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) { }
                 override fun openedFile(file: RegularFile) { isCommandExecuted = true }
                 override fun closeFile() { }
             }
@@ -127,7 +126,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when
@@ -147,7 +146,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when
@@ -167,7 +166,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when
@@ -187,7 +186,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when
@@ -209,7 +208,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when
@@ -231,7 +230,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestParser,
+                parser = TestManamiFileParser,
         )
 
         // when

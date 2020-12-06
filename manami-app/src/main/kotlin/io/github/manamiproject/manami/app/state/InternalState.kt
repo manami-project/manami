@@ -1,19 +1,20 @@
 package io.github.manamiproject.manami.app.state
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.events.AnimeListChangedEvent
 import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
+import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.regularFileExists
-import java.net.URL
 
 internal object InternalState : State {
 
     private val animeList: MutableList<AnimeListEntry> = mutableListOf()
-    private val watchList: MutableSet<URL> = mutableSetOf()
-    private val ignoreList: MutableSet<URL> = mutableSetOf()
+    private val watchList: MutableSet<WatchListEntry> = mutableSetOf()
+    private val ignoreList: MutableSet<IgnoreListEntry> = mutableSetOf()
 
     private var openedFile: OpenedFile = NoFile
 
@@ -34,15 +35,15 @@ internal object InternalState : State {
         EventBus.post(AnimeListChangedEvent)
     }
 
-    override fun watchList(): Set<URL> = watchList.toSet()
+    override fun watchList(): Set<WatchListEntry> = watchList.toSet()
 
-    override fun addAllWatchListEntries(anime: Set<URL>) {
+    override fun addAllWatchListEntries(anime: Set<WatchListEntry>) {
         watchList.addAll(anime)
     }
 
-    override fun ignoreList(): Set<URL> = ignoreList.toSet()
+    override fun ignoreList(): Set<IgnoreListEntry> = ignoreList.toSet()
 
-    override fun addAllIgnoreListEntries(anime: Set<URL>) {
+    override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) {
         ignoreList.addAll(anime)
     }
 

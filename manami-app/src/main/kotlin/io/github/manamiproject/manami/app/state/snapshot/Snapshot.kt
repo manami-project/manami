@@ -1,13 +1,14 @@
 package io.github.manamiproject.manami.app.state.snapshot
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import java.net.URL
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
+import io.github.manamiproject.manami.app.models.WatchListEntry
 
 internal interface Snapshot {
 
     fun animeList(): List<AnimeListEntry>
 
-    fun watchList(): Set<URL>
+    fun watchList(): Set<WatchListEntry>
 
-    fun ignoreList(): Set<URL>
+    fun ignoreList(): Set<IgnoreListEntry>
 }

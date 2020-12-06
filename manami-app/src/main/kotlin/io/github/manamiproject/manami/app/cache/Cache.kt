@@ -8,3 +8,4 @@ internal interface Cache<KEY, VALUE> {
 
     fun clear()
 }
+

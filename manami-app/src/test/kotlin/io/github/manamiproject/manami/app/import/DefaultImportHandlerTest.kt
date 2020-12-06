@@ -3,7 +3,9 @@ package io.github.manamiproject.manami.app.import
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.modb.core.config.FileSuffix
@@ -17,7 +19,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
-import java.net.URL
 import java.nio.file.Paths
 
 internal class DefaultImportHandlerTest {
@@ -45,10 +46,10 @@ internal class DefaultImportHandlerTest {
         @Test
         fun `throws exception if there is more than one parser handling a file suffix`() {
             // given
-            val json1 = object: Parser by TestParser {
+            val json1 = object: Parser<ParsedFile> by TestImportParser {
                 override fun handlesSuffix(): FileSuffix = "json"
             }
-            val json2 = object: Parser by TestParser {
+            val json2 = object: Parser<ParsedFile> by TestImportParser {
                 override fun handlesSuffix(): FileSuffix = "json"
             }
 
@@ -68,7 +69,7 @@ internal class DefaultImportHandlerTest {
         @Test
         fun `throws exception if the given file doesn't exist`() {
             // given
-            val testParser = object: Parser by TestParser {
+            val testParser = object: Parser<ParsedFile> by TestImportParser {
                 override fun handlesSuffix(): FileSuffix = "json"
             }
 
@@ -88,7 +89,7 @@ internal class DefaultImportHandlerTest {
         fun `throws exception if the given path is not a file`() {
             tempDirectory {
                 // given
-                val testParser = object: Parser by TestParser {
+                val testParser = object: Parser<ParsedFile> by TestImportParser {
                     override fun handlesSuffix(): FileSuffix = "json"
                 }
 
@@ -108,7 +109,7 @@ internal class DefaultImportHandlerTest {
         fun `throws exception if the file's suffix is not supported`() {
             tempDirectory {
                 // given
-                val testParser = object: Parser by TestParser {
+                val testParser = object: Parser<ParsedFile> by TestImportParser {
                     override fun handlesSuffix(): FileSuffix = "json"
                 }
 
@@ -136,23 +137,23 @@ internal class DefaultImportHandlerTest {
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 )
                 val animeListEntry2 = AnimeListEntry(
-                        link = Link(URI("https://myanimelist.net/anime/57")),
+                        link = Link("https://myanimelist.net/anime/57"),
                         title = "Beck",
                         episodes = 26,
                         type = Anime.Type.TV,
                         location = URI("some/relative/path/beck"),
                 )
 
-                val watchListEntry1 = URL("https://myanimelist.net/anime/37989")
-                val watchListEntry2 = URL("https://myanimelist.net/anime/40059")
+                val watchListEntry1 = URI("https://myanimelist.net/anime/37989")
+                val watchListEntry2 = URI("https://myanimelist.net/anime/40059")
 
-                val ignoreListEntry1 = URL("https://myanimelist.net/anime/28981")
-                val ignoreListEntry2 = URL("https://myanimelist.net/anime/33245")
-                val ignoreListEntry3 = URL("https://myanimelist.net/anime/35923")
-                val ignoreListEntry4 = URL("https://myanimelist.net/anime/31139")
-                val ignoreListEntry5 = URL("https://myanimelist.net/anime/37747")
+                val ignoreListEntry1 = URI("https://myanimelist.net/anime/28981")
+                val ignoreListEntry2 = URI("https://myanimelist.net/anime/33245")
+                val ignoreListEntry3 = URI("https://myanimelist.net/anime/35923")
+                val ignoreListEntry4 = URI("https://myanimelist.net/anime/31139")
+                val ignoreListEntry5 = URI("https://myanimelist.net/anime/37747")
 
-                val testParser = object : Parser {
+                val testParser = object : Parser<ParsedFile> {
                     override fun handlesSuffix(): FileSuffix = "xml"
                     override fun parse(file: RegularFile): ParsedFile {
                         return ParsedFile(
@@ -190,15 +191,43 @@ internal class DefaultImportHandlerTest {
                         animeListEntry2,
                 )
                 assertThat(InternalState.watchList()).containsExactlyInAnyOrder(
-                        watchListEntry1,
-                        watchListEntry2,
+                    WatchListEntry(
+                        link = Link("https://myanimelist.net/anime/37989"),
+                        title = "Golden Kamuy 2nd Season",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                    ),
+                    WatchListEntry(
+                        link = Link("https://myanimelist.net/anime/40059"),
+                        title = "Golden Kamuy 3rd Season",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                    ),
                 )
                 assertThat(InternalState.ignoreList()).containsExactlyInAnyOrder(
-                        ignoreListEntry1,
-                        ignoreListEntry2,
-                        ignoreListEntry3,
-                        ignoreListEntry4,
-                        ignoreListEntry5,
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/28981"),
+                        title = "Ame-iro Cocoa",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/72517t.jpg")
+                    ),
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/33245"),
+                        title = "Ame-iro Cocoa in Hawaii",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/82186t.jpg")
+                    ),
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/35923"),
+                        title = "Ame-iro Cocoa Series: Ame-con!!",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/88225t.jpg")
+                    ),
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/31139"),
+                        title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340.jpg")
+                    ),
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/37747"),
+                        title = "Ame-iro Cocoa: Side G",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1463/97361.jpg")
+                    ),
                 )
                 assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             }

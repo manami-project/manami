@@ -38,7 +38,13 @@ internal object TestAnimeConverter: AnimeConverter {
 }
 
 internal object TestHttpClient: HttpClient {
-    override fun executeRetryable(retryWith: String, func: () -> HttpResponse): HttpResponse  = shouldNotBeInvoked()
-    override fun get(url: URL, headers: Map<String, List<String>>, retryWith: String): HttpResponse  = shouldNotBeInvoked()
+    override fun executeRetryable(retryWith: String, func: () -> HttpResponse): HttpResponse = shouldNotBeInvoked()
+    override fun get(url: URL, headers: Map<String, List<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
     override fun post(url: URL, requestBody: RequestBody, headers: Map<String, List<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
+}
+
+internal object TestAnimeCache: Cache<URI, Anime?> {
+    override fun fetch(key: URI): Anime? = shouldNotBeInvoked()
+    override fun populate(key: URI, value: Anime?) = shouldNotBeInvoked()
+    override fun clear() = shouldNotBeInvoked()
 }

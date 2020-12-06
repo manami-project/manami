@@ -11,7 +11,7 @@ import io.github.manamiproject.modb.core.logging.LoggerDelegate
 internal class DefaultFileHandler(
         private val state: State = InternalState,
         private val commandHistory: CommandHistory = DefaultCommandHistory,
-        private val parser: Parser = FileParser(),
+        private val parser: Parser<ParsedManamiFile> = FileParser(),
 ) : FileHandler {
 
     override fun newFile(ignoreUnsavedChanged: Boolean) {

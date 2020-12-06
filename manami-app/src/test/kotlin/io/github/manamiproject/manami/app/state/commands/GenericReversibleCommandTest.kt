@@ -1,7 +1,9 @@
 package io.github.manamiproject.manami.app.state.commands
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
@@ -16,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
-import java.net.URL
 
 internal class GenericReversibleCommandTest {
 
@@ -84,26 +85,40 @@ internal class GenericReversibleCommandTest {
         // given
         val initialAnimeList = setOf(
                 AnimeListEntry(
-                    link = Link(URI("https://myanimelist.net/anime/1535")),
+                    link = Link("https://myanimelist.net/anime/1535"),
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
                     location = URI("."),
                 )
         )
-        val initialWatchList = setOf(URL("https://myanimelist.net/anime/5114"))
-        val initialIgnoreList = setOf(URL("https://myanimelist.net/anime/28977"))
-
         InternalState.addAllAnimeListEntries(initialAnimeList)
+
+        val initialWatchList = setOf(
+            WatchListEntry(
+                link = Link("https://myanimelist.net/anime/5114"),
+                title = "Fullmetal Alchemist: Brotherhood",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            )
+        )
         InternalState.addAllWatchListEntries(initialWatchList)
+
+        val initialIgnoreList = setOf(
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/28977"),
+                title = "Gintama°",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/72078t.jpg"),
+            )
+        )
         InternalState.addAllIgnoreListEntries(initialIgnoreList)
+
 
         val testCommand = object: Command {
             override fun execute() {
                 InternalState.addAllAnimeListEntries(
                         setOf(
                                 AnimeListEntry(
-                                        link = Link(URI("https://myanimelist.net/anime/28851")),
+                                        link = Link("https://myanimelist.net/anime/28851"),
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = Movie,
@@ -111,8 +126,24 @@ internal class GenericReversibleCommandTest {
                                 )
                         )
                 )
-                InternalState.addAllWatchListEntries(setOf(URL("https://myanimelist.net/anime/35180")))
-                InternalState.addAllIgnoreListEntries(setOf(URL("https://myanimelist.net/anime/11061")))
+                InternalState.addAllWatchListEntries(
+                    setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/35180"),
+                            title = "3-gatsu no Lion 2nd Season",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/88469t.jpg"),
+                        )
+                    )
+                )
+                InternalState.addAllIgnoreListEntries(
+                    setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/11061"),
+                            title = "Hunter x Hunter (2011)",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/33657t.jpg")
+                        )
+                    )
+                )
             }
         }
         val reversibleCommand = GenericReversibleCommand(command = testCommand)

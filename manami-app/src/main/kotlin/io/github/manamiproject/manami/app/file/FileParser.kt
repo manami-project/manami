@@ -1,12 +1,9 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.import.parser.manami.ManamiVersionHandler
 import io.github.manamiproject.manami.app.import.parser.manami.SemanticVersion
-import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Link
-import io.github.manamiproject.manami.app.models.NoLink
+import io.github.manamiproject.manami.app.models.*
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
@@ -19,7 +16,7 @@ import java.net.URI
 import java.net.URL
 import javax.xml.parsers.SAXParserFactory
 
-internal class FileParser : Parser {
+internal class FileParser : Parser<ParsedManamiFile> {
 
     private val saxParser = SAXParserFactory.newInstance().newSAXParser()
     private val versionHandler = ManamiVersionHandler()
@@ -27,7 +24,7 @@ internal class FileParser : Parser {
 
     override fun handlesSuffix(): FileSuffix = "xml"
 
-    override fun parse(file: RegularFile): ParsedFile {
+    override fun parse(file: RegularFile): ParsedManamiFile {
         require(file.regularFileExists()) { "Given path [${file.toAbsolutePath()}] is either not a file or doesn't exist." }
         require(file.fileSuffix() == handlesSuffix()) { "Parser doesn't support given file suffix." }
 
@@ -47,9 +44,9 @@ private class ManamiFileHandler : DefaultHandler() {
 
     private var strBuilder = StringBuilder()
     private val animeListEntries = mutableSetOf<AnimeListEntry>()
-    private val watchListEntries = mutableSetOf<URL>()
-    private val ignoreListEntries = mutableSetOf<URL>()
-    var parsedFile = ParsedFile()
+    private val watchListEntries = mutableSetOf<WatchListEntry>()
+    private val ignoreListEntries = mutableSetOf<IgnoreListEntry>()
+    var parsedFile = ParsedManamiFile()
 
     override fun characters(ch: CharArray, start: Int, length: Int) {
         strBuilder.append(String(ch, start, length))
@@ -60,8 +57,8 @@ private class ManamiFileHandler : DefaultHandler() {
 
         when (qName) {
             "animeListEntry" -> createAnimeEntry(attributes)
-            "watchListEntry" -> watchListEntries.add(URL(attributes.getValue("link").trim()))
-            "ignoreListEntry" -> ignoreListEntries.add(URL(attributes.getValue("link").trim()))
+            "watchListEntry" -> createWatchListEntry(attributes)
+            "ignoreListEntry" -> createIgnoreListEnty(attributes)
         }
     }
 
@@ -70,7 +67,7 @@ private class ManamiFileHandler : DefaultHandler() {
             if (it.isBlank()) {
                 NoLink
             } else {
-                Link(URI(it))
+                Link(it)
             }
         }
 
@@ -85,8 +82,44 @@ private class ManamiFileHandler : DefaultHandler() {
         )
     }
 
+    private fun createWatchListEntry(attributes: Attributes) {
+        val link = attributes.getValue("link").trim().let {
+            if (it.isBlank()) {
+                throw IllegalStateException("Link must not be blank")
+            } else {
+                Link(it)
+            }
+        }
+
+        watchListEntries.add(
+            WatchListEntry(
+                link = link,
+                title = attributes.getValue("title").trim(),
+                thumbnail = URI(attributes.getValue("thumbnail").trim()),
+            )
+        )
+    }
+
+    private fun createIgnoreListEnty(attributes: Attributes) {
+        val link = attributes.getValue("link").trim().let {
+            if (it.isBlank()) {
+                throw IllegalStateException("Link must not be blank")
+            } else {
+                Link(it)
+            }
+        }
+
+        ignoreListEntries.add(
+            IgnoreListEntry(
+                link = link,
+                title = attributes.getValue("title").trim(),
+                thumbnail = URI(attributes.getValue("thumbnail").trim()),
+            )
+        )
+    }
+
     override fun endDocument() {
-        parsedFile = ParsedFile(
+        parsedFile = ParsedManamiFile(
                 animeListEntries = animeListEntries,
                 watchListEntries = watchListEntries,
                 ignoreListEntries = ignoreListEntries,

@@ -5,15 +5,24 @@
 <!ELEMENT animeList (animeListEntry*)>
 <!ELEMENT animeListEntry EMPTY>
 <!ATTLIST animeListEntry episodes CDATA #REQUIRED
-link CDATA #IMPLIED
-location CDATA #REQUIRED
-title CDATA #REQUIRED
-type CDATA #REQUIRED>
+    link CDATA #IMPLIED
+    location CDATA #REQUIRED
+    title CDATA #REQUIRED
+    type CDATA #REQUIRED
+>
 
 <!ELEMENT watchList (watchListEntry*)>
 <!ELEMENT watchListEntry EMPTY>
-<!ATTLIST watchListEntry link CDATA #REQUIRED>
+<!ATTLIST watchListEntry episodes CDATA #REQUIRED
+    link CDATA #IMPLIED
+    title CDATA #REQUIRED
+    thumbnail CDATA #REQUIRED
+>
 
 <!ELEMENT ignoreList (ignoreListEntry*)>
 <!ELEMENT ignoreListEntry EMPTY>
-<!ATTLIST ignoreListEntry link CDATA #REQUIRED>
+<!ATTLIST ignoreListEntry episodes CDATA #REQUIRED
+    link CDATA #IMPLIED
+    title CDATA #REQUIRED
+    thumbnail CDATA #REQUIRED
+>

@@ -1,14 +1,20 @@
 package io.github.manamiproject.manami.app.import
 
+import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
 import io.github.manamiproject.manami.app.import.parser.manami.ManamiLegacyFileParser
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
+import io.github.manamiproject.modb.core.models.Anime
+import java.net.URI
 
 internal class DefaultImportHandler(
-        private val parserList: List<Parser> = listOf(ManamiLegacyFileParser())
+    private val parserList: List<Parser<ParsedFile>> = listOf(ManamiLegacyFileParser()),
+    private val cache: Cache<URI, Anime?> = Caches.animeCache,
 ) : ImportHandler {
 
     init {
@@ -21,7 +27,13 @@ internal class DefaultImportHandler(
 
         val parser = parserList.find { it.handlesSuffix() == file.fileSuffix() } ?: throw IllegalArgumentException("No suitable parser for file type [${file.fileSuffix()}]")
         val content = parser.parse(file)
-        GenericReversibleCommand(command = CmdAddEntriesFromParsedFile(parsedFile = content)).execute()
+
+        GenericReversibleCommand(
+            command = CmdAddEntriesFromParsedFile(
+                parsedFile = content,
+                cache = cache,
+            )
+        ).execute()
     }
 
     private fun hasOnlyOneParserPerSuffix(): Boolean {

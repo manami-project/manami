@@ -1,10 +1,10 @@
 package io.github.manamiproject.manami.app.import.parser
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
-import java.net.URL
+import java.net.URI
 
 data class ParsedFile(
     val animeListEntries: Set<AnimeListEntry> = emptySet(),
-    val watchListEntries: Set<URL> = emptySet(),
-    val ignoreListEntries:  Set<URL> = emptySet(),
+    val watchListEntries: Set<URI> = emptySet(),
+    val ignoreListEntries:  Set<URI> = emptySet(),
 )

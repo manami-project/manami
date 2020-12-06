@@ -125,7 +125,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
 
         val testCache = AnimeCache(listOf(TestCacheLoader))
         val animeCachePopulator = AnimeCachePopulator(
-                url = URL("http://localhost:$port/anime/1535")
+                uri = URI("http://localhost:$port/anime/1535")
         )
 
         serverInstance.stubFor(

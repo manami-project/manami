@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
-import java.net.URL
 
 internal class ManamiLegacyFileParserTest {
 
@@ -110,7 +109,7 @@ internal class ManamiLegacyFileParserTest {
                     location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 ),
                 AnimeListEntry(
-                    link = Link(URI("https://myanimelist.net/anime/57")),
+                    link = Link("https://myanimelist.net/anime/57"),
                     title = "Beck",
                     episodes = 26,
                     type = TV,
@@ -118,15 +117,15 @@ internal class ManamiLegacyFileParserTest {
                 )
         )
         assertThat(result.watchListEntries).containsExactlyInAnyOrder(
-            URL("https://myanimelist.net/anime/37989"),
-            URL("https://myanimelist.net/anime/40059"),
+            URI("https://myanimelist.net/anime/37989"),
+            URI("https://myanimelist.net/anime/40059"),
         )
         assertThat(result.ignoreListEntries).containsExactlyInAnyOrder(
-            URL("https://myanimelist.net/anime/28981"),
-            URL("https://myanimelist.net/anime/33245"),
-            URL("https://myanimelist.net/anime/35923"),
-            URL("https://myanimelist.net/anime/31139"),
-            URL("https://myanimelist.net/anime/37747"),
+            URI("https://myanimelist.net/anime/28981"),
+            URI("https://myanimelist.net/anime/33245"),
+            URI("https://myanimelist.net/anime/35923"),
+            URI("https://myanimelist.net/anime/31139"),
+            URI("https://myanimelist.net/anime/37747"),
         )
     }
 
@@ -142,7 +141,7 @@ internal class ManamiLegacyFileParserTest {
         // then
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
                 AnimeListEntry(
-                        link = Link(URI("https://myanimelist.net/anime/12079")),
+                        link = Link("https://myanimelist.net/anime/12079"),
                         title = "Black★Rock Shooter",
                         episodes = 1,
                         type = Special,

@@ -1,7 +1,9 @@
 package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.core.models.Anime.Type.Special
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -11,7 +13,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
-import java.net.URL
 
 internal class FileParserTest {
 
@@ -110,23 +111,51 @@ internal class FileParserTest {
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 ),
                 AnimeListEntry(
-                        link = Link(URI("https://myanimelist.net/anime/57")),
+                        link = Link("https://myanimelist.net/anime/57"),
                         title = "Beck",
                         episodes = 26,
                         type = TV,
                         location = URI("some/relative/path/beck"),
-                )
+                ),
         )
         assertThat(result.watchListEntries).containsExactlyInAnyOrder(
-                URL("https://myanimelist.net/anime/37989"),
-                URL("https://myanimelist.net/anime/40059"),
+            WatchListEntry(
+                link = Link("https://myanimelist.net/anime/37989"),
+                title = "Golden Kamuy 2nd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+            ),
+            WatchListEntry(
+                link = Link("https://myanimelist.net/anime/40059"),
+                title = "Golden Kamuy 3rd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+            ),
         )
         assertThat(result.ignoreListEntries).containsExactlyInAnyOrder(
-                URL("https://myanimelist.net/anime/28981"),
-                URL("https://myanimelist.net/anime/33245"),
-                URL("https://myanimelist.net/anime/35923"),
-                URL("https://myanimelist.net/anime/31139"),
-                URL("https://myanimelist.net/anime/37747"),
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/28981"),
+                title = "Ame-iro Cocoa",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/72517t.jpg")
+            ),
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/33245"),
+                title = "Ame-iro Cocoa in Hawaii",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/82186t.jpg")
+            ),
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/35923"),
+                title = "Ame-iro Cocoa Series: Ame-con!!",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/88225t.jpg")
+            ),
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/31139"),
+                title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340.jpg")
+            ),
+            IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/37747"),
+                title = "Ame-iro Cocoa: Side G",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1463/97361.jpg")
+            ),
         )
     }
 }
