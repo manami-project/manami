@@ -42,7 +42,7 @@ internal class AnimeCacheTest {
             var timesLoadExternallyHasBeenTriggered = 0
             val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
-                addSources(listOf(source))
+                addSources(source)
             }
 
             val testCacheLoader = object: CacheLoader by TestCacheLoader {
@@ -100,7 +100,7 @@ internal class AnimeCacheTest {
             // given
             val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
-                addSources(listOf(source))
+                addSources(source)
             }
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
@@ -118,14 +118,14 @@ internal class AnimeCacheTest {
             // given
             val source = URI("https://example.org/anime/1535")
             val anime = Anime("Death Note").apply {
-                addSources(listOf(source))
+                addSources(source)
             }
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
             cache.populate(source, anime)
 
             val otherAnime = Anime("Different title").apply {
-                addSources(listOf(source))
+                addSources(source)
             }
 
             // when
@@ -145,12 +145,12 @@ internal class AnimeCacheTest {
             // given
             val source1 = URI("https://example.org/anime/1")
             val anime1 = Anime("Entry1").apply {
-                addSources(listOf(source1))
+                addSources(source1)
             }
 
             val source2 = URI("https://example.org/anime/2")
             val anime2 = Anime("Entry2").apply {
-                addSources(listOf(source2))
+                addSources(source2)
             }
 
             var loadCacheHasBeenTriggeredFor1 = false

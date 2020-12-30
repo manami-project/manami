@@ -57,7 +57,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             duration = Duration(23, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/37989")))
+            addSources(URI("https://myanimelist.net/anime/37989"))
         }
         val watchListEntry2 = Anime(
             _title = "Golden Kamuy 3rd Season",
@@ -69,7 +69,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             duration = Duration(23, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/40059")))
+            addSources(URI("https://myanimelist.net/anime/40059"))
         }
 
         val ignoreListEntry1 = Anime(
@@ -82,7 +82,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/72517t.jpg"),
             duration = Duration(2, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/28981")))
+            addSources(URI("https://myanimelist.net/anime/28981"))
         }
         val ignoreListEntry2 = Anime(
             _title = "Ame-iro Cocoa in Hawaii",
@@ -94,7 +94,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/82186t.jpg"),
             duration = Duration(2, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/33245")))
+            addSources(URI("https://myanimelist.net/anime/33245"))
         }
 
         val testAnimeCache = object : Cache<URI, Anime?> by TestAnimeCache{
@@ -209,7 +209,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             duration = Duration(23, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/37989")))
+            addSources(URI("https://myanimelist.net/anime/37989"))
         }
 
         val ignoreListEntry = Anime(
@@ -222,7 +222,7 @@ internal class CmdAddEntriesFromParsedFileTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/72517t.jpg"),
             duration = Duration(2, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://myanimelist.net/anime/28981")))
+            addSources(URI("https://myanimelist.net/anime/28981"))
         }
 
         val testAnimeCache = object : Cache<URI, Anime?> by TestAnimeCache{

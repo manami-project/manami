@@ -58,26 +58,32 @@ internal class NotifyCacheLoaderTest {
                 status = CURRENTLY,
                 animeSeason = AnimeSeason(
                         season = SUMMER,
-                        _year = 2020
+                        year = 2020
                 ),
                 picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
                 thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
                 duration = Duration(24, MINUTES)
         ).apply {
-            addSources(listOf(URI("https://notify.moe/anime/3lack4eiR")))
-            addSynonyms(listOf(
+            addSources(URI("https://notify.moe/anime/3lack4eiR"))
+            addSynonyms(
                     "My Teen Romantic Comedy SNAFU 3",
                     "My youth romantic comedy is wrong as I expected 3",
                     "Oregairu 3",
                     "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
                     "やはり俺の青春ラブコメはまちがっている。第3期"
-            ))
-            addRelations(listOf(URI("https://notify.moe/anime/Pk0AtFmmg")))
-            addTags(listOf("comedy", "drama", "romance", "school", "slice of life"))
+            )
+            addRelations(URI("https://notify.moe/anime/Pk0AtFmmg"))
+            addTags(
+                "comedy",
+                "drama",
+                "romance",
+                "school",
+                "slice of life",
+            )
         }
 
         val testHttpClient = object: HttpClient by TestHttpClient {
-            override fun get(url: URL, headers: Map<String, List<String>>, retryWith: String): HttpResponse {
+            override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
                 val response = when(url.toString()) {
                     "https://notify.moe/api/anime/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR.json")
                     "https://notify.moe/api/animerelations/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR_relations.json")

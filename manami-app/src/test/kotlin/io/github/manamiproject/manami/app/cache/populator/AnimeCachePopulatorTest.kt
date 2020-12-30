@@ -29,7 +29,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                 status = FINISHED,
                 animeSeason = AnimeSeason(
                         season = FALL,
-                        _year = 2006
+                        year = 2006
                 ),
                 picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
@@ -44,7 +44,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     URI("https://notify.moe/anime/0-A-5Fimg")
                 )
             )
-            addSynonyms(listOf(
+            addSynonyms(
                     "DEATH NOTE",
                     "DN",
                     "Death Note - A halállista",
@@ -62,20 +62,18 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     "デスノート",
                     "死亡笔记",
                     "데스노트"
-            ))
-            addRelations(
-                listOf(
-                    URI("https://anidb.net/anime/8146"),
-                    URI("https://anidb.net/anime/8147"),
-                    URI("https://anilist.co/anime/2994"),
-                    URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
-                    URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
-                    URI("https://kitsu.io/anime/2707"),
-                    URI("https://myanimelist.net/anime/2994"),
-                    URI("https://notify.moe/anime/DBBU5Kimg")
-                )
             )
-            addTags(listOf(
+            addRelations(
+                URI("https://anidb.net/anime/8146"),
+                URI("https://anidb.net/anime/8147"),
+                URI("https://anilist.co/anime/2994"),
+                URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
+                URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
+                URI("https://kitsu.io/anime/2707"),
+                URI("https://myanimelist.net/anime/2994"),
+                URI("https://notify.moe/anime/DBBU5Kimg"),
+            )
+            addTags(
                     "alternative present",
                     "amnesia",
                     "anti-hero",
@@ -119,8 +117,8 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     "urban",
                     "urban fantasy",
                     "vigilantes",
-                    "work"
-            ))
+                    "work",
+            )
         }
 
         val testCache = AnimeCache(listOf(TestCacheLoader))
