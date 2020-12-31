@@ -6,7 +6,6 @@ import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
-import java.net.URL
 
 internal object TestState: State {
     override fun openedFile(file: RegularFile) = shouldNotBeInvoked()

@@ -13,7 +13,6 @@ import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
-import java.net.URL
 import javax.xml.parsers.SAXParserFactory
 
 internal class FileParser : Parser<ParsedManamiFile> {
