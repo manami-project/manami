@@ -1,10 +1,10 @@
 package io.github.manamiproject.manami.app.state
 
+import io.github.manamiproject.manami.app.state.events.EventfulList
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.WatchListEntry
-import io.github.manamiproject.manami.app.state.events.AnimeListChangedEvent
-import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.*
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
@@ -12,9 +12,9 @@ import io.github.manamiproject.modb.core.extensions.regularFileExists
 
 internal object InternalState : State {
 
-    private val animeList: MutableList<AnimeListEntry> = mutableListOf()
-    private val watchList: MutableSet<WatchListEntry> = mutableSetOf()
-    private val ignoreList: MutableSet<IgnoreListEntry> = mutableSetOf()
+    private val animeList: EventfulList<AnimeListEntry> = EventfulList(ANIME_LIST)
+    private val watchList: EventfulList<WatchListEntry> = EventfulList(WATCH_LIST)
+    private val ignoreList: EventfulList<IgnoreListEntry> = EventfulList(IGNORE_LIST)
 
     private var openedFile: OpenedFile = NoFile
 
@@ -32,7 +32,6 @@ internal object InternalState : State {
 
     override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
         animeList.addAll(anime)
-        EventBus.post(AnimeListChangedEvent)
     }
 
     override fun watchList(): Set<WatchListEntry> = watchList.toSet()

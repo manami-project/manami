@@ -8,9 +8,9 @@ import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
-import io.github.manamiproject.manami.app.state.events.AnimeListChangedEvent
 import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.ListChangedEvent
+import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 
 class Manami(
@@ -25,7 +25,7 @@ class Manami(
     ExportHandler by exportHandler {
 
     init {
-        EventBus.subscribe(this)
+        SimpleEventBus.subscribe(this)
     }
 
     private var eventMapper: Event.() -> Unit = {}
@@ -35,5 +35,5 @@ class Manami(
     }
 
     @Subscribe
-    fun subscribe(e: AnimeListChangedEvent) = eventMapper.invoke(e)
+    fun subscribe(e: ListChangedEvent<*>) = eventMapper.invoke(e)
 }

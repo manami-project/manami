@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.Thread.sleep
 
-internal class EventBusTest {
+internal class SimpleEventBusTest {
 
     @Test
     fun `throws exception if there is no subscriber for the given event`() {
         // when
         val result = assertThrows<IllegalStateException> {
-            EventBus.post(TestEvent)
+            SimpleEventBus.post(TestEvent)
         }
 
         // then
@@ -23,7 +23,7 @@ internal class EventBusTest {
     fun `throws exception if subscriber doesn't provide a function with subscribe annotation and exactly one parameter of type event`() {
         // when
         val result = assertThrows<IllegalStateException> {
-            EventBus.subscribe(this)
+            SimpleEventBus.subscribe(this)
         }
 
         // then
@@ -35,16 +35,16 @@ internal class EventBusTest {
         // given
         val testSubscriber = TestSubscriber()
 
-        EventBus.subscribe(testSubscriber)
+        SimpleEventBus.subscribe(testSubscriber)
 
         // when
-        EventBus.post(TestEvent)
+        SimpleEventBus.post(TestEvent)
 
         // then
         sleep(500)
         assertThat(testSubscriber.hasBeenInvoked).isTrue()
 
-        EventBus.unsubscribe(testSubscriber)
+        SimpleEventBus.unsubscribe(testSubscriber)
     }
 
     @Nested
@@ -55,12 +55,12 @@ internal class EventBusTest {
             // given
             val testSubscriber = TestSubscriber()
 
-            EventBus.subscribe(testSubscriber)
+            SimpleEventBus.subscribe(testSubscriber)
 
             // when
-            EventBus.unsubscribe(testSubscriber)
+            SimpleEventBus.unsubscribe(testSubscriber)
             val result = assertThrows<IllegalStateException> {
-                EventBus.post(TestEvent)
+                SimpleEventBus.post(TestEvent)
             }
 
             // then
@@ -74,18 +74,18 @@ internal class EventBusTest {
             val testSubscriber = TestSubscriber()
             val remainingSubscriber = TestSubscriber()
 
-            EventBus.subscribe(testSubscriber)
-            EventBus.subscribe(remainingSubscriber)
+            SimpleEventBus.subscribe(testSubscriber)
+            SimpleEventBus.subscribe(remainingSubscriber)
 
             // when
-            EventBus.unsubscribe(testSubscriber)
-            EventBus.post(TestEvent)
+            SimpleEventBus.unsubscribe(testSubscriber)
+            SimpleEventBus.post(TestEvent)
 
             // then
             sleep(500)
             assertThat(testSubscriber.hasBeenInvoked).isFalse()
             assertThat(remainingSubscriber.hasBeenInvoked).isTrue()
-            EventBus.unsubscribe(remainingSubscriber)
+            SimpleEventBus.unsubscribe(remainingSubscriber)
         }
     }
 }
