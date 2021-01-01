@@ -25,8 +25,6 @@ internal class CmdAddEntriesFromParsedFile(
     override fun execute() {
         log.info("Adding imported anime list entries [{}]", parsedFile.animeListEntries.size)
 
-        state.addAllAnimeListEntries(parsedFile.animeListEntries)
-
         val watchListEntryJob = GlobalScope.async {
             parsedFile.watchListEntries.mapNotNull { cache.fetch(it) }
                 .map { WatchListEntry(it) }
@@ -50,6 +48,7 @@ internal class CmdAddEntriesFromParsedFile(
 
         log.info("Adding watch list entries [{}] and ignore list entries [{}]", watchListEntriss, ignoreListEntries)
 
+        state.addAllAnimeListEntries(parsedFile.animeListEntries)
         state.addAllWatchListEntries(watchListEntriss)
         state.addAllIgnoreListEntries(ignoreListEntries)
     }

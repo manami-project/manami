@@ -5,10 +5,10 @@ import io.github.manamiproject.modb.core.models.Title
 import java.net.URI
 
 data class WatchListEntry(
-    val link: Link,
-    val title: Title,
-    val thumbnail: URI,
-) {
+    override val link: Link,
+    override val title: Title,
+    override val thumbnail: URI,
+) : AnimeEntry {
 
     constructor(anime: Anime): this(
         link = Link(anime.sources.first()),

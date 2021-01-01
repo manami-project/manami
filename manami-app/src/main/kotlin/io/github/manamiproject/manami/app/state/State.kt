@@ -6,7 +6,7 @@ import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
 
-internal interface State {
+internal interface State : StateHandler {
 
     fun openedFile(file: RegularFile)
     fun closeFile()
@@ -14,10 +14,8 @@ internal interface State {
     fun animeList(): List<AnimeListEntry>
     fun addAllAnimeListEntries(anime: Set<AnimeListEntry>)
 
-    fun watchList(): Set<WatchListEntry>
     fun addAllWatchListEntries(anime: Set<WatchListEntry>)
 
-    fun ignoreList(): Set<IgnoreListEntry>
     fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>)
 
     fun createSnapshot(): Snapshot

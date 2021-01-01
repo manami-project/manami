@@ -5,11 +5,10 @@ import tornadofx.View
 import tornadofx.pane
 import tornadofx.tableview
 
-class Animelist : View() {
+class AnimelistView : View() {
 
     override val root = pane {
         tableview<AnimeListEntry> {
-
         }
     }
 }
