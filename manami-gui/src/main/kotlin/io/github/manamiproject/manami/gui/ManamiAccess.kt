@@ -13,7 +13,7 @@ import io.github.manamiproject.manami.app.extensions.castToSet
 import tornadofx.Controller
 import tornadofx.FXEvent
 
-class ManamiAccess(private val manami: ManamiApp = Manami()) : Controller(), ManamiApp by manami {
+class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(), ManamiApp by manami {
 
     init {
         (manami as Manami).eventMapping {
