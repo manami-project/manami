@@ -8,6 +8,9 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
+import javafx.geometry.Pos
+import javafx.geometry.Pos.CENTER
+import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.Group
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.TableColumn
@@ -49,7 +52,9 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 isSortable = false
                 isEditable = false
                 isResizable = true
-                style = "-fx-alignment: CENTER;"
+                style {
+                    alignment = CENTER
+                }
                 prefWidthProperty().bindBidirectional(imageColWidth)
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<ImageView> {
@@ -72,7 +77,9 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 isSortable = animeTableConfig.withSortableTitle
                 isEditable = false
                 isResizable = true
-                style = "-fx-alignment: CENTER-LEFT;"
+                style {
+                    alignment = CENTER_LEFT
+                }
                 comparator = Comparator<Hyperlink> { o1, o2 -> o1.text.compareTo(o2.text, true) }
                 columnResizePolicy = CONSTRAINED_RESIZE_POLICY
                 setCellValueFactory { column ->
@@ -88,7 +95,9 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 isSortable = false
                 isEditable = false
                 isResizable = false
-                style = "-fx-alignment: CENTER;"
+                style {
+                    alignment = CENTER
+                }
                 prefWidthProperty().bindBidirectional(actionsColWidth)
                 setCellValueFactory { _ ->
                     ReadOnlyObservableValue<Group> {

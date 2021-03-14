@@ -12,6 +12,9 @@ import javafx.collections.ObservableList
 import javafx.geometry.Insets
 import javafx.geometry.Pos.CENTER
 import javafx.scene.layout.Priority.ALWAYS
+import javafx.scene.text.FontWeight
+import javafx.scene.text.FontWeight.BOLD
+import javafx.scene.text.FontWeight.EXTRA_BOLD
 import tornadofx.*
 
 class WatchListView : View() {
@@ -46,7 +49,9 @@ class WatchListView : View() {
 
                 label {
                     text = "URL"
-                    style = "-fx-font-weight: bold;"
+                    style {
+                        fontWeight = EXTRA_BOLD
+                    }
                 }
 
                 textfield {
