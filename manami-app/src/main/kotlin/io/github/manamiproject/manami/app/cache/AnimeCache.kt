@@ -13,6 +13,7 @@ import io.github.manamiproject.modb.anilist.AnilistDownloader
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.mal.MalConfig
@@ -30,25 +31,20 @@ internal class AnimeCache(
                 SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
                 NotifyCacheLoader()
         )
-) : Cache<URI, Anime?> {
+) : Cache<URI, CacheEntry<Anime>> {
 
-    private val entries = ConcurrentHashMap<URI, CacheEntry>()
+    private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
 
-    override fun fetch(key: URI): Anime? {
+    override fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
-            is Present -> entry.value
-            Empty -> null
+            is Present<Anime>, is Empty<Anime> -> entry
             null -> loadEntry(key)
         }
     }
 
-    override fun populate(key: URI, value: Anime?) {
+    override fun populate(key: URI, value: CacheEntry<Anime>) {
         if (!entries.containsKey(key)) {
-            entries[key] = if (value == null) {
-                Empty
-            } else {
-                Present(value)
-            }
+            entries[key] = value
         } else {
             log.warn("Not populating cache with key [{}], because it already exists", key)
         }
@@ -59,29 +55,30 @@ internal class AnimeCache(
         entries.clear()
     }
 
-    private fun loadEntry(uri: URI): Anime? {
+    private fun loadEntry(uri: URI): CacheEntry<Anime> {
         log.info("No cache hit for [{}]", uri)
 
         val cacheLoader = cacheLoader.find { uri.toString().contains(it.hostname()) }
 
         if (cacheLoader == null) {
             log.warn("Unable to find a CacheLoader for URI [{}]", uri)
-            return null
+            return Empty()
         }
 
-        val anime = cacheLoader.loadAnime(uri)
-        anime.sources.forEach {
-            populate(it, anime)
+        return try {
+            val anime = cacheLoader.loadAnime(uri)
+            val cacheEntry = Present(anime)
+            anime.sources.forEach {
+                populate(it, cacheEntry)
+            }
+            cacheEntry
+        } catch (t: Throwable) {
+            populate(uri, Empty())
+            Empty()
         }
-
-        return anime
     }
 
     private companion object {
         private val log by LoggerDelegate()
     }
 }
-
-private sealed class CacheEntry
-private class Present(val value: Anime) : CacheEntry()
-private object Empty: CacheEntry()

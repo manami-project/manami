@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.CacheEntry
+import io.github.manamiproject.manami.app.cache.Present
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -18,7 +20,7 @@ import java.net.URI
 internal class CmdAddEntriesFromParsedFile(
         private val state: State = InternalState,
         private val parsedFile: ParsedFile,
-        private val cache: Cache<URI, Anime?>
+        private val cache: Cache<URI, CacheEntry<Anime>>
 ) : Command {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -27,12 +29,14 @@ internal class CmdAddEntriesFromParsedFile(
 
         val watchListEntryJob = GlobalScope.async {
             parsedFile.watchListEntries.mapNotNull { cache.fetch(it) }
-                .map { WatchListEntry(it) }
+                .filterIsInstance<Present<Anime>>()
+                .map { WatchListEntry(it.value) }
                 .toSet() }
 
         val ignoreListEntryJob = GlobalScope.async {
             parsedFile.ignoreListEntries.mapNotNull { cache.fetch(it) }
-                .map { IgnoreListEntry(it) }
+                .filterIsInstance<Present<Anime>>()
+                .map { IgnoreListEntry(it.value) }
                 .toSet()
         }
 

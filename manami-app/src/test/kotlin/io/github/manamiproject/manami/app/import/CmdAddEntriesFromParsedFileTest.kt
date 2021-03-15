@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.import
 
-import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
@@ -97,13 +97,13 @@ internal class CmdAddEntriesFromParsedFileTest {
             addSources(URI("https://myanimelist.net/anime/33245"))
         }
 
-        val testAnimeCache = object : Cache<URI, Anime?> by TestAnimeCache{
-            override fun fetch(key: URI): Anime? {
+        val testAnimeCache = object : Cache<URI, CacheEntry<Anime>> by TestAnimeCache{
+            override fun fetch(key: URI): CacheEntry<Anime> {
                 return when(key) {
-                    watchListEntry1.sources.first() -> watchListEntry1
-                    watchListEntry2.sources.first() -> watchListEntry2
-                    ignoreListEntry1.sources.first() -> ignoreListEntry1
-                    ignoreListEntry2.sources.first() -> ignoreListEntry2
+                    watchListEntry1.sources.first() -> Present(watchListEntry1)
+                    watchListEntry2.sources.first() -> Present(watchListEntry2)
+                    ignoreListEntry1.sources.first() -> Present(ignoreListEntry1)
+                    ignoreListEntry2.sources.first() -> Present(ignoreListEntry2)
                     else -> shouldNotBeInvoked()
                 }
             }
@@ -225,12 +225,12 @@ internal class CmdAddEntriesFromParsedFileTest {
             addSources(URI("https://myanimelist.net/anime/28981"))
         }
 
-        val testAnimeCache = object : Cache<URI, Anime?> by TestAnimeCache{
-            override fun fetch(key: URI): Anime? {
+        val testAnimeCache = object : Cache<URI, CacheEntry<Anime>> by TestAnimeCache{
+            override fun fetch(key: URI): CacheEntry<Anime> {
                 return when(key) {
-                    watchListEntry.sources.first() -> watchListEntry
-                    ignoreListEntry.sources.first() -> ignoreListEntry
-                    else -> null
+                    watchListEntry.sources.first() -> Present(watchListEntry)
+                    ignoreListEntry.sources.first() -> Present(ignoreListEntry)
+                    else -> Empty()
                 }
             }
         }

@@ -70,7 +70,7 @@ internal class AnimeCacheTest {
             val source = URI("https://example.org/anime/1535")
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
-            cache.populate(source, null)
+            cache.populate(source, Empty())
 
             // when
             val result = cache.fetch(URI("https://example.org/anime/1535"))
@@ -106,7 +106,7 @@ internal class AnimeCacheTest {
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
 
             // when
-            cache.populate(source, anime)
+            cache.populate(source, Present(anime))
 
             // then
             val result = cache.fetch(source)
@@ -122,14 +122,14 @@ internal class AnimeCacheTest {
             }
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
-            cache.populate(source, anime)
+            cache.populate(source, Present(anime))
 
             val otherAnime = Anime("Different title").apply {
                 addSources(source)
             }
 
             // when
-            cache.populate(source, otherAnime)
+            cache.populate(source, Present(otherAnime))
 
             // then
             val result = cache.fetch(source)
@@ -173,8 +173,8 @@ internal class AnimeCacheTest {
                 }
             }
             val cache = AnimeCache(cacheLoader = listOf(testCacheLoader)).apply {
-                populate(source1, anime1)
-                populate(source1, anime2)
+                populate(source1, Present(anime1))
+                populate(source1, Present(anime2))
             }
 
             // when

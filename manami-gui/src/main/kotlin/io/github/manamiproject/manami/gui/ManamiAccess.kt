@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventTyp
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.*
 import io.github.manamiproject.manami.app.extensions.castToSet
+import io.github.manamiproject.manami.app.lists.AddWatchListStatusUpdateEvent
 import tornadofx.Controller
 import tornadofx.FXEvent
 
@@ -20,6 +21,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
             fire(
                 when(this) {
                     is ListChangedEvent<*> -> mapListChangeEvent(this)
+                    is AddWatchListStatusUpdateEvent -> AddWatchListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -36,33 +38,34 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
 
     private fun createAnimeListEvent(listChangedEvent: ListChangedEvent<*>): GuiEvent {
         return when(listChangedEvent.type) {
-            ADDED -> AddAnimeListEntry(listChangedEvent.obj.castToSet())
-            REMOVED -> RemoveAnimeListEntry(listChangedEvent.obj.castToSet())
+            ADDED -> AddAnimeListEntryGuiEvent(listChangedEvent.obj.castToSet())
+            REMOVED -> RemoveAnimeListEntryGuiEvent(listChangedEvent.obj.castToSet())
         }
     }
 
     private fun createWatchListEvent(listChangedEvent: ListChangedEvent<*>): GuiEvent {
         return when(listChangedEvent.type) {
-            ADDED -> AddWatchListEntry(listChangedEvent.obj.castToSet())
-            REMOVED -> RemoveWatchListEntry(listChangedEvent.obj.castToSet())
+            ADDED -> AddWatchListEntryGuiEvent(listChangedEvent.obj.castToSet())
+            REMOVED -> RemoveWatchListEntryGuiEvent(listChangedEvent.obj.castToSet())
         }
     }
 
     private fun createIgnoreListEvent(listChangedEvent: ListChangedEvent<*>): GuiEvent {
         return when(listChangedEvent.type) {
-            ADDED -> AddIgnoreListEntry(listChangedEvent.obj.castToSet())
-            REMOVED -> RemoveIgnoreListEntry(listChangedEvent.obj.castToSet())
+            ADDED -> AddIgnoreListEntryGuiEvent(listChangedEvent.obj.castToSet())
+            REMOVED -> RemoveIgnoreListEntryGuiEvent(listChangedEvent.obj.castToSet())
         }
     }
 }
 
 sealed class GuiEvent : FXEvent()
 
-data class AddAnimeListEntry(val entry: Set<AnimeListEntry>) : GuiEvent()
-data class RemoveAnimeListEntry(val entry: Set<AnimeListEntry>) : GuiEvent()
+data class AddAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()
+data class RemoveAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()
 
-data class AddWatchListEntry(val entry: Set<WatchListEntry>) : GuiEvent()
-data class RemoveWatchListEntry(val entry: Set<WatchListEntry>) : GuiEvent()
+data class AddWatchListEntryGuiEvent(val entry: Set<WatchListEntry>) : GuiEvent()
+data class RemoveWatchListEntryGuiEvent(val entry: Set<WatchListEntry>) : GuiEvent()
+data class AddWatchListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
-data class AddIgnoreListEntry(val entry: Set<IgnoreListEntry>) : GuiEvent()
-data class RemoveIgnoreListEntry(val entry: Set<IgnoreListEntry>) : GuiEvent()
+data class AddIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()
+data class RemoveIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()

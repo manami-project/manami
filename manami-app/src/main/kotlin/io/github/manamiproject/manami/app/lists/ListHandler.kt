@@ -6,7 +6,7 @@ import java.net.URI
 
 interface ListHandler {
 
-    fun addWatchListEntry(uri: URI)
+    fun addWatchListEntry(uris: Collection<URI>)
     fun watchList(): Set<WatchListEntry>
 
     fun ignoreList(): Set<IgnoreListEntry>

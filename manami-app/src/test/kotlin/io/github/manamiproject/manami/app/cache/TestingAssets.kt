@@ -43,8 +43,8 @@ internal object TestHttpClient: HttpClient {
     override fun post(url: URL, requestBody: RequestBody, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
 }
 
-internal object TestAnimeCache: Cache<URI, Anime?> {
-    override fun fetch(key: URI): Anime? = shouldNotBeInvoked()
-    override fun populate(key: URI, value: Anime?) = shouldNotBeInvoked()
+internal object TestAnimeCache: Cache<URI, CacheEntry<Anime>> {
+    override fun fetch(key: URI): CacheEntry<Anime> = shouldNotBeInvoked()
+    override fun populate(key: URI, value: CacheEntry<Anime>) = shouldNotBeInvoked()
     override fun clear() = shouldNotBeInvoked()
 }

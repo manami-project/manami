@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
@@ -14,7 +15,7 @@ import java.net.URI
 
 internal class DefaultImportHandler(
     private val parserList: List<Parser<ParsedFile>> = listOf(ManamiLegacyFileParser()),
-    private val cache: Cache<URI, Anime?> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
 ) : ImportHandler {
 
     init {

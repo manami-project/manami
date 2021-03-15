@@ -8,6 +8,7 @@ import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportHandler
+import io.github.manamiproject.manami.app.lists.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
@@ -48,6 +49,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: ListChangedEvent<*>) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AddWatchListStatusUpdateEvent) = eventMapper.invoke(e)
 
     companion object {
         private val log by LoggerDelegate()
