@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.import.parser.manami
 
-import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.core.models.Anime.Type.Special

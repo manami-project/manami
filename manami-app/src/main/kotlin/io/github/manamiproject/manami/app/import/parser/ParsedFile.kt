@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.import.parser
 
-import io.github.manamiproject.manami.app.models.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import java.net.URI
 
 data class ParsedFile(

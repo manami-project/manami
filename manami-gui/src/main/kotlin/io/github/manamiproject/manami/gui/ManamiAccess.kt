@@ -2,9 +2,9 @@ package io.github.manamiproject.manami.gui
 
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
-import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED

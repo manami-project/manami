@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.lists
 
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import java.net.URI
 
 interface ListHandler {

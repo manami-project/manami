@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.extensions
 
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -77,7 +77,7 @@ internal class CollectionExtensionsKtTest {
             }
 
             // then
-            assertThat(result).hasMessage("Not all items are of type [class io.github.manamiproject.manami.app.models.WatchListEntry]")
+            assertThat(result).hasMessage("Not all items are of type [class io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry]")
         }
     }
 }

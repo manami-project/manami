@@ -1,5 +1,7 @@
-package io.github.manamiproject.manami.app.models
+package io.github.manamiproject.manami.app.lists.watchlist
 
+import io.github.manamiproject.manami.app.lists.AnimeEntry
+import io.github.manamiproject.manami.app.models.Link
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Title
 import java.net.URI

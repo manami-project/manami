@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.Command

@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.app.lists.watchlist
 
-import io.github.manamiproject.manami.app.models.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.Command

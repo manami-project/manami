@@ -3,6 +3,9 @@ package io.github.manamiproject.manami.app.file
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.import.parser.manami.ManamiVersionHandler
 import io.github.manamiproject.manami.app.import.parser.manami.SemanticVersion
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.models.*
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile

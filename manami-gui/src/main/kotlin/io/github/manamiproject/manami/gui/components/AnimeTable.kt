@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.components
 
-import io.github.manamiproject.manami.app.models.AnimeEntry
+import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import javafx.beans.property.ObjectProperty
@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
-import javafx.geometry.Pos
 import javafx.geometry.Pos.CENTER
 import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.Group

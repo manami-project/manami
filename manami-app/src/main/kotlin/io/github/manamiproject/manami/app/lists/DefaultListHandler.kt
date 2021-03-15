@@ -3,8 +3,8 @@ package io.github.manamiproject.manami.app.lists
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand

@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.watchlist
 
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.gui.AddWatchListEntry
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.RemoveWatchListEntry
@@ -12,7 +12,6 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
-import java.net.URI
 
 class WatchListView : View() {
 

@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.state
 
-import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
 

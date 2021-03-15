@@ -1,9 +1,9 @@
 package io.github.manamiproject.manami.app.state.commands
 
-import io.github.manamiproject.manami.app.models.AnimeListEntry
-import io.github.manamiproject.manami.app.models.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.Link
-import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
