@@ -5,17 +5,14 @@ import io.github.manamiproject.manami.gui.AddWatchListEntry
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.RemoveWatchListEntry
 import io.github.manamiproject.manami.gui.components.animeTable
+import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.geometry.Insets
-import javafx.geometry.Pos.CENTER
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.scene.text.FontWeight
-import javafx.scene.text.FontWeight.BOLD
-import javafx.scene.text.FontWeight.EXTRA_BOLD
 import tornadofx.*
+import java.net.URI
 
 class WatchListView : View() {
 
@@ -41,28 +38,8 @@ class WatchListView : View() {
             hgrow = ALWAYS
             fitToParentSize()
 
-            hbox {
-                hgrow = ALWAYS
-                alignment = CENTER
-                padding = Insets(10.0)
-                spacing = 5.0
-
-                label {
-                    text = "URL"
-                    style {
-                        fontWeight = EXTRA_BOLD
-                    }
-                }
-
-                textfield {
-                    promptText = "https://myanimelist.net/anime/1535"
-                    prefWidth = 200.0
-                }
-
-                button {
-                    text = "add"
-                    isDefaultButton = true
-                }
+            simpleAnimeAddition {
+                onAdd = { entry -> manamiAccess.addWatchListEntry(entry) }
             }
 
             animeTable<WatchListEntry> {

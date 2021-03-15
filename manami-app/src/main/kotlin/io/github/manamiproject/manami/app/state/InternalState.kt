@@ -1,9 +1,9 @@
 package io.github.manamiproject.manami.app.state
 
-import io.github.manamiproject.manami.app.state.events.EventfulList
 import io.github.manamiproject.manami.app.models.AnimeListEntry
 import io.github.manamiproject.manami.app.models.IgnoreListEntry
 import io.github.manamiproject.manami.app.models.WatchListEntry
+import io.github.manamiproject.manami.app.state.events.EventfulList
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.*
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
@@ -30,20 +30,20 @@ internal object InternalState : State {
 
     override fun animeList(): List<AnimeListEntry> = animeList.toList()
 
-    override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
-        animeList.addAll(anime)
+    override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
+        animeList.addAll(anime.distinct())
     }
 
     override fun watchList(): Set<WatchListEntry> = watchList.toSet()
 
-    override fun addAllWatchListEntries(anime: Set<WatchListEntry>) {
-        watchList.addAll(anime)
+    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
+        watchList.addAll(anime.distinct())
     }
 
     override fun ignoreList(): Set<IgnoreListEntry> = ignoreList.toSet()
 
-    override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) {
-        ignoreList.addAll(anime)
+    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
+        ignoreList.addAll(anime.distinct())
     }
 
     override fun createSnapshot(): Snapshot = StateSnapshot(

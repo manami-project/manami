@@ -8,10 +8,10 @@ import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportHandler
+import io.github.manamiproject.manami.app.lists.DefaultListHandler
+import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
-import io.github.manamiproject.manami.app.state.InternalState
-import io.github.manamiproject.manami.app.state.StateHandler
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
@@ -20,17 +20,17 @@ import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.util.concurrent.Executors
 
 class Manami(
-        private val fileHandler: FileHandler = DefaultFileHandler(),
-        private val searchHandler: SearchHandler = DefaultSearchHandler(),
-        private val importHandler: ImportHandler = DefaultImportHandler(),
-        private val exportHandler: ExportHandler = DefaultExportHandler(),
-        private val stateHandler: StateHandler = InternalState,
+    private val fileHandler: FileHandler = DefaultFileHandler(),
+    private val searchHandler: SearchHandler = DefaultSearchHandler(),
+    private val importHandler: ImportHandler = DefaultImportHandler(),
+    private val exportHandler: ExportHandler = DefaultExportHandler(),
+    private val listHandler: ListHandler = DefaultListHandler(),
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
     ImportHandler by importHandler,
     ExportHandler by exportHandler,
-    StateHandler by stateHandler {
+    ListHandler by listHandler {
 
     init {
         log.info("Starting manami.")

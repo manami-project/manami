@@ -32,9 +32,9 @@ internal class CmdOpenFileTest {
             override fun closeFile() { hasCloseFileBeenCalled = true }
             override fun clear() { hasClearStateBeenCalled = true }
             override fun openedFile(file: RegularFile) { openedFile = file }
-            override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) { animeListEntries.addAll(anime) }
-            override fun addAllWatchListEntries(anime: Set<WatchListEntry>) { watchListEntries.addAll(anime) }
-            override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) { ignoreListEntries.addAll(anime) }
+            override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { animeListEntries.addAll(anime) }
+            override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { watchListEntries.addAll(anime) }
+            override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { ignoreListEntries.addAll(anime) }
         }
 
         val testCommandHistory = object: CommandHistory by TestCommandHistory {

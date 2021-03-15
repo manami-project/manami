@@ -95,9 +95,9 @@ internal class DefaultFileHandlerTest {
 
             val testState = object: State by TestState{
                 override fun clear() { }
-                override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) { }
-                override fun addAllWatchListEntries(anime: Set<WatchListEntry>) { }
-                override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) { }
+                override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
+                override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
+                override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
                 override fun openedFile(file: RegularFile) { isCommandExecuted = true }
                 override fun closeFile() { }
             }

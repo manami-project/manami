@@ -112,19 +112,19 @@ internal class CmdAddEntriesFromParsedFileTest {
         val testState = object: State by TestState {
             private val animeList = mutableListOf<AnimeListEntry>()
             override fun animeList(): List<AnimeListEntry> = animeList
-            override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
+            override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                 animeList.addAll(anime)
             }
 
             private val watchList = mutableSetOf<WatchListEntry>()
             override fun watchList(): Set<WatchListEntry> = watchList
-            override fun addAllWatchListEntries(anime: Set<WatchListEntry>) {
+            override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
                 watchList.addAll(anime)
             }
 
             private val ignoreList = mutableSetOf<IgnoreListEntry>()
             override fun ignoreList(): Set<IgnoreListEntry> = ignoreList
-            override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) {
+            override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
                 ignoreList.addAll(anime)
             }
         }
@@ -238,19 +238,19 @@ internal class CmdAddEntriesFromParsedFileTest {
         val testState = object: State by TestState {
             private val animeList = mutableListOf<AnimeListEntry>()
             override fun animeList(): List<AnimeListEntry> = animeList
-            override fun addAllAnimeListEntries(anime: Set<AnimeListEntry>) {
+            override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                 animeList.addAll(anime)
             }
 
             private val watchList = mutableSetOf<WatchListEntry>()
             override fun watchList(): Set<WatchListEntry> = watchList
-            override fun addAllWatchListEntries(anime: Set<WatchListEntry>) {
+            override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
                 watchList.addAll(anime)
             }
 
             private val ignoreList = mutableSetOf<IgnoreListEntry>()
             override fun ignoreList(): Set<IgnoreListEntry> = ignoreList
-            override fun addAllIgnoreListEntries(anime: Set<IgnoreListEntry>) {
+            override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
                 ignoreList.addAll(anime)
             }
         }
