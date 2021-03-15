@@ -36,7 +36,7 @@ internal class DefaultListHandler(
                         is Empty -> {
                             log.warn("Unable to retrieve anime for [$uri]")
                         }
-                        is Present -> {
+                        is PresentValue -> {
                             GenericReversibleCommand(
                                 command = CmdAddWatchListEntry(
                                     state = state,

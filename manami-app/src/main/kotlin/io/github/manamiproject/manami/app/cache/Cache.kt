@@ -10,5 +10,5 @@ internal interface Cache<KEY, VALUE: CacheEntry<*>> {
 }
 
 sealed class CacheEntry<T>
-class Present<T>(val value: T) : CacheEntry<T>()
+class PresentValue<T>(val value: T) : CacheEntry<T>()
 class Empty<T>: CacheEntry<T>()

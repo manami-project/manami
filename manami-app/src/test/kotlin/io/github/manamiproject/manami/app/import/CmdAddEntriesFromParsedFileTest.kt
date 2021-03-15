@@ -100,10 +100,10 @@ internal class CmdAddEntriesFromParsedFileTest {
         val testAnimeCache = object : Cache<URI, CacheEntry<Anime>> by TestAnimeCache{
             override fun fetch(key: URI): CacheEntry<Anime> {
                 return when(key) {
-                    watchListEntry1.sources.first() -> Present(watchListEntry1)
-                    watchListEntry2.sources.first() -> Present(watchListEntry2)
-                    ignoreListEntry1.sources.first() -> Present(ignoreListEntry1)
-                    ignoreListEntry2.sources.first() -> Present(ignoreListEntry2)
+                    watchListEntry1.sources.first() -> PresentValue(watchListEntry1)
+                    watchListEntry2.sources.first() -> PresentValue(watchListEntry2)
+                    ignoreListEntry1.sources.first() -> PresentValue(ignoreListEntry1)
+                    ignoreListEntry2.sources.first() -> PresentValue(ignoreListEntry2)
                     else -> shouldNotBeInvoked()
                 }
             }
@@ -228,8 +228,8 @@ internal class CmdAddEntriesFromParsedFileTest {
         val testAnimeCache = object : Cache<URI, CacheEntry<Anime>> by TestAnimeCache{
             override fun fetch(key: URI): CacheEntry<Anime> {
                 return when(key) {
-                    watchListEntry.sources.first() -> Present(watchListEntry)
-                    ignoreListEntry.sources.first() -> Present(ignoreListEntry)
+                    watchListEntry.sources.first() -> PresentValue(watchListEntry)
+                    ignoreListEntry.sources.first() -> PresentValue(ignoreListEntry)
                     else -> Empty()
                 }
             }

@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Present
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser
@@ -20,7 +20,7 @@ internal class AnimeCachePopulator(
 
         parser.parse(uri.toURL()).forEach { anime ->
             anime.sources.forEach { source ->
-                cache.populate(source, Present(anime))
+                cache.populate(source, PresentValue(anime))
             }
         }
     }
