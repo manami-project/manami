@@ -1,12 +1,22 @@
 package io.github.manamiproject.manami.app.import.parser.manami
 
 import org.xml.sax.Attributes
+import org.xml.sax.EntityResolver
+import org.xml.sax.InputSource
+import org.xml.sax.Locator
 import org.xml.sax.helpers.DefaultHandler
 
 internal class ManamiVersionHandler : DefaultHandler() {
 
     private var strBuilder = StringBuilder()
-    var version = SemanticVersion()
+
+    private var _version = SemanticVersion()
+    val version
+        get() = _version
+
+    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource("") }
+
+    override fun resolveEntity(publicId: String?, systemId: String?): InputSource = entityResolver.resolveEntity(publicId, systemId)
 
     override fun characters(ch: CharArray, start: Int, length: Int) {
         strBuilder.append(String(ch, start, length))
@@ -23,6 +33,6 @@ internal class ManamiVersionHandler : DefaultHandler() {
     }
 
     override fun endDocument() {
-        version = SemanticVersion(strBuilder.toString())
+        _version = SemanticVersion(strBuilder.toString())
     }
 }

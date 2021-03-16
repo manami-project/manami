@@ -15,13 +15,16 @@ import io.github.manamiproject.modb.core.extensions.newInputStream
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
+import org.xml.sax.EntityResolver
+import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
+import java.nio.file.Paths
 import javax.xml.parsers.SAXParserFactory
 
 internal class FileParser : Parser<ParsedManamiFile> {
 
-    private val saxParser = SAXParserFactory.newInstance().newSAXParser()
+    private val saxParser = SAXParserFactory.newInstance().apply { isValidating = true }.newSAXParser()
     private val versionHandler = ManamiVersionHandler()
     private val documentHandler = ManamiFileHandler()
 
@@ -31,9 +34,16 @@ internal class FileParser : Parser<ParsedManamiFile> {
         require(file.regularFileExists()) { "Given path [${file.toAbsolutePath()}] is either not a file or doesn't exist." }
         require(file.fileSuffix() == handlesSuffix()) { "Parser doesn't support given file suffix." }
 
+        val entityResolver = EntityResolver { _, systemId ->
+            val fileName = Paths.get(systemId).fileName
+            InputSource(file.parent.resolve(fileName).toString())
+        }
+
+        versionHandler.entityResolver = entityResolver
         saxParser.parse(file.newInputStream(), versionHandler)
         require(versionHandler.version == minVersion || versionHandler.version.isNewerThan(minVersion)) { "Unable to parse manami file older than $minVersion" }
 
+        documentHandler.entityResolver = entityResolver
         saxParser.parse(file.newInputStream(), documentHandler)
         return documentHandler.parsedFile
     }
@@ -49,7 +59,14 @@ private class ManamiFileHandler : DefaultHandler() {
     private val animeListEntries = mutableSetOf<AnimeListEntry>()
     private val watchListEntries = mutableSetOf<WatchListEntry>()
     private val ignoreListEntries = mutableSetOf<IgnoreListEntry>()
-    var parsedFile = ParsedManamiFile()
+
+    private var _parsedFile = ParsedManamiFile()
+    val parsedFile
+        get() = _parsedFile
+
+    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource("") }
+
+    override fun resolveEntity(publicId: String?, systemId: String?): InputSource = entityResolver.resolveEntity(publicId, systemId)
 
     override fun characters(ch: CharArray, start: Int, length: Int) {
         strBuilder.append(String(ch, start, length))
@@ -122,7 +139,7 @@ private class ManamiFileHandler : DefaultHandler() {
     }
 
     override fun endDocument() {
-        parsedFile = ParsedManamiFile(
+        _parsedFile = ParsedManamiFile(
                 animeListEntries = animeListEntries,
                 watchListEntries = watchListEntries,
                 ignoreListEntries = ignoreListEntries,
