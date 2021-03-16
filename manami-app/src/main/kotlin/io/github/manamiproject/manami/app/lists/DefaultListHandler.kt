@@ -3,13 +3,15 @@ package io.github.manamiproject.manami.app.lists
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
+import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
@@ -23,12 +25,16 @@ internal class DefaultListHandler(
     private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
 ): ListHandler {
 
-    private val tasks = AtomicInteger(0)
-    private val finishedTasks = AtomicInteger(0)
+    private val totalNumberOfWatchListTasks = AtomicInteger(0)
+    private val finishedAddWatchListTasks = AtomicInteger(0)
+
+    private val totalNumberOfIgnoreListTasks = AtomicInteger(0)
+    private val finishedAddIgnoreListTasks = AtomicInteger(0)
+
     private val pool = Executors.newSingleThreadExecutor()
 
     override fun addWatchListEntry(uris: Collection<URI>) {
-        tasks.addAndGet(uris.size)
+        totalNumberOfWatchListTasks.addAndGet(uris.size)
         pool.invokeAll(
             uris.map { uri ->
                 Callable {
@@ -46,7 +52,7 @@ internal class DefaultListHandler(
                         }
                     }
 
-                    SimpleEventBus.post(AddWatchListStatusUpdateEvent(finishedTasks.incrementAndGet(), tasks.get()))
+                    SimpleEventBus.post(AddWatchListStatusUpdateEvent(finishedAddWatchListTasks.incrementAndGet(), totalNumberOfWatchListTasks.get()))
                 }
             }
         )
@@ -54,11 +60,34 @@ internal class DefaultListHandler(
 
     override fun watchList(): Set<WatchListEntry> = state.watchList()
 
+    override fun addIgnoreListEntry(uris: Collection<URI>) {
+        totalNumberOfIgnoreListTasks.addAndGet(uris.size)
+        pool.invokeAll(
+            uris.map { uri ->
+                Callable {
+                    when(val anime = cache.fetch(uri)) {
+                        is Empty -> {
+                            log.warn("Unable to retrieve anime for [$uri]")
+                        }
+                        is PresentValue -> {
+                            GenericReversibleCommand(
+                                command = CmdAddIgnoreListEntry(
+                                    state = state,
+                                    ignoreListEntry = IgnoreListEntry(anime.value),
+                                )
+                            ).execute()
+                        }
+                    }
+
+                    SimpleEventBus.post(AddIgnoreListStatusUpdateEvent(finishedAddIgnoreListTasks.incrementAndGet(), totalNumberOfIgnoreListTasks.get()))
+                }
+            }
+        )
+    }
+
     override fun ignoreList(): Set<IgnoreListEntry> = state.ignoreList()
 
     companion object {
         private val log by LoggerDelegate()
     }
 }
-
-data class AddWatchListStatusUpdateEvent(val finishedTasks: Int, val tasks: Int): Event

@@ -19,7 +19,7 @@ class WatchListView : View() {
 
     private val manamiAccess: ManamiAccess by inject()
     private val finishedTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
-    private val totalNumberOfTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+    private val tasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
 
     private val watchListEntries: ObjectProperty<ObservableList<WatchListEntry>> = SimpleObjectProperty(
         FXCollections.observableArrayList(manamiAccess.watchList())
@@ -34,7 +34,7 @@ class WatchListView : View() {
         }
         subscribe<AddWatchListStatusUpdateGuiEvent> { event ->
             finishedTasks.set(event.finishedTasks)
-            totalNumberOfTasks.set(event.tasks)
+            tasks.set(event.tasks)
         }
     }
 
@@ -47,7 +47,7 @@ class WatchListView : View() {
 
             simpleAnimeAddition {
                 finishedTasksProperty = finishedTasks
-                totalNumberOfTasksProperty = totalNumberOfTasks
+                numberOfTasksProperty = tasks
                 onAdd = { entry ->
                     manamiAccess.addWatchListEntry(entry)
                 }

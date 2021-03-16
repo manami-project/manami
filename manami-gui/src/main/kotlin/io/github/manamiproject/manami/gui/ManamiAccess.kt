@@ -10,7 +10,8 @@ import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventTyp
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.*
 import io.github.manamiproject.manami.app.extensions.castToSet
-import io.github.manamiproject.manami.app.lists.AddWatchListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import tornadofx.Controller
 import tornadofx.FXEvent
 
@@ -22,6 +23,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                 when(this) {
                     is ListChangedEvent<*> -> mapListChangeEvent(this)
                     is AddWatchListStatusUpdateEvent -> AddWatchListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
+                    is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -69,3 +71,4 @@ data class AddWatchListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: I
 
 data class AddIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()
 data class RemoveIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()
+data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()

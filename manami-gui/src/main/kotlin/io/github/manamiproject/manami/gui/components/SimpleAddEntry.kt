@@ -17,7 +17,7 @@ data class SimpleAnimeAdditionConfig(
     val progressIndicatorVisibleProperty: SimpleBooleanProperty = SimpleBooleanProperty(false),
     val progressIndicatorValueProperty: SimpleDoubleProperty = SimpleDoubleProperty(0.0),
     var finishedTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
-    var totalNumberOfTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
+    var numberOfTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var onAdd: (Collection<URI>) -> Unit = {},
 )
 
@@ -27,12 +27,12 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
         val progressInPercent = if (newValue.toDouble() == 0.0) {
             0.0
         } else {
-            newValue.toDouble()/simpleAnimeAdditionConfig.totalNumberOfTasksProperty.get().toDouble()
+            newValue.toDouble()/simpleAnimeAdditionConfig.numberOfTasksProperty.get().toDouble()
         }
         simpleAnimeAdditionConfig.progressIndicatorValueProperty.set(progressInPercent)
-        simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(simpleAnimeAdditionConfig.totalNumberOfTasksProperty.get() > newValue.toInt())
+        simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(simpleAnimeAdditionConfig.numberOfTasksProperty.get() > newValue.toInt())
     }
-    simpleAnimeAdditionConfig.totalNumberOfTasksProperty.addListener { _, _, newValue ->
+    simpleAnimeAdditionConfig.numberOfTasksProperty.addListener { _, _, newValue ->
         val progressInPercent = if (simpleAnimeAdditionConfig.finishedTasksProperty.get().toDouble() == 0.0) {
             0.0
         } else {

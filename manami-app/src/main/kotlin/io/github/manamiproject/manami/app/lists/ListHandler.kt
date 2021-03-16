@@ -9,5 +9,6 @@ interface ListHandler {
     fun addWatchListEntry(uris: Collection<URI>)
     fun watchList(): Set<WatchListEntry>
 
+    fun addIgnoreListEntry(uris: Collection<URI>)
     fun ignoreList(): Set<IgnoreListEntry>
 }
