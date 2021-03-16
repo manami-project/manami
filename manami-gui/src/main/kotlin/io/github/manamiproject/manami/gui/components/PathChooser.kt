@@ -10,7 +10,6 @@ import javafx.stage.Stage
 object PathChooser {
 
     private val XML_FILTER = ExtensionFilter("XML", "*.xml")
-    private val JSON_FILTER = ExtensionFilter("JSON", "*.json")
 
     fun showOpenFileDialog(stage: Stage): RegularFile? {
         val fileChooser = FileChooser().apply {
@@ -34,15 +33,6 @@ object PathChooser {
         val fileChooser = FileChooser().apply {
             title = "Save your anime list as..."
             extensionFilters.addAll(XML_FILTER)
-        }
-
-        return fileChooser.showSaveDialog(stage).let { it?.toPath() }
-    }
-
-    fun showExportDialog(stage: Stage): RegularFile? {
-        val fileChooser = FileChooser().apply {
-            title = "Export anime list as..."
-            extensionFilters.addAll(JSON_FILTER)
         }
 
         return fileChooser.showSaveDialog(stage).let { it?.toPath() }

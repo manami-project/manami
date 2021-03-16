@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.app.export.FileFormat
 import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
@@ -46,10 +45,6 @@ class MenuView : View() {
             separator()
             item("Import") {
                 action { controller.import(PathChooser.showImportFileDialog(primaryStage)) }
-            }
-            item("Export") {
-                isDisable = true
-                action { controller.export(PathChooser.showExportDialog(primaryStage)) }
             }
             separator()
             item("Save") {
@@ -158,14 +153,6 @@ class MenuController : Controller() {
         if (file != null) {
             runAsync {
                 manamiAccess.import(file)
-            }
-        }
-    }
-
-    fun export(file: RegularFile?) {
-        if (file != null) {
-            runAsync {
-                manamiAccess.export(file, FileFormat.JSON)
             }
         }
     }

@@ -8,7 +8,7 @@ interface Parser<T> {
     fun parse(file: RegularFile): T
 
     /**
-     * @return The supported file suffix without a dot. **Example** _json_
+     * @return The supported file suffix without a dot. **Example** _xml_
      */
     fun handlesSuffix(): FileSuffix
 }
