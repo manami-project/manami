@@ -1,13 +1,17 @@
 package io.github.manamiproject.manami.app.state.commands.history
 
 import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 
 internal object DefaultCommandHistory : CommandHistory {
 
     private val commandHistory: EventStream<ReversibleCommand> = SimpleEventStream()
     private var lastSavedCommand: ReversibleCommand = NoOpCommand
 
-    override fun push(command: ReversibleCommand) = commandHistory.add(command)
+    override fun push(command: ReversibleCommand) {
+        commandHistory.add(command)
+        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+    }
 
     override fun isUndoPossible(): Boolean = commandHistory.hasPrevious()
 
@@ -15,6 +19,7 @@ internal object DefaultCommandHistory : CommandHistory {
         if (isUndoPossible()) {
             commandHistory.element().undo()
             commandHistory.previous()
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
         }
     }
 
@@ -24,6 +29,7 @@ internal object DefaultCommandHistory : CommandHistory {
         if (isRedoPossible()) {
             commandHistory.next()
             commandHistory.element().execute()
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
         }
     }
 
@@ -49,10 +55,14 @@ internal object DefaultCommandHistory : CommandHistory {
             }
 
             commandHistory.crop()
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
         }
     }
 
-    override fun clear() =  commandHistory.clear()
+    override fun clear() {
+        commandHistory.clear()
+        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+    }
 }
 
 private object NoOpCommand : ReversibleCommand {

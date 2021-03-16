@@ -21,6 +21,6 @@ internal class CmdOpenFile(
         state.addAllAnimeListEntries(parsedFile.animeListEntries)
         state.addAllWatchListEntries(parsedFile.watchListEntries)
         state.addAllIgnoreListEntries(parsedFile.ignoreListEntries)
-        state.openedFile(file)
+        state.setOpenedFile(file)
     }
 }

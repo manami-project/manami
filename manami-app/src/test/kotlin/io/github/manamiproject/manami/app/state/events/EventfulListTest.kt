@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.state.events
 
-import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED

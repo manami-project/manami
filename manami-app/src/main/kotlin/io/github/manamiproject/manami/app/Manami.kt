@@ -14,6 +14,7 @@ import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
+import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
@@ -35,7 +36,7 @@ class Manami(
     ListHandler by listHandler {
 
     init {
-        log.info("Starting manami.")
+        log.info("Starting manami")
         SimpleEventBus.subscribe(this)
         runInBackground {
             AnimeCachePopulator().populate(Caches.animeCache)
@@ -56,6 +57,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: AddIgnoreListStatusUpdateEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

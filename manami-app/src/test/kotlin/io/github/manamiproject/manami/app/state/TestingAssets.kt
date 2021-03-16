@@ -8,7 +8,8 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 
 internal object TestState: State {
-    override fun openedFile(file: RegularFile) = shouldNotBeInvoked()
+    override fun setOpenedFile(file: RegularFile) = shouldNotBeInvoked()
+    override fun openedFile(): OpenedFile = shouldNotBeInvoked()
     override fun closeFile() = shouldNotBeInvoked()
     override fun animeList(): List<AnimeListEntry> = shouldNotBeInvoked()
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) = shouldNotBeInvoked()

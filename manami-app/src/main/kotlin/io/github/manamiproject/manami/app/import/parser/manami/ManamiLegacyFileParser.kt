@@ -3,8 +3,8 @@ package io.github.manamiproject.manami.app.import.parser.manami
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
-import io.github.manamiproject.manami.app.models.Link
-import io.github.manamiproject.manami.app.models.NoLink
+import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix

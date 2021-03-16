@@ -98,7 +98,7 @@ internal class DefaultFileHandlerTest {
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
                 override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
                 override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
-                override fun openedFile(file: RegularFile) { isCommandExecuted = true }
+                override fun setOpenedFile(file: RegularFile) { isCommandExecuted = true }
                 override fun closeFile() { }
             }
 

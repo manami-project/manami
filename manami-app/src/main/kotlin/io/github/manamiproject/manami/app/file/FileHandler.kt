@@ -6,6 +6,7 @@ interface FileHandler {
 
     fun newFile(ignoreUnsavedChanged: Boolean = false)
     fun open(file: RegularFile, ignoreUnsavedChanged: Boolean = false)
+    fun isOpenFileSet(): Boolean
 
     fun isSaved(): Boolean
     fun isUnsaved(): Boolean

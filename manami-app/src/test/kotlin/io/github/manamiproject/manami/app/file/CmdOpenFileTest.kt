@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
-import io.github.manamiproject.manami.app.models.Link
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
@@ -31,7 +31,7 @@ internal class CmdOpenFileTest {
         val testState = object: State by TestState {
             override fun closeFile() { hasCloseFileBeenCalled = true }
             override fun clear() { hasClearStateBeenCalled = true }
-            override fun openedFile(file: RegularFile) { openedFile = file }
+            override fun setOpenedFile(file: RegularFile) { openedFile = file }
             override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { animeListEntries.addAll(anime) }
             override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { watchListEntries.addAll(anime) }
             override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { ignoreListEntries.addAll(anime) }

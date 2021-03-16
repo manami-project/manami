@@ -1,16 +1,16 @@
 package io.github.manamiproject.manami.app.lists.animelist
 
-import io.github.manamiproject.manami.app.models.LinkEntry
-import io.github.manamiproject.manami.app.models.NoLink
+import io.github.manamiproject.manami.app.lists.LinkEntry
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Episodes
 import io.github.manamiproject.modb.core.models.Title
 import java.net.URI
 
 data class AnimeListEntry(
-    private val link: LinkEntry = NoLink,
-    private val title: Title,
-    private val episodes: Episodes,
-    private val type: Anime.Type,
-    private val location: URI,
+    val link: LinkEntry = NoLink,
+    val title: Title,
+    val episodes: Episodes,
+    val type: Anime.Type,
+    val location: URI,
 )

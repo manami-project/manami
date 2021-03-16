@@ -18,10 +18,12 @@ internal object InternalState : State {
 
     private var openedFile: OpenedFile = NoFile
 
-    override fun openedFile(file: RegularFile) {
+    override fun setOpenedFile(file: RegularFile) {
         check(file.regularFileExists())
         openedFile = CurrentFile(file)
     }
+
+    override fun openedFile(): OpenedFile = openedFile
 
     override fun closeFile() {
         clear()
@@ -70,6 +72,6 @@ internal object InternalState : State {
     }
 }
 
-private sealed class OpenedFile
-private object NoFile : OpenedFile()
-private data class CurrentFile(val regularFile: RegularFile) : OpenedFile()
+internal sealed class OpenedFile
+internal object NoFile : OpenedFile()
+internal data class CurrentFile(val regularFile: RegularFile) : OpenedFile()

@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.app.export.FileFormat
+import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.Alerts
@@ -14,6 +15,7 @@ import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import javafx.application.Platform
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
@@ -22,6 +24,13 @@ import tornadofx.*
 class MenuView : View() {
 
     private val controller: MenuController by inject()
+    private val isFileSaved = SimpleBooleanProperty(true)
+
+    init {
+        subscribe<FileSavedStatusChangedGuiEvent> { event ->
+            isFileSaved.set(event.isFileSaved)
+        }
+    }
 
     override val root = menubar {
         hgrow = ALWAYS
@@ -44,11 +53,11 @@ class MenuView : View() {
             }
             separator()
             item("Save") {
-                isDisable = true
+                disableProperty().bindBidirectional(isFileSaved)
                 action { controller.save() }
             }
             item("Save as...") {
-                isDisable = true
+                disableProperty().bindBidirectional(isFileSaved)
                 action { controller.saveAs(PathChooser.showSaveAsFileDialog(primaryStage)) }
             }
             separator()
@@ -162,8 +171,12 @@ class MenuController : Controller() {
     }
 
     fun save() {
-        runAsync {
-            manamiAccess.save()
+        if (manamiAccess.isOpenFileSet()) {
+            runAsync {
+                manamiAccess.save()
+            }
+        } else {
+            saveAs(PathChooser.showSaveAsFileDialog(primaryStage))
         }
     }
 

@@ -8,7 +8,8 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 
 internal interface State {
 
-    fun openedFile(file: RegularFile)
+    fun setOpenedFile(file: RegularFile)
+    fun openedFile(): OpenedFile
     fun closeFile()
 
     fun animeList(): List<AnimeListEntry>
