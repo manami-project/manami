@@ -270,7 +270,7 @@ internal class DefaultCommandHistoryTest {
     inner class SaveTests {
 
         @Test
-        fun `when called on initial element remove command and set initial NoOpCommand`() {
+        fun `when called on initial element after undoing a command, the following commands are not cropped`() {
             // given
             val testCommand = object: ReversibleCommand by TestReversibleCommand {
                 override fun undo() { }
@@ -283,8 +283,28 @@ internal class DefaultCommandHistoryTest {
             DefaultCommandHistory.save()
 
             // then
-            assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
+            assertThat(DefaultCommandHistory.isRedoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
+            assertThat(DefaultCommandHistory.isSaved()).isTrue()
+        }
+
+        @Test
+        fun `crop following commands when save is called`() {
+            // given
+            val testCommand = object: ReversibleCommand by TestReversibleCommand {
+                override fun undo() { }
+            }
+
+            DefaultCommandHistory.push(testCommand)
+            DefaultCommandHistory.push(testCommand)
+            DefaultCommandHistory.undo()
+
+            // when
+            DefaultCommandHistory.save()
+
+            // then
+            assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
+            assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
         }
     }

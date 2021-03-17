@@ -43,10 +43,10 @@ object SimpleEventBus : EventBus {
 
     override fun post(event: Event) {
         val subscribers = mapSubscribers[event::class.toString()]
-        val errorMessage = "No subscriber for given event [${event::class}]"
 
-        checkNotNull(subscribers) { errorMessage }
-        check(subscribers.isNotEmpty()) { errorMessage }
+        if (subscribers == null || subscribers.isEmpty()) {
+            return
+        }
 
         subscribers.forEach { subscriber ->
             subscriber::class.members.filterIsInstance<KFunction<*>>()

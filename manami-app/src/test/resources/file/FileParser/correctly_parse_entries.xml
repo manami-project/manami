@@ -6,14 +6,14 @@
     <animeListEntry episodes="4" link="" location="some/relative/path/h2o_-_footprints_in_the_sand_special" title="H2O: Footprints in the Sand" type="Special"/>
   </animeList>
   <watchList>
-    <watchListEntry link="https://myanimelist.net/anime/37989"/>
-    <watchListEntry link="https://myanimelist.net/anime/40059"/>
+    <watchListEntry link="https://myanimelist.net/anime/37989" title="Golden Kamuy 2nd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"/>
+    <watchListEntry link="https://myanimelist.net/anime/40059" title="Golden Kamuy 3rd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"/>
   </watchList>
   <ignoreList>
-    <ignoreListEntry link="https://myanimelist.net/anime/28981"/>
-    <ignoreListEntry link="https://myanimelist.net/anime/33245"/>
-    <ignoreListEntry link="https://myanimelist.net/anime/35923"/>
-    <ignoreListEntry link="https://myanimelist.net/anime/31139"/>
-    <ignoreListEntry link="https://myanimelist.net/anime/37747"/>
+    <ignoreListEntry link="https://myanimelist.net/anime/28981" title="Ame-iro Cocoa" thumbnail="https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"/>
+    <ignoreListEntry link="https://myanimelist.net/anime/33245" title="Ame-iro Cocoa in Hawaii" thumbnail="https://cdn.myanimelist.net/images/anime/1727/111715t.jpg"/>
+    <ignoreListEntry link="https://myanimelist.net/anime/35923" title="Ame-iro Cocoa Series: Ame-con!!" thumbnail="https://cdn.myanimelist.net/images/anime/1165/111716t.jpg"/>
+    <ignoreListEntry link="https://myanimelist.net/anime/31139" title="Ame-iro Cocoa: Rainy Color e Youkoso!" thumbnail="https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"/>
+    <ignoreListEntry link="https://myanimelist.net/anime/37747" title="Ame-iro Cocoa: Side G" thumbnail="https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"/>
   </ignoreList>
 </manami>

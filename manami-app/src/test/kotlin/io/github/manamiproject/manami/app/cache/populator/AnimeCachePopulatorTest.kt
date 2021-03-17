@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app.cache.populator
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
@@ -138,11 +139,11 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         animeCachePopulator.populate(testCache)
 
         // then
-        assertThat(testCache.fetch(URI("https://anidb.net/anime/4563"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URI("https://anilist.co/anime/1535"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URI("https://anime-planet.com/anime/death-note"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URI("https://kitsu.io/anime/1376"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URI("https://myanimelist.net/anime/1535"))).isEqualTo(expectedAnime)
-        assertThat(testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg"))).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://anidb.net/anime/4563")) as PresentValue).value).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://anilist.co/anime/1535")) as PresentValue).value).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://anime-planet.com/anime/death-note")) as PresentValue).value).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://kitsu.io/anime/1376")) as PresentValue).value).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://myanimelist.net/anime/1535")) as PresentValue).value).isEqualTo(expectedAnime)
+        assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedAnime)
     }
 }

@@ -61,7 +61,8 @@ internal class AnimeCacheTest {
 
             // then
             assertThat(timesLoadExternallyHasBeenTriggered).isOne()
-            assertThat(result).isEqualTo(anime)
+            assertThat(result).isInstanceOf(PresentValue::class.java)
+            assertThat((result as PresentValue).value).isEqualTo(anime)
         }
 
         @Test
@@ -76,7 +77,7 @@ internal class AnimeCacheTest {
             val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
-            assertThat(result).isNull()
+            assertThat(result).isInstanceOf(Empty::class.java)
         }
 
         @Test
@@ -88,7 +89,7 @@ internal class AnimeCacheTest {
             val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
-            assertThat(result).isNull()
+            assertThat(result).isInstanceOf(Empty::class.java)
         }
     }
 
@@ -110,7 +111,7 @@ internal class AnimeCacheTest {
 
             // then
             val result = cache.fetch(source)
-            assertThat(result).isEqualTo(anime)
+            assertThat((result as PresentValue).value).isEqualTo(anime)
         }
 
         @Test
@@ -133,7 +134,7 @@ internal class AnimeCacheTest {
 
             // then
             val result = cache.fetch(source)
-            assertThat(result).isEqualTo(anime)
+            assertThat((result as PresentValue).value).isEqualTo(anime)
         }
     }
 

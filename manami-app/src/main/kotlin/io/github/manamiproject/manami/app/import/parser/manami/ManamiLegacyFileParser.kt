@@ -12,8 +12,11 @@ import io.github.manamiproject.modb.core.extensions.newInputStream
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
+import org.xml.sax.EntityResolver
+import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
+import java.nio.file.Paths
 import javax.xml.parsers.SAXParserFactory
 
 internal class ManamiLegacyFileParser : Parser<ParsedFile> {
@@ -28,9 +31,16 @@ internal class ManamiLegacyFileParser : Parser<ParsedFile> {
         require(file.regularFileExists()) { "Given path [${file.toAbsolutePath()}] is either not a file or doesn't exist." }
         require(file.fileSuffix() == handlesSuffix()) { "Parser doesn't support given file suffix." }
 
+        val entityResolver = EntityResolver { _, systemId ->
+            val fileName = Paths.get(systemId).fileName
+            InputSource(file.parent.resolve(fileName).toString())
+        }
+
+        versionHandler.entityResolver = entityResolver
         saxParser.parse(file.newInputStream(), versionHandler)
         require(versionHandler.version != maxVersion && versionHandler.version.isOlderThan(maxVersion)) { "Unable to parse manami file newer than $maxVersion" }
 
+        documentHandler.entityResolver = entityResolver
         saxParser.parse(file.newInputStream(), documentHandler)
         return documentHandler.parsedFile
     }
@@ -47,6 +57,10 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
     private val watchListEntries = mutableSetOf<URI>()
     private val ignoreListEntries = mutableSetOf<URI>()
     var parsedFile = ParsedFile()
+
+    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource("") }
+
+    override fun resolveEntity(publicId: String?, systemId: String?): InputSource = entityResolver.resolveEntity(publicId, systemId)
 
     override fun characters(ch: CharArray, start: Int, length: Int) {
         strBuilder.append(String(ch, start, length))

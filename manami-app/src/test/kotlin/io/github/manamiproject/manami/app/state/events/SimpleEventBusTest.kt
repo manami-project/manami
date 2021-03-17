@@ -9,17 +9,6 @@ import java.lang.Thread.sleep
 internal class SimpleEventBusTest {
 
     @Test
-    fun `throws exception if there is no subscriber for the given event`() {
-        // when
-        val result = assertThrows<IllegalStateException> {
-            SimpleEventBus.post(TestEvent)
-        }
-
-        // then
-        assertThat(result).hasMessage("No subscriber for given event [class io.github.manamiproject.manami.app.state.events.TestEvent]")
-    }
-
-    @Test
     fun `throws exception if subscriber doesn't provide a function with subscribe annotation and exactly one parameter of type event`() {
         // when
         val result = assertThrows<IllegalStateException> {
@@ -59,13 +48,10 @@ internal class SimpleEventBusTest {
 
             // when
             SimpleEventBus.unsubscribe(testSubscriber)
-            val result = assertThrows<IllegalStateException> {
-                SimpleEventBus.post(TestEvent)
-            }
+            SimpleEventBus.post(TestEvent)
 
             // then
             assertThat(testSubscriber.hasBeenInvoked).isFalse()
-            assertThat(result).hasMessage("No subscriber for given event [class io.github.manamiproject.manami.app.state.events.TestEvent]")
         }
 
         @Test

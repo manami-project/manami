@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?xml-stylesheet type="text/xml" href="animelist_transform.xsl"?><!DOCTYPE manami SYSTEM "src/test/resources/fileimport/parser/manami/LegacyManamiParser/animelist.dtd">
+<?xml-stylesheet type="text/xml" href="animelist_transform.xsl"?>
+<!DOCTYPE manami SYSTEM "animelist.dtd">
 <manami version="2.17.6">
   <animeList>
     <anime episodes="26" infoLink="https://myanimelist.net/anime/57" location="some/relative/path/beck" title="Beck" type="TV"/>

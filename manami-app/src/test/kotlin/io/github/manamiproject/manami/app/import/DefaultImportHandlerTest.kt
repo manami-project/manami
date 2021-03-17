@@ -206,27 +206,27 @@ internal class DefaultImportHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/72517t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/33245"),
                         title = "Ame-iro Cocoa in Hawaii",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/82186t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1727/111715t.jpg")
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/35923"),
                         title = "Ame-iro Cocoa Series: Ame-con!!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/3/88225t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1165/111716t.jpg")
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/31139"),
                         title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg")
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/37747"),
                         title = "Ame-iro Cocoa: Side G",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1463/97361.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
                     ),
                 )
                 assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()

@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app.cache.populator
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.Empty
 import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.modb.core.config.AnimeId
@@ -52,7 +53,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
         animeCachePopulator.populate(testCache)
 
         // then
-        assertThat(testCache.fetch(URI("https://example.org/anime/12449"))).isNull()
-        assertThat(testCache.fetch(URI("https://example.org/anime/65562"))).isNull()
+        assertThat(testCache.fetch(URI("https://example.org/anime/12449"))).isInstanceOf(Empty::class.java)
+        assertThat(testCache.fetch(URI("https://example.org/anime/65562"))).isInstanceOf(Empty::class.java)
     }
 }
