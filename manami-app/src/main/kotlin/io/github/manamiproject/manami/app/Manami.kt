@@ -6,10 +6,10 @@ import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportHandler
-import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
@@ -19,6 +19,7 @@ import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.util.concurrent.Executors
+import kotlin.system.exitProcess
 
 class Manami(
     private val fileHandler: FileHandler = DefaultFileHandler(),
@@ -37,6 +38,17 @@ class Manami(
         runInBackground {
             AnimeCachePopulator().populate(Caches.animeCache)
         }
+    }
+
+    override fun quit(ignoreUnsavedChanged: Boolean) {
+        if (!ignoreUnsavedChanged) {
+            check(isSaved()) { "Cannot quit app, because there are unsaved changes." }
+        }
+
+        log.info("Terminating manami")
+
+        backgroundTasks.shutdown()
+        exitProcess(0)
     }
 
     private var eventMapper: Event.() -> Unit = {}

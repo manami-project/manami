@@ -2,9 +2,8 @@ package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
+import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
-import io.github.manamiproject.manami.gui.components.Alerts
-import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.*
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
@@ -13,7 +12,6 @@ import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabReques
 import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import javafx.application.Platform
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.INFORMATION
@@ -108,21 +106,13 @@ class MenuView : View() {
 class MenuController : Controller() {
 
     private val manamiAccess: ManamiAccess by inject()
+    private val safelyExecuteActionController: SafelyExecuteActionController by inject()
+    private val quitController: QuitController by inject()
 
     fun newFile() {
-        val action = if (manamiAccess.isUnsaved()) {
-            Alerts.unsavedChangedAlert()
-        } else {
-            NONE
-        }
-
-        if (action == YES) {
-            save()
-        }
-
-        if (action != CANCEL) {
+        safelyExecuteActionController.safelyExecute { ignoreUnsavedChanged ->
             runAsync {
-                manamiAccess.newFile(ignoreUnsavedChanged = action == NO)
+                manamiAccess.newFile(ignoreUnsavedChanged = ignoreUnsavedChanged)
             }
         }
     }
@@ -132,19 +122,9 @@ class MenuController : Controller() {
             return
         }
 
-        val action = if (manamiAccess.isUnsaved()) {
-            Alerts.unsavedChangedAlert()
-        } else {
-            NONE
-        }
-
-        if (action == YES) {
-            save()
-        }
-
-        if (action != CANCEL) {
+        safelyExecuteActionController.safelyExecute { ignoreUnsavedChanged ->
             runAsync {
-                manamiAccess.open(file = file, ignoreUnsavedChanged = action == NO)
+                manamiAccess.open(file = file, ignoreUnsavedChanged = ignoreUnsavedChanged)
             }
         }
     }
@@ -200,6 +180,6 @@ class MenuController : Controller() {
     }
 
     fun quit() {
-        Platform.exit()
+        quitController.quit()
     }
 }

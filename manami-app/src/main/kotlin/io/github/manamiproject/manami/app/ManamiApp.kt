@@ -5,4 +5,7 @@ import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
 
-interface ManamiApp: SearchHandler, FileHandler, ImportHandler, ListHandler
+interface ManamiApp: SearchHandler, FileHandler, ImportHandler, ListHandler {
+
+    fun quit(ignoreUnsavedChanged: Boolean = false)
+}
