@@ -4,11 +4,12 @@ import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.modb.core.extensions.RegularFile
+import io.github.manamiproject.modb.core.extensions.createFile
+import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -27,7 +28,12 @@ internal class DefaultFileHandlerTest {
                 override fun isSaved(): Boolean = false
             }
 
-            val defaultFileHandler = DefaultFileHandler(commandHistory = testCommandHistory)
+            val defaultFileHandler = DefaultFileHandler(
+                state = TestState,
+                commandHistory = testCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
 
             // when
             val result = assertThrows<IllegalStateException> {
@@ -48,7 +54,17 @@ internal class DefaultFileHandlerTest {
                 override fun clear() { isCommandExecuted = true }
             }
 
-            val defaultFileHandler = DefaultFileHandler(commandHistory = testCommandHistory)
+            val testState = object: State by TestState {
+                override fun closeFile() { }
+                override fun clear() {}
+            }
+
+            val defaultFileHandler = DefaultFileHandler(
+                state = testState,
+                commandHistory = testCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
 
             // when
             defaultFileHandler.newFile(ignoreUnsavedChanged = true)
@@ -68,7 +84,12 @@ internal class DefaultFileHandlerTest {
                 override fun isSaved(): Boolean = false
             }
 
-            val defaultFileHandler = DefaultFileHandler(commandHistory = testCommandHistory)
+            val defaultFileHandler = DefaultFileHandler(
+                state = TestState,
+                commandHistory = testCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
 
             // when
             val result = assertThrows<IllegalStateException> {
@@ -106,6 +127,7 @@ internal class DefaultFileHandlerTest {
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = testParser,
+                    fileWriter = TestFileWriter,
             )
 
             // when
@@ -124,9 +146,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -144,9 +167,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -164,9 +188,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -184,9 +209,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -206,9 +232,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -228,9 +255,10 @@ internal class DefaultFileHandlerTest {
         }
 
         val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+            state = TestState,
+            commandHistory = testCommandHistory,
+            parser = TestManamiFileParser,
+            fileWriter = TestFileWriter,
         )
 
         // when
@@ -238,5 +266,224 @@ internal class DefaultFileHandlerTest {
 
         // then
         assertThat(hasBeenInvoked).isTrue()
+    }
+
+    @Nested
+    inner class IsOpenFileSetTests {
+
+        @Test
+        fun `return true if the opened file is of type CurrentFile which indicates that an file has been set`() {
+            // given
+            val testState = object: State by TestState {
+                override fun openedFile(): OpenedFile = CurrentFile(Paths.get("."))
+            }
+
+            val defaultFileHandler = DefaultFileHandler(
+                state = testState,
+                commandHistory = TestCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
+
+            // when
+            val result = defaultFileHandler.isOpenFileSet()
+
+            // then
+            assertThat(result).isTrue()
+        }
+
+        @Test
+        fun `return false if the opened file is not of type CurrentFile`() {
+            // given
+            val testState = object: State by TestState {
+                override fun openedFile(): OpenedFile = NoFile
+            }
+
+            val defaultFileHandler = DefaultFileHandler(
+                state = testState,
+                commandHistory = TestCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
+
+            // when
+            val result = defaultFileHandler.isOpenFileSet()
+
+            // then
+            assertThat(result).isFalse()
+        }
+    }
+
+    @Nested
+    inner class SaveTests {
+
+        @Test
+        fun `don't do anything if state is already saved`() {
+            // given
+            val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                override fun isSaved(): Boolean = true
+            }
+
+            val defaultFileHandler = DefaultFileHandler(
+                state = TestState,
+                commandHistory = testCommandHistory,
+                parser = TestManamiFileParser,
+                fileWriter = TestFileWriter,
+            )
+
+            // when
+            defaultFileHandler.save()
+        }
+
+        @Test
+        fun `throws exception if openedFile is not set`() {
+            tempDirectory {
+                // given
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                }
+
+                val testState = object: State by TestState {
+                    override fun openedFile(): OpenedFile = NoFile
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    parser = TestManamiFileParser,
+                    fileWriter = TestFileWriter,
+                )
+
+                // when
+                val result = assertThrows<IllegalStateException> {
+                    defaultFileHandler.save()
+                }
+
+                // then
+                assertThat(result).hasMessage("No file set")
+            }
+        }
+
+        @Test
+        fun `successfully write file`() {
+            tempDirectory {
+                // given
+                var  cmdHasBeenSaved = false
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                    override fun save() {
+                        cmdHasBeenSaved = true
+                    }
+                }
+
+                val testState = object: State by TestState {
+                    override fun openedFile(): OpenedFile = CurrentFile(tempDir.resolve("test.xml").createFile())
+                }
+
+                var fileHasBeenWritten = false
+                val testFileWriter = object: FileWriter by TestFileWriter {
+                    override fun writeTo(file: RegularFile) {
+                        fileHasBeenWritten = true
+                    }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    parser = TestManamiFileParser,
+                    fileWriter = testFileWriter,
+                )
+
+                // when
+                defaultFileHandler.save()
+
+                // then
+                assertThat(fileHasBeenWritten).isTrue()
+                assertThat(cmdHasBeenSaved).isTrue()
+            }
+        }
+    }
+
+    @Nested
+    inner class SaveAsTests {
+
+        @Test
+        fun `create file if it doesn't exit`() {
+            tempDirectory {
+                // given
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                    override fun save() { }
+                }
+
+                var savedFile: RegularFile? = null
+                val testState = object: State by TestState {
+                    override fun openedFile(): OpenedFile = CurrentFile(savedFile!!)
+                    override fun setOpenedFile(file: RegularFile) {
+                        savedFile = file
+                    }
+                }
+
+                val testFileWriter = object: FileWriter by TestFileWriter {
+                    override fun writeTo(file: RegularFile) { }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    parser = TestManamiFileParser,
+                    fileWriter = testFileWriter,
+                )
+
+                val fileToSave = tempDir.resolve("junit-test.xml")
+
+                // when
+                defaultFileHandler.saveAs(fileToSave)
+
+                // then
+                assertThat(savedFile).isEqualTo(fileToSave)
+            }
+        }
+
+        @Test
+        fun `successfully write file`() {
+            tempDirectory {
+                // given
+                var  cmdHasBeenSaved = false
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                    override fun save() {
+                        cmdHasBeenSaved = true
+                    }
+                }
+
+                val file = tempDir.resolve("test.xml").createFile()
+                val testState = object: State by TestState {
+                    override fun openedFile(): OpenedFile = CurrentFile(file)
+                    override fun setOpenedFile(file: RegularFile) { }
+                }
+
+                var fileHasBeenWritten = false
+                val testFileWriter = object: FileWriter by TestFileWriter {
+                    override fun writeTo(file: RegularFile) {
+                        fileHasBeenWritten = true
+                    }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    parser = TestManamiFileParser,
+                    fileWriter = testFileWriter,
+                )
+
+                // when
+                defaultFileHandler.saveAs(file)
+
+                // then
+                assertThat(fileHasBeenWritten).isTrue()
+                assertThat(cmdHasBeenSaved).isTrue()
+            }
+        }
     }
 }

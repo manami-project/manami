@@ -12,6 +12,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
+import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
@@ -22,7 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 internal class DefaultListHandler(
     private val state: State = InternalState,
+    private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val eventBus: EventBus = SimpleEventBus,
 ): ListHandler {
 
     private val totalNumberOfWatchListTasks = AtomicInteger(0)
@@ -44,6 +49,8 @@ internal class DefaultListHandler(
                         }
                         is PresentValue -> {
                             GenericReversibleCommand(
+                                state = state,
+                                commandHistory = commandHistory,
                                 command = CmdAddWatchListEntry(
                                     state = state,
                                     watchListEntry = WatchListEntry(anime.value),
@@ -52,7 +59,7 @@ internal class DefaultListHandler(
                         }
                     }
 
-                    SimpleEventBus.post(AddWatchListStatusUpdateEvent(finishedAddWatchListTasks.incrementAndGet(), totalNumberOfWatchListTasks.get()))
+                    eventBus.post(AddWatchListStatusUpdateEvent(finishedAddWatchListTasks.incrementAndGet(), totalNumberOfWatchListTasks.get()))
                 }
             }
         )
@@ -71,6 +78,8 @@ internal class DefaultListHandler(
                         }
                         is PresentValue -> {
                             GenericReversibleCommand(
+                                state = state,
+                                commandHistory = commandHistory,
                                 command = CmdAddIgnoreListEntry(
                                     state = state,
                                     ignoreListEntry = IgnoreListEntry(anime.value),
@@ -79,7 +88,7 @@ internal class DefaultListHandler(
                         }
                     }
 
-                    SimpleEventBus.post(AddIgnoreListStatusUpdateEvent(finishedAddIgnoreListTasks.incrementAndGet(), totalNumberOfIgnoreListTasks.get()))
+                    eventBus.post(AddIgnoreListStatusUpdateEvent(finishedAddIgnoreListTasks.incrementAndGet(), totalNumberOfIgnoreListTasks.get()))
                 }
             }
         )

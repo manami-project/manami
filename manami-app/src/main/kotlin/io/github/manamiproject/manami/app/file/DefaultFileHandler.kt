@@ -60,7 +60,7 @@ internal class DefaultFileHandler(
         }
 
         val file = state.openedFile()
-        check(file is CurrentFile)
+        check(file is CurrentFile) { "No file set" }
 
         fileWriter.writeTo(file.regularFile)
         commandHistory.save()

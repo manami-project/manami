@@ -88,6 +88,38 @@ internal class DefaultFileWriterTest {
     }
 
     @Test
+    fun `ensure that the structure of the written file is correct for completely empty lists`() {
+        tempDirectory {
+            // given
+            val testState = object: State by TestState {
+                override fun animeList(): List<AnimeListEntry> = emptyList()
+                override fun watchList(): Set<WatchListEntry> = emptySet()
+                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+            }
+
+            val fileWriter = DefaultFileWriter(state = testState)
+
+            // when
+            fileWriter.writeTo(tempDir.resolve("test.xml"))
+
+            // then
+            val content = tempDir.resolve("test.xml").readFile()
+            assertThat(content).isEqualTo("""
+                <?xml version="1.0" ?>
+                <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
+                <manami version="3.0.0">
+                  <animeList>
+                  </animeList>
+                  <watchList>
+                  </watchList>
+                  <ignoreList>
+                  </ignoreList>
+                </manami>
+            """.trimIndent())
+        }
+    }
+
+    @Test
     fun `writes dtd file along with the actual file`() {
         tempDirectory {
             // given
@@ -104,6 +136,58 @@ internal class DefaultFileWriterTest {
 
             // then
             assertThat(tempDir.resolve("manami_3.0.0.dtd")).exists()
+        }
+    }
+
+    @Test
+    fun `dtd content for version 3 0 0`() {
+        tempDirectory {
+            // given
+
+            val testState = object: State by TestState {
+                override fun animeList(): List<AnimeListEntry> = emptyList()
+                override fun watchList(): Set<WatchListEntry> = emptySet()
+                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+            }
+
+            val fileWriter = DefaultFileWriter(state = testState)
+
+            // when
+            fileWriter.writeTo(tempDir.resolve("test.xml"))
+
+            // then
+            assertThat(tempDir.resolve("manami_3.0.0.dtd").readFile()).isEqualTo(
+                """
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <!ELEMENT manami (animeList, watchList, ignoreList)>
+                    <!ATTLIST manami version CDATA #REQUIRED>
+        
+                    <!ELEMENT animeList (animeListEntry*)>
+                    <!ELEMENT animeListEntry EMPTY>
+                    <!ATTLIST animeListEntry episodes CDATA #REQUIRED
+                        link CDATA #IMPLIED
+                        location CDATA #REQUIRED
+                        title CDATA #REQUIRED
+                        type CDATA #REQUIRED
+                    >
+        
+                    <!ELEMENT watchList (watchListEntry*)>
+                    <!ELEMENT watchListEntry EMPTY>
+                    <!ATTLIST watchListEntry episodes CDATA #REQUIRED
+                        link CDATA #IMPLIED
+                        title CDATA #REQUIRED
+                        thumbnail CDATA #REQUIRED
+                    >
+        
+                    <!ELEMENT ignoreList (ignoreListEntry*)>
+                    <!ELEMENT ignoreListEntry EMPTY>
+                    <!ATTLIST ignoreListEntry episodes CDATA #REQUIRED
+                        link CDATA #IMPLIED
+                        title CDATA #REQUIRED
+                        thumbnail CDATA #REQUIRED
+                    >
+                """.trimIndent()
+            )
         }
     }
 }

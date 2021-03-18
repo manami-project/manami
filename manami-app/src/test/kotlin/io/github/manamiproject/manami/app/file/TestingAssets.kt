@@ -9,3 +9,7 @@ object TestManamiFileParser: Parser<ParsedManamiFile> {
     override fun parse(file: RegularFile): ParsedManamiFile = shouldNotBeInvoked()
     override fun handlesSuffix(): FileSuffix = shouldNotBeInvoked()
 }
+
+object TestFileWriter: FileWriter {
+    override fun writeTo(file: RegularFile) = shouldNotBeInvoked()
+}

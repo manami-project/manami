@@ -19,7 +19,7 @@ internal object InternalState : State {
     private var openedFile: OpenedFile = NoFile
 
     override fun setOpenedFile(file: RegularFile) {
-        check(file.regularFileExists())
+        check(file.regularFileExists()) { "Path is not a regular file" }
         openedFile = CurrentFile(file)
     }
 

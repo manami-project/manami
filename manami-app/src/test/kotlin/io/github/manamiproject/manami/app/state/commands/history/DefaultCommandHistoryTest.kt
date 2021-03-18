@@ -2,16 +2,29 @@ package io.github.manamiproject.manami.app.state.commands.history
 
 import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
 import io.github.manamiproject.manami.app.state.commands.TestReversibleCommand
+import io.github.manamiproject.manami.app.state.events.SimpleEventBus
+import io.github.manamiproject.manami.app.state.events.Subscribe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.lang.Thread.sleep
 
 internal class DefaultCommandHistoryTest {
+
+    private var testEventSubscriber = TestEventSubscriber()
+
+    @BeforeEach
+    fun before() {
+        SimpleEventBus.subscribe(testEventSubscriber)
+    }
 
     @AfterEach
     fun afterEach() {
         DefaultCommandHistory.clear()
+        testEventSubscriber.events.clear()
+        SimpleEventBus.unsubscribe(testEventSubscriber)
     }
 
     @Nested
@@ -24,6 +37,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events.first()).isFalse()
         }
     }
 
@@ -43,6 +58,8 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
         }
     }
 
@@ -65,6 +82,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false)
         }
     }
 
@@ -92,6 +111,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, true)
         }
     }
 
@@ -113,6 +134,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(commandUndone).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, true)
         }
     }
 
@@ -139,6 +162,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(commandRedone).isOne()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, false, false, false)
         }
     }
 
@@ -165,6 +190,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false)
         }
 
         @Test
@@ -182,6 +209,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, true)
         }
 
         @Test
@@ -201,6 +230,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
         }
     }
 
@@ -227,6 +258,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false)
         }
 
         @Test
@@ -244,6 +277,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, true)
         }
 
         @Test
@@ -263,6 +298,8 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
         }
     }
 
@@ -286,6 +323,8 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isRedoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, true)
         }
 
         @Test
@@ -306,6 +345,18 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
+            sleep(1000)
+            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
         }
+    }
+}
+
+internal class TestEventSubscriber {
+
+    val events = mutableListOf<Boolean>()
+
+    @Subscribe
+    fun subscribe(event: FileSavedStatusChangedEvent) {
+        events.add(event.isFileSaved)
     }
 }
