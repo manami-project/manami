@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
+import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
@@ -68,6 +69,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: ImportFinishedEvent) = eventMapper.invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

@@ -11,6 +11,8 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
@@ -22,6 +24,7 @@ internal class DefaultImportHandler(
     private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
+    private val eventBus: EventBus = SimpleEventBus,
 ) : ImportHandler {
 
     init {
@@ -43,6 +46,8 @@ internal class DefaultImportHandler(
                 cache = cache,
             )
         ).execute()
+
+        eventBus.post(ImportFinishedEvent)
     }
 
     private fun hasOnlyOneParserPerSuffix(): Boolean {

@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
+import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
@@ -16,6 +17,8 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
+import javafx.stage.StageStyle
+import javafx.stage.StageStyle.UNDECORATED
 import tornadofx.*
 
 class MenuView : View() {
@@ -42,7 +45,10 @@ class MenuView : View() {
             }
             separator()
             item("Import") {
-                action { controller.import(PathChooser.showImportFileDialog(primaryStage)) }
+                action {
+                    find<ApplicationBlockedLoading>().openModal(resizable = false, escapeClosesWindow = false, stageStyle = UNDECORATED)
+                    controller.import(PathChooser.showImportFileDialog(primaryStage))
+                }
             }
             separator()
             item("Save") {

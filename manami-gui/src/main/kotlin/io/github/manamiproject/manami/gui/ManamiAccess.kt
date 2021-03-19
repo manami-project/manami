@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.gui
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.extensions.castToSet
+import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -26,6 +27,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AddWatchListStatusUpdateEvent -> AddWatchListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is FileSavedStatusChangedEvent -> FileSavedStatusChangedGuiEvent(this.isFileSaved)
+                    is ImportFinishedEvent -> ImportFinishedGuiEvent
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -76,3 +78,5 @@ data class RemoveIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiE
 data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
 data class FileSavedStatusChangedGuiEvent(val isFileSaved: Boolean): GuiEvent()
+
+object ImportFinishedGuiEvent: GuiEvent()

@@ -99,7 +99,7 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
                 title = attributes.getValue("title").trim(),
                 episodes = attributes.getValue("episodes").trim().toInt(),
                 type = type,
-                location = URI(attributes.getValue("location").trim()),
+                location = URI(attributes.getValue("location").trim().replace("%", "%25")),
             )
         )
     }
