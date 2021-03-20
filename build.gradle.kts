@@ -1,9 +1,17 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version "1.4.31"
     application
+    id("com.github.johnrengelman.shadow") version("6.1.0")
 }
 
 allprojects {
+    apply {
+        plugin("java-library")
+        plugin("org.jetbrains.kotlin.jvm")
+    }
+
     repositories {
         jcenter()
         maven {
@@ -12,12 +20,11 @@ allprojects {
     }
 
     group = "io.github.manamiproject"
-    version = "1.0"
+    version = "3.0.0"
 }
 
 subprojects {
     apply {
-        plugin("application")
         plugin("org.jetbrains.kotlin.jvm")
     }
 
@@ -44,6 +51,27 @@ subprojects {
         reports.html.isEnabled = false
         reports.junitXml.isEnabled = false
         maxParallelForks = Runtime.getRuntime().availableProcessors()
+    }
+}
+
+dependencies {
+    api(project(":manami-app"))
+    api(project(":manami-gui"))
+}
+
+val mainClassPath = "io.github.manamiproject.manami.gui.StartKt"
+application {
+    mainClass.set(mainClassPath)
+    mainClassName = mainClassPath
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveClassifier.set("")
+        manifest {
+            attributes["Main-Class"] = mainClassPath
+        }
+        exclude(".gitemptydir")
     }
 }
 
