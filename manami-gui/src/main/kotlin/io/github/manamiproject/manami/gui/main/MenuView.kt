@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
@@ -17,7 +18,6 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.stage.StageStyle
 import javafx.stage.StageStyle.UNDECORATED
 import tornadofx.*
 
@@ -47,7 +47,10 @@ class MenuView : View() {
             item("Import") {
                 action {
                     find<ApplicationBlockedLoading>().openModal(resizable = false, escapeClosesWindow = false, stageStyle = UNDECORATED)
-                    controller.import(PathChooser.showImportFileDialog(primaryStage))
+                    when(val file = PathChooser.showImportFileDialog(primaryStage)) {
+                        null -> fire(ImportFinishedGuiEvent)
+                        else -> controller.import(file)
+                    }
                 }
             }
             separator()
