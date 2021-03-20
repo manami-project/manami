@@ -6,15 +6,16 @@
 <!ELEMENT animeListEntry EMPTY>
 <!ATTLIST animeListEntry episodes CDATA #REQUIRED
     link CDATA #IMPLIED
-    location CDATA #REQUIRED
     title CDATA #REQUIRED
     type CDATA #REQUIRED
+    episodes CDATA #REQUIRED
+    location CDATA #REQUIRED
 >
 
 <!ELEMENT watchList (watchListEntry*)>
 <!ELEMENT watchListEntry EMPTY>
 <!ATTLIST watchListEntry episodes CDATA #REQUIRED
-    link CDATA #IMPLIED
+    link CDATA #REQUIRED
     title CDATA #REQUIRED
     thumbnail CDATA #REQUIRED
 >
@@ -22,7 +23,7 @@
 <!ELEMENT ignoreList (ignoreListEntry*)>
 <!ELEMENT ignoreListEntry EMPTY>
 <!ATTLIST ignoreListEntry episodes CDATA #REQUIRED
-    link CDATA #IMPLIED
+    link CDATA #REQUIRED
     title CDATA #REQUIRED
     thumbnail CDATA #REQUIRED
 >

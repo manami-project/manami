@@ -67,12 +67,12 @@ internal class DefaultFileWriterTest {
             // then
             val content = tempDir.resolve("test.xml").readFile()
             assertThat(content).isEqualTo("""
-                <?xml version="1.0" ?>
+                <?xml version="1.1" encoding="UTF-8"?>
                 <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
                 <manami version="3.0.0">
                   <animeList>
-                    <animeListEntry link="https://myanimelist.net/anime/57" location="some/relative/path/beck" title="Beck" type="TV"/>
-                    <animeListEntry link="" location="some/relative/path/h2o_-_footprints_in_the_sand_special" title="H2O: Footprints in the Sand" type="Special"/>
+                    <animeListEntry link="https://myanimelist.net/anime/57" title="Beck" type="TV" episodes="26" location="some/relative/path/beck"/>
+                    <animeListEntry link="" title="H2O: Footprints in the Sand" type="Special" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                   </animeList>
                   <watchList>
                     <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"/>
@@ -105,7 +105,7 @@ internal class DefaultFileWriterTest {
             // then
             val content = tempDir.resolve("test.xml").readFile()
             assertThat(content).isEqualTo("""
-                <?xml version="1.0" ?>
+                <?xml version="1.1" encoding="UTF-8"?>
                 <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
                 <manami version="3.0.0">
                   <animeList>
@@ -166,15 +166,16 @@ internal class DefaultFileWriterTest {
                     <!ELEMENT animeListEntry EMPTY>
                     <!ATTLIST animeListEntry episodes CDATA #REQUIRED
                         link CDATA #IMPLIED
-                        location CDATA #REQUIRED
                         title CDATA #REQUIRED
                         type CDATA #REQUIRED
+                        episodes CDATA #REQUIRED
+                        location CDATA #REQUIRED
                     >
         
                     <!ELEMENT watchList (watchListEntry*)>
                     <!ELEMENT watchListEntry EMPTY>
                     <!ATTLIST watchListEntry episodes CDATA #REQUIRED
-                        link CDATA #IMPLIED
+                        link CDATA #REQUIRED
                         title CDATA #REQUIRED
                         thumbnail CDATA #REQUIRED
                     >
@@ -182,7 +183,7 @@ internal class DefaultFileWriterTest {
                     <!ELEMENT ignoreList (ignoreListEntry*)>
                     <!ELEMENT ignoreListEntry EMPTY>
                     <!ATTLIST ignoreListEntry episodes CDATA #REQUIRED
-                        link CDATA #IMPLIED
+                        link CDATA #REQUIRED
                         title CDATA #REQUIRED
                         thumbnail CDATA #REQUIRED
                     >

@@ -21,7 +21,7 @@ internal class DefaultFileWriter(
         loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile))
 
         val xmlWriter = xmlWriterFactory.createXMLStreamWriter(file.newOutputStream()).apply {
-            writeStartDocument()
+            writeStartDocument("UTF-8", "1.1")
             writeCharacters(LINEBREAK)
             writeDTD("<!DOCTYPE manami SYSTEM \"$dtdFile\">")
             writeCharacters(LINEBREAK)
@@ -37,9 +37,10 @@ internal class DefaultFileWriter(
             xmlWriter.writeCharacters(IDENT_2)
             xmlWriter.writeEmptyElement("animeListEntry")
             xmlWriter.writeAttribute("link", animeListEntry.link.toString())
-            xmlWriter.writeAttribute("location", animeListEntry.location.toString())
             xmlWriter.writeAttribute("title", animeListEntry.title)
             xmlWriter.writeAttribute("type", animeListEntry.type.toString())
+            xmlWriter.writeAttribute("episodes", animeListEntry.episodes.toString())
+            xmlWriter.writeAttribute("location", animeListEntry.location.toString())
             xmlWriter.writeCharacters(LINEBREAK)
         }
 
