@@ -22,24 +22,25 @@ data class SimpleAnimeAdditionConfig(
 )
 
 inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() -> Unit): HBox {
-    val simpleAnimeAdditionConfig = SimpleAnimeAdditionConfig().apply(config)
-    simpleAnimeAdditionConfig.finishedTasksProperty.addListener { _, _, newValue ->
-        val progressInPercent = if (newValue.toDouble() == 0.0) {
-            0.0
-        } else {
-            newValue.toDouble()/simpleAnimeAdditionConfig.numberOfTasksProperty.get().toDouble()
+    val simpleAnimeAdditionConfig = SimpleAnimeAdditionConfig().apply(config).apply {
+        finishedTasksProperty.addListener { _, _, newValue ->
+            val progressInPercent = if (newValue.toDouble() == 0.0) {
+                0.0
+            } else {
+                newValue.toDouble()/numberOfTasksProperty.get().toDouble()
+            }
+            progressIndicatorValueProperty.set(progressInPercent)
+            progressIndicatorVisibleProperty.set(numberOfTasksProperty.get() > newValue.toInt())
         }
-        simpleAnimeAdditionConfig.progressIndicatorValueProperty.set(progressInPercent)
-        simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(simpleAnimeAdditionConfig.numberOfTasksProperty.get() > newValue.toInt())
-    }
-    simpleAnimeAdditionConfig.numberOfTasksProperty.addListener { _, _, newValue ->
-        val progressInPercent = if (simpleAnimeAdditionConfig.finishedTasksProperty.get().toDouble() == 0.0) {
-            0.0
-        } else {
-            simpleAnimeAdditionConfig.finishedTasksProperty.get().toDouble() / newValue.toDouble()
+        numberOfTasksProperty.addListener { _, _, newValue ->
+            val progressInPercent = if (finishedTasksProperty.get().toDouble() == 0.0) {
+                0.0
+            } else {
+                finishedTasksProperty.get().toDouble() / newValue.toDouble()
+            }
+            progressIndicatorValueProperty.set(progressInPercent)
+            progressIndicatorVisibleProperty.set(finishedTasksProperty.get() < newValue.toInt())
         }
-        simpleAnimeAdditionConfig.progressIndicatorValueProperty.set(progressInPercent)
-        simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(simpleAnimeAdditionConfig.finishedTasksProperty.get() < newValue.toInt())
     }
 
     return hbox {
@@ -71,6 +72,8 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
                 val urls = txtUrls.text.trim().split(' ').map { it.trim() }.map { URI(it) }
 
                 if (urls.isNotEmpty()) {
+                    simpleAnimeAdditionConfig.progressIndicatorValueProperty.set(-1.0)
+                    simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(true)
                     runAsync { simpleAnimeAdditionConfig.onAdd.invoke(urls) }
                     txtUrls.text = EMPTY
                 }
