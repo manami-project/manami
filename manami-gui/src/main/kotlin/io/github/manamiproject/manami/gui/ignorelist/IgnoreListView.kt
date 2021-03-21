@@ -22,7 +22,7 @@ class IgnoreListView : View() {
     private val tasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
 
     private val ignoreListEntries: ObjectProperty<ObservableList<IgnoreListEntry>> = SimpleObjectProperty(
-        FXCollections.observableArrayList(manamiAccess.ignoreList())
+        FXCollections.observableArrayList()
     )
 
     init {
