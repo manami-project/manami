@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
+import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
@@ -28,6 +29,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is FileSavedStatusChangedEvent -> FileSavedStatusChangedGuiEvent(this.isFileSaved)
                     is ImportFinishedEvent -> ImportFinishedGuiEvent
+                    is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -78,5 +80,6 @@ data class RemoveIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiE
 data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
 data class FileSavedStatusChangedGuiEvent(val isFileSaved: Boolean): GuiEvent()
+data class UndoRedoStatusGuiEvent(val isUndoPossible: Boolean, val isRedoPossible: Boolean): GuiEvent()
 
 object ImportFinishedGuiEvent: GuiEvent()

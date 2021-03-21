@@ -1,9 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
-import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
-import io.github.manamiproject.manami.gui.ManamiAccess
-import io.github.manamiproject.manami.gui.SafelyExecuteActionController
+import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.PathChooser
@@ -25,10 +22,16 @@ class MenuView : View() {
 
     private val controller: MenuController by inject()
     private val isFileSaved = SimpleBooleanProperty(true)
+    private val isUndoPossible = SimpleBooleanProperty(true)
+    private val isRedoPossible = SimpleBooleanProperty(true)
 
     init {
         subscribe<FileSavedStatusChangedGuiEvent> { event ->
             isFileSaved.set(event.isFileSaved)
+        }
+        subscribe<UndoRedoStatusGuiEvent> { event ->
+            isUndoPossible.set(!event.isUndoPossible)
+            isRedoPossible.set(!event.isRedoPossible)
         }
     }
 
@@ -69,11 +72,11 @@ class MenuView : View() {
         }
         menu("Edit") {
             item("Undo") {
-                isDisable = true
+                disableProperty().bindBidirectional(isUndoPossible)
                 action { controller.undo() }
             }
             item("Redo") {
-                isDisable = true
+                disableProperty().bindBidirectional(isRedoPossible)
                 action { controller.redo() }
             }
         }

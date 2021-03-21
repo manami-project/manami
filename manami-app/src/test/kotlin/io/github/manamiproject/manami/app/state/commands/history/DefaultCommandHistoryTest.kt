@@ -23,7 +23,8 @@ internal class DefaultCommandHistoryTest {
     @AfterEach
     fun afterEach() {
         DefaultCommandHistory.clear()
-        testEventSubscriber.events.clear()
+        testEventSubscriber.fileSavedEvents.clear()
+        testEventSubscriber.undoRedoStatusEvents.clear()
         SimpleEventBus.unsubscribe(testEventSubscriber)
     }
 
@@ -38,7 +39,10 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events.first()).isFalse()
+            assertThat(testEventSubscriber.fileSavedEvents.first()).isFalse()
+            assertThat(testEventSubscriber.undoRedoStatusEvents.first()).isEqualTo(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 
@@ -59,7 +63,13 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = false),
+            )
         }
     }
 
@@ -83,7 +93,10 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 
@@ -112,7 +125,11 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
+            )
         }
     }
 
@@ -135,7 +152,11 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(commandUndone).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
+            )
         }
     }
 
@@ -163,7 +184,13 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(commandRedone).isOne()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, false, false, false)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, false)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 
@@ -191,7 +218,10 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
 
         @Test
@@ -210,7 +240,11 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isFalse()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
+            )
         }
 
         @Test
@@ -231,7 +265,13 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isFalse()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 
@@ -259,7 +299,10 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isFalse()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
 
         @Test
@@ -278,7 +321,11 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
+            )
         }
 
         @Test
@@ -299,7 +346,13 @@ internal class DefaultCommandHistoryTest {
             // then
             assertThat(result).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 
@@ -324,7 +377,11 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
+            )
         }
 
         @Test
@@ -346,17 +403,29 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
             sleep(1000)
-            assertThat(testEventSubscriber.events).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
+            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
+                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
+            )
         }
     }
 }
 
 internal class TestEventSubscriber {
 
-    val events = mutableListOf<Boolean>()
+    val fileSavedEvents = mutableListOf<Boolean>()
+    val undoRedoStatusEvents = mutableListOf<UndoRedoStatusEvent>()
 
     @Subscribe
     fun subscribe(event: FileSavedStatusChangedEvent) {
-        events.add(event.isFileSaved)
+        fileSavedEvents.add(event.isFileSaved)
+    }
+
+    @Subscribe
+    fun subscribe(event: UndoRedoStatusEvent) {
+        undoRedoStatusEvents.add(event)
     }
 }

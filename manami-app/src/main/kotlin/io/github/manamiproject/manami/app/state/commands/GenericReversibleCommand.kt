@@ -13,6 +13,7 @@ internal class GenericReversibleCommand(
 ) : ReversibleCommand {
 
     private var snapshot: StatefulSnapshot = Uninitialized
+    private var hasBeenPushedToCommandHistory: Boolean = false
 
     override fun undo() {
         when(snapshot) {
@@ -24,7 +25,11 @@ internal class GenericReversibleCommand(
     override fun execute() {
         snapshot = Initialized(state.createSnapshot())
         command.execute()
-        commandHistory.push(this)
+
+        if (!hasBeenPushedToCommandHistory) {
+            commandHistory.push(this)
+            hasBeenPushedToCommandHistory = true
+        }
     }
 }
 

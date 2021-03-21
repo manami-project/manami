@@ -14,6 +14,7 @@ import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpda
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
+import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
@@ -69,6 +70,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: UndoRedoStatusEvent) = eventMapper.invoke(e)
 
     @Subscribe
     fun subscribe(e: ImportFinishedEvent) = eventMapper.invoke(e)

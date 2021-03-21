@@ -11,6 +11,7 @@ internal object DefaultCommandHistory : CommandHistory {
     override fun push(command: ReversibleCommand) {
         commandHistory.add(command)
         SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
     }
 
     override fun isUndoPossible(): Boolean = commandHistory.hasPrevious()
@@ -20,6 +21,7 @@ internal object DefaultCommandHistory : CommandHistory {
             commandHistory.element().undo()
             commandHistory.previous()
             SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
         }
     }
 
@@ -30,6 +32,7 @@ internal object DefaultCommandHistory : CommandHistory {
             commandHistory.next()
             commandHistory.element().execute()
             SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
         }
     }
 
@@ -56,12 +59,14 @@ internal object DefaultCommandHistory : CommandHistory {
 
             commandHistory.crop()
             SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
         }
     }
 
     override fun clear() {
         commandHistory.clear()
         SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
+        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
     }
 }
 
