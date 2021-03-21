@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.components
 
+import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
@@ -22,6 +23,7 @@ import javafx.scene.layout.Priority.NEVER
 import tornadofx.*
 
 data class AnimeTableConfig<T>(
+    var manamiApp: ManamiApp? = null,
     var withToWatchListButton: Boolean = true,
     var withToIgnoreListButton: Boolean = true,
     var withHideButton: Boolean = true,
@@ -33,6 +35,8 @@ data class AnimeTableConfig<T>(
 
 inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConfig<T>.() -> Unit): TableView<T> {
     val animeTableConfig = AnimeTableConfig<T>().apply(config)
+    requireNotNull(animeTableConfig.manamiApp) { "Parameter manamiApp must be set" }
+    val manamiApp: ManamiApp = animeTableConfig.manamiApp!!
 
     val imageColWidth = SimpleDoubleProperty(0.0)
     val actionsColWidth = SimpleDoubleProperty(0.0)
@@ -98,7 +102,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                     alignment = CENTER
                 }
                 prefWidthProperty().bindBidirectional(actionsColWidth)
-                setCellValueFactory { _ ->
+                setCellValueFactory { cellValueFactory ->
                     ReadOnlyObservableValue<Group> {
                         group {
                             hbox {
@@ -108,25 +112,34 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
 
                                 if (animeTableConfig.withToWatchListButton) {
                                     button("watch") {
-                                        action { TODO("Needs to be implemented") }
+                                        action {
+                                            animeTableConfig.items.get().remove(cellValueFactory.value)
+                                            runAsync { manamiApp.addWatchListEntry(setOf(cellValueFactory.value.link.uri)) }
+                                        }
                                     }
                                 }
 
                                 if (animeTableConfig.withToIgnoreListButton) {
                                     button("ignore") {
-                                        action { TODO("Needs to be implemented") }
+                                        action {
+                                            animeTableConfig.items.get().remove(cellValueFactory.value)
+                                            runAsync { manamiApp.addIgnoreListEntry(setOf(cellValueFactory.value.link.uri)) }
+                                        }
                                     }
                                 }
 
                                 if (animeTableConfig.withDeleteButton) {
                                     button("Delete") {
-                                        action { animeTableConfig.onDelete }
+                                        action {
+                                            animeTableConfig.items.get().remove(cellValueFactory.value)
+                                            runAsync { animeTableConfig.onDelete.invoke(cellValueFactory.value) }
+                                        }
                                     }
                                 }
 
                                 if (animeTableConfig.withHideButton) {
                                     button("hide") {
-                                        action { TODO("Needs to be implemented") }
+                                        action { animeTableConfig.items.get().remove(cellValueFactory.value) }
                                     }
                                 }
 

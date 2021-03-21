@@ -1,13 +1,15 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.FileOpenedGuiEvent
+import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.ManamiAccess
+import io.github.manamiproject.manami.gui.SavedAsFileGuiEvent
 import io.github.manamiproject.manami.gui.extensions.focus
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
-import java.util.*
 
 class MainWindowView : View() {
 

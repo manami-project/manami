@@ -54,6 +54,11 @@ class WatchListView : View() {
             }
 
             animeTable<WatchListEntry> {
+                manamiApp = manamiAccess
+                withToWatchListButton = false
+                withHideButton = false
+                withDeleteButton = true
+                onDelete = { entry -> TODO("remove") }
                 items = watchListEntries
             }
         }

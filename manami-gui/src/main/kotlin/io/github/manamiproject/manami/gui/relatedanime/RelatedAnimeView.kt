@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.relatedanime
 
+import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
@@ -57,6 +58,7 @@ class RelatedAnimeView : View() {
             }
 
             animeTable<BigPicturedAnimeEntry> {
+                manamiApp = manamiAccess
                 items = entries
             }
         }
