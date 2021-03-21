@@ -13,6 +13,7 @@ import io.github.manamiproject.modb.anilist.AnilistDownloader
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
+import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.mal.MalConfig
@@ -36,7 +37,18 @@ internal class AnimeCache(
 
     override fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
-            is PresentValue<Anime>, is Empty<Anime> -> entry
+            is PresentValue<Anime> -> {
+                val source = entry.value.sources.filter { it == key }.toMutableList()
+                check(source.isNotEmpty())
+
+                val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(key.host) }.toMutableList()
+                val entryWithRequestedUri = entry.value.copy(
+                    sources = SortedList(source),
+                    relatedAnime = SortedList(relatedAnime),
+                )
+                PresentValue(entryWithRequestedUri)
+            }
+            is Empty<Anime> -> entry
             null -> loadEntry(key)
         }
     }
@@ -70,7 +82,7 @@ internal class AnimeCache(
             anime.sources.forEach {
                 populate(it, cacheEntry)
             }
-            cacheEntry
+            fetch(uri)
         } catch (t: Throwable) {
             populate(uri, Empty())
             Empty()

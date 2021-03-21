@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
+import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -14,6 +15,7 @@ import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.internal.bytebuddy.TypeCache
 import org.junit.jupiter.api.Test
 import java.net.URI
 
@@ -34,16 +36,6 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                 picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
         ).apply {
-            addSources(
-                listOf(
-                    URI("https://anidb.net/anime/4563"),
-                    URI("https://anilist.co/anime/1535"),
-                    URI("https://anime-planet.com/anime/death-note"),
-                    URI("https://kitsu.io/anime/1376"),
-                    URI("https://myanimelist.net/anime/1535"),
-                    URI("https://notify.moe/anime/0-A-5Fimg")
-                )
-            )
             addSynonyms(
                     "DEATH NOTE",
                     "DN",
@@ -62,16 +54,6 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     "デスノート",
                     "死亡笔记",
                     "데스노트"
-            )
-            addRelations(
-                URI("https://anidb.net/anime/8146"),
-                URI("https://anidb.net/anime/8147"),
-                URI("https://anilist.co/anime/2994"),
-                URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
-                URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
-                URI("https://kitsu.io/anime/2707"),
-                URI("https://myanimelist.net/anime/2994"),
-                URI("https://notify.moe/anime/DBBU5Kimg"),
             )
             addTags(
                     "alternative present",
@@ -139,11 +121,46 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         animeCachePopulator.populate(testCache)
 
         // then
-        assertThat((testCache.fetch(URI("https://anidb.net/anime/4563")) as PresentValue).value).isEqualTo(expectedAnime)
-        assertThat((testCache.fetch(URI("https://anilist.co/anime/1535")) as PresentValue).value).isEqualTo(expectedAnime)
-        assertThat((testCache.fetch(URI("https://anime-planet.com/anime/death-note")) as PresentValue).value).isEqualTo(expectedAnime)
-        assertThat((testCache.fetch(URI("https://kitsu.io/anime/1376")) as PresentValue).value).isEqualTo(expectedAnime)
-        assertThat((testCache.fetch(URI("https://myanimelist.net/anime/1535")) as PresentValue).value).isEqualTo(expectedAnime)
-        assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedAnime)
+        val expectedAnidbEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://anidb.net/anime/4563")),
+            relatedAnime = SortedList(
+                URI("https://anidb.net/anime/8146"),
+                URI("https://anidb.net/anime/8147")
+            ),
+        )
+        assertThat((testCache.fetch(URI("https://anidb.net/anime/4563")) as PresentValue).value).isEqualTo(expectedAnidbEntry)
+
+        val expectedAnilistEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://anilist.co/anime/1535")),
+            relatedAnime = SortedList(URI("https://anilist.co/anime/2994")),
+        )
+        assertThat((testCache.fetch(URI("https://anilist.co/anime/1535")) as PresentValue).value).isEqualTo(expectedAnilistEntry)
+
+        val expectedAnimePlanetEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://anime-planet.com/anime/death-note")),
+            relatedAnime = SortedList(
+                URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
+                URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
+            ),
+        )
+        assertThat((testCache.fetch(URI("https://anime-planet.com/anime/death-note")) as PresentValue).value).isEqualTo(expectedAnimePlanetEntry)
+
+        val expectedKitsuEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://kitsu.io/anime/1376")),
+            relatedAnime = SortedList(URI("https://kitsu.io/anime/2707")),
+        )
+        assertThat((testCache.fetch(URI("https://kitsu.io/anime/1376")) as PresentValue).value).isEqualTo(expectedKitsuEntry)
+
+        val expectedMalEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://myanimelist.net/anime/1535")),
+            relatedAnime = SortedList(URI("https://myanimelist.net/anime/2994")),
+        )
+        assertThat((testCache.fetch(URI("https://myanimelist.net/anime/1535")) as PresentValue).value).isEqualTo(expectedMalEntry)
+
+        val expectedNotifyEntry = expectedAnime.copy(
+            sources = SortedList(URI("https://notify.moe/anime/0-A-5Fimg")),
+            relatedAnime = SortedList(URI("https://notify.moe/anime/DBBU5Kimg")),
+        )
+        assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedNotifyEntry)
     }
 }
