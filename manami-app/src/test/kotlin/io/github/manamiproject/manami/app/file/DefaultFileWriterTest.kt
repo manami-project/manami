@@ -20,17 +20,17 @@ internal class DefaultFileWriterTest {
         tempDirectory {
             // given
             val animeListEntry1 = AnimeListEntry(
+                title = "H2O: Footprints in the Sand",
+                episodes = 4,
+                type = Anime.Type.Special,
+                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+            )
+            val animeListEntry2 = AnimeListEntry(
                 link = Link("https://myanimelist.net/anime/57"),
                 title = "Beck",
                 episodes = 26,
                 type = Anime.Type.TV,
                 location = URI("some/relative/path/beck"),
-            )
-            val animeListEntry2 = AnimeListEntry(
-                title = "H2O: Footprints in the Sand",
-                episodes = 4,
-                type = Anime.Type.Special,
-                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val watchListEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -75,8 +75,8 @@ internal class DefaultFileWriterTest {
                     <animeListEntry link="" title="H2O: Footprints in the Sand" type="Special" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                   </animeList>
                   <watchList>
-                    <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"/>
                     <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453t.jpg"/>
+                    <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"/>
                   </watchList>
                   <ignoreList>
                     <ignoreListEntry link="https://myanimelist.net/anime/37989" title="Golden Kamuy 2nd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"/>

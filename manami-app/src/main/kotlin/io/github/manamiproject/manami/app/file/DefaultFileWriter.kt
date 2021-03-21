@@ -33,7 +33,7 @@ internal class DefaultFileWriter(
             writeCharacters(LINEBREAK)
         }
 
-        state.animeList().forEach { animeListEntry ->
+        state.animeList().sortedWith(compareBy({ it.title.toLowerCase() }, {it.type}, { it.episodes })).forEach { animeListEntry ->
             xmlWriter.writeCharacters(IDENT_2)
             xmlWriter.writeEmptyElement("animeListEntry")
             xmlWriter.writeAttribute("link", animeListEntry.link.toString())
@@ -51,7 +51,7 @@ internal class DefaultFileWriter(
         xmlWriter.writeStartElement("watchList")
         xmlWriter.writeCharacters(LINEBREAK)
 
-        state.watchList().forEach { watchListEntry ->
+        state.watchList().sortedBy { it.title }.forEach { watchListEntry ->
             xmlWriter.writeCharacters(IDENT_2)
             xmlWriter.writeEmptyElement("watchListEntry")
             xmlWriter.writeAttribute("link", watchListEntry.link.toString())
@@ -67,7 +67,7 @@ internal class DefaultFileWriter(
         xmlWriter.writeStartElement("ignoreList")
         xmlWriter.writeCharacters(LINEBREAK)
 
-        state.ignoreList().forEach { ignoreListEntry ->
+        state.ignoreList().sortedBy { it.title }.forEach { ignoreListEntry ->
             xmlWriter.writeCharacters(IDENT_2)
             xmlWriter.writeEmptyElement("ignoreListEntry")
             xmlWriter.writeAttribute("link", ignoreListEntry.link.toString())
