@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.extensions.castToSet
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
+import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
@@ -29,6 +30,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
             fire(
                 when(this) {
                     is FileOpenedEvent -> FileOpenedGuiEvent(this.fileName)
+                    is SavedAsFileEvent -> SavedAsFileGuiEvent(this.fileName)
                     is ListChangedEvent<*> -> mapListChangeEvent(this)
                     is AddWatchListStatusUpdateEvent -> AddWatchListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
@@ -76,6 +78,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
 sealed class GuiEvent : FXEvent()
 
 data class FileOpenedGuiEvent(val fileName: String): GuiEvent()
+data class SavedAsFileGuiEvent(val fileName: String): GuiEvent()
 
 data class AddAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()
 data class RemoveAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()

@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
+import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
@@ -66,6 +67,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: FileOpenedEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: SavedAsFileEvent) = eventMapper.invoke(e)
 
     @Subscribe
     fun subscribe(e: ListChangedEvent<*>) = eventMapper.invoke(e)
