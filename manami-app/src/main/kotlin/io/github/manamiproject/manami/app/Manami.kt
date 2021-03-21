@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
+import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
@@ -11,6 +12,8 @@ import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
+import io.github.manamiproject.manami.app.relatedanime.*
+import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
@@ -28,11 +31,13 @@ class Manami(
     private val searchHandler: SearchHandler = DefaultSearchHandler(),
     private val importHandler: ImportHandler = DefaultImportHandler(),
     private val listHandler: ListHandler = DefaultListHandler(),
+    private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
     ImportHandler by importHandler,
-    ListHandler by listHandler {
+    ListHandler by listHandler,
+    RelatedAnimeHandler by relatedAnimeHandler {
 
     init {
         log.info("Starting manami")
@@ -60,6 +65,9 @@ class Manami(
     }
 
     @Subscribe
+    fun subscribe(e: FileOpenedEvent) = eventMapper.invoke(e)
+
+    @Subscribe
     fun subscribe(e: ListChangedEvent<*>) = eventMapper.invoke(e)
 
     @Subscribe
@@ -76,6 +84,12 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: ImportFinishedEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: RelatedAnimeFoundEvent) = eventMapper.invoke(e)
+
+    @Subscribe
+    fun subscribe(e: RelatedAnimeStatusEvent) = eventMapper.invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

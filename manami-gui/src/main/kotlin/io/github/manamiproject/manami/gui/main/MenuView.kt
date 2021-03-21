@@ -10,10 +10,7 @@ import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTab
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
-import io.github.manamiproject.modb.core.extensions.RegularFile
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.scene.control.Alert
-import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.stage.StageStyle.UNDECORATED
 import tornadofx.*
@@ -105,93 +102,12 @@ class MenuView : View() {
                 action { fire(ShowRecommendationsTabRequest) }
             }
             item("Related Anime") {
-                isDisable = true
+                isDisable = false
                 action { fire(ShowRelatedAnimeTabRequest) }
             }
         }
         menu("Help") {
             item("About").action { controller.help() }
         }
-    }
-}
-
-class MenuController : Controller() {
-
-    private val manamiAccess: ManamiAccess by inject()
-    private val safelyExecuteActionController: SafelyExecuteActionController by inject()
-    private val quitController: QuitController by inject()
-
-    fun newFile() {
-        safelyExecuteActionController.safelyExecute { ignoreUnsavedChanged ->
-            runAsync {
-                manamiAccess.newFile(ignoreUnsavedChanged = ignoreUnsavedChanged)
-            }
-        }
-    }
-
-    fun open(file: RegularFile?) {
-        if (file == null) {
-            return
-        }
-
-        safelyExecuteActionController.safelyExecute { ignoreUnsavedChanged ->
-            runAsync {
-                manamiAccess.open(file = file, ignoreUnsavedChanged = ignoreUnsavedChanged)
-            }
-        }
-    }
-
-    fun import(file: RegularFile?) {
-        if (file != null) {
-            runAsync {
-                manamiAccess.import(file)
-            }
-        }
-    }
-
-    fun save() {
-        if (manamiAccess.isOpenFileSet()) {
-            runAsync {
-                manamiAccess.save()
-            }
-        } else {
-            saveAs(PathChooser.showSaveAsFileDialog(primaryStage))
-        }
-    }
-
-    fun saveAs(file: RegularFile?) {
-        if (file != null) {
-            runAsync {
-                manamiAccess.saveAs(file)
-            }
-        }
-    }
-
-    fun undo() {
-        runAsync {
-            manamiAccess.undo()
-        }
-    }
-
-    fun redo() {
-        runAsync {
-            manamiAccess.redo()
-        }
-    }
-
-    fun help() {
-        Alert(INFORMATION).apply {
-            title = "Help"
-            headerText = "Version: #.#.#"
-            contentText = """
-                Free non-commercial software. (AGPLv3.0)
-
-                https://github.com/manami-project/manami
-            """.trimIndent()
-        }.showAndWait()
-    }
-
-    fun quit() {
-        quitController.quit()
     }
 }

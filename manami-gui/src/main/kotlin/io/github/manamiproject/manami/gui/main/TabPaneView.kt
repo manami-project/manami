@@ -5,6 +5,8 @@ import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.extensions.openTab
 import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
+import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
+import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.SearchView
 import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
@@ -14,14 +16,15 @@ import tornadofx.*
 
 class TabPaneView : View() {
 
-    private val animelistView: AnimelistView by inject()
+    private val animeListView: AnimelistView by inject()
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
     private val searchView: SearchView by inject()
+    private val relatedAnimeView: RelatedAnimeView by inject()
 
     init {
         subscribe<ShowAnimeListTabRequest> {
-            tabPane.openTab("Anime List") { add(animelistView.root) }
+            tabPane.openTab("Anime List") { add(animeListView.root) }
         }
 
         subscribe<ShowWatchListTabRequest> {
@@ -34,6 +37,10 @@ class TabPaneView : View() {
 
         subscribe<ShowSearchTabRequest> {
             tabPane.openTab("Search") { add(searchView.root) }
+        }
+
+        subscribe<ShowRelatedAnimeTabRequest> {
+            tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }
         }
     }
 
