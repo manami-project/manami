@@ -7,6 +7,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.state.events.Event
+import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.test.tempDirectory
@@ -33,6 +36,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -64,6 +68,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -89,6 +94,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -123,11 +129,19 @@ internal class DefaultFileHandlerTest {
                 override fun closeFile() { }
             }
 
+            var receivedEvent: FileOpenedEvent? = null
+            val testEventBus = object: EventBus by TestEventBus {
+                override fun post(event: Event) {
+                    receivedEvent = event as FileOpenedEvent
+                }
+            }
+
             val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = testParser,
                     fileWriter = TestFileWriter,
+                    eventBus = testEventBus,
             )
 
             // when
@@ -135,6 +149,7 @@ internal class DefaultFileHandlerTest {
 
             // then
             assertThat(isCommandExecuted).isTrue()
+            assertThat(receivedEvent!!.fileName).isEqualTo("test.xml")
         }
     }
 
@@ -150,6 +165,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -171,6 +187,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -192,6 +209,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -213,6 +231,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -236,6 +255,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -259,6 +279,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
+            eventBus = TestEventBus,
         )
 
         // when
@@ -283,6 +304,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = TestCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -304,6 +326,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = TestCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -329,6 +352,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
+                eventBus = TestEventBus,
             )
 
             // when
@@ -352,6 +376,7 @@ internal class DefaultFileHandlerTest {
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = TestFileWriter,
+                    eventBus = TestEventBus,
                 )
 
                 // when
@@ -392,6 +417,7 @@ internal class DefaultFileHandlerTest {
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
+                    eventBus = TestEventBus,
                 )
 
                 // when
@@ -428,11 +454,19 @@ internal class DefaultFileHandlerTest {
                     override fun writeTo(file: RegularFile) { }
                 }
 
+                var receivedEvent: SavedAsFileEvent? = null
+                val testEventBus = object: EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvent = event as SavedAsFileEvent
+                    }
+                }
+
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
+                    eventBus = testEventBus,
                 )
 
                 val fileToSave = tempDir.resolve("junit-test.xml")
@@ -442,6 +476,7 @@ internal class DefaultFileHandlerTest {
 
                 // then
                 assertThat(savedFile).isEqualTo(fileToSave)
+                assertThat(receivedEvent!!.fileName).isEqualTo("junit-test.xml")
             }
         }
 
@@ -470,11 +505,19 @@ internal class DefaultFileHandlerTest {
                     }
                 }
 
+                var receivedEvent: SavedAsFileEvent? = null
+                val testEventBus = object: EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvent = event as SavedAsFileEvent
+                    }
+                }
+
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
+                    eventBus = testEventBus,
                 )
 
                 // when
@@ -483,6 +526,7 @@ internal class DefaultFileHandlerTest {
                 // then
                 assertThat(fileHasBeenWritten).isTrue()
                 assertThat(cmdHasBeenSaved).isTrue()
+                assertThat(receivedEvent!!.fileName).isEqualTo("test.xml")
             }
         }
     }

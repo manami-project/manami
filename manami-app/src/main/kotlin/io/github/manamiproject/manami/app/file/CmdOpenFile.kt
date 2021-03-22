@@ -14,7 +14,6 @@ internal class CmdOpenFile(
         private val commandHistory: CommandHistory = DefaultCommandHistory,
         private val file: RegularFile,
         private val parsedFile: ParsedManamiFile,
-        private val eventBus: EventBus = SimpleEventBus,
 ) : Command {
 
     override fun execute() {
@@ -25,6 +24,5 @@ internal class CmdOpenFile(
         state.addAllWatchListEntries(parsedFile.watchListEntries)
         state.addAllIgnoreListEntries(parsedFile.ignoreListEntries)
         state.setOpenedFile(file)
-        eventBus.post(FileOpenedEvent(file.fileName.toString()))
     }
 }

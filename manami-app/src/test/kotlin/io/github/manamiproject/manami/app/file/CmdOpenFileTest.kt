@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
-import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
@@ -70,10 +70,10 @@ internal class CmdOpenFileTest {
         )
 
         val command = CmdOpenFile(
-                state = testState,
-                commandHistory = testCommandHistory,
-                file = notExistingTestFile,
-                parsedFile = parsedFile,
+            state = testState,
+            commandHistory = testCommandHistory,
+            file = notExistingTestFile,
+            parsedFile = parsedFile,
         )
 
         // when

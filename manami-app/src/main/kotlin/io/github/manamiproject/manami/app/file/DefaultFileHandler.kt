@@ -49,6 +49,7 @@ internal class DefaultFileHandler(
             parsedFile = parsedFile,
             file = file,
         ).execute()
+        eventBus.post(FileOpenedEvent(file.fileName.toString()))
     }
 
     override fun isOpenFileSet(): Boolean = state.openedFile() is CurrentFile
