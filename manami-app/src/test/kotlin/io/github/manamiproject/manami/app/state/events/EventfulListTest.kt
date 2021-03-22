@@ -1,11 +1,11 @@
 package io.github.manamiproject.manami.app.state.events
 
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.IGNORE_LIST
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.WATCH_LIST
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
+import io.github.manamiproject.manami.app.state.events.EventListType.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

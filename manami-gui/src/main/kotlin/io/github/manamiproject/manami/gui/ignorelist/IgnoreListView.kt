@@ -1,12 +1,10 @@
 package io.github.manamiproject.manami.gui.ignorelist
 
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
-import io.github.manamiproject.manami.gui.AddIgnoreListEntryGuiEvent
-import io.github.manamiproject.manami.gui.AddIgnoreListStatusUpdateGuiEvent
-import io.github.manamiproject.manami.gui.AddWatchListStatusUpdateGuiEvent
-import io.github.manamiproject.manami.gui.ManamiAccess
+import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
+import io.github.manamiproject.manami.gui.components.simpleServiceStart
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -18,17 +16,35 @@ import tornadofx.*
 class IgnoreListView : View() {
 
     private val manamiAccess: ManamiAccess by inject()
-    private val finishedTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
-    private val tasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
 
-    private val ignoreListEntries: ObjectProperty<ObservableList<IgnoreListEntry>> = SimpleObjectProperty(
+    private val finishedAddingEntriesTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+    private val addingEntriesTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+
+    private val finishedRelatedAnimeTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+    private val relatedAnimeTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+
+    private val entries: ObjectProperty<ObservableList<IgnoreListEntry>> = SimpleObjectProperty(
         FXCollections.observableArrayList()
     )
 
     init {
         subscribe<AddIgnoreListStatusUpdateGuiEvent> { event ->
-            finishedTasks.set(event.finishedTasks)
-            tasks.set(event.tasks)
+            finishedAddingEntriesTasks.set(event.finishedTasks)
+            addingEntriesTasks.set(event.tasks)
+        }
+        subscribe<IgnoreListRelatedAnimeFoundGuiEvent> { event ->
+            entries.value.add(IgnoreListEntry(event.anime))
+        }
+        subscribe<IgnoreListRelatedAnimeStatusGuiEvent> { event ->
+            finishedRelatedAnimeTasks.set(event.finishedChecking)
+            relatedAnimeTasks.set(event.toBeChecked)
+
+            if (event.finishedChecking == 1) {
+                entries.get().clear()
+            }
+        }
+        subscribe<FileOpenedGuiEvent> {
+            entries.get().clear()
         }
     }
 
@@ -39,16 +55,25 @@ class IgnoreListView : View() {
             hgrow = ALWAYS
             fitToParentSize()
 
-            simpleAnimeAddition {
-                finishedTasksProperty = finishedTasks
-                numberOfTasksProperty = tasks
-                onAdd = { entry ->
-                    manamiAccess.addIgnoreListEntry(entry)
+            vbox {
+                simpleAnimeAddition {
+                    finishedTasksProperty = finishedAddingEntriesTasks
+                    numberOfTasksProperty = addingEntriesTasks
+                    onAdd = { entry ->
+                        manamiAccess.addIgnoreListEntry(entry)
+                    }
+                }
+
+                simpleServiceStart {
+                    finishedTasksProperty = finishedRelatedAnimeTasks
+                    numberOfTasksProperty = relatedAnimeTasks
+                    onStart = { manamiAccess.findRelatedAnimeForIgnoreList() }
                 }
             }
 
             animeTable<IgnoreListEntry> {
-                items = ignoreListEntries
+                manamiApp = manamiAccess
+                items = entries
             }
         }
     }

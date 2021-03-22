@@ -20,7 +20,7 @@ import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.logging.LoggerDelegate

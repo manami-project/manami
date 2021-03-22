@@ -15,10 +15,10 @@ import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.ListType.*
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
+import io.github.manamiproject.manami.app.state.events.EventListType.*
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
 import tornadofx.FXEvent
@@ -37,8 +37,8 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is FileSavedStatusChangedEvent -> FileSavedStatusChangedGuiEvent(this.isFileSaved)
                     is ImportFinishedEvent -> ImportFinishedGuiEvent
                     is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
-                    is RelatedAnimeFoundEvent -> RelatedAnimeFoundGuiEvent(this.anime)
-                    is RelatedAnimeStatusEvent -> RelatedAnimeStatusGuiEvent(this.finishedChecking, this.toBeChecked)
+                    is RelatedAnimeFoundEvent -> mapRelatedAnimeFoundEvent(this)
+                    is RelatedAnimeStatusEvent -> mapRelatedAnimeStatusEvent(this)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -50,6 +50,22 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
             ANIME_LIST -> createAnimeListEvent(listChangedEvent)
             WATCH_LIST -> createWatchListEvent(listChangedEvent)
             IGNORE_LIST -> createIgnoreListEvent(listChangedEvent)
+        }
+    }
+
+    private fun mapRelatedAnimeFoundEvent(event: RelatedAnimeFoundEvent): GuiEvent {
+        return when(event.listType) {
+            ANIME_LIST -> AnimeListRelatedAnimeFoundGuiEvent(event.anime)
+            WATCH_LIST -> throw IllegalStateException("Unsupported list type")
+            IGNORE_LIST -> IgnoreListRelatedAnimeFoundGuiEvent(event.anime)
+        }
+    }
+
+    private fun mapRelatedAnimeStatusEvent(event: RelatedAnimeStatusEvent): GuiEvent {
+        return when(event.listType) {
+            ANIME_LIST -> AnimeListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
+            WATCH_LIST -> throw IllegalStateException("Unsupported list type")
+            IGNORE_LIST -> IgnoreListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
         }
     }
 
@@ -96,5 +112,8 @@ data class UndoRedoStatusGuiEvent(val isUndoPossible: Boolean, val isRedoPossibl
 
 object ImportFinishedGuiEvent: GuiEvent()
 
-data class RelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
-data class RelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
+data class AnimeListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
+data class AnimeListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
+
+data class IgnoreListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
+data class IgnoreListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()

@@ -1,16 +1,17 @@
 package io.github.manamiproject.manami.app.state.events
 
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.ADDED
-import io.github.manamiproject.manami.app.state.events.ListChangedEvent.EventType.REMOVED
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
 import java.util.function.Predicate
 
 class EventfulList<T>(
-    private val listType: ListChangedEvent.ListType,
+    private val listType: EventListType,
     private val eventBus: EventBus = SimpleEventBus,
     private val list: MutableList<T> = mutableListOf(),
 ) : MutableList<T> by list {
 
-    constructor(listType: ListChangedEvent.ListType, vararg values: T) : this(
+    constructor(listType: EventListType, vararg values: T) : this(
         listType = listType,
         list = values.toMutableList()
     )

@@ -1,19 +1,13 @@
 package io.github.manamiproject.manami.gui.relatedanime
 
-import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
-import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
-import io.github.manamiproject.modb.core.models.Anime
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.geometry.Insets
-import javafx.geometry.Pos
-import javafx.geometry.Pos.CENTER
 import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
 
@@ -28,10 +22,10 @@ class RelatedAnimeView : View() {
     )
 
     init {
-        subscribe<RelatedAnimeFoundGuiEvent> { event ->
+        subscribe<AnimeListRelatedAnimeFoundGuiEvent> { event ->
             entries.value.add(BigPicturedAnimeEntry(event.anime))
         }
-        subscribe<RelatedAnimeStatusGuiEvent> { event ->
+        subscribe<AnimeListRelatedAnimeStatusGuiEvent> { event ->
             finishedTasks.set(event.finishedChecking)
             tasks.set(event.toBeChecked)
 
