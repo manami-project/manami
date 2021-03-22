@@ -8,6 +8,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.watchlist.CmdRemoveWatchListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -66,6 +67,17 @@ internal class DefaultListHandler(
     }
 
     override fun watchList(): Set<WatchListEntry> = state.watchList()
+
+    override fun removeWatchListEntry(entry: WatchListEntry) {
+        GenericReversibleCommand(
+            state = state,
+            commandHistory = commandHistory,
+            command = CmdRemoveWatchListEntry(
+                state = state,
+                watchListEntry = entry,
+            )
+        ).execute()
+    }
 
     override fun addIgnoreListEntry(uris: Collection<URI>) {
         totalNumberOfIgnoreListTasks.addAndGet(uris.size)

@@ -42,6 +42,10 @@ internal object InternalState : State {
         watchList.addAll(anime.distinct())
     }
 
+    override fun removeWatchListEntry(entry: WatchListEntry) {
+        watchList.remove(entry)
+    }
+
     override fun ignoreList(): Set<IgnoreListEntry> = ignoreList.toSet()
 
     override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {

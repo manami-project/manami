@@ -17,6 +17,7 @@ internal interface State {
 
     fun watchList(): Set<WatchListEntry>
     fun addAllWatchListEntries(anime: Collection<WatchListEntry>)
+    fun removeWatchListEntry(entry: WatchListEntry)
 
     fun ignoreList(): Set<IgnoreListEntry>
     fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>)

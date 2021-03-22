@@ -58,7 +58,7 @@ class WatchListView : View() {
                 withToWatchListButton = false
                 withHideButton = false
                 withDeleteButton = true
-                onDelete = { entry -> TODO("remove") }
+                onDelete = { entry -> manamiAccess.removeWatchListEntry(entry) }
                 items = watchListEntries
             }
         }

@@ -140,6 +140,44 @@ internal class InternalStateTest {
     }
 
     @Nested
+    inner class RemoveWatchListEntryTests {
+
+        @Test
+        fun `removes a specific entry`() {
+            // given
+            val entry1 = WatchListEntry(
+                link = Link("https://myanimelist.net/anime/5114"),
+                title = "Fullmetal Alchemist: Brotherhood",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            )
+            val entry2 = WatchListEntry(
+                link = Link("https://myanimelist.net/anime/37989"),
+                title = "Golden Kamuy 2nd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+            )
+            val entry3 = WatchListEntry(
+                link = Link("https://myanimelist.net/anime/40059"),
+                title = "Golden Kamuy 3rd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+            )
+
+            InternalState.addAllWatchListEntries(
+                setOf(
+                    entry1,
+                    entry2,
+                    entry3,
+                )
+            )
+
+            // when
+            InternalState.removeWatchListEntry(entry2)
+
+            // then
+            assertThat(InternalState.watchList()).containsExactly(entry1, entry3)
+        }
+    }
+
+    @Nested
     inner class AddAllIgnoreListEntriesTests {
 
         @Test
