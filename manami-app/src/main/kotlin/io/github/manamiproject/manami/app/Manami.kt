@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app
 
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
+import io.github.manamiproject.manami.app.cache.populator.CachePopulatorFinishedEvent
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
@@ -10,21 +11,26 @@ import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
-import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
+import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
+import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeHandler
+import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
+import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
+import io.github.manamiproject.manami.app.search.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
 
 class Manami(
@@ -59,41 +65,49 @@ class Manami(
         exitProcess(0)
     }
 
-    private var eventMapper: Event.() -> Unit = {}
-
+    private var eventMapper = AtomicReference<Event.() -> Unit>()
     fun eventMapping(mapper: Event.() -> Unit = {}) {
-        eventMapper = mapper
+        eventMapper.set(mapper)
     }
 
     @Subscribe
-    fun subscribe(e: FileOpenedEvent) = eventMapper.invoke(e)
+    fun subscribe(e: FileOpenedEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: SavedAsFileEvent) = eventMapper.invoke(e)
+    fun subscribe(e: SavedAsFileEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: ListChangedEvent<*>) = eventMapper.invoke(e)
+    fun subscribe(e: ListChangedEvent<*>) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: AddWatchListStatusUpdateEvent) = eventMapper.invoke(e)
+    fun subscribe(e: AddWatchListStatusUpdateEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: AddIgnoreListStatusUpdateEvent) = eventMapper.invoke(e)
+    fun subscribe(e: AddIgnoreListStatusUpdateEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.invoke(e)
+    fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: UndoRedoStatusEvent) = eventMapper.invoke(e)
+    fun subscribe(e: UndoRedoStatusEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: ImportFinishedEvent) = eventMapper.invoke(e)
+    fun subscribe(e: ImportFinishedEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: RelatedAnimeFoundEvent) = eventMapper.invoke(e)
+    fun subscribe(e: RelatedAnimeFoundEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
-    fun subscribe(e: RelatedAnimeStatusEvent) = eventMapper.invoke(e)
+    fun subscribe(e: RelatedAnimeStatusEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeSeasonEntryFoundEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeSeasonSearchFinishedEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: CachePopulatorFinishedEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

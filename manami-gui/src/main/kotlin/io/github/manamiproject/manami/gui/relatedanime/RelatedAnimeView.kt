@@ -48,7 +48,10 @@ class RelatedAnimeView : View() {
             simpleServiceStart {
                 finishedTasksProperty.bindBidirectional(finishedTasks)
                 numberOfTasksProperty.bindBidirectional(tasks)
-                onStart = { manamiAccess.findRelatedAnimeForAnimeList() }
+                onStart = {
+                    entries.get().clear()
+                    manamiAccess.findRelatedAnimeForAnimeList()
+                }
             }
 
             animeTable<BigPicturedAnimeEntry> {

@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.gui.ManamiAccess
-import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
+import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
@@ -38,8 +38,8 @@ class SearchBoxController: Controller() {
 
     fun search(searchString: String) {
         runAsync {
-            manamiAccess.search(searchString)
+            manamiAccess.findInLists(searchString)
         }
-        fire(ShowSearchTabRequest)
+        fire(ShowAnimeSearchTabRequest)
     }
 }

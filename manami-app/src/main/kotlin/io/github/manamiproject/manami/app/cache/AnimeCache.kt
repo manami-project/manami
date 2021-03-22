@@ -4,6 +4,8 @@ import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.NotifyCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
+import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
 import io.github.manamiproject.modb.anidb.AnidbDownloader
@@ -14,6 +16,7 @@ import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
 import io.github.manamiproject.modb.core.collections.SortedList
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.mal.MalConfig
@@ -30,10 +33,27 @@ internal class AnimeCache(
                 KitsuCacheLoader(),
                 SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
                 NotifyCacheLoader()
-        )
+        ),
 ) : Cache<URI, CacheEntry<Anime>> {
 
     private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
+    private val _availableMetaDataProvider = mutableSetOf<Hostname>()
+    val availableMetaDataProvider
+        get() = _availableMetaDataProvider.toSet()
+
+    fun allEntries(metaDataProvider: Hostname): Sequence<Anime> {
+        return entries.asSequence()
+            .filter { it.key.host == metaDataProvider }
+            .map { it.value }
+            .filterIsInstance<PresentValue<Anime>>()
+            .map { it.value }
+            .map { anime ->
+                anime.copy(
+                    sources = SortedList(anime.sources.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
+                    relatedAnime = SortedList(anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
+                )
+            }
+    }
 
     override fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
@@ -54,6 +74,10 @@ internal class AnimeCache(
     }
 
     override fun populate(key: URI, value: CacheEntry<Anime>) {
+        if (!availableMetaDataProvider.contains(key.host)) {
+            _availableMetaDataProvider.add(key.host)
+        }
+
         if (!entries.containsKey(key)) {
             entries[key] = value
         } else {

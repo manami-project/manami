@@ -23,8 +23,8 @@ class MainWindowView : View() {
     init {
         primaryStage.titleProperty().unbind()
         titleProperty.bindBidirectional(customTitleProperty)
-        this.primaryStage.isMaximized = true
-        this.primaryStage.onCloseRequest = EventHandler { event -> quitController.quit(); event.consume() }
+        manamiAccess.primaryStage.isMaximized = true
+        manamiAccess.primaryStage.onCloseRequest = EventHandler { event -> quitController.quit(); event.consume() }
         subscribe<FileOpenedGuiEvent> { event ->
             customTitleProperty.set(generateTitle(event.fileName))
         }

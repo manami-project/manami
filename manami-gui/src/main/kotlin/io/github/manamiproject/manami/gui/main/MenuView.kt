@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
+import io.github.manamiproject.manami.gui.CachePopulatorFinishedGuiEvent
 import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
 import io.github.manamiproject.manami.gui.UndoRedoStatusGuiEvent
@@ -10,7 +11,8 @@ import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
 import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
-import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
+import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
+import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.layout.Priority.ALWAYS
@@ -23,6 +25,7 @@ class MenuView : View() {
     private val isFileSaved = SimpleBooleanProperty(true)
     private val isUndoPossible = SimpleBooleanProperty(true)
     private val isRedoPossible = SimpleBooleanProperty(true)
+    private val isDisabledBecauseCacheIsNotYetPopulated = SimpleBooleanProperty(true)
 
     init {
         subscribe<FileSavedStatusChangedGuiEvent> { event ->
@@ -31,6 +34,9 @@ class MenuView : View() {
         subscribe<UndoRedoStatusGuiEvent> { event ->
             isUndoPossible.set(!event.isUndoPossible)
             isRedoPossible.set(!event.isRedoPossible)
+        }
+        subscribe<CachePopulatorFinishedGuiEvent> {
+            isDisabledBecauseCacheIsNotYetPopulated.set(false)
         }
     }
 
@@ -91,9 +97,13 @@ class MenuView : View() {
             }
         }
         menu("Find") {
-            item("Anime", createMnemonic("6")) {
+            item("Anime", createMnemonic("5")) {
                 isDisable = true
-                action { fire(ShowSearchTabRequest) }
+                action { fire(ShowAnimeSearchTabRequest) }
+            }
+            item("Season", createMnemonic("6")) {
+                disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
+                action { fire(ShowAnimeSeasonTabRequest) }
             }
             item("Inconsistencies", createMnemonic("7")) {
                 isDisable = true

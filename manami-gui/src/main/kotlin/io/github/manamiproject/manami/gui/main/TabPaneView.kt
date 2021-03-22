@@ -8,7 +8,9 @@ import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.SearchView
-import io.github.manamiproject.manami.gui.search.ShowSearchTabRequest
+import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
+import io.github.manamiproject.manami.gui.search.season.AnimeSeasonView
+import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import io.github.manamiproject.manami.gui.watchlist.WatchListView
 import javafx.scene.layout.Priority.ALWAYS
@@ -20,25 +22,25 @@ class TabPaneView : View() {
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
     private val searchView: SearchView by inject()
+    private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
 
     init {
         subscribe<ShowAnimeListTabRequest> {
             tabPane.openTab("Anime List") { add(animeListView.root) }
         }
-
         subscribe<ShowWatchListTabRequest> {
             tabPane.openTab("Watch List") { add(watchListView.root) }
         }
-
         subscribe<ShowIgnoreListTabRequest> {
             tabPane.openTab("Ignore List") { add(ignoreListView.root) }
         }
-
-        subscribe<ShowSearchTabRequest> {
+        subscribe<ShowAnimeSearchTabRequest> {
             tabPane.openTab("Search") { add(searchView.root) }
         }
-
+        subscribe<ShowAnimeSeasonTabRequest> {
+            tabPane.openTab("Anime Season") { add(animeSeasonView.root) }
+        }
         subscribe<ShowRelatedAnimeTabRequest> {
             tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }
         }

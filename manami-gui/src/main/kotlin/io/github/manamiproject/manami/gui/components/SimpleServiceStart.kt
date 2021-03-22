@@ -11,13 +11,18 @@ import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
 
 data class SimpleServiceStartConfig(
+    var progressIndicatorVisibleProperty: SimpleBooleanProperty = SimpleBooleanProperty(false),
     var finishedTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var numberOfTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var onStart: () -> Unit = {},
 )
 
+/**
+ * Termination can take place by having the same value > 0 for [SimpleServiceStartConfig.finishedTasksProperty]
+ * and [SimpleServiceStartConfig.numberOfTasksProperty].
+ * The other possibility is to just set [SimpleServiceStartConfig.progressIndicatorVisibleProperty] to false.
+ */
 inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() -> Unit): HBox {
-    val progressIndicatorVisibleProperty = SimpleBooleanProperty(false)
     val progressIndicatorValueProperty = SimpleDoubleProperty(0.0)
     val startButtonDisableProperty = SimpleBooleanProperty(false)
 
@@ -45,6 +50,12 @@ inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() ->
             progressIndicatorVisibleProperty.set(showProgressIndicator)
             startButtonDisableProperty.set(showProgressIndicator)
         }
+
+        progressIndicatorVisibleProperty.addListener { _, oldValue, newValue ->
+            if (oldValue && !newValue && startButtonDisableProperty.get()) {
+                startButtonDisableProperty.set(false)
+            }
+        }
     }
 
     val progressIndicatorWidthProperty = SimpleDoubleProperty(25.0)
@@ -67,15 +78,15 @@ inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() ->
             disableProperty().bindBidirectional(startButtonDisableProperty)
             action {
                 startButtonDisableProperty.set(true)
-                progressIndicatorVisibleProperty.set(true)
                 progressIndicatorValueProperty.set(-1.0)
+                simpleServiceStartConfig.progressIndicatorVisibleProperty.set(true)
                 runAsync { simpleServiceStartConfig.onStart.invoke() }
             }
         }
 
         progressindicator {
             progressProperty().bindBidirectional(progressIndicatorValueProperty)
-            visibleProperty().bindBidirectional(progressIndicatorVisibleProperty)
+            visibleProperty().bindBidirectional(simpleServiceStartConfig.progressIndicatorVisibleProperty)
             maxWidthProperty().bindBidirectional(progressIndicatorWidthProperty)
             maxHeightProperty().unbind()
             maxHeightProperty().bindBidirectional(maxWidthProperty())

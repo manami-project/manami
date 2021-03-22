@@ -2,10 +2,14 @@ package io.github.manamiproject.manami.gui
 
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
+import io.github.manamiproject.manami.app.cache.populator.CachePopulatorFinishedEvent
 import io.github.manamiproject.manami.app.extensions.castToSet
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
+import io.github.manamiproject.manami.app.lists.ListChangedEvent
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
+import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -13,11 +17,10 @@ import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpda
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
+import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
+import io.github.manamiproject.manami.app.search.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
-import io.github.manamiproject.manami.app.lists.ListChangedEvent
-import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
-import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
 import io.github.manamiproject.manami.app.state.events.EventListType.*
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
@@ -39,6 +42,9 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
                     is RelatedAnimeFoundEvent -> mapRelatedAnimeFoundEvent(this)
                     is RelatedAnimeStatusEvent -> mapRelatedAnimeStatusEvent(this)
+                    is AnimeSeasonEntryFoundEvent -> AnimeSeasonEntryFoundGuiEvent(this.anime)
+                    is AnimeSeasonSearchFinishedEvent -> AnimeSeasonSearchFinishedGuiEvent
+                    is CachePopulatorFinishedEvent -> CachePopulatorFinishedGuiEvent
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -117,3 +123,8 @@ data class AnimeListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val to
 
 data class IgnoreListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
 data class IgnoreListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
+
+data class AnimeSeasonEntryFoundGuiEvent(val anime: Anime): GuiEvent()
+object AnimeSeasonSearchFinishedGuiEvent: GuiEvent()
+
+object CachePopulatorFinishedGuiEvent: GuiEvent()
