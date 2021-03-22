@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
+import io.github.manamiproject.manami.gui.UndoRedoStatusGuiEvent
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.PathChooser
@@ -37,14 +39,14 @@ class MenuView : View() {
         vgrow = ALWAYS
 
         menu("File") {
-            item("New") {
+            item("New", createMnemonic("N")) {
                 action { controller.newFile() }
             }
-            item("Open") {
+            item("Open", createMnemonic("O")) {
                 action { controller.open(PathChooser.showOpenFileDialog(primaryStage)) }
             }
             separator()
-            item("Import") {
+            item("Import", createMnemonic("I")) {
                 action {
                     find<ApplicationBlockedLoading>().openModal(resizable = false, escapeClosesWindow = false, stageStyle = UNDECORATED)
                     when(val file = PathChooser.showImportFileDialog(primaryStage)) {
@@ -54,60 +56,65 @@ class MenuView : View() {
                 }
             }
             separator()
-            item("Save") {
+            item("Save", createMnemonic("S")) {
                 disableProperty().bindBidirectional(isFileSaved)
                 action { controller.save() }
             }
-            item("Save as...") {
+            item("Save as...", createMnemonic("Shift+S")) {
                 disableProperty().bindBidirectional(isFileSaved)
                 action { controller.saveAs(PathChooser.showSaveAsFileDialog(primaryStage)) }
             }
             separator()
-            item("Quit") {
+            item("Quit", createMnemonic("Q")) {
                 action { controller.quit() }
             }
         }
         menu("Edit") {
-            item("Undo") {
+            item("Undo", createMnemonic("Z")) {
                 disableProperty().bindBidirectional(isUndoPossible)
                 action { controller.undo() }
             }
-            item("Redo") {
+            item("Redo", createMnemonic("Shift+N")) {
                 disableProperty().bindBidirectional(isRedoPossible)
                 action { controller.redo() }
             }
         }
         menu("Lists") {
-            item("Anime List") {
+            item("Anime List", createMnemonic("1")) {
                 action { fire(ShowAnimeListTabRequest) }
             }
-            item("Watch List") {
+            item("Watch List", createMnemonic("2")) {
                 action { fire(ShowWatchListTabRequest) }
             }
-            item("Ignore List") {
+            item("Ignore List", createMnemonic("3")) {
                 action { fire(ShowIgnoreListTabRequest) }
             }
         }
         menu("Find") {
-            item("Anime") {
+            item("Anime", createMnemonic("6")) {
                 isDisable = true
                 action { fire(ShowSearchTabRequest) }
             }
-            item("Inconsistencies") {
+            item("Inconsistencies", createMnemonic("7")) {
                 isDisable = true
                 action { fire(ShowInconsistenciesTabRequest) }
             }
-            item("Recommendations") {
+            item("Recommendations", createMnemonic("8")) {
                 isDisable = true
                 action { fire(ShowRecommendationsTabRequest) }
             }
-            item("Related Anime") {
+            item("Related Anime", createMnemonic("9")) {
                 isDisable = false
                 action { fire(ShowRelatedAnimeTabRequest) }
             }
         }
         menu("Help") {
-            item("About").action { controller.help() }
+            item("About", createMnemonic("H")).action { controller.help() }
         }
     }
+}
+
+fun createMnemonic(key: String): String {
+    val initiator = if (com.sun.javafx.PlatformUtil.isMac()) "Meta" else "Ctrl"
+    return "$initiator+$key"
 }
