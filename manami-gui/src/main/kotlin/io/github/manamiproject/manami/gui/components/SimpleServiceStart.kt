@@ -11,15 +11,16 @@ import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
 
 data class SimpleServiceStartConfig(
-    val progressIndicatorVisibleProperty: SimpleBooleanProperty = SimpleBooleanProperty(false),
-    val progressIndicatorValueProperty: SimpleDoubleProperty = SimpleDoubleProperty(0.0),
     var finishedTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var numberOfTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
-    val startButtonDisableProperty: SimpleBooleanProperty = SimpleBooleanProperty(false),
     var onStart: () -> Unit = {},
 )
 
 inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() -> Unit): HBox {
+    val progressIndicatorVisibleProperty = SimpleBooleanProperty(false)
+    val progressIndicatorValueProperty = SimpleDoubleProperty(0.0)
+    val startButtonDisableProperty = SimpleBooleanProperty(false)
+
     val simpleServiceStartConfig = SimpleServiceStartConfig().apply(config).apply {
         finishedTasksProperty.addListener { _, _, newValue ->
             val progressInPercent = if (newValue.toDouble() == 0.0) {
@@ -46,6 +47,14 @@ inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() ->
         }
     }
 
+    val progressIndicatorWidthProperty = SimpleDoubleProperty(25.0)
+    progressIndicatorValueProperty.addListener { _, _, newValue ->
+        when {
+            newValue as Double >= 0.0 -> progressIndicatorWidthProperty.set(50.0)
+            else -> progressIndicatorWidthProperty.set(25.0)
+        }
+    }
+
     return hbox {
         hgrow = ALWAYS
         alignment = CENTER
@@ -55,18 +64,22 @@ inline fun EventTarget.simpleServiceStart(config: SimpleServiceStartConfig.() ->
         button {
             text = "Start"
             isDefaultButton = true
-            disableProperty().bindBidirectional(simpleServiceStartConfig.startButtonDisableProperty)
+            disableProperty().bindBidirectional(startButtonDisableProperty)
             action {
-                simpleServiceStartConfig.startButtonDisableProperty.set(true)
-                simpleServiceStartConfig.progressIndicatorVisibleProperty.set(true)
-                simpleServiceStartConfig.progressIndicatorValueProperty.set(-1.0)
+                startButtonDisableProperty.set(true)
+                progressIndicatorVisibleProperty.set(true)
+                progressIndicatorValueProperty.set(-1.0)
                 runAsync { simpleServiceStartConfig.onStart.invoke() }
             }
         }
 
         progressindicator {
-            progressProperty().bindBidirectional(simpleServiceStartConfig.progressIndicatorValueProperty)
-            visibleProperty().bindBidirectional(simpleServiceStartConfig.progressIndicatorVisibleProperty)
+            progressProperty().bindBidirectional(progressIndicatorValueProperty)
+            visibleProperty().bindBidirectional(progressIndicatorVisibleProperty)
+            maxWidthProperty().bindBidirectional(progressIndicatorWidthProperty)
+            maxHeightProperty().unbind()
+            maxHeightProperty().bindBidirectional(maxWidthProperty())
+            maxWidthProperty().set(25.0)
         }
     }
 }

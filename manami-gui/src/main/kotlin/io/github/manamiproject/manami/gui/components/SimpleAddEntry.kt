@@ -14,14 +14,15 @@ import tornadofx.*
 import java.net.URI
 
 data class SimpleAnimeAdditionConfig(
-    val progressIndicatorVisibleProperty: SimpleBooleanProperty = SimpleBooleanProperty(false),
-    val progressIndicatorValueProperty: SimpleDoubleProperty = SimpleDoubleProperty(0.0),
     var finishedTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var numberOfTasksProperty: SimpleIntegerProperty = SimpleIntegerProperty(0),
     var onAdd: (Collection<URI>) -> Unit = {},
 )
 
 inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() -> Unit): HBox {
+    val progressIndicatorVisibleProperty = SimpleBooleanProperty(false)
+    val progressIndicatorValueProperty = SimpleDoubleProperty(0.0)
+
     val simpleAnimeAdditionConfig = SimpleAnimeAdditionConfig().apply(config).apply {
         finishedTasksProperty.addListener { _, _, newValue ->
             val progressInPercent = if (newValue.toDouble() == 0.0) {
@@ -40,6 +41,14 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
             }
             progressIndicatorValueProperty.set(progressInPercent)
             progressIndicatorVisibleProperty.set(finishedTasksProperty.get() < newValue.toInt())
+        }
+    }
+
+    val progressIndicatorWidthProperty = SimpleDoubleProperty(25.0)
+    progressIndicatorValueProperty.addListener { _, _, newValue ->
+        when {
+            newValue as Double >= 0.0 -> progressIndicatorWidthProperty.set(50.0)
+            else -> progressIndicatorWidthProperty.set(25.0)
         }
     }
 
@@ -72,8 +81,8 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
                 val urls = txtUrls.text.trim().split(' ').map { it.trim() }.map { URI(it) }
 
                 if (urls.isNotEmpty()) {
-                    simpleAnimeAdditionConfig.progressIndicatorValueProperty.set(-1.0)
-                    simpleAnimeAdditionConfig.progressIndicatorVisibleProperty.set(true)
+                    progressIndicatorValueProperty.set(-1.0)
+                    progressIndicatorVisibleProperty.set(true)
                     runAsync { simpleAnimeAdditionConfig.onAdd.invoke(urls) }
                     txtUrls.text = EMPTY
                 }
@@ -81,8 +90,12 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
         }
 
         progressindicator {
-            progressProperty().bindBidirectional(simpleAnimeAdditionConfig.progressIndicatorValueProperty)
-            visibleProperty().bindBidirectional(simpleAnimeAdditionConfig.progressIndicatorVisibleProperty)
+            progressProperty().bindBidirectional(progressIndicatorValueProperty)
+            visibleProperty().bindBidirectional(progressIndicatorVisibleProperty)
+            maxWidthProperty().bindBidirectional(progressIndicatorWidthProperty)
+            maxHeightProperty().unbind()
+            maxHeightProperty().bindBidirectional(maxWidthProperty())
+            maxWidthProperty().set(25.0)
         }
     }
 }
