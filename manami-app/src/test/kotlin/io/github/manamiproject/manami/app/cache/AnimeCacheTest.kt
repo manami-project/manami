@@ -1,8 +1,14 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
+import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
+import io.github.manamiproject.modb.core.models.Anime.Status.UPCOMING
+import io.github.manamiproject.modb.core.models.Anime.Type.*
+import io.github.manamiproject.modb.core.models.AnimeSeason
+import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -186,6 +192,175 @@ internal class AnimeCacheTest {
             cache.fetch(source2)
             assertThat(loadCacheHasBeenTriggeredFor1).isTrue()
             assertThat(loadCacheHasBeenTriggeredFor2).isTrue()
+        }
+    }
+
+    @Nested
+    inner class AvailableMetaDataProviderTests {
+
+        @Test
+        fun `return the values from the AnimeCache`() {
+            // given
+            val entry = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                type = OVA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+            )
+
+            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            // when
+            val result = animeCache.availableMetaDataProvider
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder(
+                "anidb.net",
+                "anilist.co",
+                "anime-planet.com",
+                "kitsu.io",
+                "myanimelist.net",
+                "notify.moe",
+            )
+        }
+    }
+
+    @Nested
+    inner class AllEntriesTests {
+
+        @Test
+        fun `return all entries of a specific provider`() {
+            // given
+            val entry1 = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15738"),
+                    URI("https://anilist.co/anime/124194"),
+                    URI("https://anime-planet.com/anime/fruits-basket-the-final"),
+                    URI("https://kitsu.io/anime/43578"),
+                    URI("https://myanimelist.net/anime/42938"),
+                    URI("https://notify.moe/anime/YiySZ9OMg"),
+                ),
+                _title = "Fruits Basket: The Final",
+                type = TV,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+            )
+
+            val entry2 = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                type = OVA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+            )
+
+            val entry3 = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15070"),
+                    URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
+                    URI("https://myanimelist.net/anime/40356"),
+                    URI("https://notify.moe/anime/rBaaLj2Wg"),
+                ),
+                _title = "Tate no Yuusha no Nariagari Season 2",
+                type = TV,
+                episodes = 0,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = FALL,
+                    year = 2021,
+                ),
+            )
+
+            val entry4 = Anime(
+                sources = SortedList(
+                    URI("https://myanimelist.net/anime/46587"),
+                ),
+                _title = "Tenchi Souzou Design-bu Special",
+                type = ONA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = UNDEFINED,
+                    year = 2021
+                ),
+            )
+
+            val entry5 = Anime(
+                sources = SortedList(
+                    URI("https://kitsu.io/anime/40614"),
+                    URI("https://myanimelist.net/anime/34705"),
+                    URI("https://notify.moe/anime/3I2v2FmiR"),
+                ),
+                _title = "Tejina Shi",
+                type = Movie,
+                episodes = 1,
+                status = FINISHED,
+                animeSeason = AnimeSeason(
+                    season = UNDEFINED,
+                    year = 0
+                ),
+            )
+
+            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry1.sources.forEach {
+                    populate(it, PresentValue(entry1))
+                }
+                entry2.sources.forEach {
+                    populate(it, PresentValue(entry2))
+                }
+                entry3.sources.forEach {
+                    populate(it, PresentValue(entry3))
+                }
+                entry4.sources.forEach {
+                    populate(it, PresentValue(entry4))
+                }
+                entry5.sources.forEach {
+                    populate(it, PresentValue(entry5))
+                }
+            }
+
+            // when
+            val result = animeCache.allEntries("anime-planet.com").toList()
+
+            // then
+            assertThat(result).hasSize(3)
+            assertThat(result.flatMap { it.sources }.map { it.host }.distinct()).containsExactly("anime-planet.com")
+            assertThat(result.map { it.title }).containsExactlyInAnyOrder(
+                "Fruits Basket: The Final",
+                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                "Tate no Yuusha no Nariagari Season 2",
+            )
         }
     }
 }
