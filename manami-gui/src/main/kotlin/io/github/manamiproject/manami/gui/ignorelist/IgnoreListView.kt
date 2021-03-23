@@ -93,6 +93,7 @@ class IgnoreListView : View() {
 
             animeTable<IgnoreListEntry> {
                 manamiApp = manamiAccess
+                withToWatchListButton = false
                 items = entries
             }
         }
