@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.cache.populator.CachePopulatorFinishedEvent
+import io.github.manamiproject.manami.app.cache.populator.DeadEntriesCachePopulator
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
@@ -28,7 +29,12 @@ import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusE
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
+import io.github.manamiproject.modb.anidb.AnidbConfig
+import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import io.github.manamiproject.modb.kitsu.KitsuConfig
+import io.github.manamiproject.modb.mal.MalConfig
+import java.net.URL
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
@@ -51,6 +57,10 @@ class Manami(
         SimpleEventBus.subscribe(this)
         runInBackground {
             AnimeCachePopulator().populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/myanimelist.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/anidb.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/anilist.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/kitsu.json")).populate(Caches.animeCache)
         }
     }
 
