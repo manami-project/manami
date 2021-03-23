@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.relatedanime
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
@@ -32,6 +33,16 @@ class RelatedAnimeView : View() {
             if (event.finishedChecking == 1) {
                 entries.get().clear()
             }
+        }
+        subscribe<AddAnimeListEntryGuiEvent> { event ->
+            val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to BigPictureEntry as soon as animeListEntries have a thumbnail
+        }
+        subscribe<AddWatchListEntryGuiEvent> { event ->
+            entries.get().removeAll(event.entries.map { BigPicturedAnimeEntry(it) })
+        }
+        subscribe<AddIgnoreListEntryGuiEvent> { event ->
+            entries.get().removeAll(event.entries.map { BigPicturedAnimeEntry(it) })
         }
         subscribe<FileOpenedGuiEvent> {
             entries.get().clear()

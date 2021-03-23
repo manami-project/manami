@@ -102,15 +102,15 @@ sealed class GuiEvent : FXEvent()
 data class FileOpenedGuiEvent(val fileName: String): GuiEvent()
 data class SavedAsFileGuiEvent(val fileName: String): GuiEvent()
 
-data class AddAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()
-data class RemoveAnimeListEntryGuiEvent(val entry: Set<AnimeListEntry>) : GuiEvent()
+data class AddAnimeListEntryGuiEvent(val entries: Set<AnimeListEntry>) : GuiEvent()
+data class RemoveAnimeListEntryGuiEvent(val entries: Set<AnimeListEntry>) : GuiEvent()
 
-data class AddWatchListEntryGuiEvent(val entry: Set<WatchListEntry>) : GuiEvent()
-data class RemoveWatchListEntryGuiEvent(val entry: Set<WatchListEntry>) : GuiEvent()
+data class AddWatchListEntryGuiEvent(val entries: Set<WatchListEntry>) : GuiEvent()
+data class RemoveWatchListEntryGuiEvent(val entries: Set<WatchListEntry>) : GuiEvent()
 data class AddWatchListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
-data class AddIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()
-data class RemoveIgnoreListEntryGuiEvent(val entry: Set<IgnoreListEntry>) : GuiEvent()
+data class AddIgnoreListEntryGuiEvent(val entries: Set<IgnoreListEntry>) : GuiEvent()
+data class RemoveIgnoreListEntryGuiEvent(val entries: Set<IgnoreListEntry>) : GuiEvent()
 data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
 data class FileSavedStatusChangedGuiEvent(val isFileSaved: Boolean): GuiEvent()

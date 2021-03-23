@@ -1,10 +1,8 @@
 package io.github.manamiproject.manami.gui.watchlist
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
-import io.github.manamiproject.manami.gui.AddWatchListStatusUpdateGuiEvent
-import io.github.manamiproject.manami.gui.ManamiAccess
-import io.github.manamiproject.manami.gui.RemoveWatchListEntryGuiEvent
+import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import javafx.beans.property.ObjectProperty
@@ -21,16 +19,16 @@ class WatchListView : View() {
     private val finishedTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
     private val tasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
 
-    private val watchListEntries: ObjectProperty<ObservableList<WatchListEntry>> = SimpleObjectProperty(
+    private val entries: ObjectProperty<ObservableList<WatchListEntry>> = SimpleObjectProperty(
         FXCollections.observableArrayList(manamiAccess.watchList())
     )
 
     init {
         subscribe<AddWatchListEntryGuiEvent> { event ->
-            watchListEntries.value.addAll(event.entry)
+            entries.value.addAll(event.entries)
         }
         subscribe<RemoveWatchListEntryGuiEvent> { event ->
-            watchListEntries.value.removeAll(event.entry)
+            entries.value.removeAll(event.entries)
         }
         subscribe<AddWatchListStatusUpdateGuiEvent> { event ->
             finishedTasks.set(event.finishedTasks)
@@ -59,7 +57,7 @@ class WatchListView : View() {
                 withHideButton = false
                 withDeleteButton = true
                 onDelete = { entry -> manamiAccess.removeWatchListEntry(entry) }
-                items = watchListEntries
+                items = entries
             }
         }
     }

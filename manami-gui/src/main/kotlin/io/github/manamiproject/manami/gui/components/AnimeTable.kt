@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
+import io.github.manamiproject.modb.core.models.Anime
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -22,7 +23,7 @@ import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.Priority.NEVER
 import tornadofx.*
 
-data class AnimeTableConfig<T>(
+data class AnimeTableConfig<T: AnimeEntry>(
     var manamiApp: ManamiApp? = null,
     var withToWatchListButton: Boolean = true,
     var withToIgnoreListButton: Boolean = true,

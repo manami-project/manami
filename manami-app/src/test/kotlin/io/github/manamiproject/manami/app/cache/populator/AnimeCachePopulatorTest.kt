@@ -15,7 +15,6 @@ import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.internal.bytebuddy.TypeCache
 import org.junit.jupiter.api.Test
 import java.net.URI
 

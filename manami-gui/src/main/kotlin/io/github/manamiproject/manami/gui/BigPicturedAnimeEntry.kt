@@ -9,4 +9,5 @@ import java.net.URI
 data class BigPicturedAnimeEntry(override val link: Link, override val title: Title, override val thumbnail: URI): AnimeEntry {
 
     constructor(anime: Anime): this(Link(anime.sources.first()), anime.title, anime.picture)
+    constructor(animeEntry: AnimeEntry): this(animeEntry.link, animeEntry.title, animeEntry.thumbnail)
 }

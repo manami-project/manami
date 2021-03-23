@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.ignorelist
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
@@ -43,6 +44,16 @@ class IgnoreListView : View() {
                 entries.get().clear()
             }
         }
+        subscribe<AddAnimeListEntryGuiEvent> { event ->
+            val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to BigPictureEntry as soon as animeListEntries have a thumbnail
+        }
+        subscribe<AddWatchListEntryGuiEvent> { event ->
+            entries.get().removeAll(event.entries.map { IgnoreListEntry(it) })
+        }
+        subscribe<AddIgnoreListEntryGuiEvent> { event ->
+            entries.get().removeAll(event.entries)
+        }
         subscribe<FileOpenedGuiEvent> {
             entries.get().clear()
         }
@@ -67,7 +78,10 @@ class IgnoreListView : View() {
                 simpleServiceStart {
                     finishedTasksProperty = finishedRelatedAnimeTasks
                     numberOfTasksProperty = relatedAnimeTasks
-                    onStart = { manamiAccess.findRelatedAnimeForIgnoreList() }
+                    onStart = {
+                        entries.get().clear()
+                        manamiAccess.findRelatedAnimeForIgnoreList()
+                    }
                 }
             }
 
