@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.state
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -34,12 +35,16 @@ internal object InternalState : State {
 
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
         animeList.addAll(anime.distinct())
+        val uris = anime.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
+        watchList.removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to WatchListEntry as soon as AnimeListEntries have a thumbnail
+        ignoreList.removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to IgnoreListEntry as soon as AnimeListEntries have a thumbnail
     }
 
     override fun watchList(): Set<WatchListEntry> = watchList.toSet()
 
     override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
         watchList.addAll(anime.distinct())
+        ignoreList.removeAll(anime.map { IgnoreListEntry(it) })
     }
 
     override fun removeWatchListEntry(entry: WatchListEntry) {
@@ -50,6 +55,7 @@ internal object InternalState : State {
 
     override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
         ignoreList.addAll(anime.distinct())
+        watchList.removeAll(anime.map { WatchListEntry(it) })
     }
 
     override fun createSnapshot(): Snapshot = StateSnapshot(

@@ -112,6 +112,58 @@ internal class InternalStateTest {
             // then
             assertThat(InternalState.animeList()).containsExactly(entry)
         }
+
+        @Test
+        fun `adding an entry removed it from the watchlist`() {
+            // given
+            val entry = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/57"),
+                title = "Beck",
+                episodes = 26,
+                type = TV,
+                location = URI("some/relative/path/beck"),
+            )
+            val watchListEntry = WatchListEntry(
+                link = entry.link as Link,
+                title = entry.title,
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
+            )
+
+            InternalState.addAllWatchListEntries(setOf(watchListEntry))
+
+            // when
+            InternalState.addAllAnimeListEntries(setOf(entry))
+
+            // then
+            assertThat(InternalState.animeList()).containsExactly(entry)
+            assertThat(InternalState.watchList()).isEmpty()
+        }
+
+        @Test
+        fun `adding an entry removed it from the ignorelist`() {
+            // given
+            val entry = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/57"),
+                title = "Beck",
+                episodes = 26,
+                type = TV,
+                location = URI("some/relative/path/beck"),
+            )
+            val ignoreListEntry = IgnoreListEntry(
+                link = entry.link as Link,
+                title = entry.title,
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
+            )
+
+            InternalState.addAllIgnoreListEntries(setOf(ignoreListEntry))
+
+            // when
+            InternalState.addAllAnimeListEntries(setOf(entry))
+
+            // then
+            assertThat(InternalState.animeList()).containsExactly(entry)
+            assertThat(InternalState.ignoreList()).isEmpty()
+        }
     }
 
     @Nested
@@ -136,6 +188,24 @@ internal class InternalStateTest {
 
             // then
             assertThat(InternalState.watchList()).containsExactly(entry)
+        }
+
+        @Test
+        fun `adding an entry to the watchlist will remove it from the ignorelist`() {
+            // given
+            val entry = WatchListEntry(
+                link = Link("https://myanimelist.net/anime/5114"),
+                title = "Fullmetal Alchemist: Brotherhood",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            )
+            InternalState.addAllIgnoreListEntries(setOf(IgnoreListEntry(entry)))
+
+            // when
+            InternalState.addAllWatchListEntries(setOf(entry))
+
+            // then
+            assertThat(InternalState.watchList()).containsExactly(entry)
+            assertThat(InternalState.ignoreList()).isEmpty()
         }
     }
 
@@ -199,6 +269,24 @@ internal class InternalStateTest {
 
             // then
             assertThat(InternalState.ignoreList()).containsExactly(entry)
+        }
+
+        @Test
+        fun `adding an entry to the ignorelist will remove it from the watchlist`() {
+            // given
+            val entry = IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/5114"),
+                title = "Fullmetal Alchemist: Brotherhood",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            )
+            InternalState.addAllWatchListEntries(setOf(WatchListEntry(entry)))
+
+            // when
+            InternalState.addAllIgnoreListEntries(setOf(entry))
+
+            // then
+            assertThat(InternalState.ignoreList()).containsExactly(entry)
+            assertThat(InternalState.watchList()).isEmpty()
         }
     }
 
