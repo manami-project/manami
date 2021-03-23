@@ -57,17 +57,7 @@ internal class AnimeCache(
 
     override fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
-            is PresentValue<Anime> -> {
-                val source = entry.value.sources.filter { it == key }.toMutableList()
-                check(source.isNotEmpty())
-
-                val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(key.host) }.toMutableList()
-                val entryWithRequestedUri = entry.value.copy(
-                    sources = SortedList(source),
-                    relatedAnime = SortedList(relatedAnime),
-                )
-                PresentValue(entryWithRequestedUri)
-            }
+            is PresentValue<Anime> -> removeUnrequestedMetaDataProvider(entry, key)
             is Empty<Anime> -> entry
             null -> loadEntry(key)
         }
@@ -105,11 +95,24 @@ internal class AnimeCache(
             anime.sources.forEach {
                 populate(it, cacheEntry)
             }
-            fetch(uri)
+            removeUnrequestedMetaDataProvider(cacheEntry, uri)
         } catch (t: Throwable) {
             populate(uri, Empty())
             Empty()
         }
+    }
+
+    private fun removeUnrequestedMetaDataProvider(entry: PresentValue<Anime>, requestedKey: URI): PresentValue<Anime> {
+        val source = entry.value.sources.filter { it == requestedKey }.toMutableList()
+        check(source.isNotEmpty())
+
+        val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(requestedKey.host) }.toMutableList()
+        val entryWithRequestedUri = entry.value.copy(
+            sources = SortedList(source),
+            relatedAnime = SortedList(relatedAnime),
+        )
+
+        return PresentValue(entryWithRequestedUri)
     }
 
     private companion object {

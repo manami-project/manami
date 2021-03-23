@@ -192,7 +192,7 @@ internal class DefaultListHandlerTest {
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }
-            val deadEntry = URI("https://myanimelist.net/anime/1001")
+            val deadEntry = URI("https://myanimelist.net/anime/10001")
 
             val savedEntries = mutableListOf<WatchListEntry>()
             val state = object: State by TestState {
@@ -331,7 +331,7 @@ internal class DefaultListHandlerTest {
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }
-            val deadEntry = URI("https://myanimelist.net/anime/1001")
+            val deadEntry = URI("https://myanimelist.net/anime/10001")
 
             val savedEntries = mutableListOf<IgnoreListEntry>()
             val state = object: State by TestState {
