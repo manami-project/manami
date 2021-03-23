@@ -16,10 +16,8 @@ import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
+import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
-import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
-import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeHandler
-import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
 import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
 import io.github.manamiproject.manami.app.search.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
@@ -109,6 +107,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: RelatedAnimeStatusEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: RelatedAnimeFinishedEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
     fun subscribe(e: AnimeSeasonEntryFoundEvent) = eventMapper.get().invoke(e)

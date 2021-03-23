@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -23,6 +24,7 @@ class IgnoreListView : View() {
 
     private val finishedRelatedAnimeTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
     private val relatedAnimeTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+    private val isRelatedAnimeProgressIndicatorVisible = SimpleBooleanProperty(false)
 
     private val entries: ObjectProperty<ObservableList<IgnoreListEntry>> = SimpleObjectProperty(
         FXCollections.observableArrayList()
@@ -43,6 +45,9 @@ class IgnoreListView : View() {
             if (event.finishedChecking == 1) {
                 entries.get().clear()
             }
+        }
+        subscribe<IgnoreListRelatedAnimeFinishedGuiEvent> {
+            isRelatedAnimeProgressIndicatorVisible.set(false)
         }
         subscribe<AddAnimeListEntryGuiEvent> { event ->
             val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
@@ -78,6 +83,7 @@ class IgnoreListView : View() {
                 simpleServiceStart {
                     finishedTasksProperty = finishedRelatedAnimeTasks
                     numberOfTasksProperty = relatedAnimeTasks
+                    progressIndicatorVisibleProperty = isRelatedAnimeProgressIndicatorVisible
                     onStart = {
                         entries.get().clear()
                         manamiAccess.findRelatedAnimeForIgnoreList()

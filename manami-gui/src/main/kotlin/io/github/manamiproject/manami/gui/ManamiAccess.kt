@@ -15,6 +15,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUp
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
+import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFinishedEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
 import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
@@ -42,6 +43,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
                     is RelatedAnimeFoundEvent -> mapRelatedAnimeFoundEvent(this)
                     is RelatedAnimeStatusEvent -> mapRelatedAnimeStatusEvent(this)
+                    is RelatedAnimeFinishedEvent -> mapRelatedAnimeFinsihedEvent(this)
                     is AnimeSeasonEntryFoundEvent -> AnimeSeasonEntryFoundGuiEvent(this.anime)
                     is AnimeSeasonSearchFinishedEvent -> AnimeSeasonSearchFinishedGuiEvent
                     is CachePopulatorFinishedEvent -> CachePopulatorFinishedGuiEvent
@@ -72,6 +74,14 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
             ANIME_LIST -> AnimeListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
             WATCH_LIST -> throw IllegalStateException("Unsupported list type")
             IGNORE_LIST -> IgnoreListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
+        }
+    }
+
+    private fun mapRelatedAnimeFinsihedEvent(event: RelatedAnimeFinishedEvent): GuiEvent {
+        return when(event.listType) {
+            ANIME_LIST -> AnimeListRelatedAnimeFinishedGuiEvent
+            WATCH_LIST -> throw IllegalStateException("Unsupported list type")
+            IGNORE_LIST -> IgnoreListRelatedAnimeFinishedGuiEvent
         }
     }
 
@@ -120,9 +130,11 @@ object ImportFinishedGuiEvent: GuiEvent()
 
 data class AnimeListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
 data class AnimeListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
+object AnimeListRelatedAnimeFinishedGuiEvent: GuiEvent()
 
 data class IgnoreListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
 data class IgnoreListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
+object IgnoreListRelatedAnimeFinishedGuiEvent: GuiEvent()
 
 data class AnimeSeasonEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeSeasonSearchFinishedGuiEvent: GuiEvent()

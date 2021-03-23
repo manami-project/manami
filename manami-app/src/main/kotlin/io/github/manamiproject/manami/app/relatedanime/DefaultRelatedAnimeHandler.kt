@@ -76,6 +76,7 @@ internal class DefaultRelatedAnimeHandler(
             eventBus.post(RelatedAnimeStatusEvent(eventListType, checkedEntries.size, numberOfEntriesToBeChecked))
         }
 
+        eventBus.post(RelatedAnimeFinishedEvent(eventListType))
         log.info("Finished searching for [{}] related anime", eventListType)
     }
 

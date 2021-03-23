@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -17,6 +18,7 @@ class RelatedAnimeView : View() {
     private val manamiAccess: ManamiAccess by inject()
     private val finishedTasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
     private val tasks: SimpleIntegerProperty = SimpleIntegerProperty(0)
+    private val isRelatedAnimeProgressIndicatorVisible = SimpleBooleanProperty(false)
 
     private val entries: ObjectProperty<ObservableList<BigPicturedAnimeEntry>> = SimpleObjectProperty(
         FXCollections.observableArrayList()
@@ -33,6 +35,9 @@ class RelatedAnimeView : View() {
             if (event.finishedChecking == 1) {
                 entries.get().clear()
             }
+        }
+        subscribe<AnimeListRelatedAnimeFinishedGuiEvent> {
+            isRelatedAnimeProgressIndicatorVisible.set(false)
         }
         subscribe<AddAnimeListEntryGuiEvent> { event ->
             val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
@@ -59,6 +64,7 @@ class RelatedAnimeView : View() {
             simpleServiceStart {
                 finishedTasksProperty.bindBidirectional(finishedTasks)
                 numberOfTasksProperty.bindBidirectional(tasks)
+                progressIndicatorVisibleProperty.bindBidirectional(isRelatedAnimeProgressIndicatorVisible)
                 onStart = {
                     entries.get().clear()
                     manamiAccess.findRelatedAnimeForAnimeList()
