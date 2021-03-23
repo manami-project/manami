@@ -1,7 +1,9 @@
 package io.github.manamiproject.manami.gui.components
 
 import io.github.manamiproject.manami.app.ManamiApp
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
+import io.github.manamiproject.manami.gui.GuiCaches
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import io.github.manamiproject.modb.core.models.Anime
@@ -62,18 +64,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 prefWidthProperty().bindBidirectional(imageColWidth)
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<ImageView> {
-                        val image = Image(column.value.thumbnail.toString(), true)
-                        val cachedImageView = ImageView(image).apply {
-                            isCache = true
-                        }
-
-                        image.widthProperty().addListener { _, oldValue, newValue ->
-                            if (oldValue.toDouble() < newValue.toDouble()) {
-                                imageColWidth.set(newValue.toDouble() + columnSpacer)
-                            }
-                        }
-
-                        cachedImageView
+                        (GuiCaches.imageViewCache.fetch(column.value.thumbnail) as PresentValue).value
                     }
                 }
             },

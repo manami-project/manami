@@ -78,15 +78,14 @@ internal class AnimeCache(
             _availableMetaDataProvider.add(key.host)
         }
 
-        if (!entries.containsKey(key)) {
-            entries[key] = value
-        } else {
-            log.warn("Not populating cache with key [{}], because it already exists", key)
+        when {
+            !entries.containsKey(key) -> entries[key] = value
+            else -> log.warn("Not populating cache with key [{}], because it already exists", key)
         }
     }
 
     override fun clear() {
-        log.info("Clearing cache")
+        log.info("Clearing anime cache")
         entries.clear()
     }
 
