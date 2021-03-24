@@ -27,6 +27,7 @@ class MenuController : Controller() {
         }
 
         safelyExecuteActionController.safelyExecute { ignoreUnsavedChanged ->
+            fire(ClearAutoCompleteSuggestionsGuiEvent)
             runAsync {
                 manamiAccess.open(file = file, ignoreUnsavedChanged = ignoreUnsavedChanged)
             }

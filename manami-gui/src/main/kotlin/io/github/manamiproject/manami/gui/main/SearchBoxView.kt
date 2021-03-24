@@ -1,16 +1,37 @@
 package io.github.manamiproject.manami.gui.main
 
+import impl.org.controlsfx.autocompletion.SuggestionProvider
+import io.github.manamiproject.manami.gui.AddAnimeListEntryGuiEvent
+import io.github.manamiproject.manami.gui.AddIgnoreListEntryGuiEvent
+import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
 import tornadofx.*
+import tornadofx.controlsfx.bindAutoCompletion
 
 class SearchBoxView: View() {
 
     private val controller: SearchBoxController by inject()
     private val searchStringProperty = SimpleStringProperty()
+    private val autoCompleteProvider: SuggestionProvider<String> = SuggestionProvider.create(emptyList())
+
+    init {
+        subscribe<AddAnimeListEntryGuiEvent> { event ->
+            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+        }
+        subscribe<AddWatchListEntryGuiEvent> { event ->
+            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+        }
+        subscribe<AddIgnoreListEntryGuiEvent> { event ->
+            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+        }
+        subscribe<ClearAutoCompleteSuggestionsGuiEvent> {
+            autoCompleteProvider.clearSuggestions()
+        }
+    }
 
     override val root = hbox {
         alignment = CENTER_RIGHT
@@ -19,6 +40,8 @@ class SearchBoxView: View() {
         textfield {
             promptText = "Title"
             textProperty().bindBidirectional(searchStringProperty)
+            bindAutoCompletion(autoCompleteProvider)
+            minWidth = 250.0
         }
         button("Search") {
             isDefaultButton = true

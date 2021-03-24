@@ -67,7 +67,7 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
 
         val txtUrls = textfield {
             promptText = "https://myanimelist.net/anime/1535 https://..."
-            prefWidth = 200.0
+            minWidth = 260.0
         }
 
         button {
