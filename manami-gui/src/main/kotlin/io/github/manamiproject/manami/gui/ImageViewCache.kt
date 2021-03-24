@@ -6,22 +6,21 @@ import io.github.manamiproject.manami.app.cache.Empty
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import javafx.scene.image.Image
-import javafx.scene.image.ImageView
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 
-class ImageViewCache: Cache<URI, CacheEntry<ImageView>> {
+class ImageViewCache: Cache<URI, CacheEntry<Image>> {
 
-    private val entries = ConcurrentHashMap<URI, CacheEntry<ImageView>>()
+    private val entries = ConcurrentHashMap<URI, CacheEntry<Image>>()
 
-    override fun fetch(key: URI): CacheEntry<ImageView> {
+    override fun fetch(key: URI): CacheEntry<Image> {
         return when(val entry = entries[key]) {
-            is PresentValue<ImageView>, is Empty<ImageView> -> entry
+            is PresentValue<Image>, is Empty<Image> -> entry
             null -> createEntry(key)
         }
     }
 
-    override fun populate(key: URI, value: CacheEntry<ImageView>) {
+    override fun populate(key: URI, value: CacheEntry<Image>) {
         when {
             !entries.containsKey(key) -> entries[key] = value
             else -> log.warn("Not populating cache with key [{}], because it already exists", key)
@@ -33,15 +32,11 @@ class ImageViewCache: Cache<URI, CacheEntry<ImageView>> {
         entries.clear()
     }
 
-    private fun createEntry(uri: URI): CacheEntry<ImageView> {
+    private fun createEntry(uri: URI): CacheEntry<Image> {
         log.trace("No cache hit for [{}]. Creating a new entry.", uri)
 
         val image = Image(uri.toString(), true)
-        val cachedImageView = ImageView(image).apply {
-            isCache = true
-        }
-
-        val value = PresentValue(cachedImageView)
+        val value = PresentValue(image)
         populate(uri, value)
 
         return value
@@ -53,5 +48,5 @@ class ImageViewCache: Cache<URI, CacheEntry<ImageView>> {
 }
 
 object GuiCaches {
-    val imageViewCache = ImageViewCache()
+    val imageCache = ImageViewCache()
 }

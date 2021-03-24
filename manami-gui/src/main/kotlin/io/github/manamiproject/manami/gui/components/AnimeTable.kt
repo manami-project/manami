@@ -3,11 +3,9 @@ package io.github.manamiproject.manami.gui.components
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
-import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.GuiCaches
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
-import io.github.manamiproject.modb.core.models.Anime
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -20,7 +18,6 @@ import javafx.scene.control.Hyperlink
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY
-import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.Priority.NEVER
@@ -65,7 +62,9 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 prefWidthProperty().bindBidirectional(imageColWidth)
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<ImageView> {
-                        (GuiCaches.imageViewCache.fetch(column.value.thumbnail) as PresentValue).value
+                        ImageView((GuiCaches.imageCache.fetch(column.value.thumbnail) as PresentValue).value).apply {
+                            isCache = true
+                        }
                     }
                 }
             },
