@@ -7,8 +7,8 @@ import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
-import io.github.manamiproject.manami.gui.search.SearchView
-import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
+import io.github.manamiproject.manami.gui.search.file.FileSearchView
+import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.AnimeSeasonView
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
@@ -21,7 +21,7 @@ class TabPaneView : View() {
     private val animeListView: AnimelistView by inject()
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
-    private val searchView: SearchView by inject()
+    private val fileSearchView: FileSearchView by inject()
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
 
@@ -35,8 +35,8 @@ class TabPaneView : View() {
         subscribe<ShowIgnoreListTabRequest> {
             tabPane.openTab("Ignore List") { add(ignoreListView.root) }
         }
-        subscribe<ShowAnimeSearchTabRequest> {
-            tabPane.openTab("Search") { add(searchView.root) }
+        subscribe<ShowFileSearchTabRequest> {
+            tabPane.openTab("Search") { add(fileSearchView.root) }
         }
         subscribe<ShowAnimeSeasonTabRequest> {
             tabPane.openTab("Anime Season") { add(animeSeasonView.root) }

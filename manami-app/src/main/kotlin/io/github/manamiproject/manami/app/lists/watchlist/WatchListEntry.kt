@@ -19,7 +19,7 @@ data class WatchListEntry(
     )
 
     constructor(animeEntry: AnimeEntry): this(
-        link = animeEntry.link,
+        link = animeEntry.link.asLink(),
         title = animeEntry.title,
         thumbnail = animeEntry.thumbnail,
     )

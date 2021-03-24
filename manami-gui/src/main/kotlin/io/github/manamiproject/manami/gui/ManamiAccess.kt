@@ -18,11 +18,11 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFinishedEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
-import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
-import io.github.manamiproject.manami.app.search.AnimeSeasonSearchFinishedEvent
+import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.EventListType.*
+import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
 import tornadofx.FXEvent
@@ -47,6 +47,9 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AnimeSeasonEntryFoundEvent -> AnimeSeasonEntryFoundGuiEvent(this.anime)
                     is AnimeSeasonSearchFinishedEvent -> AnimeSeasonSearchFinishedGuiEvent
                     is CachePopulatorFinishedEvent -> CachePopulatorFinishedGuiEvent
+                    is FileSearchAnimeListResultsEvent -> FileSearchAnimeListResultsGuiEvent(this.anime)
+                    is FileSearchWatchListResultsEvent -> FileSearchWatchListResultsGuiEvent(this.anime)
+                    is FileSearchIgnoreListResultsEvent -> FileSearchIgnoreListResultsGuiEvent(this.anime)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -140,3 +143,7 @@ data class AnimeSeasonEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeSeasonSearchFinishedGuiEvent: GuiEvent()
 
 object CachePopulatorFinishedGuiEvent: GuiEvent()
+
+data class FileSearchAnimeListResultsGuiEvent(val anime: Collection<AnimeListEntry>): GuiEvent()
+data class FileSearchWatchListResultsGuiEvent(val anime: Collection<WatchListEntry>): GuiEvent()
+data class FileSearchIgnoreListResultsGuiEvent(val anime: Collection<IgnoreListEntry>): GuiEvent()

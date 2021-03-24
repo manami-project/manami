@@ -5,7 +5,7 @@ import io.github.manamiproject.manami.gui.AddAnimeListEntryGuiEvent
 import io.github.manamiproject.manami.gui.AddIgnoreListEntryGuiEvent
 import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
-import io.github.manamiproject.manami.gui.search.ShowAnimeSearchTabRequest
+import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
@@ -63,6 +63,6 @@ class SearchBoxController: Controller() {
         runAsync {
             manamiAccess.findInLists(searchString)
         }
-        fire(ShowAnimeSearchTabRequest)
+        fire(ShowFileSearchTabRequest)
     }
 }

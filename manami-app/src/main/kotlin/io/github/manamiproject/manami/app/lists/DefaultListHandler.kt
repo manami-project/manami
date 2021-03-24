@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.CmdRemoveIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
@@ -107,6 +108,17 @@ internal class DefaultListHandler(
     }
 
     override fun ignoreList(): Set<IgnoreListEntry> = state.ignoreList()
+
+    override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
+        GenericReversibleCommand(
+            state = state,
+            commandHistory = commandHistory,
+            command = CmdRemoveIgnoreListEntry(
+                state = state,
+                ignoreListEntry = entry,
+            )
+        ).execute()
+    }
 
     companion object {
         private val log by LoggerDelegate()

@@ -18,10 +18,8 @@ import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUp
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
-import io.github.manamiproject.manami.app.search.AnimeSeasonEntryFoundEvent
-import io.github.manamiproject.manami.app.search.AnimeSeasonSearchFinishedEvent
+import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
-import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
@@ -50,6 +48,8 @@ class Manami(
     ListHandler by listHandler,
     RelatedAnimeHandler by relatedAnimeHandler {
 
+    private var eventMapper = AtomicReference<Event.() -> Unit>()
+
     init {
         log.info("Starting manami")
         SimpleEventBus.subscribe(this)
@@ -73,7 +73,6 @@ class Manami(
         exitProcess(0)
     }
 
-    private var eventMapper = AtomicReference<Event.() -> Unit>()
     fun eventMapping(mapper: Event.() -> Unit = {}) {
         eventMapper.set(mapper)
     }
@@ -119,6 +118,15 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: CachePopulatorFinishedEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: FileSearchAnimeListResultsEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: FileSearchWatchListResultsEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: FileSearchIgnoreListResultsEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

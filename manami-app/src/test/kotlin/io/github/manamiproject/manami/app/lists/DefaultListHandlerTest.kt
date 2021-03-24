@@ -1,7 +1,6 @@
 package io.github.manamiproject.manami.app.lists
 
 import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
@@ -16,6 +15,7 @@ import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
+import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.Duration
@@ -377,5 +377,75 @@ internal class DefaultListHandlerTest {
             assertThat(eventsReceived.first()).isEqualTo(AddIgnoreListStatusUpdateEvent(1, 2))
             assertThat(eventsReceived.last()).isEqualTo(AddIgnoreListStatusUpdateEvent(2, 2))
         }
+    }
+
+    @Test
+    fun `delegate call for removing watch list entry to state`() {
+        // given
+        var resultingEntry: WatchListEntry? = null
+        val testState = object: State by TestState {
+            override fun createSnapshot(): Snapshot = StateSnapshot()
+            override fun removeWatchListEntry(entry: WatchListEntry) {
+                resultingEntry = entry
+            }
+        }
+
+        val testCommandHistory = object: CommandHistory by TestCommandHistory {
+            override fun push(command: ReversibleCommand) { }
+        }
+
+        val defaultListHandler = DefaultListHandler(
+            state = testState,
+            commandHistory = testCommandHistory,
+            cache = TestAnimeCache,
+            eventBus = TestEventBus,
+        )
+
+        val expectedEntry = WatchListEntry(
+            link = Link("https://myanimelist.net/anime/5114"),
+            title = "Fullmetal Alchemist: Brotherhood",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+        )
+
+        // when
+        defaultListHandler.removeWatchListEntry(expectedEntry)
+
+        // then
+        assertThat(resultingEntry).isEqualTo(expectedEntry)
+    }
+
+    @Test
+    fun `delegate call for removing ignore list entry to state`() {
+        // given
+        var resultingEntry: IgnoreListEntry? = null
+        val testState = object: State by TestState {
+            override fun createSnapshot(): Snapshot = StateSnapshot()
+            override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
+                resultingEntry = entry
+            }
+        }
+
+        val testCommandHistory = object: CommandHistory by TestCommandHistory {
+            override fun push(command: ReversibleCommand) { }
+        }
+
+        val defaultListHandler = DefaultListHandler(
+            state = testState,
+            commandHistory = testCommandHistory,
+            cache = TestAnimeCache,
+            eventBus = TestEventBus,
+        )
+
+        val expectedEntry = IgnoreListEntry(
+            link = Link("https://myanimelist.net/anime/5114"),
+            title = "Fullmetal Alchemist: Brotherhood",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+        )
+
+        // when
+        defaultListHandler.removeIgnoreListEntry(expectedEntry)
+
+        // then
+        assertThat(resultingEntry).isEqualTo(expectedEntry)
     }
 }

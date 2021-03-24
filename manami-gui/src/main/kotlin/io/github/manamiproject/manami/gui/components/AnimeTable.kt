@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.gui.components
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.GuiCaches
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.extensions.hyperlink
@@ -81,7 +82,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                     ReadOnlyObservableValue<Hyperlink> {
                         hyperlink {
                             title = column.value.title
-                            uri = column.value.link.uri
+                            uri = column.value.link.asLink().uri
                         }
                     }
                 }
@@ -106,7 +107,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                                     button("watch") {
                                         action {
                                             animeTableConfig.items.get().remove(cellValueFactory.value)
-                                            runAsync { manamiApp.addWatchListEntry(setOf(cellValueFactory.value.link.uri)) }
+                                            runAsync { manamiApp.addWatchListEntry(setOf(cellValueFactory.value.link.asLink().uri)) }
                                         }
                                     }
                                 }
@@ -115,7 +116,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                                     button("ignore") {
                                         action {
                                             animeTableConfig.items.get().remove(cellValueFactory.value)
-                                            runAsync { manamiApp.addIgnoreListEntry(setOf(cellValueFactory.value.link.uri)) }
+                                            runAsync { manamiApp.addIgnoreListEntry(setOf(cellValueFactory.value.link.asLink().uri)) }
                                         }
                                     }
                                 }

@@ -10,6 +10,9 @@ import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.AnimeSeason
+import io.github.manamiproject.modb.core.models.Title
+import org.apache.commons.lang3.StringUtils.containsIgnoreCase
+import org.apache.commons.text.similarity.LevenshteinDistance
 import java.net.URI
 
 internal class DefaultSearchHandler(
@@ -18,8 +21,20 @@ internal class DefaultSearchHandler(
     private val state: State = InternalState,
 ) : SearchHandler {
 
+    private val levenshteinDistance = LevenshteinDistance(2)
+
     override fun findInLists(searchString: String) {
-        TODO("Not yet implemented")
+        val animeListResults = state.animeList()
+            .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link is Link && it.link.uri.toString() == searchString) }
+        eventBus.post(FileSearchAnimeListResultsEvent(animeListResults))
+
+        val watchListResults = state.watchList()
+            .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
+        eventBus.post(FileSearchWatchListResultsEvent(watchListResults))
+
+        val ignoreListResults = state.ignoreList()
+            .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
+        eventBus.post(FileSearchIgnoreListResultsEvent(ignoreListResults))
     }
 
     override fun findSeason(season: AnimeSeason, metaDataProvider: Hostname) {
@@ -43,4 +58,15 @@ internal class DefaultSearchHandler(
     }
 
     override fun availableMetaDataProviders(): Set<Hostname> = cache.availableMetaDataProvider
+
+    private fun isEntryMatchingSearchString(title: Title, searchString: String): Boolean {
+        val levenshteinDistance = levenshteinDistance.apply(title.toLowerCase(), searchString.toLowerCase())
+        val isTitleNearlyEqual = levenshteinDistance in 0..2
+        val isInTitle = containsIgnoreCase(title, searchString)
+
+        return when {
+            isTitleNearlyEqual || isInTitle -> true
+            else -> false
+        }
+    }
 }

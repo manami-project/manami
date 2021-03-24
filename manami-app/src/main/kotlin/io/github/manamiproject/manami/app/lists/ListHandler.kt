@@ -12,4 +12,5 @@ interface ListHandler {
 
     fun addIgnoreListEntry(uris: Collection<URI>)
     fun ignoreList(): Set<IgnoreListEntry>
+    fun removeIgnoreListEntry(entry: IgnoreListEntry)
 }

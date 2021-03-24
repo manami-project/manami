@@ -21,6 +21,7 @@ internal interface State {
 
     fun ignoreList(): Set<IgnoreListEntry>
     fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>)
+    fun removeIgnoreListEntry(entry: IgnoreListEntry)
 
     fun createSnapshot(): Snapshot
     fun restore(snapshot: Snapshot)

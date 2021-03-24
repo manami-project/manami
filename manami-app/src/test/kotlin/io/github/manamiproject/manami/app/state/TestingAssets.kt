@@ -18,6 +18,7 @@ internal object TestState: State {
     override fun removeWatchListEntry(entry: WatchListEntry) = shouldNotBeInvoked()
     override fun ignoreList(): Set<IgnoreListEntry> = shouldNotBeInvoked()
     override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) = shouldNotBeInvoked()
+    override fun removeIgnoreListEntry(entry: IgnoreListEntry) = shouldNotBeInvoked()
     override fun createSnapshot(): Snapshot = shouldNotBeInvoked()
     override fun restore(snapshot: Snapshot) = shouldNotBeInvoked()
     override fun clear() = shouldNotBeInvoked()

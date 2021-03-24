@@ -58,6 +58,10 @@ internal object InternalState : State {
         watchList.removeAll(anime.map { WatchListEntry(it) })
     }
 
+    override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
+        ignoreList.remove(entry)
+    }
+
     override fun createSnapshot(): Snapshot = StateSnapshot(
         animeList = animeList(),
         watchList = watchList(),

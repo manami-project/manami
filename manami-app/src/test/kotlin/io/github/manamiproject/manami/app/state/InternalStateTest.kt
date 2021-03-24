@@ -124,7 +124,7 @@ internal class InternalStateTest {
                 location = URI("some/relative/path/beck"),
             )
             val watchListEntry = WatchListEntry(
-                link = entry.link as Link,
+                link = entry.link.asLink(),
                 title = entry.title,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
             )
@@ -150,7 +150,7 @@ internal class InternalStateTest {
                 location = URI("some/relative/path/beck"),
             )
             val ignoreListEntry = IgnoreListEntry(
-                link = entry.link as Link,
+                link = entry.link.asLink(),
                 title = entry.title,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
             )
@@ -287,6 +287,44 @@ internal class InternalStateTest {
             // then
             assertThat(InternalState.ignoreList()).containsExactly(entry)
             assertThat(InternalState.watchList()).isEmpty()
+        }
+    }
+
+    @Nested
+    inner class RemoveIgnoreListEntryTests {
+
+        @Test
+        fun `removes a specific entry`() {
+            // given
+            val entry1 = IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/5114"),
+                title = "Fullmetal Alchemist: Brotherhood",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            )
+            val entry2 = IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/37989"),
+                title = "Golden Kamuy 2nd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+            )
+            val entry3 = IgnoreListEntry(
+                link = Link("https://myanimelist.net/anime/40059"),
+                title = "Golden Kamuy 3rd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+            )
+
+            InternalState.addAllIgnoreListEntries(
+                setOf(
+                    entry1,
+                    entry2,
+                    entry3,
+                )
+            )
+
+            // when
+            InternalState.removeIgnoreListEntry(entry2)
+
+            // then
+            assertThat(InternalState.ignoreList()).containsExactly(entry1, entry3)
         }
     }
 

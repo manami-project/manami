@@ -3,7 +3,9 @@ package io.github.manamiproject.manami.app.lists
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import java.net.URI
 
-sealed class LinkEntry
+sealed class LinkEntry {
+    fun asLink(): Link = this as Link
+}
 
 object NoLink: LinkEntry() {
     override fun toString(): String  = EMPTY
