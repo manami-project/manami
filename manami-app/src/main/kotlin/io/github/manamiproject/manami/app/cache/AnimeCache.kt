@@ -17,6 +17,7 @@ import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Tag
 import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.mal.MalConverter
 import io.github.manamiproject.modb.mal.MalDownloader
@@ -35,9 +36,14 @@ internal class AnimeCache(
 ) : Cache<URI, CacheEntry<Anime>> {
 
     private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
+
     private val _availableMetaDataProvider = mutableSetOf<Hostname>()
     val availableMetaDataProvider
         get() = _availableMetaDataProvider.toSet()
+
+    private val _availableTags = mutableSetOf<Tag>()
+    val availableTags
+        get() = _availableTags.toSet()
 
     fun allEntries(metaDataProvider: Hostname): Sequence<Anime> {
         return entries.asSequence()
@@ -64,6 +70,10 @@ internal class AnimeCache(
     override fun populate(key: URI, value: CacheEntry<Anime>) {
         if (!availableMetaDataProvider.contains(key.host)) {
             _availableMetaDataProvider.add(key.host)
+        }
+
+        if (value is PresentValue) {
+            _availableTags.addAll(value.value.tags)
         }
 
         when {

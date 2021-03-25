@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.search
+package io.github.manamiproject.manami.app.search.season
 
 import io.github.manamiproject.manami.app.state.events.Event
 

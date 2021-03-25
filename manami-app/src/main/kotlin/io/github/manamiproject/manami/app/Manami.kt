@@ -20,6 +20,10 @@ import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
 import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
+import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
+import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
+import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
@@ -127,6 +131,12 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: FileSearchIgnoreListResultsEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeSearchEntryFoundEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeSearchFinishedEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

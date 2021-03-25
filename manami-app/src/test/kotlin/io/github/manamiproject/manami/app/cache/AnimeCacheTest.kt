@@ -242,6 +242,78 @@ internal class AnimeCacheTest {
     }
 
     @Nested
+    inner class AvailableTagsTests {
+
+        @Test
+        fun `return the values from the AnimeCache`() {
+            // given
+            val entry = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                type = OVA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+                tags = SortedList(
+                    "based on a manga",
+                    "comedy",
+                    "ensemble cast",
+                    "food",
+                    "high school",
+                    "psychological",
+                    "romance",
+                    "romantic comedy",
+                    "school",
+                    "school clubs",
+                    "school life",
+                    "seinen",
+                    "slice of life",
+                    "student government",
+                    "tsundere",
+                )
+            )
+
+            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            // when
+            val result = animeCache.availableTags
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder(
+                "based on a manga",
+                "comedy",
+                "ensemble cast",
+                "food",
+                "high school",
+                "psychological",
+                "romance",
+                "romantic comedy",
+                "school",
+                "school clubs",
+                "school life",
+                "seinen",
+                "slice of life",
+                "student government",
+                "tsundere",
+            )
+        }
+    }
+
+    @Nested
     inner class AllEntriesTests {
 
         @Test

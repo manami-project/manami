@@ -7,6 +7,8 @@ import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
+import io.github.manamiproject.manami.gui.search.anime.AnimeSearchView
+import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.search.file.FileSearchView
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.AnimeSeasonView
@@ -22,6 +24,7 @@ class TabPaneView : View() {
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
     private val fileSearchView: FileSearchView by inject()
+    private val animeSearchView: AnimeSearchView by inject()
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
 
@@ -37,6 +40,9 @@ class TabPaneView : View() {
         }
         subscribe<ShowFileSearchTabRequest> {
             tabPane.openTab("Search") { add(fileSearchView.root) }
+        }
+        subscribe<ShowAnimeSearchTabRequest> {
+            tabPane.openTab("Anime Search") { add(animeSearchView.root) }
         }
         subscribe<ShowAnimeSeasonTabRequest> {
             tabPane.openTab("Anime Season") { add(animeSeasonView.root) }

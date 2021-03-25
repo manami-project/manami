@@ -11,6 +11,7 @@ import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
 import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
+import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
@@ -98,8 +99,8 @@ class MenuView : View() {
         }
         menu("Find") {
             item("Anime", createMnemonic("5")) {
-                isDisable = true
-                action { fire(ShowFileSearchTabRequest) }
+                disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
+                action { fire(ShowAnimeSearchTabRequest) }
             }
             item("Season", createMnemonic("6")) {
                 disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
