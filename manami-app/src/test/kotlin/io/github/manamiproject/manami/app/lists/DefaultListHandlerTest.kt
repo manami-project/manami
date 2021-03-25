@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.lists
 
 import io.github.manamiproject.manami.app.cache.*
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
@@ -17,6 +18,8 @@ import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Type.Special
+import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.Duration
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
@@ -27,6 +30,48 @@ import java.lang.Thread.sleep
 import java.net.URI
 
 internal class DefaultListHandlerTest {
+
+    @Test
+    fun `return the list of anime list entries from state`() {
+        // given
+        val entry1 = AnimeListEntry(
+            title = "H2O: Footprints in the Sand",
+            episodes = 4,
+            type = Special,
+            location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+        )
+        val entry2 = AnimeListEntry(
+            link = Link("https://myanimelist.net/anime/57"),
+            title = "Beck",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+            episodes = 26,
+            type = TV,
+            location = URI("some/relative/path/beck"),
+        )
+
+        val state = object: State by TestState {
+            override fun animeList(): List<AnimeListEntry> = listOf(entry1, entry2)
+        }
+
+        val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache { }
+        val testCommandHistory = object: CommandHistory by TestCommandHistory { }
+        val testEventBus = object: EventBus by TestEventBus {
+            override fun post(event: Event) { }
+        }
+
+        val defaultListHandler = DefaultListHandler(
+            state = state,
+            commandHistory = testCommandHistory,
+            cache = testCache,
+            eventBus = testEventBus,
+        )
+
+        // when
+        val result = defaultListHandler.animeList()
+
+        // then
+        assertThat(result).containsExactlyInAnyOrder(entry1, entry2)
+    }
 
     @Test
     fun `return the list of watch list entries from state`() {
@@ -109,7 +154,7 @@ internal class DefaultListHandlerTest {
             // given
             val entry1 = Anime(
                 _title = "Golden Kamuy 2nd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.FINISHED,
                 animeSeason = AnimeSeason(),
@@ -121,7 +166,7 @@ internal class DefaultListHandlerTest {
             }
             val entry2 = Anime(
                 _title = "Golden Kamuy 3rd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.CURRENTLY,
                 animeSeason = AnimeSeason(),
@@ -182,7 +227,7 @@ internal class DefaultListHandlerTest {
             // given
             val entry = Anime(
                 _title = "Golden Kamuy 2nd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.FINISHED,
                 animeSeason = AnimeSeason(),
@@ -248,7 +293,7 @@ internal class DefaultListHandlerTest {
             // given
             val entry1 = Anime(
                 _title = "Golden Kamuy 2nd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.FINISHED,
                 animeSeason = AnimeSeason(),
@@ -260,7 +305,7 @@ internal class DefaultListHandlerTest {
             }
             val entry2 = Anime(
                 _title = "Golden Kamuy 3rd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.CURRENTLY,
                 animeSeason = AnimeSeason(),
@@ -321,7 +366,7 @@ internal class DefaultListHandlerTest {
             // given
             val entry = Anime(
                 _title = "Golden Kamuy 2nd Season",
-                type = Anime.Type.TV,
+                type = TV,
                 episodes = 12,
                 status = Anime.Status.FINISHED,
                 animeSeason = AnimeSeason(),

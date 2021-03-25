@@ -4,8 +4,6 @@ import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.NotifyCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
 import io.github.manamiproject.modb.anidb.AnidbDownloader

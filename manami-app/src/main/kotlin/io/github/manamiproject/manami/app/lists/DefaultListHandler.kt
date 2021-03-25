@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app.lists
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdRemoveIgnoreListEntry
@@ -39,6 +40,8 @@ internal class DefaultListHandler(
     private val finishedAddIgnoreListTasks = AtomicInteger(0)
 
     private val pool = Executors.newSingleThreadExecutor()
+
+    override fun animeList(): List<AnimeListEntry> = state.animeList()
 
     override fun addWatchListEntry(uris: Collection<URI>) {
         totalNumberOfWatchListTasks.addAndGet(uris.size)

@@ -1,8 +1,10 @@
 package io.github.manamiproject.manami.gui.watchlist
 
-import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
+import io.github.manamiproject.manami.gui.AddWatchListStatusUpdateGuiEvent
+import io.github.manamiproject.manami.gui.ManamiAccess
+import io.github.manamiproject.manami.gui.RemoveWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import javafx.beans.property.ObjectProperty

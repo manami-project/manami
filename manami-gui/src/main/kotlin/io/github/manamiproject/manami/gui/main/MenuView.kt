@@ -87,7 +87,6 @@ class MenuView : View() {
         }
         menu("Lists") {
             item("Anime List", createMnemonic("1")) {
-                isDisable = true
                 action { fire(ShowAnimeListTabRequest) }
             }
             item("Watch List", createMnemonic("2")) {

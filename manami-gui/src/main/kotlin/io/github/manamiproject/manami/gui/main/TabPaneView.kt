@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.gui.animelist.AnimelistView
+import io.github.manamiproject.manami.gui.animelist.AnimeListView
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.extensions.openTab
 import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
@@ -18,7 +18,7 @@ import tornadofx.*
 
 class TabPaneView : View() {
 
-    private val animeListView: AnimelistView by inject()
+    private val animeListView: AnimeListView by inject()
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
     private val fileSearchView: FileSearchView by inject()

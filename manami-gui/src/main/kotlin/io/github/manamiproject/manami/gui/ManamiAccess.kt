@@ -22,7 +22,6 @@ import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.EventListType.*
-import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
 import tornadofx.FXEvent

@@ -1,10 +1,13 @@
 package io.github.manamiproject.manami.app.lists
 
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import java.net.URI
 
 interface ListHandler {
+
+    fun animeList(): List<AnimeListEntry>
 
     fun addWatchListEntry(uris: Collection<URI>)
     fun watchList(): Set<WatchListEntry>

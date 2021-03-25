@@ -13,6 +13,7 @@ data class HyperlinkConfig(
     var title: String = EMPTY,
     var uri: URI = URI(""),
     var font: Font = Font.font(20.0),
+    var isDisable: Boolean = false
 )
 
 fun EventTarget.hyperlink(config: HyperlinkConfig.() -> Unit): Hyperlink {
@@ -25,5 +26,6 @@ fun EventTarget.hyperlink(config: HyperlinkConfig.() -> Unit): Hyperlink {
             }
         }
         font = hyperlinkConfig.font
+        isDisable = hyperlinkConfig.isDisable
     }
 }
