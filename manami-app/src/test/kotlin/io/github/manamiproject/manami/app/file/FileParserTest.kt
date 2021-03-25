@@ -106,6 +106,7 @@ internal class FileParserTest {
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
                 AnimeListEntry(
                         title = "H2O: Footprints in the Sand",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                         episodes = 4,
                         type = Special,
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
@@ -113,6 +114,7 @@ internal class FileParserTest {
                 AnimeListEntry(
                         link = Link("https://myanimelist.net/anime/57"),
                         title = "Beck",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                         episodes = 26,
                         type = TV,
                         location = URI("some/relative/path/beck"),

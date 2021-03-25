@@ -2,8 +2,10 @@ package io.github.manamiproject.manami.app.import
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
+import io.github.manamiproject.manami.app.cache.Empty
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
@@ -27,6 +29,20 @@ internal class CmdAddEntriesFromParsedFile(
     override fun execute() {
         log.info("Adding imported anime list entries [{}]", parsedFile.animeListEntries.size)
 
+        val animeListEntryJob = GlobalScope.async {
+            parsedFile.animeListEntries.map { animeListEntry ->
+                val cacheEntry = when(animeListEntry.link) {
+                    is Link -> cache.fetch(animeListEntry.link.uri)
+                    else -> Empty()
+                }
+
+                return@map when(cacheEntry) {
+                    is PresentValue -> animeListEntry.copy(thumbnail = cacheEntry.value.thumbnail)
+                    else -> animeListEntry
+                }
+            }
+            .toSet() }
+
         val watchListEntryJob = GlobalScope.async {
             parsedFile.watchListEntries.map { cache.fetch(it) }
                 .filterIsInstance<PresentValue<Anime>>()
@@ -40,19 +56,21 @@ internal class CmdAddEntriesFromParsedFile(
                 .toSet()
         }
 
-        log.info("Converting watch list entries [{}] and ignore list entries [{}]", parsedFile.watchListEntries.size, parsedFile.ignoreListEntries.size)
+        log.info("Converting [{}] anime list entries, [{}] watch list entries and [{}] ignore list entries", parsedFile.animeListEntries.size, parsedFile.watchListEntries.size, parsedFile.ignoreListEntries.size)
 
         runBlocking {
+            animeListEntryJob.join()
             watchListEntryJob.join()
             ignoreListEntryJob.join()
         }
 
+        val animeListEntries = animeListEntryJob.getCompleted()
         val watchListEntries = watchListEntryJob.getCompleted()
         val ignoreListEntries = ignoreListEntryJob.getCompleted()
 
-        log.info("Adding watch list entries [{}] and ignore list entries [{}]", watchListEntries, ignoreListEntries)
+        log.trace("Adding [{}] to anime list entries, [{}] to watch list entries and [{}] to ignore list entries", animeListEntries, watchListEntries, ignoreListEntries)
 
-        state.addAllAnimeListEntries(parsedFile.animeListEntries)
+        state.addAllAnimeListEntries(animeListEntries)
         state.addAllWatchListEntries(watchListEntries)
         state.addAllIgnoreListEntries(ignoreListEntries)
     }

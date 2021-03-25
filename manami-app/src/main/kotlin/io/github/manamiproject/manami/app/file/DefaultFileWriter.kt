@@ -38,6 +38,7 @@ internal class DefaultFileWriter(
             xmlWriter.writeEmptyElement("animeListEntry")
             xmlWriter.writeAttribute("link", animeListEntry.link.toString())
             xmlWriter.writeAttribute("title", animeListEntry.title)
+            xmlWriter.writeAttribute("thumbnail", animeListEntry.thumbnail.toString())
             xmlWriter.writeAttribute("type", animeListEntry.type.toString())
             xmlWriter.writeAttribute("episodes", animeListEntry.episodes.toString())
             xmlWriter.writeAttribute("location", animeListEntry.location.toString())

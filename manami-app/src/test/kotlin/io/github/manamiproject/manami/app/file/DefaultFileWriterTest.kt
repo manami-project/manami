@@ -28,6 +28,7 @@ internal class DefaultFileWriterTest {
             val animeListEntry2 = AnimeListEntry(
                 link = Link("https://myanimelist.net/anime/57"),
                 title = "Beck",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = Anime.Type.TV,
                 location = URI("some/relative/path/beck"),
@@ -71,8 +72,8 @@ internal class DefaultFileWriterTest {
                 <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
                 <manami version="3.0.0">
                   <animeList>
-                    <animeListEntry link="https://myanimelist.net/anime/57" title="Beck" type="TV" episodes="26" location="some/relative/path/beck"/>
-                    <animeListEntry link="" title="H2O: Footprints in the Sand" type="Special" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
+                    <animeListEntry link="https://myanimelist.net/anime/57" title="Beck" thumbnail="https://cdn.myanimelist.net/images/anime/11/11636t.jpg" type="TV" episodes="26" location="some/relative/path/beck"/>
+                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://cdn.myanimelist.net/images/qm_50.gif" type="Special" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                   </animeList>
                   <watchList>
                     <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453t.jpg"/>
@@ -167,6 +168,7 @@ internal class DefaultFileWriterTest {
                     <!ATTLIST animeListEntry episodes CDATA #REQUIRED
                         link CDATA #IMPLIED
                         title CDATA #REQUIRED
+                        thumbnail CDATA #REQUIRED
                         type CDATA #REQUIRED
                         episodes CDATA #REQUIRED
                         location CDATA #REQUIRED

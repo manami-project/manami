@@ -78,7 +78,7 @@ private class ManamiFileHandler : DefaultHandler() {
         when (qName) {
             "animeListEntry" -> createAnimeEntry(attributes)
             "watchListEntry" -> createWatchListEntry(attributes)
-            "ignoreListEntry" -> createIgnoreListEnty(attributes)
+            "ignoreListEntry" -> createIgnoreListEntry(attributes)
         }
     }
 
@@ -95,6 +95,7 @@ private class ManamiFileHandler : DefaultHandler() {
                 AnimeListEntry(
                         link = link,
                         title = attributes.getValue("title").trim(),
+                        thumbnail = URI(attributes.getValue("thumbnail").trim()),
                         episodes = attributes.getValue("episodes").trim().toInt(),
                         type = Anime.Type.valueOf(attributes.getValue("type").trim()),
                         location = URI(attributes.getValue("location").trim()),
@@ -120,7 +121,7 @@ private class ManamiFileHandler : DefaultHandler() {
         )
     }
 
-    private fun createIgnoreListEnty(attributes: Attributes) {
+    private fun createIgnoreListEntry(attributes: Attributes) {
         val link = attributes.getValue("link").trim().let {
             if (it.isBlank()) {
                 throw IllegalStateException("Link must not be blank")
