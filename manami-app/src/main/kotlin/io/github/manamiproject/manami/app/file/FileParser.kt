@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.import.parser.manami.ManamiVersionHandler
-import io.github.manamiproject.manami.app.import.parser.manami.SemanticVersion
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry

@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.import.parser.manami
 
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.import.parser.ParsedFile
 import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry

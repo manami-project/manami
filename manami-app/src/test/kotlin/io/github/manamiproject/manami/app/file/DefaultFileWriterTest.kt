@@ -6,6 +6,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
+import io.github.manamiproject.manami.app.versioning.TestVersionProvider
+import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.tempDirectory
@@ -141,10 +144,9 @@ internal class DefaultFileWriterTest {
     }
 
     @Test
-    fun `dtd content for version 3 0 0`() {
+    fun `dtd content for version greater than or equal to 3 0 0`() {
         tempDirectory {
             // given
-
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> = emptyList()
                 override fun watchList(): Set<WatchListEntry> = emptySet()
@@ -191,6 +193,47 @@ internal class DefaultFileWriterTest {
                     >
                 """.trimIndent()
             )
+        }
+    }
+
+    @Test
+    fun `dynamically fetch version from build file and use it in dtd file name and in xml attribute`() {
+        tempDirectory {
+            // given
+            val testState = object: State by TestState {
+                override fun animeList(): List<AnimeListEntry> = emptyList()
+                override fun watchList(): Set<WatchListEntry> = emptySet()
+                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+            }
+
+            val testVersionProvider = object: VersionProvider by TestVersionProvider {
+                override fun version(): SemanticVersion = SemanticVersion("3.1.0")
+            }
+
+            val fileWriter = DefaultFileWriter(
+                state = testState,
+                versionProvider = testVersionProvider,
+            )
+
+            // when
+            fileWriter.writeTo(tempDir.resolve("test.xml"))
+
+            // then
+            assertThat(tempDir.resolve("manami_3.1.0.dtd")).exists()
+
+            val content = tempDir.resolve("test.xml").readFile()
+            assertThat(content).isEqualTo("""
+                <?xml version="1.1" encoding="UTF-8"?>
+                <!DOCTYPE manami SYSTEM "manami_3.1.0.dtd">
+                <manami version="3.1.0">
+                  <animeList>
+                  </animeList>
+                  <watchList>
+                  </watchList>
+                  <ignoreList>
+                  </ignoreList>
+                </manami>
+            """.trimIndent())
         }
     }
 }

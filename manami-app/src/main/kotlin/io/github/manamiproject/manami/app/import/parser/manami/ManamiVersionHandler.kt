@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.import.parser.manami
 
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource

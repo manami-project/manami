@@ -2,6 +2,8 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
+import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
+import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.newOutputStream
 import io.github.manamiproject.modb.core.extensions.writeToFile
@@ -10,13 +12,14 @@ import javax.xml.stream.XMLOutputFactory
 
 internal class DefaultFileWriter(
     private val state: State = InternalState,
+    private val versionProvider: VersionProvider = ResourceBasedVersionProvider
 ) : FileWriter {
 
     private val xmlWriterFactory = XMLOutputFactory.newInstance()
 
     override fun writeTo(file: RegularFile) {
         val folder = file.parent
-        val dtdFile = "manami_3.0.0.dtd" // TODO: fetch actual version
+        val dtdFile = "manami_${versionProvider.version()}.dtd"
 
         loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile))
 
@@ -26,7 +29,7 @@ internal class DefaultFileWriter(
             writeDTD("<!DOCTYPE manami SYSTEM \"$dtdFile\">")
             writeCharacters(LINEBREAK)
             writeStartElement("manami")
-            writeAttribute("version", "3.0.0") // TODO: fetch actual version
+            writeAttribute("version", versionProvider.version().toString())
             writeCharacters(LINEBREAK)
             writeCharacters(IDENT_1)
             writeStartElement("animeList")

@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.import.parser.manami
+package io.github.manamiproject.manami.app.versioning
 
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.assertj.core.api.Assertions.assertThat

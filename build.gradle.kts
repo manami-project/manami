@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.nio.file.Files
 
 plugins {
     kotlin("jvm") version "1.4.31"
@@ -57,6 +58,17 @@ subprojects {
 dependencies {
     api(project(":manami-app"))
     api(project(":manami-gui"))
+}
+
+tasks.shadowJar {
+    dependsOn("writeVersionFile")
+}
+
+tasks.register("writeVersionFile") {
+    doFirst {
+        val version = (project.findProperty("releaseVersion") as String? ?: throw Exception("Gradle task shadowJar must be called with property -PreleaseVersion=VERSION with VERSION having the format: 'INTEGER.INTEGER.INTEGER'"))
+        Files.write(projectDir.toPath().resolve("manami-app/src/main/resources/manami.version"), version.toByteArray())
+    }
 }
 
 val mainClassPath = "io.github.manamiproject.manami.gui.StartKt"

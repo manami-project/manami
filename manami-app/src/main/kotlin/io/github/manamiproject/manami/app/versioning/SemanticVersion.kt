@@ -1,6 +1,6 @@
-package io.github.manamiproject.manami.app.import.parser.manami
+package io.github.manamiproject.manami.app.versioning
 
-internal data class SemanticVersion(private val version: String = "0.0.0") {
+data class SemanticVersion(private val version: String = "0.0.0") {
 
     init {
         require(Regex("[0-9]+\\.[0-9]+\\.[0-9]+").matches(version)) { "Version must be of format NUMBER.NUMBER.NUMBER" }

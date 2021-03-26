@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.main
 
+import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.components.PathChooser
@@ -75,11 +76,12 @@ class MenuController : Controller() {
     fun help() {
         Alert(Alert.AlertType.INFORMATION).apply {
             title = "Help"
-            headerText = "Version: #.#.#"
+            headerText = "Version: ${ResourceBasedVersionProvider.version()}"
             contentText = """
                 Free non-commercial software. (AGPLv3.0)
 
                 https://github.com/manami-project/manami
+                https://github.com/manami-project/manami/blob/master/LICENSE
             """.trimIndent()
         }.showAndWait()
     }
