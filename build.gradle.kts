@@ -20,7 +20,7 @@ allprojects {
     }
 
     group = "io.github.manamiproject"
-    version = "3.0.0"
+    version = project.findProperty("releaseVersion") as String? ?: ""
 }
 
 subprojects {
@@ -68,6 +68,7 @@ application {
 tasks {
     named<ShadowJar>("shadowJar") {
         archiveClassifier.set("")
+        archiveVersion.set("")
         manifest {
             attributes["Main-Class"] = mainClassPath
         }
