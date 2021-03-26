@@ -32,4 +32,4 @@ jobs:
       - name: Set executable flag on gradlew
         run: chmod +x gradlew
       - name: Execute tests
-        run: ./gradlew test
+        run: ./gradlew -Dkotlin.daemon.jvm.options=--illegal-access=permit test
