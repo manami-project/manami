@@ -425,6 +425,44 @@ internal class DefaultListHandlerTest {
     }
 
     @Test
+    fun `delegate call for removing anime list entry to state`() {
+        // given
+        var resultingEntry: AnimeListEntry? = null
+        val testState = object: State by TestState {
+            override fun createSnapshot(): Snapshot = StateSnapshot()
+            override fun removeAnimeListEntry(entry: AnimeListEntry) {
+                resultingEntry = entry
+            }
+        }
+
+        val testCommandHistory = object: CommandHistory by TestCommandHistory {
+            override fun push(command: ReversibleCommand) { }
+        }
+
+        val defaultListHandler = DefaultListHandler(
+            state = testState,
+            commandHistory = testCommandHistory,
+            cache = TestAnimeCache,
+            eventBus = TestEventBus,
+        )
+
+        val expectedEntry = AnimeListEntry(
+            link = Link("https://myanimelist.net/anime/57"),
+            title = "Beck",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+            episodes = 26,
+            type = Anime.Type.TV,
+            location = URI("some/relative/path/beck"),
+        )
+
+        // when
+        defaultListHandler.removeAnimeListEntry(expectedEntry)
+
+        // then
+        assertThat(resultingEntry).isEqualTo(expectedEntry)
+    }
+
+    @Test
     fun `delegate call for removing watch list entry to state`() {
         // given
         var resultingEntry: WatchListEntry? = null

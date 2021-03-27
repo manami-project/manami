@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.gui.GuiCaches
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
+import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.YES
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.ObjectProperty
@@ -127,8 +128,10 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                                 if (animeTableConfig.withDeleteButton) {
                                     button("Delete") {
                                         action {
-                                            animeTableConfig.items.get().remove(cellValueFactory.value)
-                                            runAsync { animeTableConfig.onDelete.invoke(cellValueFactory.value) }
+                                            if (Alerts.removeEntry(cellValueFactory.value.title) == YES) {
+                                                animeTableConfig.items.get().remove(cellValueFactory.value)
+                                                runAsync { animeTableConfig.onDelete.invoke(cellValueFactory.value) }
+                                            }
                                         }
                                     }
                                 }

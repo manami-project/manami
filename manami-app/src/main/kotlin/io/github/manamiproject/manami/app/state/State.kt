@@ -14,6 +14,7 @@ internal interface State {
 
     fun animeList(): List<AnimeListEntry>
     fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>)
+    fun removeAnimeListEntry(entry: AnimeListEntry)
 
     fun watchList(): Set<WatchListEntry>
     fun addAllWatchListEntries(anime: Collection<WatchListEntry>)

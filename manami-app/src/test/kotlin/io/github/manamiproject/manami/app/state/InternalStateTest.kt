@@ -6,11 +6,14 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.extensions.createFile
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Type.Special
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.net.URI
 
 internal class InternalStateTest {
@@ -163,6 +166,50 @@ internal class InternalStateTest {
             // then
             assertThat(InternalState.animeList()).containsExactly(entry)
             assertThat(InternalState.ignoreList()).isEmpty()
+        }
+    }
+
+    @Nested
+    inner class RemoveAnimeListEntryTests {
+
+        @Test
+        fun `removes a specific entry`() {
+            // given
+            val entry1 = AnimeListEntry(
+                title = "H2O: Footprints in the Sand",
+                episodes = 4,
+                type = Special,
+                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+            )
+            val entry2 = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/57"),
+                title = "Beck",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                episodes = 26,
+                type = TV,
+                location = URI("some/relative/path/beck"),
+            )
+            val entry3 = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/12079"),
+                title = "Black★Rock Shooter",
+                episodes = 1,
+                type = Special,
+                location = URI("some/relative/path/black_rock_shooter"),
+            )
+
+            InternalState.addAllAnimeListEntries(
+                setOf(
+                    entry1,
+                    entry2,
+                    entry3,
+                )
+            )
+
+            // when
+            InternalState.removeAnimeListEntry(entry2)
+
+            // then
+            assertThat(InternalState.animeList()).containsExactly(entry1, entry3)
         }
     }
 
@@ -379,7 +426,7 @@ internal class InternalStateTest {
                     AnimeListEntry(
                         title = "H2O: Footprints in the Sand",
                         episodes = 4,
-                        type = Anime.Type.Special,
+                        type = Special,
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                     )
                 )

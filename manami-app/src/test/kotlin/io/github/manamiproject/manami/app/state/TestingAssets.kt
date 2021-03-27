@@ -13,6 +13,7 @@ internal object TestState: State {
     override fun closeFile() = shouldNotBeInvoked()
     override fun animeList(): List<AnimeListEntry> = shouldNotBeInvoked()
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) = shouldNotBeInvoked()
+    override fun removeAnimeListEntry(entry: AnimeListEntry) = shouldNotBeInvoked()
     override fun watchList(): Set<WatchListEntry> = shouldNotBeInvoked()
     override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) = shouldNotBeInvoked()
     override fun removeWatchListEntry(entry: WatchListEntry) = shouldNotBeInvoked()

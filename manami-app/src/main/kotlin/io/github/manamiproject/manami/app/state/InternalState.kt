@@ -40,6 +40,10 @@ internal object InternalState : State {
         ignoreList.removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to IgnoreListEntry as soon as AnimeListEntries have a thumbnail
     }
 
+    override fun removeAnimeListEntry(entry: AnimeListEntry) {
+        animeList.remove(entry)
+    }
+
     override fun watchList(): Set<WatchListEntry> = watchList.toSet()
 
     override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {

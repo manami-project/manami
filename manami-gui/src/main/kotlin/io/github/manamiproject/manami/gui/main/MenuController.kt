@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType.INFORMATION
 import tornadofx.Controller
 
 class MenuController : Controller() {
@@ -74,7 +75,7 @@ class MenuController : Controller() {
     }
 
     fun help() {
-        Alert(Alert.AlertType.INFORMATION).apply {
+        Alert(INFORMATION).apply {
             title = "Help"
             headerText = "Version: ${ResourceBasedVersionProvider.version()}"
             contentText = """
