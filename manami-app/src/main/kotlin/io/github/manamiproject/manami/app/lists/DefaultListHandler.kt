@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
@@ -41,6 +42,17 @@ internal class DefaultListHandler(
     private val finishedAddIgnoreListTasks = AtomicInteger(0)
 
     private val pool = Executors.newSingleThreadExecutor()
+
+    override fun addAnimeListEntry(entry: AnimeListEntry) {
+        GenericReversibleCommand(
+            state = state,
+            commandHistory = commandHistory,
+            command = CmdAddAnimeListEntry(
+                state = state,
+                animeListEntry = entry,
+            )
+        ).execute()
+    }
 
     override fun animeList(): List<AnimeListEntry> = state.animeList()
 

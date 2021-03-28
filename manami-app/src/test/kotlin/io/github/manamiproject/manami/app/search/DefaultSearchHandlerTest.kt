@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.Empty
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.manami.app.lists.Link
@@ -1231,6 +1232,95 @@ internal class DefaultSearchHandlerTest {
             )
 
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
+        }
+    }
+
+    @Nested
+    inner class FindByUriTests {
+
+        @Test
+        fun `successfully find anime`() {
+            // given
+            val entry = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15738"),
+                    URI("https://anilist.co/anime/124194"),
+                    URI("https://anime-planet.com/anime/fruits-basket-the-final"),
+                    URI("https://kitsu.io/anime/43578"),
+                    URI("https://myanimelist.net/anime/42938"),
+                    URI("https://notify.moe/anime/YiySZ9OMg"),
+                ),
+                _title = "Fruits Basket: The Final",
+                type = TV,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+                tags = SortedList("my-tag-1", "my-tag-2"),
+            )
+
+            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            val receivedEvents = mutableListOf<Event>()
+            val testEventBus = object: EventBus by TestEventBus {
+                override fun post(event: Event) {
+                    receivedEvents.add(event)
+                }
+            }
+
+            val defaultSearchHandler = DefaultSearchHandler(
+                state = TestState,
+                cache = testCache,
+                eventBus = testEventBus,
+            )
+
+            // when
+            defaultSearchHandler.find(URI("https://myanimelist.net/anime/42938"))
+
+            // then
+            sleep(1000)
+            assertThat(receivedEvents).hasSize(2)
+
+            assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
+                "Fruits Basket: The Final",
+            )
+
+            assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
+        }
+
+        @Test
+        fun `don't return anime, because URI relates to a dead entry`() {
+            // given
+            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                populate(URI("https://myanimelist.net/anime/10001"), Empty())
+            }
+
+            val receivedEvents = mutableListOf<Event>()
+            val testEventBus = object: EventBus by TestEventBus {
+                override fun post(event: Event) {
+                    receivedEvents.add(event)
+                }
+            }
+
+            val defaultSearchHandler = DefaultSearchHandler(
+                state = TestState,
+                cache = testCache,
+                eventBus = testEventBus,
+            )
+
+            // when
+            defaultSearchHandler.find(URI("https://myanimelist.net/anime/10001"))
+
+            // then
+            sleep(1000)
+            assertThat(receivedEvents).hasSize(1)
+            assertThat(receivedEvents.first()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
     }
 }

@@ -7,6 +7,7 @@ import java.net.URI
 
 interface ListHandler {
 
+    fun addAnimeListEntry(entry: AnimeListEntry)
     fun animeList(): List<AnimeListEntry>
     fun removeAnimeListEntry(entry: AnimeListEntry)
 

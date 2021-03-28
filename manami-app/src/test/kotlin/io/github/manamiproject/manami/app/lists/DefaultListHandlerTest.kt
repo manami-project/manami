@@ -17,11 +17,15 @@ import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
+import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Status.CURRENTLY
+import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
 import io.github.manamiproject.modb.core.models.Anime.Type.Special
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.Duration
+import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -147,6 +151,48 @@ internal class DefaultListHandlerTest {
     }
 
     @Nested
+    inner class AddAnimeListEntryTests {
+
+        @Test
+        fun `add anime list entries and fire command containing the progress`() {
+            // given
+            val entry = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/57"),
+                title = "Beck",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                episodes = 26,
+                type = Anime.Type.TV,
+                location = URI("some/relative/path/beck"),
+            )
+
+            val savedEntries = mutableListOf<AnimeListEntry>()
+            val state = object: State by TestState {
+                override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
+                    savedEntries.addAll(anime)
+                }
+            }
+
+            val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                override fun push(command: ReversibleCommand) { }
+            }
+
+            val defaultListHandler = DefaultListHandler(
+                state = state,
+                commandHistory = testCommandHistory,
+                cache = TestAnimeCache,
+                eventBus = TestEventBus,
+            )
+
+            // when
+            defaultListHandler.addAnimeListEntry(entry)
+
+            // then
+            assertThat(savedEntries).containsExactly(entry)
+        }
+    }
+
+    @Nested
     inner class AddWatchListEntryTests {
 
         @Test
@@ -156,11 +202,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.FINISHED,
+                status = FINISHED,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }
@@ -168,11 +214,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.CURRENTLY,
+                status = CURRENTLY,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/40059"))
             }
@@ -229,11 +275,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.FINISHED,
+                status = FINISHED,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }
@@ -295,11 +341,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.FINISHED,
+                status = FINISHED,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }
@@ -307,11 +353,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.CURRENTLY,
+                status = CURRENTLY,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/40059"))
             }
@@ -368,11 +414,11 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
-                status = Anime.Status.FINISHED,
+                status = FINISHED,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, Duration.TimeUnit.MINUTES)
+                duration = Duration(23, MINUTES)
             ).apply {
                 addSources(URI("https://myanimelist.net/anime/37989"))
             }

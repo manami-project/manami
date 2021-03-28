@@ -33,8 +33,10 @@ data class AnimeTableConfig<T: AnimeEntry>(
     var withToIgnoreListButton: Boolean = true,
     var withHideButton: Boolean = true,
     var withDeleteButton: Boolean = false,
-    var withSortableTitle: Boolean = true,
     var onDelete: (T) -> Unit = {},
+    var withSortableTitle: Boolean = true,
+    var withEditButton: Boolean = false,
+    var onEdit: (T) -> Unit = {},
     var items: ObjectProperty<ObservableList<T>> = SimpleObjectProperty(observableListOf()),
 )
 
@@ -121,6 +123,14 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                                         action {
                                             animeTableConfig.items.get().remove(cellValueFactory.value)
                                             runAsync { manamiApp.addIgnoreListEntry(setOf(cellValueFactory.value.link.asLink().uri)) }
+                                        }
+                                    }
+                                }
+
+                                if (animeTableConfig.withEditButton) {
+                                    button("Edit") {
+                                        action {
+                                            animeTableConfig.onEdit.invoke(cellValueFactory.value)
                                         }
                                     }
                                 }

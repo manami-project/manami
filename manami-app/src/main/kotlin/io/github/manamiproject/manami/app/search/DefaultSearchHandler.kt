@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.runInBackground
 import io.github.manamiproject.manami.app.search.SearchType.AND
@@ -85,6 +86,16 @@ internal class DefaultSearchHandler(
                 eventBus.post(AnimeSearchEntryFoundEvent(it))
             }
 
+            eventBus.post(AnimeSearchFinishedEvent)
+        }
+    }
+
+    override fun find(uri: URI) {
+        runInBackground {
+            val entry = cache.fetch(uri)
+            if (entry is PresentValue) {
+                eventBus.post(AnimeSearchEntryFoundEvent(entry.value))
+            }
             eventBus.post(AnimeSearchFinishedEvent)
         }
     }
