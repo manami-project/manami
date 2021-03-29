@@ -51,13 +51,15 @@ class IgnoreListView : View() {
         }
         subscribe<AddAnimeListEntryGuiEvent> { event ->
             val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
-            entries.get().removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to BigPictureEntry as soon as animeListEntries have a thumbnail
+            entries.get().removeIf { uris.contains(it.link.uri) }
         }
         subscribe<AddWatchListEntryGuiEvent> { event ->
-            entries.get().removeAll(event.entries.map { IgnoreListEntry(it) })
+            val uris = event.entries.map { it.link }.map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) }
         }
         subscribe<AddIgnoreListEntryGuiEvent> { event ->
-            entries.get().removeAll(event.entries)
+            val uris = event.entries.map { it.link }.map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) }
         }
         subscribe<FileOpenedGuiEvent> {
             entries.get().clear()
