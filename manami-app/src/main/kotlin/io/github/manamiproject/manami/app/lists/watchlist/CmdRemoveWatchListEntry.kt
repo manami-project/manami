@@ -9,7 +9,12 @@ internal class CmdRemoveWatchListEntry(
     val watchListEntry: WatchListEntry,
 ) : Command {
 
-    override fun execute() {
+    override fun execute(): Boolean {
+        if (state.watchList().map { it.link }.none { it == watchListEntry.link }) {
+            return false
+        }
+
         state.removeWatchListEntry(watchListEntry)
+        return true
     }
 }

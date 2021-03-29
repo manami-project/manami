@@ -26,7 +26,7 @@ internal class CmdAddEntriesFromParsedFile(
 ) : Command {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun execute() {
+    override fun execute(): Boolean {
         log.info("Adding imported anime list entries [{}]", parsedFile.animeListEntries.size)
 
         val animeListEntryJob = GlobalScope.async {
@@ -73,6 +73,7 @@ internal class CmdAddEntriesFromParsedFile(
         state.addAllAnimeListEntries(animeListEntries)
         state.addAllWatchListEntries(watchListEntries)
         state.addAllIgnoreListEntries(ignoreListEntries)
+        return true
     }
 
     companion object {

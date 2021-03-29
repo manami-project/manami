@@ -72,5 +72,5 @@ internal object DefaultCommandHistory : CommandHistory {
 
 private object NoOpCommand : ReversibleCommand {
     override fun undo() {}
-    override fun execute() {}
+    override fun execute() = true
 }

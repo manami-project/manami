@@ -11,9 +11,10 @@ internal class CmdNewFile(
         private val commandHistory: CommandHistory = DefaultCommandHistory,
 ) : Command {
 
-    override fun execute() {
+    override fun execute(): Boolean {
         commandHistory.clear()
         state.closeFile()
         state.clear()
+        return true
     }
 }

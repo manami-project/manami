@@ -14,7 +14,7 @@ internal class CmdOpenFile(
         private val parsedFile: ParsedManamiFile,
 ) : Command {
 
-    override fun execute() {
+    override fun execute(): Boolean {
         commandHistory.clear()
         state.clear()
         state.closeFile()
@@ -22,5 +22,6 @@ internal class CmdOpenFile(
         state.addAllWatchListEntries(parsedFile.watchListEntries)
         state.addAllIgnoreListEntries(parsedFile.ignoreListEntries)
         state.setOpenedFile(file)
+        return true
     }
 }

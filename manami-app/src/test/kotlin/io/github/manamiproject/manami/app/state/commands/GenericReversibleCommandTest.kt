@@ -31,7 +31,7 @@ internal class GenericReversibleCommandTest {
     fun `throws exception if undo is being called before command has been executed`() {
         // given
         val testCommand = object: Command {
-            override fun execute() { }
+            override fun execute() = true
         }
         val reversibleCommand = GenericReversibleCommand(command = testCommand)
 
@@ -47,9 +47,8 @@ internal class GenericReversibleCommandTest {
     @Test
     fun `creates a snapshot and adds the command to the history if the ReversibleCommand is being executed`() {
         // given
-        var isCommandExecuted = false
         val testCommand = object: Command {
-            override fun execute() { isCommandExecuted = true }
+            override fun execute() = true
         }
 
         var isSnapshotCreated = false
@@ -72,10 +71,10 @@ internal class GenericReversibleCommandTest {
         )
 
         // when
-        reversibleCommand.execute()
+        val result = reversibleCommand.execute()
 
         // then
-        assertThat(isCommandExecuted).isTrue()
+        assertThat(result).isTrue()
         assertThat(isSnapshotCreated).isTrue()
         assertThat(isAddedToHistory).isTrue()
     }
@@ -114,7 +113,7 @@ internal class GenericReversibleCommandTest {
 
 
         val testCommand = object: Command {
-            override fun execute() {
+            override fun execute(): Boolean {
                 InternalState.addAllAnimeListEntries(
                         setOf(
                                 AnimeListEntry(
@@ -144,6 +143,7 @@ internal class GenericReversibleCommandTest {
                         )
                     )
                 )
+                return true
             }
         }
         val reversibleCommand = GenericReversibleCommand(command = testCommand)

@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 
 internal class GenericReversibleCommand(
         private val state: State = InternalState,
@@ -22,14 +23,28 @@ internal class GenericReversibleCommand(
         }
     }
 
-    override fun execute() {
-        snapshot = Initialized(state.createSnapshot())
-        command.execute()
+    override fun execute(): Boolean {
+        val unsavedSnapshot = Initialized(state.createSnapshot())
+
+        val successfullyExecuted = command.execute()
+
+        if (!successfullyExecuted) {
+            log.warn("Command wasn't executed successfully.")
+            return successfullyExecuted
+        }
+
+        snapshot = unsavedSnapshot
 
         if (!hasBeenPushedToCommandHistory) {
             commandHistory.push(this)
             hasBeenPushedToCommandHistory = true
         }
+
+        return successfullyExecuted
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
     }
 }
 

@@ -172,7 +172,10 @@ internal class DefaultCommandHistoryTest {
 
             val testReversibleCommand = object: ReversibleCommand by TestReversibleCommand {
                 override fun undo() { }
-                override fun execute() { commandRedone++ }
+                override fun execute(): Boolean {
+                    commandRedone++
+                    return true
+                }
             }
 
             DefaultCommandHistory.push(testReversibleCommand)

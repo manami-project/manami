@@ -9,7 +9,12 @@ internal class CmdRemoveIgnoreListEntry(
     val ignoreListEntry: IgnoreListEntry,
 ): Command {
 
-    override fun execute() {
+    override fun execute(): Boolean {
+        if (state.ignoreList().map { it.link }.none { it == ignoreListEntry.link }) {
+            return false
+        }
+
         state.removeIgnoreListEntry(ignoreListEntry)
+        return true
     }
 }

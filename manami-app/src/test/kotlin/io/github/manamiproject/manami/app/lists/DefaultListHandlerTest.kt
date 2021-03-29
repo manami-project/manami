@@ -161,13 +161,14 @@ internal class DefaultListHandlerTest {
                 title = "Beck",
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
-                type = Anime.Type.TV,
+                type = TV,
                 location = URI("some/relative/path/beck"),
             )
 
             val savedEntries = mutableListOf<AnimeListEntry>()
             val state = object: State by TestState {
                 override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun animeList(): List<AnimeListEntry> = emptyList()
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                     savedEntries.addAll(anime)
                 }
@@ -199,6 +200,7 @@ internal class DefaultListHandlerTest {
         fun `add watch list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -207,10 +209,9 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/37989"))
-            }
+            )
             val entry2 = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -219,13 +220,12 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/40059"))
-            }
+            )
 
             val savedEntries = mutableListOf<WatchListEntry>()
             val state = object: State by TestState {
                 override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun watchList(): Set<WatchListEntry> = emptySet()
                 override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
                     savedEntries.addAll(anime)
                 }
@@ -272,6 +272,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -280,14 +281,13 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/37989"))
-            }
+            )
             val deadEntry = URI("https://myanimelist.net/anime/10001")
 
             val savedEntries = mutableListOf<WatchListEntry>()
             val state = object: State by TestState {
                 override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun watchList(): Set<WatchListEntry> = emptySet()
                 override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
                     savedEntries.addAll(anime)
                 }
@@ -338,6 +338,7 @@ internal class DefaultListHandlerTest {
         fun `add ignore list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -346,10 +347,9 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/37989"))
-            }
+            )
             val entry2 = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -358,13 +358,12 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/40059"))
-            }
+            )
 
             val savedEntries = mutableListOf<IgnoreListEntry>()
             val state = object: State by TestState {
                 override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
                     savedEntries.addAll(anime)
                 }
@@ -411,6 +410,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
+                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -419,14 +419,13 @@ internal class DefaultListHandlerTest {
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
                 duration = Duration(23, MINUTES)
-            ).apply {
-                addSources(URI("https://myanimelist.net/anime/37989"))
-            }
+            )
             val deadEntry = URI("https://myanimelist.net/anime/10001")
 
             val savedEntries = mutableListOf<IgnoreListEntry>()
             val state = object: State by TestState {
                 override fun createSnapshot(): Snapshot = TestSnapshot
+                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
                     savedEntries.addAll(anime)
                 }
@@ -471,10 +470,20 @@ internal class DefaultListHandlerTest {
     }
 
     @Test
-    fun `delegate call for removing anime list entry to state`() {
+    fun `remove anime list entry`() {
         // given
+        val expectedEntry = AnimeListEntry(
+            link = Link("https://myanimelist.net/anime/57"),
+            title = "Beck",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+            episodes = 26,
+            type = TV,
+            location = URI("some/relative/path/beck"),
+        )
+
         var resultingEntry: AnimeListEntry? = null
         val testState = object: State by TestState {
+            override fun animeList(): List<AnimeListEntry> = listOf(expectedEntry)
             override fun createSnapshot(): Snapshot = StateSnapshot()
             override fun removeAnimeListEntry(entry: AnimeListEntry) {
                 resultingEntry = entry
@@ -492,15 +501,6 @@ internal class DefaultListHandlerTest {
             eventBus = TestEventBus,
         )
 
-        val expectedEntry = AnimeListEntry(
-            link = Link("https://myanimelist.net/anime/57"),
-            title = "Beck",
-            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            episodes = 26,
-            type = Anime.Type.TV,
-            location = URI("some/relative/path/beck"),
-        )
-
         // when
         defaultListHandler.removeAnimeListEntry(expectedEntry)
 
@@ -509,11 +509,18 @@ internal class DefaultListHandlerTest {
     }
 
     @Test
-    fun `delegate call for removing watch list entry to state`() {
+    fun `remove watch list entry`() {
         // given
+        val expectedEntry = WatchListEntry(
+            link = Link("https://myanimelist.net/anime/5114"),
+            title = "Fullmetal Alchemist: Brotherhood",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+        )
+
         var resultingEntry: WatchListEntry? = null
         val testState = object: State by TestState {
             override fun createSnapshot(): Snapshot = StateSnapshot()
+            override fun watchList(): Set<WatchListEntry> = setOf(expectedEntry)
             override fun removeWatchListEntry(entry: WatchListEntry) {
                 resultingEntry = entry
             }
@@ -530,12 +537,6 @@ internal class DefaultListHandlerTest {
             eventBus = TestEventBus,
         )
 
-        val expectedEntry = WatchListEntry(
-            link = Link("https://myanimelist.net/anime/5114"),
-            title = "Fullmetal Alchemist: Brotherhood",
-            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-        )
-
         // when
         defaultListHandler.removeWatchListEntry(expectedEntry)
 
@@ -544,11 +545,18 @@ internal class DefaultListHandlerTest {
     }
 
     @Test
-    fun `delegate call for removing ignore list entry to state`() {
+    fun `remove ignore list entry`() {
         // given
+        val expectedEntry = IgnoreListEntry(
+            link = Link("https://myanimelist.net/anime/5114"),
+            title = "Fullmetal Alchemist: Brotherhood",
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+        )
+
         var resultingEntry: IgnoreListEntry? = null
         val testState = object: State by TestState {
             override fun createSnapshot(): Snapshot = StateSnapshot()
+            override fun ignoreList(): Set<IgnoreListEntry> = setOf(expectedEntry)
             override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
                 resultingEntry = entry
             }
@@ -563,12 +571,6 @@ internal class DefaultListHandlerTest {
             commandHistory = testCommandHistory,
             cache = TestAnimeCache,
             eventBus = TestEventBus,
-        )
-
-        val expectedEntry = IgnoreListEntry(
-            link = Link("https://myanimelist.net/anime/5114"),
-            title = "Fullmetal Alchemist: Brotherhood",
-            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
         )
 
         // when

@@ -9,7 +9,12 @@ internal class CmdAddWatchListEntry(
     private val watchListEntry: WatchListEntry,
 ): Command {
 
-    override fun execute() {
+    override fun execute(): Boolean {
+        if (state.watchList().map { it.link }.any { it == watchListEntry.link }) {
+            return false
+        }
+
         state.addAllWatchListEntries(setOf(watchListEntry))
+        return true
     }
 }
