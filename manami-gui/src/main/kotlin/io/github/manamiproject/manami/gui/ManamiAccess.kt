@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.gui
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.ManamiApp
 import io.github.manamiproject.manami.app.cache.populator.CachePopulatorFinishedEvent
+import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMetaDataProviderEvent
 import io.github.manamiproject.manami.app.extensions.castToSet
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.file.SavedAsFileEvent
@@ -18,7 +19,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFinishedEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
-import io.github.manamiproject.manami.app.search.*
+import io.github.manamiproject.manami.app.search.FileSearchAnimeListResultsEvent
+import io.github.manamiproject.manami.app.search.FileSearchIgnoreListResultsEvent
+import io.github.manamiproject.manami.app.search.FileSearchWatchListResultsEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
@@ -26,7 +29,7 @@ import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishe
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.EventListType.*
-import io.github.manamiproject.manami.app.state.events.Subscribe
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
 import tornadofx.FXEvent
@@ -56,6 +59,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is FileSearchIgnoreListResultsEvent -> FileSearchIgnoreListResultsGuiEvent(this.anime)
                     is AnimeSearchEntryFoundEvent -> AnimeSearchEntryFoundGuiEvent(this.anime)
                     is AnimeSearchFinishedEvent -> AnimeSearchFinishedGuiEvent
+                    is NumberOfEntriesPerMetaDataProviderEvent -> NumberOfEntriesPerMetaDataProviderGuiEvent(this.entries)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -156,3 +160,5 @@ data class FileSearchIgnoreListResultsGuiEvent(val anime: Collection<IgnoreListE
 
 data class AnimeSearchEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeSearchFinishedGuiEvent: GuiEvent()
+
+data class NumberOfEntriesPerMetaDataProviderGuiEvent(val entries: Map<Hostname, Int>): GuiEvent()

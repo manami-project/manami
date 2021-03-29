@@ -12,7 +12,6 @@ import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTab
 import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
-import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import javafx.beans.property.SimpleBooleanProperty

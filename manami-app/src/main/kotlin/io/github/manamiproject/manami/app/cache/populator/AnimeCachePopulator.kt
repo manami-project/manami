@@ -21,11 +21,21 @@ internal class AnimeCachePopulator(
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info("Populating cache with anime from [{}].", uri)
 
-        parser.parse(uri.toURL()).forEach { anime ->
+        val parsedAnime =parser.parse(uri.toURL())
+
+        parsedAnime.forEach { anime ->
             anime.sources.forEach { source ->
                 cache.populate(source, PresentValue(anime))
             }
         }
+
+        val numberOfEntriesPerMetaDataProvider = parsedAnime.flatMap { anime -> anime.sources.map { it to anime } }
+            .groupBy { it.first.host }
+            .map { (key, value) ->
+                key to value.size
+            }.toMap()
+
+        eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider))
 
         eventBus.post(CachePopulatorFinishedEvent)
     }

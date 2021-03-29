@@ -5,6 +5,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
+import io.github.manamiproject.manami.app.state.events.Event
+import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
@@ -103,8 +106,17 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         }
 
         val testCache = AnimeCache(listOf(TestCacheLoader))
+
+        val receivedEvents = mutableListOf<Event>()
+        val testEventBus = object: EventBus by TestEventBus {
+            override fun post(event: Event) {
+                receivedEvents.add(event)
+            }
+        }
+
         val animeCachePopulator = AnimeCachePopulator(
-                uri = URI("http://localhost:$port/anime/1535")
+                uri = URI("http://localhost:$port/anime/1535"),
+                eventBus = testEventBus,
         )
 
         serverInstance.stubFor(
@@ -161,5 +173,15 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             relatedAnime = SortedList(URI("https://notify.moe/anime/DBBU5Kimg")),
         )
         assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedNotifyEntry)
+
+        assertThat(receivedEvents).hasSize(2)
+        assertThat(receivedEvents.first()).isInstanceOf(NumberOfEntriesPerMetaDataProviderEvent::class.java)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anidb.net"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anilist.co"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anime-planet.com"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["kitsu.io"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["myanimelist.net"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["notify.moe"]).isEqualTo(1)
+        assertThat(receivedEvents.last()).isInstanceOf(CachePopulatorFinishedEvent::class.java)
     }
 }

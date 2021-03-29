@@ -27,8 +27,16 @@ class TabPaneView : View() {
     private val animeSearchView: AnimeSearchView by inject()
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
+    private val dashboardView: DashboardView by inject()
+
+    private val tabPane = tabpane {
+        hgrow = ALWAYS
+        vgrow = ALWAYS
+    }
 
     init {
+        tabPane.openTab(title = "Dashboard", closeable = false) { add(dashboardView.root) }
+
         subscribe<ShowAnimeListTabRequest> {
             tabPane.openTab("Anime List") { add(animeListView.root) }
         }
@@ -49,18 +57,6 @@ class TabPaneView : View() {
         }
         subscribe<ShowRelatedAnimeTabRequest> {
             tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }
-        }
-    }
-
-    private val tabPane = tabpane {
-        hgrow = ALWAYS
-        vgrow = ALWAYS
-
-        tab("Dashboard") {
-            isClosable = false
-
-            vbox {
-            }
         }
     }
 

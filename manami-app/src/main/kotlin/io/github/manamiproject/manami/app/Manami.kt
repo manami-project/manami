@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.cache.populator.CachePopulatorFinishedEvent
 import io.github.manamiproject.manami.app.cache.populator.DeadEntriesCachePopulator
+import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMetaDataProviderEvent
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
@@ -137,6 +138,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: AnimeSearchFinishedEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: NumberOfEntriesPerMetaDataProviderEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()
