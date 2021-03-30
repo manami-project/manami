@@ -6,7 +6,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUp
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.state.State
+import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.TestSnapshot
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
@@ -167,6 +167,7 @@ internal class DefaultListHandlerTest {
 
             val savedEntries = mutableListOf<AnimeListEntry>()
             val state = object: State by TestState {
+                override fun openedFile(): OpenedFile = NoFile
                 override fun createSnapshot(): Snapshot = TestSnapshot
                 override fun animeList(): List<AnimeListEntry> = emptyList()
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
