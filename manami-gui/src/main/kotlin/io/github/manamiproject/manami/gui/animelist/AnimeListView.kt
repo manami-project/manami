@@ -111,7 +111,7 @@ class AnimeListView : View() {
                 withToWatchListButton = false
                 withToIgnoreListButton = false
                 withHideButton = false
-                withEditButton = true
+                withEditButton = false
                 onEdit = {
                     find<AnimeForm>().apply {
                         selectedTitle.set(it.title)
