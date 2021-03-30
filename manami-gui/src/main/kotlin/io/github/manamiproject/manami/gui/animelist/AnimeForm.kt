@@ -33,7 +33,7 @@ class AnimeForm: Fragment() {
     val selectedTitle = SimpleStringProperty(EMPTY)
     val selectedEpisodes = SimpleIntegerProperty(1)
     val selectedType = SimpleStringProperty("TV")
-    val selectedThumbnail = SimpleStringProperty("https://cdn.myanimelist.net/images/qm_50.gif")
+    val selectedThumbnail = SimpleStringProperty(EMPTY)
     val selectedLink = SimpleStringProperty(EMPTY)
     val selectedLocation = SimpleStringProperty(EMPTY)
     val isEdit = SimpleBooleanProperty(false)
