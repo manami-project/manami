@@ -81,9 +81,10 @@ class MenuController : Controller() {
             contentText = """
                 Free non-commercial software. (AGPLv3.0)
 
-                https://github.com/manami-project/manami
-                https://github.com/manami-project/manami/blob/master/LICENSE
+                Project / Source code: https://github.com/manami-project/manami
+                License: https://github.com/manami-project/manami/blob/master/LICENSE
             """.trimIndent()
+            dialogPane.minWidth = 450.0
         }.showAndWait()
     }
 
