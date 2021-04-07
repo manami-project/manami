@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.gui.animelist
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.animeTable
@@ -35,7 +36,7 @@ class AnimeListView : View() {
         subscribe<RemoveAnimeListEntryGuiEvent> { event ->
             entries.value.removeAll(event.entries)
         }
-        subscribe<AnimeSearchEntryFoundGuiEvent> { event ->
+        subscribe<AnimeEntryFoundGuiEvent> { event ->
             loadingIndicator.close()
             find<AnimeForm>().apply {
                 selectedTitle.set(event.anime.title)
@@ -45,7 +46,7 @@ class AnimeListView : View() {
                 selectedLink.set(event.anime.sources.first().toString())
             }.openModal(stageStyle = UTILITY, APPLICATION_MODAL)
         }
-        subscribe<AnimeSearchFinishedGuiEvent> {
+        subscribe<AnimeEntryFinishedGuiEvent> {
             loadingIndicator.close()
         }
     }

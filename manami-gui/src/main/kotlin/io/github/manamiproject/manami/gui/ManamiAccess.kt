@@ -22,6 +22,8 @@ import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
 import io.github.manamiproject.manami.app.search.FileSearchAnimeListResultsEvent
 import io.github.manamiproject.manami.app.search.FileSearchIgnoreListResultsEvent
 import io.github.manamiproject.manami.app.search.FileSearchWatchListResultsEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
@@ -59,6 +61,8 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is FileSearchIgnoreListResultsEvent -> FileSearchIgnoreListResultsGuiEvent(this.anime)
                     is AnimeSearchEntryFoundEvent -> AnimeSearchEntryFoundGuiEvent(this.anime)
                     is AnimeSearchFinishedEvent -> AnimeSearchFinishedGuiEvent
+                    is AnimeEntryFoundEvent -> AnimeEntryFoundGuiEvent(this.anime)
+                    is AnimeEntryFinishedEvent -> AnimeEntryFinishedGuiEvent
                     is NumberOfEntriesPerMetaDataProviderEvent -> NumberOfEntriesPerMetaDataProviderGuiEvent(this.entries)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
@@ -160,5 +164,8 @@ data class FileSearchIgnoreListResultsGuiEvent(val anime: Collection<IgnoreListE
 
 data class AnimeSearchEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeSearchFinishedGuiEvent: GuiEvent()
+
+data class AnimeEntryFoundGuiEvent(val anime: Anime): GuiEvent()
+object AnimeEntryFinishedGuiEvent: GuiEvent()
 
 data class NumberOfEntriesPerMetaDataProviderGuiEvent(val entries: Map<Hostname, Int>): GuiEvent()

@@ -21,6 +21,8 @@ import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
 import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
@@ -141,6 +143,12 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: NumberOfEntriesPerMetaDataProviderEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeEntryFoundEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeEntryFinishedEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

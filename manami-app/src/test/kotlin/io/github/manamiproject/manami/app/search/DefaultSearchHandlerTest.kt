@@ -10,6 +10,8 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.search.SearchType.AND
 import io.github.manamiproject.manami.app.search.SearchType.OR
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
@@ -1287,11 +1289,11 @@ internal class DefaultSearchHandlerTest {
             sleep(1000)
             assertThat(receivedEvents).hasSize(2)
 
-            assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
+            assertThat(receivedEvents.filterIsInstance<AnimeEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
             )
 
-            assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
+            assertThat(receivedEvents.last()).isInstanceOf(AnimeEntryFinishedEvent::class.java)
         }
 
         @Test
@@ -1320,7 +1322,7 @@ internal class DefaultSearchHandlerTest {
             // then
             sleep(1000)
             assertThat(receivedEvents).hasSize(1)
-            assertThat(receivedEvents.first()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
+            assertThat(receivedEvents.first()).isInstanceOf(AnimeEntryFinishedEvent::class.java)
         }
     }
 }

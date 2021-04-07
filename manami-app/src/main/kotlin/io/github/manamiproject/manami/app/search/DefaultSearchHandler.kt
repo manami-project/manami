@@ -7,6 +7,8 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.runInBackground
 import io.github.manamiproject.manami.app.search.SearchType.AND
 import io.github.manamiproject.manami.app.search.SearchType.OR
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
+import io.github.manamiproject.manami.app.search.anime.AnimeEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
@@ -94,9 +96,9 @@ internal class DefaultSearchHandler(
         runInBackground {
             val entry = cache.fetch(uri)
             if (entry is PresentValue) {
-                eventBus.post(AnimeSearchEntryFoundEvent(entry.value))
+                eventBus.post(AnimeEntryFoundEvent(entry.value))
             }
-            eventBus.post(AnimeSearchFinishedEvent)
+            eventBus.post(AnimeEntryFinishedEvent)
         }
     }
 
