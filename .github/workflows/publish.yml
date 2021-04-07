@@ -19,8 +19,12 @@ jobs:
           java-version: 14
       - name: Set executable flag on gradlew
         run: chmod +x gradlew
-      - name: Execute tests and build executable fatJar
-        run: ./gradlew test shadowJar -PreleaseVersion=$RELEASE_VERSION
+      - name: Execute tests
+        run: ./gradlew test
+      - name: Set version
+        run: echo $RELEASE_VERSION > manami-app/src/main/resources/manami.version
+      - name: Build executable fatJar
+        run: ./gradlew shadowJar
       - name: Upload file to release
         uses: softprops/action-gh-release@v1
         with:
