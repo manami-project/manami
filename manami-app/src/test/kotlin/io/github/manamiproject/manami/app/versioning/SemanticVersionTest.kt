@@ -58,6 +58,19 @@ internal class SemanticVersionTest {
         assertThat(result).isEqualTo(2)
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = [" 3.1.2", "3.1.2 ", "3.1.2\n"])
+    fun `trim string`(value: String) {
+        // given
+        val version = SemanticVersion(value)
+
+        // when
+        val result = version.toString()
+
+        // then
+        assertThat(result).isEqualTo("3.1.2")
+    }
+
     @Test
     fun `toString returns the original string`() {
         // given

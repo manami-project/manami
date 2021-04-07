@@ -1,9 +1,13 @@
 package io.github.manamiproject.manami.app.versioning
 
-data class SemanticVersion(private val version: String = "0.0.0") {
+data class SemanticVersion(private val _version: String = "0.0.0") {
+
+    private var trimmedVersion = _version.trim()
+    val version
+        get() = trimmedVersion
 
     init {
-        require(Regex("[0-9]+\\.[0-9]+\\.[0-9]+").matches(version)) { "Version must be of format NUMBER.NUMBER.NUMBER" }
+        require(Regex("[0-9]+\\.[0-9]+\\.[0-9]+").matches(trimmedVersion)) { "Version must be of format NUMBER.NUMBER.NUMBER" }
     }
 
     fun isNewerThan(other: SemanticVersion): Boolean {
