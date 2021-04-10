@@ -12,6 +12,8 @@ import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
+import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListHandler
@@ -48,12 +50,14 @@ class Manami(
     private val importHandler: ImportHandler = DefaultImportHandler(),
     private val listHandler: ListHandler = DefaultListHandler(),
     private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
+    private val inconsistenciesHandler: InconsistenciesHandler = DefaultInconsistenciesHandler(),
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
     ImportHandler by importHandler,
     ListHandler by listHandler,
-    RelatedAnimeHandler by relatedAnimeHandler {
+    RelatedAnimeHandler by relatedAnimeHandler,
+    InconsistenciesHandler by inconsistenciesHandler {
 
     private var eventMapper = AtomicReference<Event.() -> Unit>()
 
@@ -62,10 +66,10 @@ class Manami(
         SimpleEventBus.subscribe(this)
         runInBackground {
             AnimeCachePopulator().populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/myanimelist.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/anidb.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/anilist.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries/kitsu.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URL("$CACHE_URL/myanimelist.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$CACHE_URL/anidb.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$CACHE_URL/anilist.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$CACHE_URL/kitsu.json")).populate(Caches.animeCache)
         }
     }
 
@@ -152,6 +156,7 @@ class Manami(
 
     companion object {
         private val log by LoggerDelegate()
+        private const val CACHE_URL = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries"
     }
 }
 
