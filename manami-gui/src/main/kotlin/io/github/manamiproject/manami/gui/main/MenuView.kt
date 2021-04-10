@@ -1,5 +1,7 @@
 package io.github.manamiproject.manami.gui.main
 
+import com.sun.javafx.PlatformUtil.*
+import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.gui.CachePopulatorFinishedGuiEvent
 import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
 import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
@@ -15,6 +17,8 @@ import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.stage.StageStyle.UNDECORATED
 import tornadofx.*
@@ -119,12 +123,26 @@ class MenuView : View() {
             }
         }
         menu("Help") {
-            item("About", createMnemonic("H")).action { controller.help() }
+            item("About", createMnemonic("H")).action { showHelp() }
         }
+    }
+
+    private fun showHelp() {
+        Alert(INFORMATION).apply {
+            title = "Help"
+            headerText = "Version: ${ResourceBasedVersionProvider.version()}"
+            contentText = """
+                Free non-commercial software. (AGPLv3.0)
+
+                Project / Source code: https://github.com/manami-project/manami
+                License: https://github.com/manami-project/manami/blob/${ResourceBasedVersionProvider.version()}/LICENSE
+            """.trimIndent()
+            dialogPane.minWidth = 450.0
+        }.showAndWait()
     }
 }
 
 fun createMnemonic(key: String): String {
-    val initiator = if (com.sun.javafx.PlatformUtil.isMac()) "Meta" else "Ctrl"
+    val initiator = if (isMac()) "Meta" else "Ctrl"
     return "$initiator+$key"
 }

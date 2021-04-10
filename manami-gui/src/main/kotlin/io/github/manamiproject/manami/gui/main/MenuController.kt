@@ -74,20 +74,6 @@ class MenuController : Controller() {
         }
     }
 
-    fun help() {
-        Alert(INFORMATION).apply {
-            title = "Help"
-            headerText = "Version: ${ResourceBasedVersionProvider.version()}"
-            contentText = """
-                Free non-commercial software. (AGPLv3.0)
-
-                Project / Source code: https://github.com/manami-project/manami
-                License: https://github.com/manami-project/manami/blob/${ResourceBasedVersionProvider.version()}/LICENSE
-            """.trimIndent()
-            dialogPane.minWidth = 450.0
-        }.showAndWait()
-    }
-
     fun quit() {
         quitController.quit()
     }

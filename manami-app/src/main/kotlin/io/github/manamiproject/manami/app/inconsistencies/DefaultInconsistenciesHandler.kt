@@ -62,7 +62,7 @@ internal class DefaultInconsistenciesHandler(
         val deadEntriesInconsistencyResult = deadEntriesInconsistencyHandler.execute()
         watchListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.watchListResults)
         ignoreListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.ignoreListResults)
-        eventBus.post(InconsistenciesProgressEvent(metaDataWorkload, workload))
+        eventBus.post(InconsistenciesProgressEvent(deadEntriesWorkload, workload))
     }
 
     override fun fixMetaDataInconsistencies() {
