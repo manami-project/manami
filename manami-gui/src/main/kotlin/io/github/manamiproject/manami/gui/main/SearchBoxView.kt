@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.models.Title
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
 import tornadofx.*
@@ -16,20 +17,22 @@ class SearchBoxView: View() {
 
     private val controller: SearchBoxController by inject()
     private val searchStringProperty = SimpleStringProperty()
+    private val suggestedEntries = mutableSetOf<String>()
     private val autoCompleteProvider: SuggestionProvider<String> = SuggestionProvider.create(emptyList())
 
     init {
         subscribe<AddAnimeListEntryGuiEvent> { event ->
-            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+            addTitlesToSuggestions(event.entries.map { it.title })
         }
         subscribe<AddWatchListEntryGuiEvent> { event ->
-            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+            addTitlesToSuggestions(event.entries.map { it.title })
         }
         subscribe<AddIgnoreListEntryGuiEvent> { event ->
-            autoCompleteProvider.addPossibleSuggestions(event.entries.map { it.title })
+            addTitlesToSuggestions(event.entries.map { it.title })
         }
         subscribe<ClearAutoCompleteSuggestionsGuiEvent> {
             autoCompleteProvider.clearSuggestions()
+            suggestedEntries.clear()
         }
     }
 
@@ -52,6 +55,12 @@ class SearchBoxView: View() {
                 searchStringProperty.set(EMPTY)
             }
         }
+    }
+
+    private fun addTitlesToSuggestions(titles: Collection<Title>) {
+        val suggestionsToAdd = titles.map { it }.distinct().filterNot { suggestedEntries.contains(it) }
+        autoCompleteProvider.addPossibleSuggestions(suggestionsToAdd)
+        suggestedEntries.addAll(suggestionsToAdd)
     }
 }
 
