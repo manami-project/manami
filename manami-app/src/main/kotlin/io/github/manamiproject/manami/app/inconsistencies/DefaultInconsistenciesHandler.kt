@@ -9,9 +9,6 @@ import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntrie
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
 import io.github.manamiproject.manami.app.inconsistencies.metadata.*
-import io.github.manamiproject.manami.app.inconsistencies.metadata.CmdFixMetaData
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
@@ -20,9 +17,6 @@ import io.github.manamiproject.manami.app.state.commands.GenericReversibleComman
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.EventListType
-import io.github.manamiproject.manami.app.state.events.EventListType.IGNORE_LIST
-import io.github.manamiproject.manami.app.state.events.EventListType.WATCH_LIST
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.models.Anime
@@ -58,7 +52,7 @@ internal class DefaultInconsistenciesHandler(
         val deadEntriesWorkload = deadEntriesInconsistencyHandler.calculateWorkload().takeIf { config.checkDeadEntries } ?: 0
         val workload = metaDataWorkload + deadEntriesWorkload
 
-        if (config.checkMetaData) {
+        if (config.checkMetaData && metaDataWorkload > 0) {
             val metaDataInconsistencyResult = metaDataInconsistencyHandler.execute {
                 eventBus.post(InconsistenciesProgressEvent(it, workload))
             }
@@ -70,7 +64,7 @@ internal class DefaultInconsistenciesHandler(
             }
         }
 
-        if (config.checkDeadEntries) {
+        if (config.checkDeadEntries && deadEntriesWorkload > 0) {
             val deadEntriesInconsistencyResult = deadEntriesInconsistencyHandler.execute {
                 eventBus.post(InconsistenciesProgressEvent(metaDataWorkload + it, workload))
             }
