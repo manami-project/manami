@@ -434,5 +434,53 @@ internal class AnimeCacheTest {
                 "Tate no Yuusha no Nariagari Season 2",
             )
         }
+
+        @Test
+        fun `create individual entries for duplicates`() {
+            // given
+            val entry = Anime(
+                sources = SortedList(
+                    URI("https://myanimelist.net/anime/48670"),
+                    URI("https://myanimelist.net/anime/48671"),
+                    URI("https://myanimelist.net/anime/48672"),
+                ),
+                _title = "Tsugumomo Mini Anime",
+                type = ONA,
+                episodes = 59,
+                status = FINISHED,
+                animeSeason = AnimeSeason(
+                    season = UNDEFINED,
+                    year = 2019,
+                ),
+                picture = URI("https://cdn.myanimelist.net/images/anime/1469/114202.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1469/114202t.jpg"),
+                synonyms = SortedList(
+                    "Tsugu Tsugumomo Mini Anime",
+                    "継つぐももミニアニメ"
+                ),
+                relatedAnime = SortedList(
+                    URI("https://myanimelist.net/anime/34019"),
+                    URI("https://myanimelist.net/anime/39469"),
+                ),
+                tags = SortedList("comedy"),
+            )
+
+            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            // when
+            val result = animeCache.allEntries("myanimelist.net").toList()
+
+            // then
+            assertThat(result).hasSize(3)
+            assertThat(result.map { it.sources.first() }).containsExactlyInAnyOrder(
+                URI("https://myanimelist.net/anime/48670"),
+                URI("https://myanimelist.net/anime/48671"),
+                URI("https://myanimelist.net/anime/48672"),
+            )
+        }
     }
 }

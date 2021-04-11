@@ -51,12 +51,15 @@ internal class AnimeCache(
             .map { it.value }
             .filterIsInstance<PresentValue<Anime>>()
             .map { it.value }
-            .map { anime ->
-                anime.copy(
-                    sources = SortedList(anime.sources.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
-                    relatedAnime = SortedList(anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
-                )
+            .flatMap { anime ->
+                anime.sources.filter { it.toString().contains(metaDataProvider) }.map { link ->
+                    anime.copy(
+                        sources = SortedList(link),
+                        relatedAnime = SortedList(anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
+                    )
+                }
             }
+            .distinct()
     }
 
     override fun fetch(key: URI): CacheEntry<Anime> {
