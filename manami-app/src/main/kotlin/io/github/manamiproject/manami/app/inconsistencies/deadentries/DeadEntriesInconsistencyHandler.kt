@@ -19,9 +19,15 @@ internal class DeadEntriesInconsistencyHandler(
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size
 
-    override fun execute(): DeadEntriesInconsistenciesResult {
+    override fun execute(progressUpdate: (Int) -> Unit): DeadEntriesInconsistenciesResult {
+        var progress = 0
+
         val watchListResults: List<WatchListEntry> = state.watchList()
             .asSequence()
+            .map {
+                progressUpdate.invoke(++progress)
+                it
+            }
             .map { watchListEntry -> watchListEntry to cache.fetch(watchListEntry.link.uri) }
             .filter { it.second is Empty }
             .map { it.first }
@@ -29,6 +35,10 @@ internal class DeadEntriesInconsistencyHandler(
 
         val ignoreListResults: List<IgnoreListEntry> = state.ignoreList()
             .asSequence()
+            .map {
+                progressUpdate.invoke(++progress)
+                it
+            }
             .map { ignoreListEntry -> ignoreListEntry to cache.fetch(ignoreListEntry.link.uri) }
             .filter { it.second is Empty }
             .map { it.first }

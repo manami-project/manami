@@ -5,6 +5,8 @@ import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.extensions.openTab
 import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
+import io.github.manamiproject.manami.gui.inconsistencies.InconsistenciesView
+import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.anime.AnimeSearchView
@@ -20,6 +22,7 @@ import tornadofx.*
 
 class TabPaneView : View() {
 
+    private val dashboardView: DashboardView by inject()
     private val animeListView: AnimeListView by inject()
     private val watchListView: WatchListView by inject()
     private val ignoreListView: IgnoreListView by inject()
@@ -27,7 +30,7 @@ class TabPaneView : View() {
     private val animeSearchView: AnimeSearchView by inject()
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
-    private val dashboardView: DashboardView by inject()
+    private val inconsistenciesView: InconsistenciesView by inject()
 
     private val tabPane = tabpane {
         hgrow = ALWAYS
@@ -54,6 +57,9 @@ class TabPaneView : View() {
         }
         subscribe<ShowAnimeSeasonTabRequest> {
             tabPane.openTab("Anime Season") { add(animeSeasonView.root) }
+        }
+        subscribe<ShowInconsistenciesTabRequest> {
+            tabPane.openTab("Inconsistencies") { add(inconsistenciesView.root) }
         }
         subscribe<ShowRelatedAnimeTabRequest> {
             tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }

@@ -13,7 +13,11 @@ import io.github.manamiproject.manami.app.import.DefaultImportHandler
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
+import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListHandler
@@ -153,6 +157,18 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: AnimeEntryFinishedEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: InconsistenciesProgressEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: InconsistenciesCheckFinishedEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: MetaDataInconsistenciesResultEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: DeadEntriesInconsistenciesResultEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

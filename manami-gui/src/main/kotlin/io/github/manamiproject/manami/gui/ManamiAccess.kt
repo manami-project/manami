@@ -8,6 +8,10 @@ import io.github.manamiproject.manami.app.extensions.castToSet
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
+import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
@@ -30,6 +34,8 @@ import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEve
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
+import io.github.manamiproject.manami.app.state.events.Event
+import io.github.manamiproject.manami.app.state.events.EventListType
 import io.github.manamiproject.manami.app.state.events.EventListType.*
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
@@ -64,6 +70,10 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AnimeEntryFoundEvent -> AnimeEntryFoundGuiEvent(this.anime)
                     is AnimeEntryFinishedEvent -> AnimeEntryFinishedGuiEvent
                     is NumberOfEntriesPerMetaDataProviderEvent -> NumberOfEntriesPerMetaDataProviderGuiEvent(this.entries)
+                    is InconsistenciesProgressEvent -> InconsistenciesProgressGuiEvent(this.finishedTasks, this.numberOfTasks)
+                    is InconsistenciesCheckFinishedEvent -> InconsistenciesCheckFinishedGuiEvent
+                    is MetaDataInconsistenciesResultEvent -> MetaDataInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
+                    is DeadEntriesInconsistenciesResultEvent -> DeadEntriesInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -169,3 +179,8 @@ data class AnimeEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeEntryFinishedGuiEvent: GuiEvent()
 
 data class NumberOfEntriesPerMetaDataProviderGuiEvent(val entries: Map<Hostname, Int>): GuiEvent()
+
+data class InconsistenciesProgressGuiEvent(val finishedTasks: Int, val numberOfTasks: Int): GuiEvent()
+data class MetaDataInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
+data class DeadEntriesInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
+object InconsistenciesCheckFinishedGuiEvent: GuiEvent()

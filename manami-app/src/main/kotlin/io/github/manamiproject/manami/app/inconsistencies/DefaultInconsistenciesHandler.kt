@@ -6,9 +6,10 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.CmdFixDeadEntries
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
+import io.github.manamiproject.manami.app.inconsistencies.metadata.*
 import io.github.manamiproject.manami.app.inconsistencies.metadata.CmdFixMetaData
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataDiff
 import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResult
 import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -19,6 +20,9 @@ import io.github.manamiproject.manami.app.state.commands.GenericReversibleComman
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.events.EventBus
+import io.github.manamiproject.manami.app.state.events.EventListType
+import io.github.manamiproject.manami.app.state.events.EventListType.IGNORE_LIST
+import io.github.manamiproject.manami.app.state.events.EventListType.WATCH_LIST
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import io.github.manamiproject.modb.core.models.Anime
@@ -54,15 +58,31 @@ internal class DefaultInconsistenciesHandler(
         val deadEntriesWorkload = deadEntriesInconsistencyHandler.calculateWorkload().takeIf { config.checkDeadEntries } ?: 0
         val workload = metaDataWorkload + deadEntriesWorkload
 
-        val metaDataInconsistencyResult = metaDataInconsistencyHandler.execute()
-        watchListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.watchListResults)
-        ignoreListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.ignoreListResults)
-        eventBus.post(InconsistenciesProgressEvent(metaDataWorkload, workload))
+        if (config.checkMetaData) {
+            val metaDataInconsistencyResult = metaDataInconsistencyHandler.execute {
+                eventBus.post(InconsistenciesProgressEvent(it, workload))
+            }
+            watchListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.watchListResults)
+            ignoreListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.ignoreListResults)
+            val numberOfMetaDataEntries = watchListMetaDataInconsistencies.size + ignoreListMetaDataInconsistencies.size
+            if (numberOfMetaDataEntries > 0) {
+                eventBus.post(MetaDataInconsistenciesResultEvent(numberOfMetaDataEntries))
+            }
+        }
 
-        val deadEntriesInconsistencyResult = deadEntriesInconsistencyHandler.execute()
-        watchListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.watchListResults)
-        ignoreListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.ignoreListResults)
-        eventBus.post(InconsistenciesProgressEvent(deadEntriesWorkload, workload))
+        if (config.checkDeadEntries) {
+            val deadEntriesInconsistencyResult = deadEntriesInconsistencyHandler.execute {
+                eventBus.post(InconsistenciesProgressEvent(metaDataWorkload + it, workload))
+            }
+            watchListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.watchListResults)
+            ignoreListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.ignoreListResults)
+            val numberOfDeadEntries = watchListDeadEntriesInconsistencies.size + ignoreListDeadEntriesInconsistencies.size
+            if (numberOfDeadEntries > 0) {
+                eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfDeadEntries))
+            }
+        }
+
+        eventBus.post(InconsistenciesCheckFinishedEvent)
     }
 
     override fun fixMetaDataInconsistencies() {

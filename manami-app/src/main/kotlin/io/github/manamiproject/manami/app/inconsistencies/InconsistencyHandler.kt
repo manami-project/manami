@@ -4,5 +4,5 @@ internal interface InconsistencyHandler<RESULT> {
 
     fun calculateWorkload(): Int
 
-    fun execute(): RESULT
+    fun execute(progressUpdate: (Int) -> Unit = {}): RESULT
 }

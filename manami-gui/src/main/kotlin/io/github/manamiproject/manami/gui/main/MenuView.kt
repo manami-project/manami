@@ -2,10 +2,7 @@ package io.github.manamiproject.manami.gui.main
 
 import com.sun.javafx.PlatformUtil.*
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
-import io.github.manamiproject.manami.gui.CachePopulatorFinishedGuiEvent
-import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
-import io.github.manamiproject.manami.gui.ImportFinishedGuiEvent
-import io.github.manamiproject.manami.gui.UndoRedoStatusGuiEvent
+import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.PathChooser
@@ -29,15 +26,20 @@ class MenuView : View() {
     private val isFileSaved = SimpleBooleanProperty(true)
     private val isUndoPossible = SimpleBooleanProperty(true)
     private val isRedoPossible = SimpleBooleanProperty(true)
+    private val isInconsistenciesDisabled = SimpleBooleanProperty(true)
     private val isDisabledBecauseCacheIsNotYetPopulated = SimpleBooleanProperty(true)
 
     init {
         subscribe<FileSavedStatusChangedGuiEvent> { event ->
             isFileSaved.set(event.isFileSaved)
         }
+        subscribe<FileOpenedGuiEvent> {
+            isInconsistenciesDisabled.set(false)
+        }
         subscribe<UndoRedoStatusGuiEvent> { event ->
             isUndoPossible.set(!event.isUndoPossible)
             isRedoPossible.set(!event.isRedoPossible)
+            isInconsistenciesDisabled.set(!event.isUndoPossible)
         }
         subscribe<CachePopulatorFinishedGuiEvent> {
             isDisabledBecauseCacheIsNotYetPopulated.set(false)
@@ -110,7 +112,7 @@ class MenuView : View() {
                 action { fire(ShowAnimeSeasonTabRequest) }
             }
             item("Inconsistencies", createMnemonic("7")) {
-                isDisable = true
+                disableProperty().bindBidirectional(isInconsistenciesDisabled)
                 action { fire(ShowInconsistenciesTabRequest) }
             }
             item("Recommendations", createMnemonic("8")) {
