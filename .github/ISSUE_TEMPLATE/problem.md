@@ -10,7 +10,9 @@ _Before posting: Please check if you have the newest version. If there is a newe
 
 **Manami version:**
 
-**Java version:**
+**operating system + version**:
+
+**JDK/JRE + version:**
 
 **Steps to reproduce:**
 
