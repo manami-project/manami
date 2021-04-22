@@ -12,6 +12,7 @@ dependencies {
 javafx {
     version = "14"
     modules = listOf(
-        "javafx.controls"
+        "javafx.base",
+        "javafx.controls",
     )
 }
