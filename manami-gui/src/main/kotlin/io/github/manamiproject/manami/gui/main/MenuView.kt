@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.gui.main
 
-import com.sun.javafx.PlatformUtil.*
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
@@ -142,9 +141,11 @@ class MenuView : View() {
             dialogPane.minWidth = 450.0
         }.showAndWait()
     }
-}
 
-fun createMnemonic(key: String): String {
-    val initiator = if (isMac()) "Meta" else "Ctrl"
-    return "$initiator+$key"
+    private fun createMnemonic(key: String): String {
+        val initiator = if (isMac()) "Meta" else "Ctrl"
+        return "$initiator+$key"
+    }
+
+    private fun isMac(): Boolean = System.getProperty("os.name").startsWith("Mac")
 }

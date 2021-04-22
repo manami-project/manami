@@ -1,12 +1,9 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import javafx.scene.control.Alert
-import javafx.scene.control.Alert.AlertType.INFORMATION
 import tornadofx.Controller
 
 class MenuController : Controller() {

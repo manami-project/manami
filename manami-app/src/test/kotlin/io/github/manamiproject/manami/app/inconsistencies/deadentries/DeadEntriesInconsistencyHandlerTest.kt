@@ -1,8 +1,6 @@
 package io.github.manamiproject.manami.app.inconsistencies.deadentries
 
 import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.TestAnimeCache
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry

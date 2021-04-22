@@ -34,8 +34,6 @@ import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEve
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventListType
 import io.github.manamiproject.manami.app.state.events.EventListType.*
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime

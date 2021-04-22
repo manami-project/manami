@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import java.nio.file.Files
 
 plugins {
     kotlin("jvm") version "1.4.32"

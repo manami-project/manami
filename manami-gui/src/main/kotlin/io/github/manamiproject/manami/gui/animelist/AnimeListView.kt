@@ -1,7 +1,6 @@
 package io.github.manamiproject.manami.gui.animelist
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
-import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.animeTable
