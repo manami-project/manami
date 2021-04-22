@@ -38,6 +38,7 @@ internal class AnimeCachePopulator(
         eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider))
 
         eventBus.post(CachePopulatorFinishedEvent)
+        log.info("Finished populating cache with anime from [{}].", uri)
     }
 
     private companion object {

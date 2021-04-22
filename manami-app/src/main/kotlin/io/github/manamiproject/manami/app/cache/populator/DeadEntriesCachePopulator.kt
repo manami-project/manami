@@ -26,6 +26,8 @@ internal class DeadEntriesCachePopulator(
             val source = config.buildAnimeLink(animeId)
             cache.populate(source, Empty())
         }
+
+        log.info("Finished populating cache with dead entries from [{}]", config.hostname())
     }
 
     private companion object {
