@@ -1,11 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0"
     application
     id("com.github.johnrengelman.shadow") version("6.1.0")
 }
-
+val githubUsername = "manami-project"
 allprojects {
     apply {
         plugin("java-library")
@@ -13,14 +13,67 @@ allprojects {
     }
 
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
-            url = uri("https://dl.bintray.com/manami-project/maven")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-anidb")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-anilist")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-anime-planet")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-kitsu")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-mal")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-notify")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubUsername/modb-db-parser")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: githubUsername
+                password = project.findProperty("gpr.key") as String? ?: ""
+            }
         }
     }
 
     group = "io.github.manamiproject"
-    version = project.findProperty("releaseVersion") as String? ?: ""
+    version = project.findProperty("release.version") as String? ?: ""
 }
 
 subprojects {

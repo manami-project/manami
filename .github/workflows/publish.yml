@@ -20,11 +20,15 @@ jobs:
       - name: Set executable flag on gradlew
         run: chmod +x gradlew
       - name: Execute tests
-        run: ./gradlew test
+        env:
+          GITHUB_PACKAGES_ACCESS_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: ./gradlew test -Prelease.version=$RELEASE_VERSION -Pgpr.key=$GITHUB_PACKAGES_ACCESS_TOKEN
       - name: Set version
         run: echo $RELEASE_VERSION > manami-app/src/main/resources/manami.version
       - name: Build executable fatJar
-        run: ./gradlew shadowJar
+        env:
+          GITHUB_PACKAGES_ACCESS_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: ./gradlew shadowJar -Prelease.version=$RELEASE_VERSION -Pgpr.key=$GITHUB_PACKAGES_ACCESS_TOKEN
       - name: Upload file to release
         uses: softprops/action-gh-release@v1
         with:

@@ -32,4 +32,6 @@ jobs:
       - name: Set executable flag on gradlew
         run: chmod +x gradlew
       - name: Execute tests
-        run: ./gradlew -Dkotlin.daemon.jvm.options=--illegal-access=permit test
+        env:
+          GITHUB_PACKAGES_ACCESS_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: ./gradlew test -Pgpr.key=$GITHUB_PACKAGES_ACCESS_TOKEN
