@@ -25,6 +25,16 @@ class AnimeSearchView: View() {
     private val selectedTags = SimpleListProperty<String>(FXCollections.observableArrayList())
     private val selectableTags = SimpleListProperty(FXCollections.observableArrayList(availableTags))
 
+    private val searchBoxExpanded = SimpleBooleanProperty(true).apply {
+        addListener { _, _, newValue ->
+            when(newValue) {
+                true -> collapsableText.set("collapse")
+                false -> collapsableText.set("expand")
+            }
+        }
+    }
+    private val collapsableText = SimpleStringProperty("collapse")
+
     private val selectedMetaDataProvider = SimpleStringProperty(manamiAccess.availableMetaDataProviders().first())
     private val availableMetaDataProvider: ObservableList<String> = FXCollections.observableArrayList(
         manamiAccess.availableMetaDataProviders()
@@ -73,11 +83,13 @@ class AnimeSearchView: View() {
                 hgrow = ALWAYS
                 alignment = CENTER
                 padding = Insets(10.0)
+                managedProperty().bindBidirectional(searchBoxExpanded)
 
                 vbox(5) {
                     hgrow = ALWAYS
                     alignment = CENTER
                     padding = Insets(10.0)
+                    visibleProperty().bindBidirectional(searchBoxExpanded)
 
                     form {
                         fieldset {
@@ -129,9 +141,22 @@ class AnimeSearchView: View() {
                 }
             }
 
-            animeTable<BigPicturedAnimeEntry> {
-                manamiApp = manamiAccess
-                items = entries
+            vbox(5) {
+                hgrow = ALWAYS
+                alignment = CENTER
+                padding = Insets(10.0)
+                fitToParentSize()
+
+                button {
+                    textProperty().bindBidirectional(collapsableText)
+                    action {
+                        searchBoxExpanded.set(!searchBoxExpanded.get())
+                    }
+                }
+                animeTable<BigPicturedAnimeEntry> {
+                    manamiApp = manamiAccess
+                    items = entries
+                }
             }
         }
     }
