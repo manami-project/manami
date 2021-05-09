@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.gui.main
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.SafelyExecuteActionController
 import io.github.manamiproject.manami.gui.components.PathChooser
+import io.github.manamiproject.manami.gui.search.ClearAutoCompleteSuggestionsGuiEvent
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import tornadofx.Controller
 

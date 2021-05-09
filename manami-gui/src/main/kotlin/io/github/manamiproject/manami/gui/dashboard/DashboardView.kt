@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.gui.main
+package io.github.manamiproject.manami.gui.dashboard
 
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link

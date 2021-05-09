@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.gui.animelist.AnimeListView
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
+import io.github.manamiproject.manami.gui.dashboard.DashboardView
 import io.github.manamiproject.manami.gui.extensions.openTab
 import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest

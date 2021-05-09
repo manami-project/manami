@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.gui.main
+package io.github.manamiproject.manami.gui.search
 
 import tornadofx.FXEvent
 
