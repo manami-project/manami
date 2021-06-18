@@ -11,7 +11,7 @@ import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
-import io.github.manamiproject.modb.core.models.Anime.Type.Movie
+import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -120,7 +120,7 @@ internal class GenericReversibleCommandTest {
                                         link = Link("https://myanimelist.net/anime/28851"),
                                         title = "Koe no Katachi",
                                         episodes = 1,
-                                        type = Movie,
+                                        type = SPECIAL,
                                         location = URI("."),
                                 )
                         )

@@ -124,7 +124,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://notify.moe/anime/3I2v2FmiR"),
                 ),
                 _title = "Tejina Shi",
-                type = Movie,
+                type = MOVIE,
                 episodes = 1,
                 status = FINISHED,
                 animeSeason = AnimeSeason(

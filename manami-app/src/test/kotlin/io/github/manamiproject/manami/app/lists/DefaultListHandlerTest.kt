@@ -19,9 +19,9 @@ import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.CURRENTLY
+import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
-import io.github.manamiproject.modb.core.models.Anime.Type.Special
+import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.Duration
@@ -41,7 +41,7 @@ internal class DefaultListHandlerTest {
         val entry1 = AnimeListEntry(
             title = "H2O: Footprints in the Sand",
             episodes = 4,
-            type = Special,
+            type = SPECIAL,
             location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
         )
         val entry2 = AnimeListEntry(
@@ -216,7 +216,7 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
-                status = CURRENTLY,
+                status = ONGOING,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
@@ -354,7 +354,7 @@ internal class DefaultListHandlerTest {
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
-                status = CURRENTLY,
+                status = ONGOING,
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),

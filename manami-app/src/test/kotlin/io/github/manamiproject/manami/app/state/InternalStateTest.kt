@@ -6,7 +6,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.extensions.createFile
-import io.github.manamiproject.modb.core.models.Anime.Type.Special
+import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
@@ -178,7 +178,7 @@ internal class InternalStateTest {
             val entry1 = AnimeListEntry(
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
-                type = Special,
+                type = SPECIAL,
                 location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val entry2 = AnimeListEntry(
@@ -193,7 +193,7 @@ internal class InternalStateTest {
                 link = Link("https://myanimelist.net/anime/12079"),
                 title = "Black★Rock Shooter",
                 episodes = 1,
-                type = Special,
+                type = SPECIAL,
                 location = URI("some/relative/path/black_rock_shooter"),
             )
 
@@ -426,7 +426,7 @@ internal class InternalStateTest {
                     AnimeListEntry(
                         title = "H2O: Footprints in the Sand",
                         episodes = 4,
-                        type = Special,
+                        type = SPECIAL,
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                     )
                 )

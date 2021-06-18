@@ -18,8 +18,7 @@ import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
-import io.github.manamiproject.modb.core.models.Anime.Type.Special
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.FALL
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.WINTER
@@ -371,14 +370,14 @@ internal class DefaultRelatedAnimeHandlerTest {
                         link = Link("https://myanimelist.net/anime/28789"),
                         title = "3-gatsu no Lion meets Bump of Chicken",
                         episodes = 1,
-                        type = Special,
+                        type = SPECIAL,
                         location = URI("/test1"),
                     ),
                     AnimeListEntry(
                         link = Link("https://myanimelist.net/anime/34647"),
                         title = "3-gatsu no Lion Recap",
                         episodes = 1,
-                        type = Special,
+                        type = SPECIAL,
                         location = URI("/test2"),
                     )
                 )
@@ -460,7 +459,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             URI("https://myanimelist.net/anime/28789"),
         ),
         _title = "3-gatsu no Lion meets Bump of Chicken",
-        type = Special,
+        type = SPECIAL,
         episodes = 1,
         status = FINISHED,
         animeSeason = AnimeSeason(
@@ -478,7 +477,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             URI("https://myanimelist.net/anime/34647"),
         ),
         _title = "3-gatsu no Lion Recap",
-        type = Special,
+        type = SPECIAL,
         episodes = 1,
         status = FINISHED,
         animeSeason = AnimeSeason(
@@ -495,7 +494,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             URI("https://myanimelist.net/anime/38154"),
         ),
         _title = "3-gatsu no Lion: Ugoku! Nya Shogi",
-        type = Special,
+        type = SPECIAL,
         episodes = 10,
         status = FINISHED,
         animeSeason = AnimeSeason(
@@ -512,7 +511,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             URI("https://myanimelist.net/anime/34611"),
         ),
         _title = "Answer (2016)",
-        type = Special,
+        type = SPECIAL,
         episodes = 1,
         status = FINISHED,
         animeSeason = AnimeSeason(
@@ -530,7 +529,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             URI("https://myanimelist.net/anime/38864"),
         ),
         _title = "Lion meets HachiClo",
-        type = Special,
+        type = SPECIAL,
         episodes = 2,
         status = FINISHED,
         animeSeason = AnimeSeason(

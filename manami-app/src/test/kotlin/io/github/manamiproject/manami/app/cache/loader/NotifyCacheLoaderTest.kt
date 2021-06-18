@@ -9,7 +9,7 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.CURRENTLY
+import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.SUMMER
@@ -55,7 +55,7 @@ internal class NotifyCacheLoaderTest {
                 _title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
                 type = TV,
                 episodes = 12,
-                status = CURRENTLY,
+                status = ONGOING,
                 animeSeason = AnimeSeason(
                         season = SUMMER,
                         year = 2020

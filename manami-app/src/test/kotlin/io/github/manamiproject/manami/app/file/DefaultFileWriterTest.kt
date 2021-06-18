@@ -11,6 +11,8 @@ import io.github.manamiproject.manami.app.versioning.TestVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
+import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,7 +27,7 @@ internal class DefaultFileWriterTest {
             val animeListEntry1 = AnimeListEntry(
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
-                type = Anime.Type.Special,
+                type = SPECIAL,
                 location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val animeListEntry2 = AnimeListEntry(
@@ -33,7 +35,7 @@ internal class DefaultFileWriterTest {
                 title = "Beck",
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
-                type = Anime.Type.TV,
+                type = TV,
                 location = URI("some/relative/path/beck"),
             )
             val watchListEntry1 = WatchListEntry(
@@ -76,7 +78,7 @@ internal class DefaultFileWriterTest {
                 <manami version="3.0.0">
                   <animeList>
                     <animeListEntry link="https://myanimelist.net/anime/57" title="Beck" thumbnail="https://cdn.myanimelist.net/images/anime/11/11636t.jpg" type="TV" episodes="26" location="some/relative/path/beck"/>
-                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://cdn.myanimelist.net/images/qm_50.gif" type="Special" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
+                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://cdn.myanimelist.net/images/qm_50.gif" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                   </animeList>
                   <watchList>
                     <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453t.jpg"/>

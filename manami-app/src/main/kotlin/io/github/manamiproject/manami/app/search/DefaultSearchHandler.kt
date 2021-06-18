@@ -107,7 +107,7 @@ internal class DefaultSearchHandler(
     override fun availableTags(): Set<Tag> = cache.availableTags
 
     private fun isEntryMatchingSearchString(title: Title, searchString: String): Boolean {
-        val levenshteinDistance = levenshteinDistance.apply(title.toLowerCase(), searchString.toLowerCase())
+        val levenshteinDistance = levenshteinDistance.apply(title.lowercase(), searchString.lowercase())
         val isTitleNearlyEqual = levenshteinDistance in 0..2
         val isInTitle = containsIgnoreCase(title, searchString)
 

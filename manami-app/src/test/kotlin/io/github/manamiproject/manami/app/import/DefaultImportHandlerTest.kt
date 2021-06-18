@@ -134,7 +134,7 @@ internal class DefaultImportHandlerTest {
                         title = "H2O: Footprints in the Sand",
                         thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                         episodes = 4,
-                        type = Anime.Type.Special,
+                        type = Anime.Type.SPECIAL,
                         location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 )
                 val animeListEntry2 = AnimeListEntry(

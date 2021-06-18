@@ -88,9 +88,9 @@ private class ManamiLegacyFileHandler : DefaultHandler() {
 
         val type = attributes.getValue("type").trim().let {
             if (it.equals("music", ignoreCase = true)) {
-                Anime.Type.Special
+                Anime.Type.SPECIAL
             } else {
-                Anime.Type.valueOf(it)
+                Anime.Type.valueOf(it.uppercase())
             }
         }
 
