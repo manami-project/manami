@@ -72,7 +72,7 @@ class AnimeSeasonView : View() {
                     spinner(min = 1907, max = LocalDate.now().year + 5, property = selectedYear)
 
                     combobox<String>(selectedSeason) {
-                        items = observableArrayList("Spring", "Summer", "Autumn", "Winter")
+                        items = observableArrayList("Spring", "Summer", "Fall", "Winter")
                     }
 
                     combobox<String>(selectedMetaDataProvider) {
