@@ -21,14 +21,14 @@ jobs:
         run: chmod +x gradlew
       - name: Execute tests
         env:
-          GITHUB_PACKAGES_ACCESS_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-        run: ./gradlew test -Prelease.version=$RELEASE_VERSION -Pgpr.key=$GITHUB_PACKAGES_ACCESS_TOKEN
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: ./gradlew test -Prelease.version=$RELEASE_VERSION
       - name: Set version
         run: echo $RELEASE_VERSION > manami-app/src/main/resources/manami.version
       - name: Build executable fatJar
         env:
-          GITHUB_PACKAGES_ACCESS_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-        run: ./gradlew shadowJar -Prelease.version=$RELEASE_VERSION -Pgpr.key=$GITHUB_PACKAGES_ACCESS_TOKEN
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: ./gradlew shadowJar -Prelease.version=$RELEASE_VERSION
       - name: Upload file to release
         uses: softprops/action-gh-release@v1
         with:

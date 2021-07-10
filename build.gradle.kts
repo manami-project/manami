@@ -18,56 +18,56 @@ allprojects {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-anidb")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-anilist")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-anime-planet")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-kitsu")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-mal")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-notify")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/$githubUsername/modb-db-parser")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: githubUsername
-                password = project.findProperty("gpr.key") as String? ?: ""
+                username = parameter("GH_USERNAME", githubUsername)
+                password = parameter("GH_PACKAGES_READ_TOKEN")
             }
         }
     }
@@ -131,4 +131,18 @@ tasks {
 
 object Versions {
     const val JVM_TARGET = "14"
+}
+
+fun parameter(name: String, default: String = ""): String {
+    val env = System.getenv(name) ?: ""
+    if (env.isNotBlank()) {
+        return env
+    }
+
+    val property = project.findProperty(name) as String? ?: ""
+    if (property.isNotEmpty()) {
+        return property
+    }
+
+    return default
 }

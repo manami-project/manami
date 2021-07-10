@@ -1,22 +1,21 @@
-name: Build
+name: Pull Requests
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'master'
+      - '**'
     paths-ignore:
       - 'README.md'
       - '.gitignore'
       - '.gitattributes'
       - '.github/workflows/**'
-      - '!.github/workflows/build.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 14, x ]
+        java: [ 14 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,5 +27,5 @@ jobs:
         run: chmod +x gradlew
       - name: Execute tests
         env:
-          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test
