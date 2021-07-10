@@ -1,7 +1,7 @@
 dependencies {
     api("io.github.manamiproject:modb-core:5.0.1")
     api("io.github.manamiproject:modb-db-parser:3.0.0")
-    api("org.slf4j:slf4j-api:1.7.30")
+    api("org.slf4j:slf4j-api:1.7.31")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
     implementation("io.github.manamiproject:modb-anidb:3.0.0")
