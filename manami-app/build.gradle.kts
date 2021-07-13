@@ -3,7 +3,7 @@ dependencies {
     api("io.github.manamiproject:modb-db-parser:3.0.0")
     api("org.slf4j:slf4j-api:1.7.31")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt")
     implementation("io.github.manamiproject:modb-anidb:3.0.0")
     implementation("io.github.manamiproject:modb-anilist:4.0.0")
     implementation("io.github.manamiproject:modb-anime-planet:3.0.0")
