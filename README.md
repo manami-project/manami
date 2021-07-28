@@ -27,6 +27,6 @@ Manami creates an index file for the anime that you already watched and stored o
 * I created this tool for my personal needs to support my workflow.
 
 ## Installation
-* Requires Java 14 or 15
+* Requires Java 14 or 15 with JavaFX
 * Download the *.jar file of the latest release
 * No installation or additional setup needed. Just Download the `*.jar` and start it by double click or via console `java -jar manami.jar`.
