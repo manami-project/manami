@@ -38,6 +38,8 @@ import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusE
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
+import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
+import io.github.manamiproject.manami.app.versioning.NewVersionAvailableEvent
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
@@ -69,6 +71,7 @@ class Manami(
         log.info("Starting manami")
         SimpleEventBus.subscribe(this)
         runInBackground {
+            DefaultLatestVersionChecker().checkLatestVersion()
             AnimeCachePopulator().populate(Caches.animeCache)
             DeadEntriesCachePopulator(config = MalConfig, url = URL("$CACHE_URL/myanimelist.json")).populate(Caches.animeCache)
             DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$CACHE_URL/anidb.json")).populate(Caches.animeCache)
@@ -169,6 +172,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: DeadEntriesInconsistenciesResultEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: NewVersionAvailableEvent) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

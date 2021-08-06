@@ -1,13 +1,16 @@
 package io.github.manamiproject.manami.gui.main
 
-import io.github.manamiproject.manami.gui.FileOpenedGuiEvent
-import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
-import io.github.manamiproject.manami.gui.ManamiAccess
-import io.github.manamiproject.manami.gui.SavedAsFileGuiEvent
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
+import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.extensions.HyperlinkConfig
 import io.github.manamiproject.manami.gui.extensions.focus
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
+import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType.INFORMATION
+import javafx.scene.control.ButtonBar
+import javafx.scene.control.ButtonType
 import javafx.scene.layout.Priority.ALWAYS
 import tornadofx.*
 
@@ -33,6 +36,9 @@ class MainWindowView : View() {
         }
         subscribe<FileSavedStatusChangedGuiEvent> {
             handleUnsavedIndicator()
+        }
+        subscribe<NewVersionAvailableGuiEvent> { event ->
+            handleNewVersionAvailable(event.version)
         }
     }
 
@@ -71,6 +77,18 @@ class MainWindowView : View() {
             else -> customTitleProperty.get()
         }
         customTitleProperty.set(newTitle)
+    }
+
+    private fun handleNewVersionAvailable(version: SemanticVersion) {
+        Alert(INFORMATION).apply {
+            title = "New version available"
+            headerText = "There is a new version available: $version"
+            contentText = "https://github.com/manami-project/manami/releases/latest"
+            buttonTypes.clear()
+            buttonTypes.addAll(
+                ButtonType("OK", ButtonBar.ButtonData.OK_DONE),
+            )
+        }.showAndWait().get()
     }
 
     companion object {

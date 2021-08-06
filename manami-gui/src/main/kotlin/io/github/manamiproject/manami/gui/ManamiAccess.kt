@@ -35,6 +35,8 @@ import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishe
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.EventListType.*
+import io.github.manamiproject.manami.app.versioning.NewVersionAvailableEvent
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 import tornadofx.Controller
@@ -72,6 +74,7 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is InconsistenciesCheckFinishedEvent -> InconsistenciesCheckFinishedGuiEvent
                     is MetaDataInconsistenciesResultEvent -> MetaDataInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
                     is DeadEntriesInconsistenciesResultEvent -> DeadEntriesInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
+                    is NewVersionAvailableEvent -> NewVersionAvailableGuiEvent(this.version)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )
@@ -182,3 +185,5 @@ data class InconsistenciesProgressGuiEvent(val finishedTasks: Int, val numberOfT
 data class MetaDataInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
 data class DeadEntriesInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
 object InconsistenciesCheckFinishedGuiEvent: GuiEvent()
+
+data class NewVersionAvailableGuiEvent(val version: SemanticVersion): GuiEvent()
