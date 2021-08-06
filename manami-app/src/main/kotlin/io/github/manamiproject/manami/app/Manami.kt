@@ -44,6 +44,7 @@ import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
+import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.mal.MalConfig
 import java.net.URL
 import java.util.concurrent.Executors
@@ -73,10 +74,11 @@ class Manami(
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
             AnimeCachePopulator().populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URL("$CACHE_URL/myanimelist.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$CACHE_URL/anidb.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$CACHE_URL/anilist.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$CACHE_URL/kitsu.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anidb.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anilist.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$DEAD_ENTRIES_BASE_URL/kitsu.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = LivechartConfig, url = URL("$DEAD_ENTRIES_BASE_URL/livechart.json")).populate(Caches.animeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URL("$DEAD_ENTRIES_BASE_URL/myanimelist.json")).populate(Caches.animeCache)
         }
     }
 
@@ -178,7 +180,7 @@ class Manami(
 
     companion object {
         private val log by LoggerDelegate()
-        private const val CACHE_URL = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries"
+        private const val DEAD_ENTRIES_BASE_URL = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries"
     }
 }
 

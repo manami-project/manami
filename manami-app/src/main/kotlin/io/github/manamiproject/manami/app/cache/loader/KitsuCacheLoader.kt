@@ -19,17 +19,17 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 internal class KitsuCacheLoader(
-        private val kitsuConfig: MetaDataProviderConfig = KitsuConfig,
-        private val animeDownloader: Downloader = KitsuDownloader(config = kitsuConfig),
-        private val relationsDownloader: Downloader = KitsuDownloader(config = KitsuRelationsConfig),
-        private val tagsDownloader: Downloader = KitsuDownloader(config = KitsuTagsConfig),
-        private val tempFolder: Path = Files.createTempDirectory("manami-kitsu_"),
-        private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
-        private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
-        private val converter: AnimeConverter = KitsuConverter(
-                relationsDir = relationsDir,
-                tagsDir = tagsDir
-        )
+    private val kitsuConfig: MetaDataProviderConfig = KitsuConfig,
+    private val animeDownloader: Downloader = KitsuDownloader(config = kitsuConfig),
+    private val relationsDownloader: Downloader = KitsuDownloader(config = KitsuRelationsConfig),
+    private val tagsDownloader: Downloader = KitsuDownloader(config = KitsuTagsConfig),
+    private val tempFolder: Path = Files.createTempDirectory("manami-kitsu_"),
+    private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
+    private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
+    private val converter: AnimeConverter = KitsuConverter(
+            relationsDir = relationsDir,
+            tagsDir = tagsDir
+    )
 ) : CacheLoader {
 
     override fun loadAnime(uri: URI): Anime {
@@ -54,9 +54,7 @@ internal class KitsuCacheLoader(
         return anime
     }
 
-    override fun hostname(): Hostname {
-        return kitsuConfig.hostname()
-    }
+    override fun hostname(): Hostname = kitsuConfig.hostname()
 
     private fun loadRelations(id: AnimeId) {
         relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${kitsuConfig.fileSuffix()}"))

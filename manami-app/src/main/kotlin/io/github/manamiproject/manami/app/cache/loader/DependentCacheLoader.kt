@@ -18,35 +18,33 @@ import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 
-internal class NotifyCacheLoader(
-        private val notifyConfig: MetaDataProviderConfig = NotifyConfig,
-        private val animeDownloader: Downloader = NotifyDownloader(config = notifyConfig),
-        private val relationsDownloader: Downloader = NotifyDownloader(config = NotifyRelationsConfig),
-        private val relationsDir: Path = Files.createTempDirectory("manami-notify_").resolve("relations").createDirectory(),
-        private val converter: AnimeConverter = NotifyConverter(relationsDir = relationsDir)
+internal class DependentCacheLoader(
+    private val config: MetaDataProviderConfig,
+    private val animeDownloader: Downloader,
+    private val relationsDownloader: Downloader,
+    private val relationsDir: Path,
+    private val converter: AnimeConverter,
 ) : CacheLoader {
 
     override fun loadAnime(uri: URI): Anime {
         log.debug("Loading anime from [{}]", uri)
 
-        val id = notifyConfig.extractAnimeId(uri)
+        val id = config.extractAnimeId(uri)
 
         loadRelations(id)
 
         val result = animeDownloader.download(id)
         val anime = converter.convert(result)
 
-        relationsDir.resolve("$id.${notifyConfig.fileSuffix()}").deleteIfExists()
+        relationsDir.resolve("$id.${config.fileSuffix()}").deleteIfExists()
 
         return anime
     }
 
-    override fun hostname(): Hostname {
-        return notifyConfig.hostname()
-    }
+    override fun hostname(): Hostname = config.hostname()
 
     private fun loadRelations(id: AnimeId) {
-        relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${notifyConfig.fileSuffix()}"))
+        relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${config.fileSuffix()}"))
     }
 
     private companion object {

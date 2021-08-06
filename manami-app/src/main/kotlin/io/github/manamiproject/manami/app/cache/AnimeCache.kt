@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
-import io.github.manamiproject.manami.app.cache.loader.NotifyCacheLoader
+import io.github.manamiproject.manami.app.cache.loader.DependentCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
@@ -13,26 +13,59 @@ import io.github.manamiproject.modb.anilist.AnilistDownloader
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
+import io.github.manamiproject.modb.anisearch.AnisearchConfig
+import io.github.manamiproject.modb.anisearch.AnisearchConverter
+import io.github.manamiproject.modb.anisearch.AnisearchDownloader
+import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
+import io.github.manamiproject.modb.core.converter.AnimeConverter
+import io.github.manamiproject.modb.core.downloader.Downloader
+import io.github.manamiproject.modb.core.extensions.createDirectory
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Tag
+import io.github.manamiproject.modb.livechart.LivechartConfig
+import io.github.manamiproject.modb.livechart.LivechartConverter
+import io.github.manamiproject.modb.livechart.LivechartDownloader
 import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.mal.MalConverter
 import io.github.manamiproject.modb.mal.MalDownloader
+import io.github.manamiproject.modb.notify.NotifyConfig
+import io.github.manamiproject.modb.notify.NotifyConverter
+import io.github.manamiproject.modb.notify.NotifyDownloader
+import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
+private val anisearchRelationsDir = Files.createTempDirectory("manami-anisearch_").resolve("relations").createDirectory()
+private val notifyRelationsDir = Files.createTempDirectory("manami-notify_").resolve("relations").createDirectory()
+
 internal class AnimeCache(
-        private val cacheLoader: List<CacheLoader> = listOf(
-                SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbConverter()),
-                SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistConverter()),
-                SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetConverter()),
-                KitsuCacheLoader(),
-                SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
-                NotifyCacheLoader()
+    private val cacheLoader: List<CacheLoader> = listOf(
+        SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbConverter()),
+        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistConverter()),
+        SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetConverter()),
+        DependentCacheLoader(
+            config = AnisearchConfig,
+            animeDownloader = AnisearchDownloader(config = AnisearchConfig),
+            relationsDownloader = AnisearchDownloader(config = AnisearchRelationsConfig),
+            relationsDir = anisearchRelationsDir,
+            converter = AnisearchConverter(relationsDir = anisearchRelationsDir)
         ),
+        KitsuCacheLoader(),
+        SimpleCacheLoader(LivechartConfig, LivechartDownloader(LivechartConfig), LivechartConverter()),
+        SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
+        DependentCacheLoader(
+            config = NotifyConfig,
+            animeDownloader = NotifyDownloader(config = NotifyConfig),
+            relationsDownloader = NotifyDownloader(config = NotifyRelationsConfig),
+            relationsDir = notifyRelationsDir,
+            converter = NotifyConverter(relationsDir = notifyRelationsDir)
+        ),
+    ),
 ) : Cache<URI, CacheEntry<Anime>> {
 
     private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
