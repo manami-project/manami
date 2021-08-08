@@ -7,7 +7,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-anidb:3.0.2")
     implementation("io.github.manamiproject:modb-anilist:4.0.1")
     implementation("io.github.manamiproject:modb-anime-planet:3.1.3")
-    implementation("io.github.manamiproject:modb-anisearch:1.0.1")
+    implementation("io.github.manamiproject:modb-anisearch:1.0.3")
     implementation("io.github.manamiproject:modb-kitsu:3.0.1")
     implementation("io.github.manamiproject:modb-livechart:1.0.1")
     implementation("io.github.manamiproject:modb-mal:3.0.1")
