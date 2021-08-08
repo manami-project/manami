@@ -10,7 +10,6 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.nio.file.Paths
+import kotlin.io.path.createFile
 
 internal class DefaultImportHandlerTest {
 

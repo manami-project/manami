@@ -5,18 +5,12 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
-import io.github.manamiproject.modb.core.extensions.createDirectory
-import io.github.manamiproject.modb.core.extensions.deleteIfExists
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.notify.NotifyConfig
-import io.github.manamiproject.modb.notify.NotifyConverter
-import io.github.manamiproject.modb.notify.NotifyDownloader
-import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import java.net.URI
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.deleteIfExists
 
 internal class DependentCacheLoader(
     private val config: MetaDataProviderConfig,

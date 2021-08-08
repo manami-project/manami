@@ -3,13 +3,13 @@ package io.github.manamiproject.manami.app.lists.animelist
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.extensions.createDirectory
-import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createFile
 
 internal class CmdAddAnimeListEntryTest {
 

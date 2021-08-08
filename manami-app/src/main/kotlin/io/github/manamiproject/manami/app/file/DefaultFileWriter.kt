@@ -5,10 +5,10 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.newOutputStream
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.loadResource
 import javax.xml.stream.XMLOutputFactory
+import kotlin.io.path.outputStream
 
 internal class DefaultFileWriter(
     private val state: State = InternalState,
@@ -23,7 +23,7 @@ internal class DefaultFileWriter(
 
         loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile))
 
-        val xmlWriter = xmlWriterFactory.createXMLStreamWriter(file.newOutputStream()).apply {
+        val xmlWriter = xmlWriterFactory.createXMLStreamWriter(file.outputStream()).apply {
             writeStartDocument("UTF-8", "1.1")
             writeCharacters(LINEBREAK)
             writeDTD("<!DOCTYPE manami SYSTEM \"$dtdFile\">")
