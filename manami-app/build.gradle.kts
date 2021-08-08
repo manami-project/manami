@@ -1,5 +1,5 @@
 dependencies {
-    api("io.github.manamiproject:modb-core:5.2.0")
+    api("io.github.manamiproject:modb-core:6.0.0")
     api("io.github.manamiproject:modb-db-parser:3.0.1")
     api("org.slf4j:slf4j-api:1.7.32")
 
