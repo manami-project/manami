@@ -11,7 +11,6 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
-import io.github.manamiproject.modb.core.extensions.newInputStream
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.models.Anime
 import org.xml.sax.Attributes
@@ -21,6 +20,7 @@ import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
 import java.nio.file.Paths
 import javax.xml.parsers.SAXParserFactory
+import kotlin.io.path.inputStream
 
 internal class FileParser : Parser<ParsedManamiFile> {
 
@@ -40,11 +40,11 @@ internal class FileParser : Parser<ParsedManamiFile> {
         }
 
         versionHandler.entityResolver = entityResolver
-        saxParser.parse(file.newInputStream(), versionHandler)
+        saxParser.parse(file.inputStream(), versionHandler)
         require(versionHandler.version == minVersion || versionHandler.version.isNewerThan(minVersion)) { "Unable to parse manami file older than $minVersion" }
 
         documentHandler.entityResolver = entityResolver
-        saxParser.parse(file.newInputStream(), documentHandler)
+        saxParser.parse(file.inputStream(), documentHandler)
         return documentHandler.parsedFile
     }
 

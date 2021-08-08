@@ -11,13 +11,13 @@ import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.createFile
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Paths
+import kotlin.io.path.createFile
 
 internal class DefaultFileHandlerTest {
 

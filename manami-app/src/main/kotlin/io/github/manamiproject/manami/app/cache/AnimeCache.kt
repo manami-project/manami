@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
-import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.DependentCacheLoader
+import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
@@ -19,9 +19,6 @@ import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.converter.AnimeConverter
-import io.github.manamiproject.modb.core.downloader.Downloader
-import io.github.manamiproject.modb.core.extensions.createDirectory
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Tag
@@ -37,8 +34,8 @@ import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import java.net.URI
 import java.nio.file.Files
-import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.io.path.createDirectory
 
 private val anisearchRelationsDir = Files.createTempDirectory("manami-anisearch_").resolve("relations").createDirectory()
 private val notifyRelationsDir = Files.createTempDirectory("manami-notify_").resolve("relations").createDirectory()
