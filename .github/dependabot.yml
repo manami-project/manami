@@ -72,3 +72,4 @@ updates:
       - modb-test
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 12
