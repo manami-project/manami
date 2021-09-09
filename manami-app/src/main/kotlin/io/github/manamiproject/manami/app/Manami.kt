@@ -69,7 +69,7 @@ class Manami(
     private var eventMapper = AtomicReference<Event.() -> Unit>()
 
     init {
-        log.info("Starting manami")
+        log.info {"Starting manami" }
         SimpleEventBus.subscribe(this)
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
@@ -87,7 +87,7 @@ class Manami(
             check(isSaved()) { "Cannot quit app, because there are unsaved changes." }
         }
 
-        log.info("Terminating manami")
+        log.info { "Terminating manami" }
 
         backgroundTasks.shutdown()
         exitProcess(0)

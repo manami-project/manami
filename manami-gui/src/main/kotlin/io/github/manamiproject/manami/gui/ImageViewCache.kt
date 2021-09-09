@@ -23,17 +23,17 @@ class ImageViewCache: Cache<URI, CacheEntry<Image>> {
     override fun populate(key: URI, value: CacheEntry<Image>) {
         when {
             !entries.containsKey(key) -> entries[key] = value
-            else -> log.warn("Not populating cache with key [{}], because it already exists", key)
+            else -> log.warn { "Not populating cache with key [$key], because it already exists" }
         }
     }
 
     override fun clear() {
-        log.info("Clearing cache for thumbnails")
+        log.info { "Clearing cache for thumbnails" }
         entries.clear()
     }
 
     private fun createEntry(uri: URI): CacheEntry<Image> {
-        log.trace("No cache hit for [{}]. Creating a new entry.", uri)
+        log.trace { "No cache hit for [$uri]. Creating a new entry." }
 
         val image = Image(uri.toString(), true)
         val value = PresentValue(image)

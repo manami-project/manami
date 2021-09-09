@@ -11,12 +11,12 @@ internal class DefaultLatestVersionChecker(
 ) : LatestVersionChecker {
 
     override fun checkLatestVersion() {
-        log.info("Checking if there is a new version available.")
+        log.info { "Checking if there is a new version available." }
         val currentVersion = currentVersionProvider.version()
         val latestVersion = latestVersionProvider.version()
 
         if (latestVersion.isNewerThan(currentVersion)) {
-            log.info("Found new version [{}]", latestVersion)
+            log.info { "Found new version [$latestVersion]" }
             eventBus.post(NewVersionAvailableEvent(latestVersion))
         }
     }

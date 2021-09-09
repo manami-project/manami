@@ -74,7 +74,7 @@ internal class DefaultListHandler(
                 Callable {
                     when(val anime = cache.fetch(uri)) {
                         is Empty -> {
-                            log.warn("Unable to retrieve anime for [$uri]")
+                            log.warn { "Unable to retrieve anime for [$uri]" }
                         }
                         is PresentValue -> {
                             GenericReversibleCommand(
@@ -114,7 +114,7 @@ internal class DefaultListHandler(
                 Callable {
                     when(val anime = cache.fetch(uri)) {
                         is Empty -> {
-                            log.warn("Unable to retrieve anime for [$uri]")
+                            log.warn { "Unable to retrieve anime for [$uri]" }
                         }
                         is PresentValue -> {
                             GenericReversibleCommand(

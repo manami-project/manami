@@ -22,7 +22,7 @@ internal class DefaultFileHandler(
 ) : FileHandler {
 
     override fun newFile(ignoreUnsavedChanged: Boolean) {
-        log.info("Creating new file using [ignoreUnsavedChanged={}]", ignoreUnsavedChanged)
+        log.info { "Creating new file using [ignoreUnsavedChanged=$ignoreUnsavedChanged]" }
 
         if (!ignoreUnsavedChanged) {
             check(commandHistory.isSaved()) { "Cannot create a new list, because there are unsaved changes." }
@@ -35,7 +35,7 @@ internal class DefaultFileHandler(
     }
 
     override fun open(file: RegularFile, ignoreUnsavedChanged: Boolean) {
-        log.info("Opening file [{}] using [ignoreUnsavedChanged={}]", file, ignoreUnsavedChanged)
+        log.info { "Opening file [$file] using [ignoreUnsavedChanged=$ignoreUnsavedChanged]" }
 
         if (!ignoreUnsavedChanged) {
             check(commandHistory.isSaved()) { "Cannot open file, because there are unsaved changes." }

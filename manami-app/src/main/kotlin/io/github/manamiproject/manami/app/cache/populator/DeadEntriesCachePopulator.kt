@@ -20,14 +20,14 @@ internal class DeadEntriesCachePopulator(
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
-        log.info("Populating cache with dead entries from [{}]", config.hostname())
+        log.info { "Populating cache with dead entries from [${config.hostname()}]" }
 
         parser.parse(url).forEach { animeId ->
             val source = config.buildAnimeLink(animeId)
             cache.populate(source, Empty())
         }
 
-        log.info("Finished populating cache with dead entries from [{}]", config.hostname())
+        log.info { "Finished populating cache with dead entries from [${config.hostname()}]" }
     }
 
     private companion object {

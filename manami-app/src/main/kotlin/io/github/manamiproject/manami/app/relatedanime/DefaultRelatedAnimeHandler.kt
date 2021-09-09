@@ -24,12 +24,12 @@ internal class DefaultRelatedAnimeHandler(
 ) : RelatedAnimeHandler {
 
     override fun findRelatedAnimeForAnimeList() {
-        log.info("Searching related anime for anime list.")
+        log.info { "Searching related anime for anime list." }
         findRelatedAnime(ANIME_LIST, state.animeList().map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet())
     }
 
     override fun findRelatedAnimeForIgnoreList() {
-        log.info("Searching related anime for ignore list.")
+        log.info { "Searching related anime for ignore list." }
         findRelatedAnime(IGNORE_LIST, state.ignoreList().map { it.link.uri }.toSet())
     }
 
@@ -49,10 +49,10 @@ internal class DefaultRelatedAnimeHandler(
 
         val checkedEntries = mutableSetOf<URI>()
 
-        log.info("Initializing search for [{}] related anime is done.", eventListType)
+        log.info { "Initializing search for [$eventListType] related anime is done." }
 
         while (entriesToCheck.isNotEmpty()) {
-            log.trace("Checking {}/{} for [{}] related anime", checkedEntries.size+1, numberOfEntriesToBeChecked, eventListType)
+            log.trace { "Checking ${checkedEntries.size+1}/$numberOfEntriesToBeChecked for [$eventListType] related anime" }
             val currentEntry = entriesToCheck.pop()
 
             if (!checkedEntries.contains(currentEntry)) {
@@ -77,7 +77,7 @@ internal class DefaultRelatedAnimeHandler(
         }
 
         eventBus.post(RelatedAnimeFinishedEvent(eventListType))
-        log.info("Finished searching for [{}] related anime", eventListType)
+        log.info { "Finished searching for [$eventListType] related anime" }
     }
 
     companion object {

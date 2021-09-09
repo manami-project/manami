@@ -9,6 +9,7 @@ import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.kitsu.*
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -32,8 +33,9 @@ internal class KitsuCacheLoader(
     )
 ) : CacheLoader {
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun loadAnime(uri: URI): Anime {
-        log.debug("Loading anime from [{}]", uri)
+        log.debug {"Loading anime from [$uri]" }
 
         val id = kitsuConfig.extractAnimeId(uri)
 

@@ -29,7 +29,7 @@ internal class GenericReversibleCommand(
         val successfullyExecuted = command.execute()
 
         if (!successfullyExecuted) {
-            log.warn("Command wasn't executed successfully.")
+            log.warn { "Command wasn't executed successfully." }
             return successfullyExecuted
         }
 

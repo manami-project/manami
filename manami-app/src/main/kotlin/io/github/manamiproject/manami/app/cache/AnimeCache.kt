@@ -111,22 +111,22 @@ internal class AnimeCache(
 
         when {
             !entries.containsKey(key) -> entries[key] = value
-            else -> log.warn("Not populating cache with key [{}], because it already exists", key)
+            else -> log.warn { "Not populating cache with key [$key], because it already exists" }
         }
     }
 
     override fun clear() {
-        log.info("Clearing anime cache")
+        log.info { "Clearing anime cache" }
         entries.clear()
     }
 
     private fun loadEntry(uri: URI): CacheEntry<Anime> {
-        log.info("No cache hit for [{}]", uri)
+        log.info { "No cache hit for [$uri]" }
 
         val cacheLoader = cacheLoader.find { uri.toString().contains(it.hostname()) }
 
         if (cacheLoader == null) {
-            log.warn("Unable to find a CacheLoader for URI [{}]", uri)
+            log.warn { "Unable to find a CacheLoader for URI [$uri]" }
             return Empty()
         }
 

@@ -19,7 +19,7 @@ internal class AnimeCachePopulator(
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
-        log.info("Populating cache with anime from [{}].", uri)
+        log.info {"Populating cache with anime from [$uri]." }
 
         val parsedAnime =parser.parse(uri.toURL())
 
@@ -38,7 +38,7 @@ internal class AnimeCachePopulator(
         eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider))
 
         eventBus.post(CachePopulatorFinishedEvent)
-        log.info("Finished populating cache with anime from [{}].", uri)
+        log.info { "Finished populating cache with anime from [$uri]." }
     }
 
     private companion object {

@@ -25,9 +25,9 @@ internal class CmdAddEntriesFromParsedFile(
         private val cache: Cache<URI, CacheEntry<Anime>>
 ) : Command {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.DelicateCoroutinesApi::class)
     override fun execute(): Boolean {
-        log.info("Adding imported anime list entries [{}]", parsedFile.animeListEntries.size)
+        log.info { "Adding imported anime list entries [${parsedFile.animeListEntries.size}]" }
 
         val animeListEntryJob = GlobalScope.async {
             parsedFile.animeListEntries.map { animeListEntry ->
@@ -56,7 +56,7 @@ internal class CmdAddEntriesFromParsedFile(
                 .toSet()
         }
 
-        log.info("Converting [{}] anime list entries, [{}] watch list entries and [{}] ignore list entries", parsedFile.animeListEntries.size, parsedFile.watchListEntries.size, parsedFile.ignoreListEntries.size)
+        log.info { "Converting [${parsedFile.animeListEntries.size}] anime list entries, [${parsedFile.watchListEntries.size}] watch list entries and [${parsedFile.ignoreListEntries.size}] ignore list entries" }
 
         runBlocking {
             animeListEntryJob.join()
@@ -68,7 +68,7 @@ internal class CmdAddEntriesFromParsedFile(
         val watchListEntries = watchListEntryJob.getCompleted()
         val ignoreListEntries = ignoreListEntryJob.getCompleted()
 
-        log.trace("Adding [{}] to anime list entries, [{}] to watch list entries and [{}] to ignore list entries", animeListEntries, watchListEntries, ignoreListEntries)
+        log.trace { "Adding [$animeListEntries] to anime list entries, [$watchListEntries] to watch list entries and [$ignoreListEntries] to ignore list entries" }
 
         state.addAllAnimeListEntries(animeListEntries)
         state.addAllWatchListEntries(watchListEntries)

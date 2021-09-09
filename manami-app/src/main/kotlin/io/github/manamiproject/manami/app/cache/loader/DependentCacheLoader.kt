@@ -21,7 +21,7 @@ internal class DependentCacheLoader(
 ) : CacheLoader {
 
     override fun loadAnime(uri: URI): Anime {
-        log.debug("Loading anime from [{}]", uri)
+        log.debug { "Loading anime from [$uri]" }
 
         val id = config.extractAnimeId(uri)
 

@@ -17,7 +17,7 @@ internal class SimpleCacheLoader(
     override fun hostname(): Hostname = config.hostname()
 
     override fun loadAnime(uri: URI): Anime {
-        log.debug("Loading anime from [{}]", uri)
+        log.debug { "Loading anime from [$uri]" }
 
         val id = config.extractAnimeId(uri)
         val rawContent = downloader.download(id)
