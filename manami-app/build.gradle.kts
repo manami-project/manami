@@ -9,7 +9,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-anime-planet:3.1.4")
     implementation("io.github.manamiproject:modb-anisearch:1.0.4")
     implementation("io.github.manamiproject:modb-kitsu:3.0.3")
-    implementation("io.github.manamiproject:modb-livechart:1.0.3")
+    implementation("io.github.manamiproject:modb-livechart:1.0.4")
     implementation("io.github.manamiproject:modb-mal:3.0.3")
     implementation("io.github.manamiproject:modb-notify:3.0.3")
     implementation("ch.qos.logback:logback-classic:1.2.5")
