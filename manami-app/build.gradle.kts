@@ -6,7 +6,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
     implementation("io.github.manamiproject:modb-anidb:3.0.6")
     implementation("io.github.manamiproject:modb-anilist:4.0.4")
-    implementation("io.github.manamiproject:modb-anime-planet:3.1.5")
+    implementation("io.github.manamiproject:modb-anime-planet:3.1.6")
     implementation("io.github.manamiproject:modb-anisearch:1.0.6")
     implementation("io.github.manamiproject:modb-kitsu:3.0.4")
     implementation("io.github.manamiproject:modb-livechart:1.0.5")
