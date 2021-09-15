@@ -13,7 +13,7 @@ import io.github.manamiproject.modb.dbparser.ExternalResourceParser
 import java.net.URI
 
 internal class AnimeCachePopulator(
-    private val uri: URI = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.zip"),
+    private val uri: URI = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json"),
     private val parser: ExternalResourceParser<Anime> = DatabaseFileParser(fileParser = AnimeDatabaseJsonStringParser()),
     private val eventBus: EventBus = SimpleEventBus,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
