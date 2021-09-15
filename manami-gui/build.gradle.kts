@@ -14,5 +14,7 @@ javafx {
     modules = listOf(
         "javafx.base",
         "javafx.controls",
+        "javafx.graphics",
+        "javafx.web",
     )
 }

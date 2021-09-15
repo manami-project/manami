@@ -2,7 +2,6 @@ package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.gui.*
-import io.github.manamiproject.manami.gui.extensions.HyperlinkConfig
 import io.github.manamiproject.manami.gui.extensions.focus
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
