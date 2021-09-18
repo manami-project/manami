@@ -117,6 +117,10 @@ subprojects {
         implementation(platform(kotlin("bom")))
         implementation(kotlin("reflect"))
 
+        implementation("org.openjfx:javafx-graphics:14:win")
+        implementation("org.openjfx:javafx-graphics:14:linux")
+        implementation("org.openjfx:javafx-graphics:14:mac")
+
         api(kotlin("stdlib-jdk8"))
     }
 
