@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
+import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdRemoveIgnoreListEntry
@@ -63,6 +64,18 @@ internal class DefaultListHandler(
             command = CmdRemoveAnimeListEntry(
                 state = state,
                 animeListEntry = entry,
+            )
+        ).execute()
+    }
+
+    override fun replaceAnimeListEntry(current: AnimeListEntry, replacement: AnimeListEntry) {
+        GenericReversibleCommand(
+            state = state,
+            commandHistory = commandHistory,
+            command = CmdReplaceAnimeListEntry(
+                state = state,
+                currentEntry = current,
+                replacementEntry = replacement,
             )
         ).execute()
     }

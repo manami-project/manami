@@ -168,6 +168,7 @@ internal class DefaultListHandlerTest {
             val savedEntries = mutableListOf<AnimeListEntry>()
             val state = object: State by TestState {
                 override fun openedFile(): OpenedFile = NoFile
+                override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = false
                 override fun createSnapshot(): Snapshot = TestSnapshot
                 override fun animeList(): List<AnimeListEntry> = emptyList()
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
@@ -485,6 +486,7 @@ internal class DefaultListHandlerTest {
         var resultingEntry: AnimeListEntry? = null
         val testState = object: State by TestState {
             override fun animeList(): List<AnimeListEntry> = listOf(expectedEntry)
+            override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = true
             override fun createSnapshot(): Snapshot = StateSnapshot()
             override fun removeAnimeListEntry(entry: AnimeListEntry) {
                 resultingEntry = entry

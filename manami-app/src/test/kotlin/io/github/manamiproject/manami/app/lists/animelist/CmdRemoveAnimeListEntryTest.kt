@@ -24,7 +24,7 @@ internal class CmdRemoveAnimeListEntryTest {
 
         var receivedEntry: AnimeListEntry? = null
         val testState = object: State by TestState {
-            override fun animeList(): List<AnimeListEntry> = listOf(expectedEntry)
+            override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = true
             override fun removeAnimeListEntry(entry: AnimeListEntry) {
                 receivedEntry = entry
             }
@@ -48,7 +48,7 @@ internal class CmdRemoveAnimeListEntryTest {
         // given
         var receivedEntry: AnimeListEntry? = null
         val testState = object: State by TestState {
-            override fun animeList(): List<AnimeListEntry> = emptyList()
+            override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = false
             override fun removeAnimeListEntry(entry: AnimeListEntry) {
                 receivedEntry = entry
             }

@@ -10,6 +10,7 @@ interface ListHandler {
     fun addAnimeListEntry(entry: AnimeListEntry)
     fun animeList(): List<AnimeListEntry>
     fun removeAnimeListEntry(entry: AnimeListEntry)
+    fun replaceAnimeListEntry(current: AnimeListEntry, replacement: AnimeListEntry)
 
     fun addWatchListEntry(uris: Collection<URI>)
     fun watchList(): Set<WatchListEntry>

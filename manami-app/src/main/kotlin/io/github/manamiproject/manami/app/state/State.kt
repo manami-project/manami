@@ -12,6 +12,7 @@ internal interface State {
     fun openedFile(): OpenedFile
     fun closeFile()
 
+    fun animeListEntrtyExists(anime: AnimeListEntry): Boolean
     fun animeList(): List<AnimeListEntry>
     fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>)
     fun removeAnimeListEntry(entry: AnimeListEntry)

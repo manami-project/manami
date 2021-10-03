@@ -4,17 +4,19 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.Command
 
-internal class CmdRemoveAnimeListEntry(
+internal class CmdReplaceAnimeListEntry(
     private val state: State = InternalState,
-    private val animeListEntry: AnimeListEntry,
+    private val currentEntry: AnimeListEntry,
+    private val replacementEntry: AnimeListEntry,
 ): Command {
 
     override fun execute(): Boolean {
-        if (!state.animeListEntrtyExists(animeListEntry)) {
+        if (!state.animeListEntrtyExists(currentEntry)) {
             return false
         }
 
-        state.removeAnimeListEntry(animeListEntry)
+        state.removeAnimeListEntry(currentEntry)
+        state.addAllAnimeListEntries(setOf(replacementEntry.locationToRelativePathConverter(state.openedFile())))
 
         return true
     }
