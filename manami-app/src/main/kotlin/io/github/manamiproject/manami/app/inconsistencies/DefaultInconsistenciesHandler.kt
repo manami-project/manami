@@ -9,8 +9,6 @@ import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntrie
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
 import io.github.manamiproject.manami.app.inconsistencies.metadata.*
-import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
-import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
@@ -26,16 +24,14 @@ internal class DefaultInconsistenciesHandler(
     private val state: State = InternalState,
     private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
-    private val metaDataInconsistencyHandler: InconsistencyHandler<MetaDataInconsistenciesResult> = MetaDataInconsistencyHandler(state, cache),
-    private val deadEntriesInconsistencyHandler: InconsistencyHandler<DeadEntriesInconsistenciesResult> = DeadEntriesInconsistencyHandler(state, cache),
+    private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
+        MetaDataInconsistencyHandler(state, cache),
+        DeadEntriesInconsistencyHandler(state, cache),
+    ),
     private val eventBus: EventBus = SimpleEventBus,
 ) : InconsistenciesHandler {
 
-    private val watchListMetaDataInconsistencies = mutableListOf<MetaDataDiff<WatchListEntry>>()
-    private val ignoreListMetaDataInconsistencies = mutableListOf<MetaDataDiff<IgnoreListEntry>>()
-
-    private val watchListDeadEntriesInconsistencies = mutableListOf<WatchListEntry>()
-    private val ignoreListDeadEntriesInconsistencies = mutableListOf<IgnoreListEntry>()
+    private val inconsistencyResults = mutableListOf<Any>()
 
     init {
         eventBus.subscribe(this)
@@ -43,84 +39,73 @@ internal class DefaultInconsistenciesHandler(
 
     @Subscribe
     @Suppress("UNUSED_PARAMETER")
-    fun subscribe(e: FileOpenedEvent) = reset()
+    fun subscribe(e: FileOpenedEvent) = inconsistencyResults.clear()
 
     override fun findInconsistencies(config: InconsistenciesSearchConfig) {
-        reset()
+        inconsistencyResults.clear()
 
-        val metaDataWorkload = metaDataInconsistencyHandler.calculateWorkload().takeIf { config.checkMetaData } ?: 0
-        val deadEntriesWorkload = deadEntriesInconsistencyHandler.calculateWorkload().takeIf { config.checkDeadEntries } ?: 0
-        val workload = metaDataWorkload + deadEntriesWorkload
+        var totalWorkload = 0
 
-        if (config.checkMetaData && metaDataWorkload > 0) {
-            val metaDataInconsistencyResult = metaDataInconsistencyHandler.execute {
-                eventBus.post(InconsistenciesProgressEvent(it, workload))
+        inconsistencyHandlers.filter { it.isExecutable(config) }
+            .map { it to it.calculateWorkload() }
+            .filter { it.second > 0 }
+            .map {
+                totalWorkload += it.second
+                it.first
             }
-            watchListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.watchListResults)
-            ignoreListMetaDataInconsistencies.addAll(metaDataInconsistencyResult.ignoreListResults)
-            val numberOfMetaDataEntries = watchListMetaDataInconsistencies.size + ignoreListMetaDataInconsistencies.size
-            if (numberOfMetaDataEntries > 0) {
-                eventBus.post(MetaDataInconsistenciesResultEvent(numberOfMetaDataEntries))
+            .forEach {
+                val result = it.execute { progress ->
+                    eventBus.post(InconsistenciesProgressEvent(progress, totalWorkload))
+                }!!
+                inconsistencyResults.add(result)
+                notifyResults(result)
             }
-        }
-
-        if (config.checkDeadEntries && deadEntriesWorkload > 0) {
-            val deadEntriesInconsistencyResult = deadEntriesInconsistencyHandler.execute {
-                eventBus.post(InconsistenciesProgressEvent(metaDataWorkload + it, workload))
-            }
-            watchListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.watchListResults)
-            ignoreListDeadEntriesInconsistencies.addAll(deadEntriesInconsistencyResult.ignoreListResults)
-            val numberOfDeadEntries = watchListDeadEntriesInconsistencies.size + ignoreListDeadEntriesInconsistencies.size
-            if (numberOfDeadEntries > 0) {
-                eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfDeadEntries))
-            }
-        }
 
         eventBus.post(InconsistenciesCheckFinishedEvent)
     }
 
-    override fun fixMetaDataInconsistencies() {
-        if (watchListMetaDataInconsistencies.isEmpty() && ignoreListMetaDataInconsistencies.isEmpty()) {
-            return
+    private fun notifyResults(result: Any) {
+        when(result) {
+            is MetaDataInconsistenciesResult -> {
+                val numberOfEntries = result.watchListResults.size + result.ignoreListResults.size
+                if (numberOfEntries > 0) {
+                    eventBus.post(MetaDataInconsistenciesResultEvent(numberOfEntries))
+                }
+            }
+            is DeadEntriesInconsistenciesResult -> {
+                val numberOfEntries = result.watchListResults.size + result.ignoreListResults.size
+                if (numberOfEntries > 0) {
+                    eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfEntries))
+                }
+            }
         }
+    }
+
+    override fun fixMetaDataInconsistencies() {
+        val result = inconsistencyResults.find { it is MetaDataInconsistenciesResult }?.let { it as MetaDataInconsistenciesResult } ?: return
 
         GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdFixMetaData(
                 state = state,
-                diffWatchList = watchListMetaDataInconsistencies,
-                diffIgnoreList = ignoreListMetaDataInconsistencies,
+                diffWatchList = result.watchListResults,
+                diffIgnoreList = result.ignoreListResults,
             )
         ).execute()
-
-        watchListMetaDataInconsistencies.clear()
-        ignoreListMetaDataInconsistencies.clear()
     }
 
     override fun fixDeadEntryInconsistencies() {
-        if (watchListDeadEntriesInconsistencies.isEmpty() && ignoreListDeadEntriesInconsistencies.isEmpty()) {
-            return
-        }
+        val result = inconsistencyResults.find { it is DeadEntriesInconsistenciesResult }?.let { it as DeadEntriesInconsistenciesResult } ?: return
 
         GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdFixDeadEntries(
                 state = state,
-                removeWatchList = watchListDeadEntriesInconsistencies,
-                removeIgnoreList = ignoreListDeadEntriesInconsistencies,
+                removeWatchList = result.watchListResults,
+                removeIgnoreList = result.ignoreListResults,
             )
         ).execute()
-
-        watchListDeadEntriesInconsistencies.clear()
-        ignoreListDeadEntriesInconsistencies.clear()
-    }
-
-    private fun reset() {
-        watchListMetaDataInconsistencies.clear()
-        ignoreListMetaDataInconsistencies.clear()
-        watchListDeadEntriesInconsistencies.clear()
-        ignoreListDeadEntriesInconsistencies.clear()
     }
 }

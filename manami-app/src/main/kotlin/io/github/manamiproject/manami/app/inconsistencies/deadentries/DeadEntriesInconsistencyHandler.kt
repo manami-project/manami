@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -49,4 +50,6 @@ internal class DeadEntriesInconsistencyHandler(
             ignoreListResults = ignoreListResults,
         )
     }
+
+    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkDeadEntries
 }
