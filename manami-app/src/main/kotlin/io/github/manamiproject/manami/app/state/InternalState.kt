@@ -36,8 +36,8 @@ internal object InternalState : State {
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
         animeList.addAll(anime.distinct())
         val uris = anime.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
-        watchList.removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to WatchListEntry as soon as AnimeListEntries have a thumbnail
-        ignoreList.removeIf { uris.contains(it.link.uri) } // TODO: change to conversion to IgnoreListEntry as soon as AnimeListEntries have a thumbnail
+        watchList.removeIf { uris.contains(it.link.uri) }
+        ignoreList.removeIf { uris.contains(it.link.uri) }
     }
 
     override fun removeAnimeListEntry(entry: AnimeListEntry) {
