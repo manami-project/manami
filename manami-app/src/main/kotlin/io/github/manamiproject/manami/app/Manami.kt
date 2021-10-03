@@ -16,6 +16,7 @@ import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistencies
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
@@ -174,6 +175,9 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: DeadEntriesInconsistenciesResultEvent) = eventMapper.get().invoke(e)
+
+    @Subscribe
+    fun subscribe(e: AnimeListMetaDataInconsistenciesResultEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
     fun subscribe(e: NewVersionAvailableEvent) = eventMapper.get().invoke(e)

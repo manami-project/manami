@@ -9,20 +9,22 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos.CENTER
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority.ALWAYS
+import javafx.stage.StageStyle
+import javafx.stage.StageStyle.UTILITY
 import tornadofx.*
-import kotlin.reflect.KClass
 
 class InconsistenciesView : View() {
 
     private val manamiAccess: ManamiAccess by inject()
 
+    private val animeListMetaData = SimpleBooleanProperty(false)
     private val metaDataSelected = SimpleBooleanProperty(false)
     private val deadEntriesSelected = SimpleBooleanProperty(false)
 
     private val progressIndicatorVisibleProperty = SimpleBooleanProperty(false)
     private val progressIndicatorValueProperty = SimpleDoubleProperty(0.0)
 
-    private val items: MutableMap<KClass<*>, HBox> = mutableMapOf()
+    private val items: MutableMap<String, HBox> = mutableMapOf()
     private val activeItems = FXCollections.observableArrayList<HBox>()
 
     init {
@@ -34,12 +36,17 @@ class InconsistenciesView : View() {
         }
         subscribe<MetaDataInconsistenciesResultGuiEvent> { event ->
             val messageBox = createMetaDataMessageBox(event)
-            items[MetaDataInconsistenciesResultGuiEvent::class] = messageBox
+            items[META_DATA_RESULT_ENTRY] = messageBox
             activeItems.add(messageBox)
         }
         subscribe<DeadEntriesInconsistenciesResultGuiEvent> { event ->
             val messageBox = createDeadEntriesMessageBox(event)
-            items[DeadEntriesInconsistenciesResultGuiEvent::class] = messageBox
+            items[DEAD_ENTRIES_RESULT_ENTRY] = messageBox
+            activeItems.add(messageBox)
+        }
+        subscribe<AnimeListMetaDataInconsistenciesResultEventGuiEvent> { event ->
+            val messageBox = createAnimeListMetaDataDiffMessageBox(event)
+            items["$ANIME_LIST_META_DATA_PREFIX-${event.diff.currentEntry.link}"] = messageBox
             activeItems.add(messageBox)
         }
     }
@@ -60,14 +67,23 @@ class InconsistenciesView : View() {
 
                 form {
                     fieldset {
-                        field("MetaData") {
-                            checkbox {
-                                selectedProperty().bindBidirectional(metaDataSelected)
+                        fieldset("AnimeList") {
+                            field("MetaData") {
+                                checkbox {
+                                    selectedProperty().bindBidirectional(animeListMetaData)
+                                }
                             }
                         }
-                        field("DeadEntries") {
-                            checkbox {
-                                selectedProperty().bindBidirectional(deadEntriesSelected)
+                        fieldset("WatchList / IgnoreList") {
+                            field("MetaData") {
+                                checkbox {
+                                    selectedProperty().bindBidirectional(metaDataSelected)
+                                }
+                            }
+                            field("DeadEntries") {
+                                checkbox {
+                                    selectedProperty().bindBidirectional(deadEntriesSelected)
+                                }
                             }
                         }
                         field {
@@ -75,7 +91,7 @@ class InconsistenciesView : View() {
                                 isDefaultButton = true
 
                                 action {
-                                    if (!metaDataSelected.value && !deadEntriesSelected.value) {
+                                    if (!animeListMetaData.value && !metaDataSelected.value && !deadEntriesSelected.value) {
                                         return@action
                                     }
 
@@ -85,6 +101,7 @@ class InconsistenciesView : View() {
                                     runAsync {
                                         manamiAccess.findInconsistencies(
                                             InconsistenciesSearchConfig(
+                                                checkAnimeListMetaData = animeListMetaData.value,
                                                 checkMetaData = metaDataSelected.value,
                                                 checkDeadEntries = deadEntriesSelected.value,
                                             )
@@ -116,7 +133,7 @@ class InconsistenciesView : View() {
                         field("Found ${event.numberOfAffectedEntries} entries in watch list and ignore list with outdated meta data.") {
                             button("fix") {
                                 action {
-                                    activeItems.remove(items[MetaDataInconsistenciesResultGuiEvent::class])
+                                    activeItems.remove(items[META_DATA_RESULT_ENTRY])
                                     runAsync {
                                         manamiAccess.fixMetaDataInconsistencies()
                                     }
@@ -137,7 +154,7 @@ class InconsistenciesView : View() {
                         field("Found ${event.numberOfAffectedEntries} dead entries in watch list and ignore list.") {
                             button("fix") {
                                 action {
-                                    activeItems.remove(items[DeadEntriesInconsistenciesResultGuiEvent::class])
+                                    activeItems.remove(items[DEAD_ENTRIES_RESULT_ENTRY])
                                     runAsync {
                                         manamiAccess.fixDeadEntryInconsistencies()
                                     }
@@ -148,5 +165,39 @@ class InconsistenciesView : View() {
                 }
             )
         }
+    }
+
+    private fun createAnimeListMetaDataDiffMessageBox(event: AnimeListMetaDataInconsistenciesResultEventGuiEvent): HBox {
+        return HBox().apply {
+            add(
+                form {
+                    fieldset {
+                        field("Found difference in anime list entry ${event.diff.currentEntry.title}") {
+                            button("show diff") {
+                                action {
+                                    find<DiffFragment>().apply {
+                                        diff.set(event.diff)
+                                    }.openModal(stageStyle = UTILITY)
+                                }
+                            }
+                            button("fix") {
+                                action {
+                                    activeItems.remove(items["$ANIME_LIST_META_DATA_PREFIX-${event.diff.currentEntry.link}"])
+                                    runAsync {
+                                        manamiAccess.fixAnimeListEntryMetaDataInconsistencies(event.diff)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    companion object {
+        private const val ANIME_LIST_META_DATA_PREFIX = "anime-list-meta-data"
+        private const val META_DATA_RESULT_ENTRY = "meta-data-result-event"
+        private const val DEAD_ENTRIES_RESULT_ENTRY = "dead-entries-result-event"
     }
 }

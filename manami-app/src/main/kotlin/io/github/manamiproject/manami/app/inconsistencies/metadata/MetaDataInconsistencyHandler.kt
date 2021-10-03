@@ -20,6 +20,8 @@ internal class MetaDataInconsistencyHandler(
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size
 
+    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkMetaData
+
     override fun execute(progressUpdate: (Int) -> Unit): MetaDataInconsistenciesResult {
         var progress = 0
 
@@ -58,6 +60,4 @@ internal class MetaDataInconsistencyHandler(
             ignoreListResults = ignoreListResults,
         )
     }
-
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkMetaData
 }

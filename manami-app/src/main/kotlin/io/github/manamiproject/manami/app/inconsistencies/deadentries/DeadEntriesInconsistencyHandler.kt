@@ -20,6 +20,8 @@ internal class DeadEntriesInconsistencyHandler(
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size
 
+    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkDeadEntries
+
     override fun execute(progressUpdate: (Int) -> Unit): DeadEntriesInconsistenciesResult {
         var progress = 0
 
@@ -50,6 +52,4 @@ internal class DeadEntriesInconsistencyHandler(
             ignoreListResults = ignoreListResults,
         )
     }
-
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkDeadEntries
 }

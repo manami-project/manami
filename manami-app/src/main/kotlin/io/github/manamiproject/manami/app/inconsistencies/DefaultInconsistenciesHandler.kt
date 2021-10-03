@@ -4,11 +4,19 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataDiff
+import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.CmdFixDeadEntries
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResult
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
-import io.github.manamiproject.manami.app.inconsistencies.metadata.*
+import io.github.manamiproject.manami.app.inconsistencies.metadata.CmdFixMetaData
+import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistencyHandler
+import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
@@ -25,6 +33,7 @@ internal class DefaultInconsistenciesHandler(
     private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
+        AnimeListMetaDataInconsistenciesHandler(state, cache),
         MetaDataInconsistencyHandler(state, cache),
         DeadEntriesInconsistencyHandler(state, cache),
     ),
@@ -78,6 +87,11 @@ internal class DefaultInconsistenciesHandler(
                     eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfEntries))
                 }
             }
+            is AnimeListMetaDataInconsistenciesResult -> {
+                result.entries.forEach {
+                    eventBus.post(AnimeListMetaDataInconsistenciesResultEvent(it))
+                }
+            }
         }
     }
 
@@ -105,6 +119,18 @@ internal class DefaultInconsistenciesHandler(
                 state = state,
                 removeWatchList = result.watchListResults,
                 removeIgnoreList = result.ignoreListResults,
+            )
+        ).execute()
+    }
+
+    override fun fixAnimeListEntryMetaDataInconsistencies(diff: AnimeListMetaDataDiff) {
+        GenericReversibleCommand(
+            state = state,
+            commandHistory = commandHistory,
+            command = CmdReplaceAnimeListEntry(
+                state = state,
+                currentEntry = diff.currentEntry,
+                replacementEntry = diff.replacementEntry,
             )
         ).execute()
     }
