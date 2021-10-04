@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.inconsistencies.deadentries
 
 import io.github.manamiproject.manami.app.cache.*
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -15,6 +16,30 @@ import org.junit.jupiter.api.Test
 import java.net.URI
 
 internal class DeadEntriesInconsistencyHandlerTest {
+
+    @Test
+    fun `is executable if the config explicitly activates the option`() {
+        // given
+        val inconsistencyHandler = DeadEntriesInconsistencyHandler(
+            state = TestState,
+            cache = TestAnimeCache,
+        )
+
+        val isExecutableConfig = InconsistenciesSearchConfig(
+            checkDeadEntries = true
+        )
+        val isNotExecutableConfig = InconsistenciesSearchConfig(
+            checkDeadEntries = false
+        )
+
+        // when
+        val resultTrue = inconsistencyHandler.isExecutable(isExecutableConfig)
+        val resultFalse = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+
+        // then
+        assertThat(resultTrue).isTrue()
+        assertThat(resultFalse).isFalse()
+    }
 
     @Test
     fun `workload is computed by size of watch- and ignoreList`() {
@@ -41,12 +66,12 @@ internal class DeadEntriesInconsistencyHandlerTest {
             )
         }
 
-        val metaDataInconsistencyHandler = DeadEntriesInconsistencyHandler(
+        val inconsistencyHandler = DeadEntriesInconsistencyHandler(
             state = testState,
         )
 
         // when
-        val result = metaDataInconsistencyHandler.calculateWorkload()
+        val result = inconsistencyHandler.calculateWorkload()
 
         // then
         assertThat(result).isEqualTo(3)
@@ -73,13 +98,13 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = Empty()
             }
 
-            val metaDataInconsistencyHandler = DeadEntriesInconsistencyHandler(
+            val inconsistencyHandler = DeadEntriesInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).hasSize(1)
@@ -132,13 +157,13 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = DeadEntriesInconsistencyHandler(
+            val inconsistencyHandler = DeadEntriesInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -167,13 +192,13 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = Empty()
             }
 
-            val metaDataInconsistencyHandler = DeadEntriesInconsistencyHandler(
+            val inconsistencyHandler = DeadEntriesInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -213,13 +238,13 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = DeadEntriesInconsistencyHandler(
+            val inconsistencyHandler = DeadEntriesInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()

@@ -2,6 +2,8 @@ package io.github.manamiproject.manami.app.inconsistencies.metadata
 
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
+import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -19,6 +21,30 @@ import org.junit.jupiter.api.Test
 import java.net.URI
 
 internal class MetaDataInconsistencyHandlerTest {
+
+    @Test
+    fun `is executable if the config explicitly activates the option`() {
+        // given
+        val inconsistencyHandler = MetaDataInconsistencyHandler(
+            state = TestState,
+            cache = TestAnimeCache,
+        )
+
+        val isExecutableConfig = InconsistenciesSearchConfig(
+            checkMetaData = true
+        )
+        val isNotExecutableConfig = InconsistenciesSearchConfig(
+            checkMetaData = false
+        )
+
+        // when
+        val resultTrue = inconsistencyHandler.isExecutable(isExecutableConfig)
+        val resultFalse = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+
+        // then
+        assertThat(resultTrue).isTrue()
+        assertThat(resultFalse).isFalse()
+    }
 
     @Test
     fun `workload is computed by size of watch- and ignoreList`() {
@@ -45,12 +71,12 @@ internal class MetaDataInconsistencyHandlerTest {
             )
         }
 
-        val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+        val inconsistencyHandler = MetaDataInconsistencyHandler(
             state = testState,
         )
 
         // when
-        val result = metaDataInconsistencyHandler.calculateWorkload()
+        val result = inconsistencyHandler.calculateWorkload()
 
         // then
         assertThat(result).isEqualTo(3)
@@ -77,13 +103,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = Empty()
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -129,13 +155,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -182,13 +208,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -235,13 +261,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults.size).isOne()
@@ -303,13 +329,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults.size).isOne()
@@ -353,13 +379,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = Empty()
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -392,13 +418,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -431,13 +457,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -470,13 +496,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
@@ -525,13 +551,13 @@ internal class MetaDataInconsistencyHandlerTest {
                 )
             }
 
-            val metaDataInconsistencyHandler = MetaDataInconsistencyHandler(
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
                 cache = testCache,
             )
 
             // when
-            val result = metaDataInconsistencyHandler.execute()
+            val result = inconsistencyHandler.execute()
 
             // then
             assertThat(result.watchListResults).isEmpty()
