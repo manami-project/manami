@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
-import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataDiff
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 
 interface InconsistenciesHandler {
 

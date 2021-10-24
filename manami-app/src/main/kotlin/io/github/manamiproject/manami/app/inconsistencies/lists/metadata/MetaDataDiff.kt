@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.inconsistencies.metadata
+package io.github.manamiproject.manami.app.inconsistencies.lists.metadata
 
 data class MetaDataDiff<T>(
     val currentEntry: T,

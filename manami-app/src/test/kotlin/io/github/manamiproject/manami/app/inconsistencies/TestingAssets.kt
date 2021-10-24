@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResult
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 
 internal object TestInconsistencyHandler: InconsistencyHandler<String> {

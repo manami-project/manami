@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.inconsistencies.deadentries
+package io.github.manamiproject.manami.app.inconsistencies.lists.deadentries
 
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry

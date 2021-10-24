@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.inconsistencies
 
-import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataDiff
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.Episodes
 import io.github.manamiproject.modb.core.models.Title

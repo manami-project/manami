@@ -9,7 +9,6 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos.CENTER
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.stage.StageStyle
 import javafx.stage.StageStyle.UTILITY
 import tornadofx.*
 

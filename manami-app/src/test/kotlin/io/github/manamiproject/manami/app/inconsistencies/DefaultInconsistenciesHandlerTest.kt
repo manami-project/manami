@@ -1,13 +1,13 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistencyHandler
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataDiff
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistencyHandler
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistencyHandler
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataDiff
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -21,7 +21,6 @@ import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
-import org.assertj.core.api.Assertions.`in`
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

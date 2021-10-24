@@ -10,10 +10,10 @@ import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
-import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataDiff
-import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED

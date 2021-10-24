@@ -16,9 +16,9 @@ import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistencies
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
-import io.github.manamiproject.manami.app.inconsistencies.animelistmetadata.AnimeListMetaDataInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.deadentries.DeadEntriesInconsistenciesResultEvent
-import io.github.manamiproject.manami.app.inconsistencies.metadata.MetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListHandler

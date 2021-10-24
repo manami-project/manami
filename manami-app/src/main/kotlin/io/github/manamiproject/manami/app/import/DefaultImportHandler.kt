@@ -51,6 +51,6 @@ internal class DefaultImportHandler(
     }
 
     private fun hasOnlyOneParserPerSuffix(): Boolean {
-        return parserList.groupBy { it.handlesSuffix() }.filter { it.value.size > 1 }.count() == 0
+        return parserList.groupBy { it.handlesSuffix() }.filter { it.value.size > 1 }.isEmpty()
     }
 }

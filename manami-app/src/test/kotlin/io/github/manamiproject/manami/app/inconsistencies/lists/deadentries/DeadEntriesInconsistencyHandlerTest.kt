@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.inconsistencies.deadentries
+package io.github.manamiproject.manami.app.inconsistencies.lists.deadentries
 
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig

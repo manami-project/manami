@@ -1,16 +1,15 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.versioning.TestVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.readFile
-import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.test.tempDirectory
