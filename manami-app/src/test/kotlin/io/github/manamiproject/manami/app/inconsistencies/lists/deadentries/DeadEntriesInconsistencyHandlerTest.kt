@@ -28,17 +28,31 @@ internal class DeadEntriesInconsistencyHandlerTest {
         val isExecutableConfig = InconsistenciesSearchConfig(
             checkDeadEntries = true
         )
+
+        // when
+        val result = inconsistencyHandler.isExecutable(isExecutableConfig)
+
+        // then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `is not executable if the config doesn't explicitly activates the option`() {
+        // given
+        val inconsistencyHandler = DeadEntriesInconsistencyHandler(
+            state = TestState,
+            cache = TestAnimeCache,
+        )
+
         val isNotExecutableConfig = InconsistenciesSearchConfig(
             checkDeadEntries = false
         )
 
         // when
-        val resultTrue = inconsistencyHandler.isExecutable(isExecutableConfig)
-        val resultFalse = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+        val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
 
         // then
-        assertThat(resultTrue).isTrue()
-        assertThat(resultFalse).isFalse()
+        assertThat(result).isFalse()
     }
 
     @Test

@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.file.SavedAsFileEvent
 import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResultEvent
@@ -76,7 +77,8 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is InconsistenciesCheckFinishedEvent -> InconsistenciesCheckFinishedGuiEvent
                     is MetaDataInconsistenciesResultEvent -> MetaDataInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
                     is DeadEntriesInconsistenciesResultEvent -> DeadEntriesInconsistenciesResultGuiEvent(this.numberOfAffectedEntries)
-                    is AnimeListMetaDataInconsistenciesResultEvent -> AnimeListMetaDataInconsistenciesResultEventGuiEvent(this.diff)
+                    is AnimeListMetaDataInconsistenciesResultEvent -> AnimeListMetaDataInconsistenciesResultGuiEvent(this.diff)
+                    is AnimeListDeadEntriesInconsistenciesResultEvent -> AnimeListDeadEntriesInconsistenciesResultGuiEvent(this.entries)
                     is NewVersionAvailableEvent -> NewVersionAvailableGuiEvent(this.version)
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
@@ -187,7 +189,8 @@ data class NumberOfEntriesPerMetaDataProviderGuiEvent(val entries: Map<Hostname,
 data class InconsistenciesProgressGuiEvent(val finishedTasks: Int, val numberOfTasks: Int): GuiEvent()
 data class MetaDataInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
 data class DeadEntriesInconsistenciesResultGuiEvent(val numberOfAffectedEntries: Int): GuiEvent()
-data class AnimeListMetaDataInconsistenciesResultEventGuiEvent(val diff: AnimeListMetaDataDiff): GuiEvent()
+data class AnimeListMetaDataInconsistenciesResultGuiEvent(val diff: AnimeListMetaDataDiff): GuiEvent()
+data class AnimeListDeadEntriesInconsistenciesResultGuiEvent(val entries: Collection<AnimeListEntry>): GuiEvent()
 object InconsistenciesCheckFinishedGuiEvent: GuiEvent()
 
 data class NewVersionAvailableGuiEvent(val version: SemanticVersion): GuiEvent()

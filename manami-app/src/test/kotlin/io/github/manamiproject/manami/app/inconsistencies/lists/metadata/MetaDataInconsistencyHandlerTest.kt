@@ -32,17 +32,31 @@ internal class MetaDataInconsistencyHandlerTest {
         val isExecutableConfig = InconsistenciesSearchConfig(
             checkMetaData = true
         )
+
+        // when
+        val result = inconsistencyHandler.isExecutable(isExecutableConfig)
+
+        // then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `is not executable if the config doesn't explicitly activates the option`() {
+        // given
+        val inconsistencyHandler = MetaDataInconsistencyHandler(
+            state = TestState,
+            cache = TestAnimeCache,
+        )
+
         val isNotExecutableConfig = InconsistenciesSearchConfig(
             checkMetaData = false
         )
 
         // when
-        val resultTrue = inconsistencyHandler.isExecutable(isExecutableConfig)
-        val resultFalse = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+        val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
 
         // then
-        assertThat(resultTrue).isTrue()
-        assertThat(resultFalse).isFalse()
+        assertThat(result).isFalse()
     }
 
     @Test

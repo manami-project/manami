@@ -1,8 +1,6 @@
 package io.github.manamiproject.manami.app.inconsistencies.animelist.metadata
 
-import io.github.manamiproject.manami.app.cache.Cache
-import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.lists.Link
@@ -11,6 +9,7 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.collections.SortedList
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
@@ -31,17 +30,31 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
         val isExecutableConfig = InconsistenciesSearchConfig(
             checkAnimeListMetaData = true
         )
+
+        // when
+        val result = inconsistencyHandler.isExecutable(isExecutableConfig)
+
+        // then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `is not executable if the config doesn't explicitly activates the option`() {
+        // given
+        val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+            state = TestState,
+            cache = TestAnimeCache,
+        )
+
         val isNotExecutableConfig = InconsistenciesSearchConfig(
             checkAnimeListMetaData = false
         )
 
         // when
-        val resultTrue = inconsistencyHandler.isExecutable(isExecutableConfig)
-        val resultFalse = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+        val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
 
         // then
-        assertThat(resultTrue).isTrue()
-        assertThat(resultFalse).isFalse()
+        assertThat(result).isFalse()
     }
 
     @Test
@@ -88,6 +101,40 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
         // then
         assertThat(result).isEqualTo(2)
+    }
+
+    @Test
+    fun `ignore entry if link is empty`() {
+        // given
+        val testState = object: State by TestState {
+            override fun animeList(): List<AnimeListEntry> {
+                return listOf(
+                    AnimeListEntry(
+                        link = NoLink,
+                        title = "No Link Entry",
+                        type = TV,
+                        episodes = 64,
+                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        location = URI(".")
+                    ),
+                )
+            }
+        }
+
+        val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+            override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+        }
+
+        val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+            state = testState,
+            cache = testCache,
+        )
+
+        // when
+        val result = inconsistencyHandler.execute()
+
+        // then
+        assertThat(result.entries).isEmpty()
     }
 
     @Test

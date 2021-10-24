@@ -4,6 +4,9 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResult
@@ -34,6 +37,7 @@ internal class DefaultInconsistenciesHandler(
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
         AnimeListMetaDataInconsistenciesHandler(state, cache),
+        AnimeListDeadEntriesInconsistenciesHandler(state, cache),
         MetaDataInconsistencyHandler(state, cache),
         DeadEntriesInconsistencyHandler(state, cache),
     ),
@@ -90,6 +94,11 @@ internal class DefaultInconsistenciesHandler(
             is AnimeListMetaDataInconsistenciesResult -> {
                 result.entries.forEach {
                     eventBus.post(AnimeListMetaDataInconsistenciesResultEvent(it))
+                }
+            }
+            is AnimeListDeadEntriesInconsistenciesResult -> {
+                if (result.entries.isNotEmpty()) {
+                    eventBus.post(AnimeListDeadEntriesInconsistenciesResultEvent(result.entries))
                 }
             }
         }

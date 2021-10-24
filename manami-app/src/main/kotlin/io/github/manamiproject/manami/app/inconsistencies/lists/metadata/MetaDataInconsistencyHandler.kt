@@ -6,10 +6,12 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
+import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
 
@@ -23,6 +25,8 @@ internal class MetaDataInconsistencyHandler(
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkMetaData
 
     override fun execute(progressUpdate: (Int) -> Unit): MetaDataInconsistenciesResult {
+        log.info { "Starting check for meta data inconsistencies in WatchList and IgnoreList." }
+
         var progress = 0
 
         val watchListResults: List<MetaDataDiff<WatchListEntry>> = state.watchList()
@@ -55,9 +59,15 @@ internal class MetaDataInconsistencyHandler(
             .map { MetaDataDiff(currentEntry = it.first, newEntry = it.second) }
             .toList()
 
+        log.info { "Finished check for meta data inconsistencies in WatchList and IgnoreList." }
+
         return MetaDataInconsistenciesResult(
             watchListResults = watchListResults,
             ignoreListResults = ignoreListResults,
         )
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
     }
 }
