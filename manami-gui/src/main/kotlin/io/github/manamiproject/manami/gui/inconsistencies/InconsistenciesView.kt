@@ -57,6 +57,10 @@ class InconsistenciesView : View() {
                 activeItems.add(messageBox)
             }
         }
+        subscribe<FileOpenedGuiEvent> { _ ->
+            items.clear()
+            activeItems.clear()
+        }
     }
 
     override val root = pane {

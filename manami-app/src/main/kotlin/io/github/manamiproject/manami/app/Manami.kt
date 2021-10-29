@@ -30,6 +30,7 @@ import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEven
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
+import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
 import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.Event
@@ -92,89 +93,37 @@ class Manami(
         eventMapper.set(mapper)
     }
 
-    @Subscribe
-    fun subscribe(e: FileOpenedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: SavedAsFileEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: ListChangedEvent<*>) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AddWatchListStatusUpdateEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AddIgnoreListStatusUpdateEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: FileSavedStatusChangedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: UndoRedoStatusEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: RelatedAnimeFoundEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: RelatedAnimeStatusEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: RelatedAnimeFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeSeasonEntryFoundEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeSeasonSearchFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: CachePopulatorFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: FileSearchAnimeListResultsEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: FileSearchWatchListResultsEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: FileSearchIgnoreListResultsEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeSearchEntryFoundEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeSearchFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: NumberOfEntriesPerMetaDataProviderEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeEntryFoundEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeEntryFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: InconsistenciesProgressEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: InconsistenciesCheckFinishedEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: MetaDataInconsistenciesResultEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: DeadEntriesInconsistenciesResultEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeListMetaDataInconsistenciesResultEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: AnimeListDeadEntriesInconsistenciesResultEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: NewVersionAvailableEvent) = eventMapper.get().invoke(e)
+    @Subscribe (
+        FileOpenedEvent::class,
+        SavedAsFileEvent::class,
+        ListChangedEvent::class,
+        AddWatchListStatusUpdateEvent::class,
+        AddIgnoreListStatusUpdateEvent::class,
+        FileSavedStatusChangedEvent::class,
+        UndoRedoStatusEvent::class,
+        RelatedAnimeFoundEvent::class,
+        RelatedAnimeStatusEvent::class,
+        RelatedAnimeFinishedEvent::class,
+        AnimeSeasonEntryFoundEvent::class,
+        AnimeSeasonSearchFinishedEvent::class,
+        CachePopulatorFinishedEvent::class,
+        FileSearchAnimeListResultsEvent::class,
+        FileSearchWatchListResultsEvent::class,
+        FileSearchIgnoreListResultsEvent::class,
+        AnimeSearchEntryFoundEvent::class,
+        AnimeSearchFinishedEvent::class,
+        NumberOfEntriesPerMetaDataProviderEvent::class,
+        AnimeEntryFoundEvent::class,
+        AnimeEntryFinishedEvent::class,
+        InconsistenciesProgressEvent::class,
+        InconsistenciesCheckFinishedEvent::class,
+        MetaDataInconsistenciesResultEvent::class,
+        DeadEntriesInconsistenciesResultEvent::class,
+        AnimeListMetaDataInconsistenciesResultEvent::class,
+        AnimeListDeadEntriesInconsistenciesResultEvent::class,
+        NewVersionAvailableEvent::class,
+    )
+    fun subscribe(e: Event) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

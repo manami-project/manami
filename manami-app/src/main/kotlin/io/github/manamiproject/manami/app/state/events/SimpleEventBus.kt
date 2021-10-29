@@ -1,7 +1,6 @@
 package io.github.manamiproject.manami.app.state.events
 
 import java.util.concurrent.Executors
-import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter.Kind.VALUE
 
@@ -20,17 +19,22 @@ object SimpleEventBus : EventBus {
         check(functions.isNotEmpty()) { "EventBus subscriber does not provide a function annotated with @Subscribe" }
 
         functions.filter { func -> func.parameters.count { it.kind == VALUE } == 1}.forEach { func ->
-            func.parameters.find { it.kind == VALUE }?.apply {
-                val eventClassName = (this.type.classifier as KClass<*>).toString()
-                val currentSubscribers = mapSubscribers[eventClassName].let {
-                    when(it) {
-                        null -> mutableSetOf()
-                        else -> it
-                    }
-                }
+            func.annotations.filter { it.annotationClass == Subscribe::class }.map { it as Subscribe }.forEach { annotation ->
+                check(annotation.types.isNotEmpty()) { "Annotation @Subscribe does not provide any types" }
 
-                currentSubscribers.add(subscriber)
-                mapSubscribers[eventClassName] = currentSubscribers
+                annotation.types.forEach { type ->
+
+                    val eventClassName = type.toString()
+                    val currentSubscribers = mapSubscribers[eventClassName].let {
+                        when(it) {
+                            null -> mutableSetOf()
+                            else -> it
+                        }
+                    }
+
+                    currentSubscribers.add(subscriber)
+                    mapSubscribers[eventClassName] = currentSubscribers
+                }
             }
         }
     }
@@ -51,7 +55,7 @@ object SimpleEventBus : EventBus {
         subscribers.forEach { subscriber ->
             subscriber::class.members.filterIsInstance<KFunction<*>>()
                     .filter { func -> func.annotations.any { it.annotationClass == Subscribe::class } }
-                    .filter { func -> func.parameters.find { it.kind == VALUE }?.type?.classifier == event::class }
+                    .filter { func -> func.parameters.find { it.kind == VALUE }?.type?.classifier in setOf(event::class, Event::class) }
                     .forEach {
                         threadPool.submit {
                             it.call(subscriber, event)

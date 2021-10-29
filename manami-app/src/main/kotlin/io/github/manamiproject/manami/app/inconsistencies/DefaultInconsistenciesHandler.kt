@@ -50,8 +50,8 @@ internal class DefaultInconsistenciesHandler(
         eventBus.subscribe(this)
     }
 
-    @Subscribe
     @Suppress("UNUSED_PARAMETER")
+    @Subscribe(FileOpenedEvent::class)
     fun subscribe(e: FileOpenedEvent) = inconsistencyResults.clear()
 
     override fun findInconsistencies(config: InconsistenciesSearchConfig) {
