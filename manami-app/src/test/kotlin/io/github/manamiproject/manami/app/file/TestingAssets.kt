@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.test.shouldNotBeInvoked

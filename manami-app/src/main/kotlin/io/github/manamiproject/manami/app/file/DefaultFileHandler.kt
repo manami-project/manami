@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -14,11 +13,11 @@ import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import kotlin.io.path.createFile
 
 internal class DefaultFileHandler(
-        private val state: State = InternalState,
-        private val commandHistory: CommandHistory = DefaultCommandHistory,
-        private val parser: Parser<ParsedManamiFile> = FileParser(),
-        private val fileWriter: FileWriter = DefaultFileWriter(),
-        private val eventBus: EventBus = SimpleEventBus,
+    private val state: State = InternalState,
+    private val commandHistory: CommandHistory = DefaultCommandHistory,
+    private val parser: Parser<ParsedManamiFile> = FileParser(),
+    private val fileWriter: FileWriter = DefaultFileWriter(),
+    private val eventBus: EventBus = SimpleEventBus,
 ) : FileHandler {
 
     override fun newFile(ignoreUnsavedChanged: Boolean) {

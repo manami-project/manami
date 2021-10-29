@@ -9,9 +9,6 @@ import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.file.SavedAsFileEvent
-import io.github.manamiproject.manami.app.import.DefaultImportHandler
-import io.github.manamiproject.manami.app.import.ImportFinishedEvent
-import io.github.manamiproject.manami.app.import.ImportHandler
 import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
@@ -26,9 +23,7 @@ import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.relatedanime.*
-import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
 import io.github.manamiproject.manami.app.search.*
-import io.github.manamiproject.manami.app.search.DefaultSearchHandler
 import io.github.manamiproject.manami.app.search.anime.AnimeEntryFinishedEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeEntryFoundEvent
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEvent
@@ -56,14 +51,12 @@ import kotlin.system.exitProcess
 class Manami(
     private val fileHandler: FileHandler = DefaultFileHandler(),
     private val searchHandler: SearchHandler = DefaultSearchHandler(),
-    private val importHandler: ImportHandler = DefaultImportHandler(),
     private val listHandler: ListHandler = DefaultListHandler(),
     private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
     private val inconsistenciesHandler: InconsistenciesHandler = DefaultInconsistenciesHandler(),
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
-    ImportHandler by importHandler,
     ListHandler by listHandler,
     RelatedAnimeHandler by relatedAnimeHandler,
     InconsistenciesHandler by inconsistenciesHandler {
@@ -119,9 +112,6 @@ class Manami(
 
     @Subscribe
     fun subscribe(e: UndoRedoStatusEvent) = eventMapper.get().invoke(e)
-
-    @Subscribe
-    fun subscribe(e: ImportFinishedEvent) = eventMapper.get().invoke(e)
 
     @Subscribe
     fun subscribe(e: RelatedAnimeFoundEvent) = eventMapper.get().invoke(e)

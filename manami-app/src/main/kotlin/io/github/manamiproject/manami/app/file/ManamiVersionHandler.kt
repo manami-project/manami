@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.import.parser.manami
+package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import org.xml.sax.Attributes

@@ -34,14 +34,6 @@ class MenuController : Controller() {
         }
     }
 
-    fun import(file: RegularFile?) {
-        if (file != null) {
-            runAsync {
-                manamiAccess.import(file)
-            }
-        }
-    }
-
     fun save() {
         if (manamiAccess.isOpenFileSet()) {
             runAsync {

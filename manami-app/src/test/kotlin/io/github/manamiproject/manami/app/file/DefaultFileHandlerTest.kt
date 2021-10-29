@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.import.parser.Parser
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry

@@ -20,15 +20,6 @@ object PathChooser {
         return fileChooser.showOpenDialog(stage).let { it?.toPath() }
     }
 
-    fun showImportFileDialog(stage: Stage): RegularFile? {
-        val fileChooser = FileChooser().apply {
-            title = "Import file..."
-            extensionFilters.addAll(ExtensionFilter("Manami < v3.0.0 (XML)", "*.xml"))
-        }
-
-        return fileChooser.showOpenDialog(stage).let { it?.toPath() }
-    }
-
     fun showSaveAsFileDialog(stage: Stage): RegularFile? {
         val fileChooser = FileChooser().apply {
             title = "Save your anime list as..."

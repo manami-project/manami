@@ -57,16 +57,6 @@ class MenuView : View() {
                 action { controller.open(PathChooser.showOpenFileDialog(primaryStage)) }
             }
             separator()
-            item("Import", createMnemonic("I")) {
-                action {
-                    find<ApplicationBlockedLoading>().openModal(resizable = false, escapeClosesWindow = false, stageStyle = UNDECORATED)
-                    when(val file = PathChooser.showImportFileDialog(primaryStage)) {
-                        null -> fire(ImportFinishedGuiEvent)
-                        else -> controller.import(file)
-                    }
-                }
-            }
-            separator()
             item("Save", createMnemonic("S")) {
                 disableProperty().bindBidirectional(isFileSaved)
                 action { controller.save() }

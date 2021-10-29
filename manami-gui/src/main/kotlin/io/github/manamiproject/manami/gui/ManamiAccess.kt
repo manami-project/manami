@@ -7,7 +7,6 @@ import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMeta
 import io.github.manamiproject.manami.app.extensions.castToSet
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.file.SavedAsFileEvent
-import io.github.manamiproject.manami.app.import.ImportFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesCheckFinishedEvent
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesProgressEvent
 import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResultEvent
@@ -57,7 +56,6 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AddWatchListStatusUpdateEvent -> AddWatchListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is FileSavedStatusChangedEvent -> FileSavedStatusChangedGuiEvent(this.isFileSaved)
-                    is ImportFinishedEvent -> ImportFinishedGuiEvent
                     is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
                     is RelatedAnimeFoundEvent -> mapRelatedAnimeFoundEvent(this)
                     is RelatedAnimeStatusEvent -> mapRelatedAnimeStatusEvent(this)
@@ -158,8 +156,6 @@ data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: 
 
 data class FileSavedStatusChangedGuiEvent(val isFileSaved: Boolean): GuiEvent()
 data class UndoRedoStatusGuiEvent(val isUndoPossible: Boolean, val isRedoPossible: Boolean): GuiEvent()
-
-object ImportFinishedGuiEvent: GuiEvent()
 
 data class AnimeListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
 data class AnimeListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
