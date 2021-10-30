@@ -9,7 +9,7 @@ import kotlin.reflect.full.isSubclassOf
 
 private typealias ClassName = String
 
-object SimpleEventBus : EventBus {
+internal object SimpleEventBus : EventBus {
 
     private val mapSubscribers = mutableMapOf<ClassName, MutableSet<Any>>()
     private val threadPool = Executors.newSingleThreadExecutor()

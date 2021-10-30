@@ -5,7 +5,7 @@ import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
 import java.util.function.Predicate
 
-class EventfulList<T>(
+internal class EventfulList<T>(
     private val listType: EventListType,
     private val eventBus: EventBus = SimpleEventBus,
     private val list: MutableList<T> = mutableListOf(),

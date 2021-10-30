@@ -6,4 +6,4 @@ import kotlin.reflect.KClass
 
 @Target(FUNCTION)
 @Retention(RUNTIME)
-annotation class Subscribe(vararg val types: KClass<out Event>)
+internal annotation class Subscribe(vararg val types: KClass<out Event>)
