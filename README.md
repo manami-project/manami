@@ -5,8 +5,6 @@
 Manami creates an index file for the anime that you already watched and stored on your hard drive. Additionally based on this list the tool can assist you in finding more anime that you might enjoy.
 
 ## All features at a glance
-
-* Import list from previous manami releases
 * Categorize anime in watched, plan to watch/watching, ignore
 * Automatically fill out anime data upon adding a new entry
   * supports multiple meta data providers using data from [anime-offline-database](https://github.com/manami-project/anime-offline-database)
@@ -14,7 +12,7 @@ Manami creates an index file for the anime that you already watched and stored o
 * Browse anime seasons
 * Related anime finder
 * Suggestions to ignore anime
-* Find inconsistencies and automatically fix them
+* Find inconsistencies
   * Find updated meta data in animelist/watchlist/ignorelist entries and automatically fix them
   * Find dead entries in animelist
   * Find dead entries in watchlist/ignorelist and automatically remove them
