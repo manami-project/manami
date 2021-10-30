@@ -6,7 +6,6 @@ import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
-import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState

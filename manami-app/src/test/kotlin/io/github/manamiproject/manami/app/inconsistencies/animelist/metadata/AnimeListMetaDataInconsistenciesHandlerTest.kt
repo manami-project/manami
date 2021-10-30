@@ -1,7 +1,6 @@
 package io.github.manamiproject.manami.app.inconsistencies.animelist.metadata
 
 import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
@@ -9,7 +8,6 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.collections.SortedList
-import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN

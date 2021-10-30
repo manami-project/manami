@@ -1,9 +1,11 @@
 package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
-import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.CachePopulatorFinishedGuiEvent
+import io.github.manamiproject.manami.gui.FileOpenedGuiEvent
+import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.UndoRedoStatusGuiEvent
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
-import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
@@ -16,7 +18,6 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.INFORMATION
 import javafx.scene.layout.Priority.ALWAYS
-import javafx.stage.StageStyle.UNDECORATED
 import tornadofx.*
 
 class MenuView : View() {

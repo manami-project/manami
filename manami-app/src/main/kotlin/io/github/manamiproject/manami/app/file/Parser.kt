@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.file
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 
-interface Parser<T> {
+internal interface Parser<T> {
 
     fun parse(file: RegularFile): T
 

@@ -57,7 +57,7 @@ class InconsistenciesView : View() {
                 activeItems.add(messageBox)
             }
         }
-        subscribe<FileOpenedGuiEvent> { _ ->
+        subscribe<FileOpenedGuiEvent> {
             items.clear()
             activeItems.clear()
         }

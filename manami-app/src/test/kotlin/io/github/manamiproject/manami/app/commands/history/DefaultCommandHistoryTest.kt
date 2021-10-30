@@ -423,12 +423,12 @@ internal class TestEventSubscriber {
     val undoRedoStatusEvents = mutableListOf<UndoRedoStatusEvent>()
 
     @Subscribe(FileSavedStatusChangedEvent::class)
-    fun subscribe(event: FileSavedStatusChangedEvent) {
+    fun receive(event: FileSavedStatusChangedEvent) {
         fileSavedEvents.add(event.isFileSaved)
     }
 
     @Subscribe(UndoRedoStatusEvent::class)
-    fun subscribe(event: UndoRedoStatusEvent) {
+    fun receive(event: UndoRedoStatusEvent) {
         undoRedoStatusEvents.add(event)
     }
 }
