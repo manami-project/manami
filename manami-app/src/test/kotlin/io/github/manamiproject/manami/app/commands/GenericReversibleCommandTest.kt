@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.commands
+package io.github.manamiproject.manami.app.commands
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -8,8 +8,8 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestSnapshot
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
 import io.github.manamiproject.modb.core.models.Anime.Type.TV

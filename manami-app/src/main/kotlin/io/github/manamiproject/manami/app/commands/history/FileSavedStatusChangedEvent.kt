@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.commands.history
+package io.github.manamiproject.manami.app.commands.history
 
 import io.github.manamiproject.manami.app.state.events.Event
 

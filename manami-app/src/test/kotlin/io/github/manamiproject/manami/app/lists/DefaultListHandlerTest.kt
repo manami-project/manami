@@ -9,9 +9,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.TestSnapshot
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
-import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.events.Event
 import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.TestEventBus

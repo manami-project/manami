@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.inconsistencies.lists.deadentries
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.manami.app.state.commands.Command
+import io.github.manamiproject.manami.app.commands.Command
 
 internal class CmdFixDeadEntries(
     private val state: State,

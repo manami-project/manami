@@ -1,7 +1,7 @@
-package io.github.manamiproject.manami.app.state.commands.history
+package io.github.manamiproject.manami.app.commands.history
 
-import io.github.manamiproject.manami.app.state.commands.ReversibleCommand
-import io.github.manamiproject.manami.app.state.commands.TestReversibleCommand
+import io.github.manamiproject.manami.app.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.commands.TestReversibleCommand
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe
 import org.assertj.core.api.Assertions.assertThat

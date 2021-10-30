@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import org.assertj.core.api.Assertions.assertThat

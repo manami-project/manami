@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.commands
+package io.github.manamiproject.manami.app.commands
 
 internal interface ReversibleCommand : Command {
 

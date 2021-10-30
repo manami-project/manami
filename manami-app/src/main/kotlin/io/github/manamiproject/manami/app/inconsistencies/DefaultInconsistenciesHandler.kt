@@ -22,9 +22,9 @@ import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDat
 import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.manami.app.state.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.state.events.EventBus
 import io.github.manamiproject.manami.app.state.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.events.Subscribe

@@ -34,8 +34,8 @@ import io.github.manamiproject.manami.app.search.anime.AnimeSearchEntryFoundEven
 import io.github.manamiproject.manami.app.search.anime.AnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEvent
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
-import io.github.manamiproject.manami.app.state.commands.history.FileSavedStatusChangedEvent
-import io.github.manamiproject.manami.app.state.commands.history.UndoRedoStatusEvent
+import io.github.manamiproject.manami.app.commands.history.FileSavedStatusChangedEvent
+import io.github.manamiproject.manami.app.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.state.events.EventListType.*
 import io.github.manamiproject.manami.app.versioning.NewVersionAvailableEvent
 import io.github.manamiproject.manami.app.versioning.SemanticVersion

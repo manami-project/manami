@@ -1,7 +1,7 @@
-package io.github.manamiproject.manami.app.state.commands
+package io.github.manamiproject.manami.app.commands
 
-import io.github.manamiproject.manami.app.state.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot

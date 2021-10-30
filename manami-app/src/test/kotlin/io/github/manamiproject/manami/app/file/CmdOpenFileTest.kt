@@ -6,8 +6,8 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.state.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.state.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
