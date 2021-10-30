@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.versioning
 
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.TestEventBus
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.TestEventBus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

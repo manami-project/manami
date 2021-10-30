@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.commands.history
 
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
 
 internal object DefaultCommandHistory : CommandHistory {
 

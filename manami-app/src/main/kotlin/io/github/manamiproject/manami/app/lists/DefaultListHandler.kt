@@ -20,8 +20,8 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI

@@ -18,9 +18,9 @@ import io.github.manamiproject.manami.app.search.season.AnimeSeasonEntryFoundEve
 import io.github.manamiproject.manami.app.search.season.AnimeSeasonSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.TestEventBus
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED

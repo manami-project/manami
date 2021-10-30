@@ -3,8 +3,8 @@ package io.github.manamiproject.manami.app.cache.populator
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser

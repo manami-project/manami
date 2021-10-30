@@ -10,11 +10,11 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.EventListType.ANIME_LIST
-import io.github.manamiproject.manami.app.state.events.EventListType.IGNORE_LIST
-import io.github.manamiproject.manami.app.state.events.TestEventBus
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.EventListType.ANIME_LIST
+import io.github.manamiproject.manami.app.events.EventListType.IGNORE_LIST
+import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED

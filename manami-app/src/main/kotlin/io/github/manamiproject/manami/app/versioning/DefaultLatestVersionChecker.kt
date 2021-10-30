@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.versioning
 
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 
 internal class DefaultLatestVersionChecker(

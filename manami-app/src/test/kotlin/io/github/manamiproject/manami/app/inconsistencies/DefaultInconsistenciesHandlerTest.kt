@@ -16,9 +16,9 @@ import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
 import io.github.manamiproject.manami.app.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.EventBus
-import io.github.manamiproject.manami.app.state.events.TestEventBus
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import org.assertj.core.api.Assertions.assertThat

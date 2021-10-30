@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.app.commands.history
 
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
 import io.github.manamiproject.manami.app.commands.TestReversibleCommand
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
-import io.github.manamiproject.manami.app.state.events.Subscribe
+import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.Subscribe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach

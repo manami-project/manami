@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.events
+package io.github.manamiproject.manami.app.events
 
 import java.util.concurrent.Executors
 import kotlin.reflect.KClass

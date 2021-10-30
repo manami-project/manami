@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.events
+package io.github.manamiproject.manami.app.events
 
 import io.github.manamiproject.manami.app.lists.ListChangedEvent
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED

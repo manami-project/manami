@@ -11,9 +11,9 @@ import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
 import io.github.manamiproject.manami.app.relatedanime.*
 import io.github.manamiproject.manami.app.search.*
-import io.github.manamiproject.manami.app.state.events.Event
-import io.github.manamiproject.manami.app.state.events.SimpleEventBus
-import io.github.manamiproject.manami.app.state.events.Subscribe
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig

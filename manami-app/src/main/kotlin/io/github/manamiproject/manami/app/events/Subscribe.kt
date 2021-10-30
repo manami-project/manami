@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.app.state.events
+package io.github.manamiproject.manami.app.events
 
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.FUNCTION
