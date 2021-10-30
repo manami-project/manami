@@ -93,36 +93,7 @@ class Manami(
         eventMapper.set(mapper)
     }
 
-    @Subscribe (
-        FileOpenedEvent::class,
-        SavedAsFileEvent::class,
-        ListChangedEvent::class,
-        AddWatchListStatusUpdateEvent::class,
-        AddIgnoreListStatusUpdateEvent::class,
-        FileSavedStatusChangedEvent::class,
-        UndoRedoStatusEvent::class,
-        RelatedAnimeFoundEvent::class,
-        RelatedAnimeStatusEvent::class,
-        RelatedAnimeFinishedEvent::class,
-        AnimeSeasonEntryFoundEvent::class,
-        AnimeSeasonSearchFinishedEvent::class,
-        CachePopulatorFinishedEvent::class,
-        FileSearchAnimeListResultsEvent::class,
-        FileSearchWatchListResultsEvent::class,
-        FileSearchIgnoreListResultsEvent::class,
-        AnimeSearchEntryFoundEvent::class,
-        AnimeSearchFinishedEvent::class,
-        NumberOfEntriesPerMetaDataProviderEvent::class,
-        AnimeEntryFoundEvent::class,
-        AnimeEntryFinishedEvent::class,
-        InconsistenciesProgressEvent::class,
-        InconsistenciesCheckFinishedEvent::class,
-        MetaDataInconsistenciesResultEvent::class,
-        DeadEntriesInconsistenciesResultEvent::class,
-        AnimeListMetaDataInconsistenciesResultEvent::class,
-        AnimeListDeadEntriesInconsistenciesResultEvent::class,
-        NewVersionAvailableEvent::class,
-    )
+    @Subscribe
     fun subscribe(e: Event) = eventMapper.get().invoke(e)
 
     companion object {

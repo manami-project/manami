@@ -1,8 +1,11 @@
 package io.github.manamiproject.manami.app.state.events
 
 import java.util.concurrent.Executors
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
 import kotlin.reflect.KParameter.Kind.VALUE
+import kotlin.reflect.full.isSubclassOf
 
 private typealias ClassName = String
 
@@ -12,30 +15,29 @@ object SimpleEventBus : EventBus {
     private val threadPool = Executors.newSingleThreadExecutor()
 
     override fun subscribe(subscriber: Any) {
-        val functions = subscriber.javaClass.kotlin.members
-                .filterIsInstance<KFunction<*>>()
-                .filter { func -> func.annotations.any { it.annotationClass == Subscribe::class } }
+        val functions = findAnnotatedFunctions(subscriber)
+            .filter { doesFunctionProvideExactlyOneParameter(it) }
+            .filter { doesParameterImplementEvent(it.parameters) }
 
-        check(functions.isNotEmpty()) { "EventBus subscriber does not provide a function annotated with @Subscribe" }
+        check(functions.isNotEmpty()) { "Either the EventBus subscriber does not provide a function annotated with @Subscribe or the respective functions does not provide a single Parameter of a type which implements Event." }
 
-        functions.filter { func -> func.parameters.count { it.kind == VALUE } == 1}.forEach { func ->
-            func.annotations.filter { it.annotationClass == Subscribe::class }.map { it as Subscribe }.forEach { annotation ->
-                check(annotation.types.isNotEmpty()) { "Annotation @Subscribe does not provide any types" }
-
-                annotation.types.forEach { type ->
-
-                    val eventClassName = type.toString()
-                    val currentSubscribers = mapSubscribers[eventClassName].let {
-                        when(it) {
-                            null -> mutableSetOf()
-                            else -> it
+        functions.forEach { func ->
+                func.annotations.findSubscribeAnnotations().forEach { annotation ->
+                    if (annotation.types.isNotEmpty()) {
+                        annotation.types.forEach { type ->
+                            upsertSubscriber(subscriber, type)
                         }
+                    } else {
+                        val updatedSubscribers = mapSubscribers[Event::class.toString()].let { subscriberEntry ->
+                            when(subscriberEntry) {
+                                null -> mutableSetOf()
+                                else -> subscriberEntry
+                            }
+                        }
+                        updatedSubscribers.add(subscriber)
+                        mapSubscribers[Event::class.toString()] = updatedSubscribers
                     }
-
-                    currentSubscribers.add(subscriber)
-                    mapSubscribers[eventClassName] = currentSubscribers
                 }
-            }
         }
     }
 
@@ -46,13 +48,10 @@ object SimpleEventBus : EventBus {
     }
 
     override fun post(event: Event) {
-        val subscribers = mapSubscribers[event::class.toString()]
+        val typeSpecificsubscribers = mapSubscribers[event::class.toString()].takeIf { it?.isNotEmpty() == true } ?: emptyList()
+        val broadcastSubscribers = mapSubscribers[Event::class.toString()] ?: emptyList()
 
-        if (subscribers == null || subscribers.isEmpty()) {
-            return
-        }
-
-        subscribers.forEach { subscriber ->
+        typeSpecificsubscribers.union(broadcastSubscribers).forEach { subscriber ->
             subscriber::class.members.filterIsInstance<KFunction<*>>()
                     .filter { func -> func.annotations.any { it.annotationClass == Subscribe::class } }
                     .filter { func -> func.parameters.find { it.kind == VALUE }?.type?.classifier in setOf(event::class, Event::class) }
@@ -62,5 +61,36 @@ object SimpleEventBus : EventBus {
                         }
                     }
         }
+    }
+
+    private fun findAnnotatedFunctions(subscriber: Any): List<KFunction<*>> {
+        return subscriber.javaClass.kotlin.members
+            .filterIsInstance<KFunction<*>>()
+            .filter { func -> func.annotations.any { it.annotationClass == Subscribe::class } }
+    }
+
+    private fun doesFunctionProvideExactlyOneParameter(func: KFunction<*>): Boolean {
+        return func.parameters.count { it.kind == VALUE } == 1
+    }
+
+    private fun doesParameterImplementEvent(parameters: List<KParameter>): Boolean {
+        return (parameters.find { it.kind == VALUE }!!.type.classifier as KClass<*>).isSubclassOf(Event::class)
+    }
+
+    private fun Collection<Annotation>.findSubscribeAnnotations(): Collection<Subscribe> {
+        return filter { it.annotationClass == Subscribe::class }.map { it as Subscribe }
+    }
+
+    private fun upsertSubscriber(subscriber: Any, type: KClass<out Event>) {
+        val eventClassName = type.toString()
+        val currentSubscribers = mapSubscribers[eventClassName].let { subscriberEntry ->
+            when(subscriberEntry) {
+                null -> mutableSetOf()
+                else -> subscriberEntry
+            }
+        }
+
+        currentSubscribers.add(subscriber)
+        mapSubscribers[eventClassName] = currentSubscribers
     }
 }
