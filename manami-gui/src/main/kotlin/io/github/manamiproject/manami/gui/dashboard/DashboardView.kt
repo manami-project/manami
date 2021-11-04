@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.gui.dashboard
 
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.numberTile
+import io.github.manamiproject.manami.gui.events.*
 import io.github.manamiproject.modb.core.config.Hostname
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER

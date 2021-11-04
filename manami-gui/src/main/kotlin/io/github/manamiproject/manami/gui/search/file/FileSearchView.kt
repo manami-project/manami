@@ -3,9 +3,9 @@ package io.github.manamiproject.manami.gui.search.file
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.gui.FileSearchAnimeListResultsGuiEvent
-import io.github.manamiproject.manami.gui.FileSearchIgnoreListResultsGuiEvent
-import io.github.manamiproject.manami.gui.FileSearchWatchListResultsGuiEvent
+import io.github.manamiproject.manami.gui.events.FileSearchAnimeListResultsGuiEvent
+import io.github.manamiproject.manami.gui.events.FileSearchIgnoreListResultsGuiEvent
+import io.github.manamiproject.manami.gui.events.FileSearchWatchListResultsGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.components.animeTable
 import javafx.beans.property.ObjectProperty

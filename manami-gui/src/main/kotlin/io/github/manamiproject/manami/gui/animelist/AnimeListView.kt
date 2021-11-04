@@ -4,6 +4,10 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.animeTable
+import io.github.manamiproject.manami.gui.events.AddAnimeListEntryGuiEvent
+import io.github.manamiproject.manami.gui.events.AnimeEntryFinishedGuiEvent
+import io.github.manamiproject.manami.gui.events.AnimeEntryFoundGuiEvent
+import io.github.manamiproject.manami.gui.events.RemoveAnimeListEntryGuiEvent
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty

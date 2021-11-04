@@ -1,10 +1,10 @@
 package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
-import io.github.manamiproject.manami.gui.CachePopulatorFinishedGuiEvent
-import io.github.manamiproject.manami.gui.FileOpenedGuiEvent
-import io.github.manamiproject.manami.gui.FileSavedStatusChangedGuiEvent
-import io.github.manamiproject.manami.gui.UndoRedoStatusGuiEvent
+import io.github.manamiproject.manami.gui.events.CachePopulatorFinishedGuiEvent
+import io.github.manamiproject.manami.gui.events.FileOpenedGuiEvent
+import io.github.manamiproject.manami.gui.events.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.events.UndoRedoStatusGuiEvent
 import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest

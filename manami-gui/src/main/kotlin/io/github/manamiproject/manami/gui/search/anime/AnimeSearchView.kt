@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.app.search.SearchType.OR
 import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
+import io.github.manamiproject.manami.gui.events.*
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList

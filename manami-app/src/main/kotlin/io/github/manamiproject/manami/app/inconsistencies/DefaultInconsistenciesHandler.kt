@@ -28,6 +28,9 @@ import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.events.Subscribe
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
 
@@ -38,6 +41,7 @@ internal class DefaultInconsistenciesHandler(
     private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
         AnimeListMetaDataInconsistenciesHandler(state, cache),
         AnimeListDeadEntriesInconsistenciesHandler(state, cache),
+        AnimeListEpisodesInconsistenciesHandler(state),
         MetaDataInconsistencyHandler(state, cache),
         DeadEntriesInconsistencyHandler(state, cache),
     ),
@@ -99,6 +103,11 @@ internal class DefaultInconsistenciesHandler(
             is AnimeListDeadEntriesInconsistenciesResult -> {
                 if (result.entries.isNotEmpty()) {
                     eventBus.post(AnimeListDeadEntriesInconsistenciesResultEvent(result.entries))
+                }
+            }
+            is AnimeListEpisodesInconsistenciesResult -> {
+                if (result.entries.isNotEmpty()) {
+                    eventBus.post(AnimeListEpisodesInconsistenciesResultEvent(result.entries))
                 }
             }
         }

@@ -1,8 +1,10 @@
 package io.github.manamiproject.manami.gui.inconsistencies
 
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.EpisodeDiff
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.events.*
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
@@ -19,6 +21,7 @@ class InconsistenciesView : View() {
 
     private val animeListDeadEntries = SimpleBooleanProperty(false)
     private val animeListMetaData = SimpleBooleanProperty(false)
+    private val animeListEpisodes = SimpleBooleanProperty(false)
     private val metaDataSelected = SimpleBooleanProperty(false)
     private val deadEntriesSelected = SimpleBooleanProperty(false)
 
@@ -57,6 +60,13 @@ class InconsistenciesView : View() {
                 activeItems.add(messageBox)
             }
         }
+        subscribe<AnimeListEpisodesInconsistenciesResultGuiEvent> { event ->
+            event.entries.forEach {
+                val messageBox = createAnimeListEpisodesMessageBox(it)
+                items["${ANIME_LIST_EPISODES_PREFIX}-${it.animeListEntry.link}"] = messageBox
+                activeItems.add(messageBox)
+            }
+        }
         subscribe<FileOpenedGuiEvent> {
             items.clear()
             activeItems.clear()
@@ -90,6 +100,11 @@ class InconsistenciesView : View() {
                                     selectedProperty().bindBidirectional(animeListDeadEntries)
                                 }
                             }
+                            field("Episodes") {
+                                checkbox {
+                                    selectedProperty().bindBidirectional(animeListEpisodes)
+                                }
+                            }
                         }
                         fieldset("WatchList / IgnoreList") {
                             field("MetaData") {
@@ -108,7 +123,14 @@ class InconsistenciesView : View() {
                                 isDefaultButton = true
 
                                 action {
-                                    if (!animeListMetaData.value && !animeListDeadEntries.value && !metaDataSelected.value && !deadEntriesSelected.value) {
+                                    val options = listOf(
+                                        !animeListMetaData.value,
+                                        !animeListDeadEntries.value,
+                                        !animeListEpisodes.value,
+                                        !metaDataSelected.value,
+                                        !deadEntriesSelected.value,
+                                    )
+                                    if (options.all { !it }) {
                                         return@action
                                     }
 
@@ -120,6 +142,7 @@ class InconsistenciesView : View() {
                                             InconsistenciesSearchConfig(
                                                 checkAnimeListMetaData = animeListMetaData.value,
                                                 checkAnimeListDeadEnties = animeListDeadEntries.value,
+                                                checkAnimeListEpisodes = animeListEpisodes.value,
                                                 checkMetaData = metaDataSelected.value,
                                                 checkDeadEntries = deadEntriesSelected.value,
                                             )
@@ -231,9 +254,28 @@ class InconsistenciesView : View() {
         }
     }
 
+    private fun createAnimeListEpisodesMessageBox(episodeDiff: EpisodeDiff): HBox {
+        return HBox().apply {
+            add(
+                form {
+                    fieldset {
+                        field("${episodeDiff.animeListEntry.title} ( ${episodeDiff.animeListEntry.link} ) expects ${episodeDiff.animeListEntry.episodes} files, but found${episodeDiff.numberOfFiles}") {
+                            button("hide") {
+                                action {
+                                    activeItems.remove(items["$ANIME_LIST_EPISODES_PREFIX-${episodeDiff.animeListEntry.link}"])
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
     companion object {
         private const val ANIME_LIST_DEAD_ENTRIES_PREFIX = "anime-list-dead-entries"
         private const val ANIME_LIST_META_DATA_PREFIX = "anime-list-meta-data"
+        private const val ANIME_LIST_EPISODES_PREFIX = "anime-list-episodes"
         private const val META_DATA_RESULT_ENTRY = "meta-data-result-event"
         private const val DEAD_ENTRIES_RESULT_ENTRY = "dead-entries-result-event"
     }

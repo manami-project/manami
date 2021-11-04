@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleAnimeAddition
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
+import io.github.manamiproject.manami.gui.events.*
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty

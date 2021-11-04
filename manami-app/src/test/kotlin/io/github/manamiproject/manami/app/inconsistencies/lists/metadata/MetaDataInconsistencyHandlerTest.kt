@@ -21,576 +21,588 @@ import java.net.URI
 
 internal class MetaDataInconsistencyHandlerTest {
 
-    @Test
-    fun `is executable if the config explicitly activates the option`() {
-        // given
-        val inconsistencyHandler = MetaDataInconsistencyHandler(
-            state = TestState,
-            cache = TestAnimeCache,
-        )
+    @Nested
+    inner class IsExecutableTests {
 
-        val isExecutableConfig = InconsistenciesSearchConfig(
-            checkMetaData = true
-        )
-
-        // when
-        val result = inconsistencyHandler.isExecutable(isExecutableConfig)
-
-        // then
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `is not executable if the config doesn't explicitly activates the option`() {
-        // given
-        val inconsistencyHandler = MetaDataInconsistencyHandler(
-            state = TestState,
-            cache = TestAnimeCache,
-        )
-
-        val isNotExecutableConfig = InconsistenciesSearchConfig(
-            checkMetaData = false
-        )
-
-        // when
-        val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
-
-        // then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `workload is computed by size of watch- and ignoreList`() {
-        // given
-        val testState = object: State by TestState {
-            override fun watchList(): Set<WatchListEntry> = setOf(
-                WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/5114"),
-                    title = "Fullmetal Alchemist: Brotherhood",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                )
+        @Test
+        fun `is executable if the config explicitly activates the option`() {
+            // given
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
+                state = TestState,
+                cache = TestAnimeCache,
             )
-            override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/31139"),
-                    title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg")
-                ),
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/37747"),
-                    title = "Ame-iro Cocoa: Side G",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
-                )
+
+            val isExecutableConfig = InconsistenciesSearchConfig(
+                checkMetaData = true
             )
+
+            // when
+            val result = inconsistencyHandler.isExecutable(isExecutableConfig)
+
+            // then
+            assertThat(result).isTrue()
         }
 
-        val inconsistencyHandler = MetaDataInconsistencyHandler(
-            state = testState,
-        )
+        @Test
+        fun `is not executable if the config doesn't explicitly activates the option`() {
+            // given
+            val inconsistencyHandler = MetaDataInconsistencyHandler(
+                state = TestState,
+                cache = TestAnimeCache,
+            )
 
-        // when
-        val result = inconsistencyHandler.calculateWorkload()
+            val isNotExecutableConfig = InconsistenciesSearchConfig(
+                checkMetaData = false
+            )
 
-        // then
-        assertThat(result).isEqualTo(3)
+            // when
+            val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
+
+            // then
+            assertThat(result).isFalse()
+        }
     }
 
     @Nested
-    inner class WatchListTests {
+    inner class CalculateWorkloadTests {
 
         @Test
-        fun `entries without cache entry cannot appear in result`() {
+        fun `workload is computed by size of watch- and ignoreList`() {
             // given
             val testState = object: State by TestState {
                 override fun watchList(): Set<WatchListEntry> = setOf(
                     WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/10001"),
-                        title = "Dead entry",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        link = Link("https://myanimelist.net/anime/5114"),
+                        title = "Fullmetal Alchemist: Brotherhood",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
                     )
                 )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = Empty()
-            }
-
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
-        }
-
-        @Test
-        fun `do not include entry if current entry and entry from cache have different links`() {
-            // given
-            val testState = object: State by TestState {
-                override fun watchList(): Set<WatchListEntry> = setOf(
-                    WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/10001"),
-                        title = "Dead entry",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                    )
-                )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/31646"),
-                        ),
-                        _title = "3-gatsu no Lion",
-                        type = TV,
-                        episodes = 22,
-                        status = FINISHED,
-                        animeSeason = AnimeSeason(
-                            season = FALL,
-                            year = 2016,
-                        ),
-                        relatedAnime = SortedList(
-                            URI("https://myanimelist.net/anime/28789"),
-                            URI("https://myanimelist.net/anime/34611"),
-                            URI("https://myanimelist.net/anime/34647"),
-                            URI("https://myanimelist.net/anime/35180"),
-                            URI("https://myanimelist.net/anime/38154"),
-                        ),
+                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/31139"),
+                        title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg")
+                    ),
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/37747"),
+                        title = "Ame-iro Cocoa: Side G",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
                     )
                 )
             }
 
             val inconsistencyHandler = MetaDataInconsistencyHandler(
                 state = testState,
-                cache = testCache,
             )
 
             // when
-            val result = inconsistencyHandler.execute()
+            val result = inconsistencyHandler.calculateWorkload()
 
             // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
+            assertThat(result).isEqualTo(3)
         }
+    }
 
-        @Test
-        fun `do not include entry if current entry and entry from cache do not differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun watchList(): Set<WatchListEntry> = setOf(
-                    WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/31646"),
-                        title = "3-gatsu no Lion",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+    @Nested
+    inner class ExecuteTests {
+
+        @Nested
+        inner class WatchListTests {
+
+            @Test
+            fun `entries without cache entry cannot appear in result`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/10001"),
+                            title = "Dead entry",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        )
                     )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/31646"),
-                        ),
-                        _title = "3-gatsu no Lion",
-                        type = TV,
-                        episodes = 22,
-                        status = FINISHED,
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                        animeSeason = AnimeSeason(
-                            season = FALL,
-                            year = 2016,
-                        ),
-                        relatedAnime = SortedList(
-                            URI("https://myanimelist.net/anime/28789"),
-                            URI("https://myanimelist.net/anime/34611"),
-                            URI("https://myanimelist.net/anime/34647"),
-                            URI("https://myanimelist.net/anime/35180"),
-                            URI("https://myanimelist.net/anime/38154"),
-                        ),
+            @Test
+            fun `do not include entry if current entry and entry from cache have different links`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/10001"),
+                            title = "Dead entry",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        )
                     )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/31646"),
+                            ),
+                            _title = "3-gatsu no Lion",
+                            type = TV,
+                            episodes = 22,
+                            status = FINISHED,
+                            animeSeason = AnimeSeason(
+                                season = FALL,
+                                year = 2016,
+                            ),
+                            relatedAnime = SortedList(
+                                URI("https://myanimelist.net/anime/28789"),
+                                URI("https://myanimelist.net/anime/34611"),
+                                URI("https://myanimelist.net/anime/34647"),
+                                URI("https://myanimelist.net/anime/35180"),
+                                URI("https://myanimelist.net/anime/38154"),
+                            ),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
+            @Test
+            fun `do not include entry if current entry and entry from cache do not differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/31646"),
+                            title = "3-gatsu no Lion",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        )
+                    )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
 
-            // when
-            val result = inconsistencyHandler.execute()
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/31646"),
+                            ),
+                            _title = "3-gatsu no Lion",
+                            type = TV,
+                            episodes = 22,
+                            status = FINISHED,
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                            animeSeason = AnimeSeason(
+                                season = FALL,
+                                year = 2016,
+                            ),
+                            relatedAnime = SortedList(
+                                URI("https://myanimelist.net/anime/28789"),
+                                URI("https://myanimelist.net/anime/34611"),
+                                URI("https://myanimelist.net/anime/34647"),
+                                URI("https://myanimelist.net/anime/35180"),
+                                URI("https://myanimelist.net/anime/38154"),
+                            ),
+                        )
+                    )
+                }
 
-            // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
-        }
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
+                )
 
-        @Test
-        fun `include entry if title differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun watchList(): Set<WatchListEntry> = setOf(
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
+            }
+
+            @Test
+            fun `include entry if title differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/31646"),
+                            title = "sangatsu no Lion",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        )
+                    )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/31646"),
+                            ),
+                            _title = "3-gatsu no Lion",
+                            type = TV,
+                            episodes = 22,
+                            status = FINISHED,
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                            animeSeason = AnimeSeason(
+                                season = FALL,
+                                year = 2016,
+                            ),
+                            relatedAnime = SortedList(
+                                URI("https://myanimelist.net/anime/28789"),
+                                URI("https://myanimelist.net/anime/34611"),
+                                URI("https://myanimelist.net/anime/34647"),
+                                URI("https://myanimelist.net/anime/35180"),
+                                URI("https://myanimelist.net/anime/38154"),
+                            ),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults.size).isOne()
+                val entry = result.watchListResults.first()
+                assertThat(entry.currentEntry).isEqualTo(
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/31646"),
                         title = "sangatsu no Lion",
                         thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                     )
                 )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/31646"),
-                        ),
-                        _title = "3-gatsu no Lion",
-                        type = TV,
-                        episodes = 22,
-                        status = FINISHED,
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                        animeSeason = AnimeSeason(
-                            season = FALL,
-                            year = 2016,
-                        ),
-                        relatedAnime = SortedList(
-                            URI("https://myanimelist.net/anime/28789"),
-                            URI("https://myanimelist.net/anime/34611"),
-                            URI("https://myanimelist.net/anime/34647"),
-                            URI("https://myanimelist.net/anime/35180"),
-                            URI("https://myanimelist.net/anime/38154"),
-                        ),
-                    )
-                )
-            }
-
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults.size).isOne()
-            val entry = result.watchListResults.first()
-            assertThat(entry.currentEntry).isEqualTo(
-                WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/31646"),
-                    title = "sangatsu no Lion",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                )
-            )
-            assertThat(entry.newEntry).isEqualTo(
-                WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/31646"),
-                    title = "3-gatsu no Lion",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                )
-            )
-            assertThat(result.ignoreListResults).isEmpty()
-        }
-
-        @Test
-        fun `include entry if thumbnails differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun watchList(): Set<WatchListEntry> = setOf(
+                assertThat(entry.newEntry).isEqualTo(
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/31646"),
                         title = "3-gatsu no Lion",
                         thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                     )
                 )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/31646"),
-                        ),
-                        _title = "3-gatsu no Lion",
-                        type = TV,
-                        episodes = 22,
-                        status = FINISHED,
+            @Test
+            fun `include entry if thumbnails differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/31646"),
+                            title = "3-gatsu no Lion",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        )
+                    )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/31646"),
+                            ),
+                            _title = "3-gatsu no Lion",
+                            type = TV,
+                            episodes = 22,
+                            status = FINISHED,
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898t.jpg"),
+                            animeSeason = AnimeSeason(
+                                season = FALL,
+                                year = 2016,
+                            ),
+                            relatedAnime = SortedList(
+                                URI("https://myanimelist.net/anime/28789"),
+                                URI("https://myanimelist.net/anime/34611"),
+                                URI("https://myanimelist.net/anime/34647"),
+                                URI("https://myanimelist.net/anime/35180"),
+                                URI("https://myanimelist.net/anime/38154"),
+                            ),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults.size).isOne()
+                val entry = result.watchListResults.first()
+                assertThat(entry.currentEntry).isEqualTo(
+                    WatchListEntry(
+                        link = Link("https://myanimelist.net/anime/31646"),
+                        title = "3-gatsu no Lion",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                    )
+                )
+                assertThat(entry.newEntry).isEqualTo(
+                    WatchListEntry(
+                        link = Link("https://myanimelist.net/anime/31646"),
+                        title = "3-gatsu no Lion",
                         thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898t.jpg"),
-                        animeSeason = AnimeSeason(
-                            season = FALL,
-                            year = 2016,
-                        ),
-                        relatedAnime = SortedList(
-                            URI("https://myanimelist.net/anime/28789"),
-                            URI("https://myanimelist.net/anime/34611"),
-                            URI("https://myanimelist.net/anime/34647"),
-                            URI("https://myanimelist.net/anime/35180"),
-                            URI("https://myanimelist.net/anime/38154"),
-                        ),
                     )
                 )
+                assertThat(result.ignoreListResults).isEmpty()
             }
-
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults.size).isOne()
-            val entry = result.watchListResults.first()
-            assertThat(entry.currentEntry).isEqualTo(
-                WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/31646"),
-                    title = "3-gatsu no Lion",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                )
-            )
-            assertThat(entry.newEntry).isEqualTo(
-                WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/31646"),
-                    title = "3-gatsu no Lion",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898t.jpg"),
-                )
-            )
-            assertThat(result.ignoreListResults).isEmpty()
-        }
-    }
-
-    @Nested
-    inner class IgnoreListTests {
-
-        @Test
-        fun `entries without cache entry cannot appear in result`() {
-            // given
-            val testState = object: State by TestState {
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/28981"),
-                        title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
-                    )
-                )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = Empty()
-            }
-
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
         }
 
-        @Test
-        fun `do not include entry if current entry and entry from cache have different links`() {
-            // given
-            val testState = object: State by TestState {
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/10001"),
-                        title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+        @Nested
+        inner class IgnoreListTests {
+
+            @Test
+            fun `entries without cache entry cannot appear in result`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        )
                     )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/28981"),
-                        ),
-                        _title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+            @Test
+            fun `do not include entry if current entry and entry from cache have different links`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/10001"),
+                            title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        )
                     )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/28981"),
+                            ),
+                            _title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
-        }
-
-        @Test
-        fun `do not include entry if current entry and entry from cache do not differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/28981"),
-                        title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+            @Test
+            fun `do not include entry if current entry and entry from cache do not differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        )
                     )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/28981"),
+                            ),
+                            _title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+                assertThat(result.ignoreListResults).isEmpty()
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/28981"),
-                        ),
-                        _title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+            @Test
+            fun `include entry if title differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ameiro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        )
                     )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/28981"),
+                            ),
+                            _title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        )
+                    )
+                }
+
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
-            }
 
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
+                // when
+                val result = inconsistencyHandler.execute()
 
-            // when
-            val result = inconsistencyHandler.execute()
+                // then
+                assertThat(result.watchListResults).isEmpty()
 
-            // then
-            assertThat(result.watchListResults).isEmpty()
-            assertThat(result.ignoreListResults).isEmpty()
-        }
-
-        @Test
-        fun `include entry if title differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                assertThat(result.ignoreListResults.size).isOne()
+                val entry = result.ignoreListResults.first()
+                assertThat(entry.currentEntry).isEqualTo(
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ameiro Cocoa",
                         thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
                     )
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/28981"),
-                        ),
-                        _title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                assertThat(entry.newEntry).isEqualTo(
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/28981"),
+                        title = "Ame-iro Cocoa",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
                     )
                 )
             }
 
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
+            @Test
+            fun `include entry if thumbnails differ`() {
+                // given
+                val testState = object: State by TestState {
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        )
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                }
 
-            // when
-            val result = inconsistencyHandler.execute()
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            sources = SortedList(
+                                URI("https://myanimelist.net/anime/28981"),
+                            ),
+                            _title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        )
+                    )
+                }
 
-            // then
-            assertThat(result.watchListResults).isEmpty()
-
-            assertThat(result.ignoreListResults.size).isOne()
-            val entry = result.ignoreListResults.first()
-            assertThat(entry.currentEntry).isEqualTo(
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/28981"),
-                    title = "Ameiro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                val inconsistencyHandler = MetaDataInconsistencyHandler(
+                    state = testState,
+                    cache = testCache,
                 )
-            )
-            assertThat(entry.newEntry).isEqualTo(
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/28981"),
-                    title = "Ame-iro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
-                )
-            )
-        }
 
-        @Test
-        fun `include entry if thumbnails differ`() {
-            // given
-            val testState = object: State by TestState {
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.watchListResults).isEmpty()
+
+                assertThat(result.ignoreListResults.size).isOne()
+                val entry = result.ignoreListResults.first()
+                assertThat(entry.currentEntry).isEqualTo(
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
                         thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
                     )
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        sources = SortedList(
-                            URI("https://myanimelist.net/anime/28981"),
-                        ),
-                        _title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                assertThat(entry.newEntry).isEqualTo(
+                    IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/28981"),
+                        title = "Ame-iro Cocoa",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
                     )
                 )
             }
-
-            val inconsistencyHandler = MetaDataInconsistencyHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.watchListResults).isEmpty()
-
-            assertThat(result.ignoreListResults.size).isOne()
-            val entry = result.ignoreListResults.first()
-            assertThat(entry.currentEntry).isEqualTo(
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/28981"),
-                    title = "Ame-iro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
-                )
-            )
-            assertThat(entry.newEntry).isEqualTo(
-                IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/28981"),
-                    title = "Ame-iro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
-                )
-            )
         }
     }
 }

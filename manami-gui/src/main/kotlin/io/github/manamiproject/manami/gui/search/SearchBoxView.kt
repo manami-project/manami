@@ -1,9 +1,9 @@
 package io.github.manamiproject.manami.gui.search
 
 import impl.org.controlsfx.autocompletion.SuggestionProvider
-import io.github.manamiproject.manami.gui.AddAnimeListEntryGuiEvent
-import io.github.manamiproject.manami.gui.AddIgnoreListEntryGuiEvent
-import io.github.manamiproject.manami.gui.AddWatchListEntryGuiEvent
+import io.github.manamiproject.manami.gui.events.AddAnimeListEntryGuiEvent
+import io.github.manamiproject.manami.gui.events.AddIgnoreListEntryGuiEvent
+import io.github.manamiproject.manami.gui.events.AddWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY

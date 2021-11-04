@@ -2,6 +2,10 @@ package io.github.manamiproject.manami.gui.main
 
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.events.FileOpenedGuiEvent
+import io.github.manamiproject.manami.gui.events.FileSavedStatusChangedGuiEvent
+import io.github.manamiproject.manami.gui.events.NewVersionAvailableGuiEvent
+import io.github.manamiproject.manami.gui.events.SavedAsFileGuiEvent
 import io.github.manamiproject.manami.gui.extensions.focus
 import io.github.manamiproject.manami.gui.search.SearchBoxView
 import io.github.manamiproject.modb.core.extensions.EMPTY
