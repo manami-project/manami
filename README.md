@@ -1,4 +1,4 @@
-![Build](https://github.com/manami-project/manami/workflows/Build/badge.svg)
+![Build](https://github.com/manami-project/manami/workflows/Build/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/manami-project/manami/badge.svg)](https://coveralls.io/github/manami-project/manami)
 # Manami
 
 ## What does it do?
