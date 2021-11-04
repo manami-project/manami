@@ -31,3 +31,9 @@ jobs:
         env:
           GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: ./gradlew test
+      - name: Generate coverage
+        if: ${{ matrix.java == 14 }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew jacocoTestReport coverallsJacoco

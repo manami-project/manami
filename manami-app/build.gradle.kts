@@ -1,3 +1,8 @@
+plugins {
+    jacoco
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.13"
+}
+
 dependencies {
     api("io.github.manamiproject:modb-core:7.0.2")
     api("io.github.manamiproject:modb-db-parser:3.1.2")
@@ -17,4 +22,17 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.9")
 
     testImplementation("io.github.manamiproject:modb-test:1.2.11")
+}
+
+coverallsJacoco {
+    reportPath = "$buildDir/reports/jacoco/test/jacocoFullReport.xml"
+}
+
+tasks.jacocoTestReport {
+    reports {
+        html.required.set(false)
+        xml.required.set(true)
+        xml.outputLocation.set(file("$buildDir/reports/jacoco/test/jacocoFullReport.xml"))
+    }
+    dependsOn(allprojects.map { it.tasks.named<Test>("test") })
 }

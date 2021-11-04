@@ -9,13 +9,14 @@ on:
       - '.gitignore'
       - '.gitattributes'
       - '.github/workflows/**'
+      - '!.github/workflows/pull-requests.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 14 ]
+        java: [ 14, x ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,5 +29,11 @@ jobs:
         run: chmod +x gradlew
       - name: Execute tests
         env:
-          GH_PACKAGES_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: ./gradlew test
+      - name: Generate coverage
+        if: ${{ matrix.java == 14 }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew manami-app:jacocoTestReport manami-app:coverallsJacoco
