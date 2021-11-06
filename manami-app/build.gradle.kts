@@ -1,13 +1,16 @@
 plugins {
-    jacoco
+    id("manami-base-plugin")
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.13"
+    jacoco
 }
 
 dependencies {
+    api(kotlin("stdlib-jdk8"))
     api("io.github.manamiproject:modb-core:7.0.2")
     api("io.github.manamiproject:modb-db-parser:3.1.2")
-    api("org.slf4j:slf4j-api:1.7.32")
 
+    implementation(platform(kotlin("bom")))
+    implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
     implementation("io.github.manamiproject:modb-anidb:3.0.7")
     implementation("io.github.manamiproject:modb-anilist:4.0.6")
