@@ -118,6 +118,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 // given
                 val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
 
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
                     override fun animeList(): List<AnimeListEntry> {
@@ -128,7 +129,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = TV,
                                 episodes = 12,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("/test")
+                                location = testLocation
                             ),
                         )
                     }

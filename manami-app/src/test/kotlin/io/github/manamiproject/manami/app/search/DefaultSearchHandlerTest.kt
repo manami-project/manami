@@ -28,11 +28,13 @@ import io.github.manamiproject.modb.core.models.Anime.Status.UPCOMING
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
+import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.lang.Thread.sleep
 import java.net.URI
+import kotlin.io.path.createDirectory
 
 internal class DefaultSearchHandlerTest {
 
@@ -187,95 +189,99 @@ internal class DefaultSearchHandlerTest {
 
         @Test
         fun `exclude entries in animelist`() {
-            // given
-            val matchingEntry1 = Anime(
-                sources = SortedList(
-                    URI("https://anidb.net/anime/15738"),
-                    URI("https://anilist.co/anime/124194"),
-                    URI("https://anime-planet.com/anime/fruits-basket-the-final"),
-                    URI("https://kitsu.io/anime/43578"),
-                    URI("https://myanimelist.net/anime/42938"),
-                    URI("https://notify.moe/anime/YiySZ9OMg"),
-                ),
-                _title = "Fruits Basket: The Final",
-                type = TV,
-                episodes = 24,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = SPRING,
-                    year = 2021,
-                ),
-            )
+            tempDirectory {
 
-            val matchingEntry2 = Anime(
-                sources = SortedList(
-                    URI("https://anidb.net/anime/15807"),
-                    URI("https://anilist.co/anime/125368"),
-                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
-                    URI("https://myanimelist.net/anime/43609"),
-                    URI("https://notify.moe/anime/_RdVrLpGR"),
-                ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
-                type = OVA,
-                episodes = 1,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = SPRING,
-                    year = 2021,
-                ),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    AnimeListEntry(
-                        link = Link("https://myanimelist.net/anime/42938"),
-                        title = "Fruits Basket: The Final",
-                        episodes = 24,
-                        type = TV,
-                        location = URI("/test"),
-                    )
+                // given
+                val matchingEntry1 = Anime(
+                    sources = SortedList(
+                        URI("https://anidb.net/anime/15738"),
+                        URI("https://anilist.co/anime/124194"),
+                        URI("https://anime-planet.com/anime/fruits-basket-the-final"),
+                        URI("https://kitsu.io/anime/43578"),
+                        URI("https://myanimelist.net/anime/42938"),
+                        URI("https://notify.moe/anime/YiySZ9OMg"),
+                    ),
+                    _title = "Fruits Basket: The Final",
+                    type = TV,
+                    episodes = 24,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = SPRING,
+                        year = 2021,
+                    ),
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
-                matchingEntry1.sources.forEach {
-                    populate(it, PresentValue(matchingEntry1))
+                val matchingEntry2 = Anime(
+                    sources = SortedList(
+                        URI("https://anidb.net/anime/15807"),
+                        URI("https://anilist.co/anime/125368"),
+                        URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                        URI("https://kitsu.io/anime/43731"),
+                        URI("https://myanimelist.net/anime/43609"),
+                        URI("https://notify.moe/anime/_RdVrLpGR"),
+                    ),
+                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    type = OVA,
+                    episodes = 1,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = SPRING,
+                        year = 2021,
+                    ),
+                )
+
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        AnimeListEntry(
+                            link = Link("https://myanimelist.net/anime/42938"),
+                            title = "Fruits Basket: The Final",
+                            episodes = 24,
+                            type = TV,
+                            location = testLocation,
+                        )
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
-                matchingEntry2.sources.forEach {
-                    populate(it, PresentValue(matchingEntry2))
+
+                val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                    matchingEntry1.sources.forEach {
+                        populate(it, PresentValue(matchingEntry1))
+                    }
+                    matchingEntry2.sources.forEach {
+                        populate(it, PresentValue(matchingEntry2))
+                    }
                 }
-            }
 
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object: EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object: EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
                 }
+
+                val defaultSearchHandler = DefaultSearchHandler(
+                    state = testState,
+                    cache = testCache,
+                    eventBus = testEventBus,
+                )
+
+                // when
+                defaultSearchHandler.findSeason(
+                    season = AnimeSeason(
+                        year = 2021,
+                        season = SPRING,
+                    ),
+                    "myanimelist.net"
+                )
+
+                // then
+                sleep(1000)
+                assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
+                    "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
+                )
             }
-
-            val defaultSearchHandler = DefaultSearchHandler(
-                state = testState,
-                cache = testCache,
-                eventBus = testEventBus,
-            )
-
-            // when
-            defaultSearchHandler.findSeason(
-                season = AnimeSeason(
-                    year = 2021,
-                    season = SPRING,
-                ),
-                "myanimelist.net"
-            )
-
-            // then
-            sleep(1000)
-            assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
-                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
-            )
         }
 
         @Test
@@ -831,139 +837,143 @@ internal class DefaultSearchHandlerTest {
 
         @Test
         fun `exclude entries in animelist`() {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    AnimeListEntry(
-                        link = Link("https://myanimelist.net/anime/42938"),
-                        title = "Fruits Basket: The Final",
-                        episodes = 24,
-                        type = TV,
-                        location = URI("/test"),
+            tempDirectory {
+                // given
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        AnimeListEntry(
+                            link = Link("https://myanimelist.net/anime/42938"),
+                            title = "Fruits Basket: The Final",
+                            episodes = 24,
+                            type = TV,
+                            location = testLocation,
+                        )
                     )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val matchingEntry1 = Anime(
+                    sources = SortedList(
+                        URI("https://anidb.net/anime/15738"),
+                        URI("https://anilist.co/anime/124194"),
+                        URI("https://anime-planet.com/anime/fruits-basket-the-final"),
+                        URI("https://kitsu.io/anime/43578"),
+                        URI("https://myanimelist.net/anime/42938"),
+                        URI("https://notify.moe/anime/YiySZ9OMg"),
+                    ),
+                    _title = "Fruits Basket: The Final",
+                    type = TV,
+                    episodes = 1,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = SPRING,
+                        year = 2021,
+                    ),
+                    tags = SortedList("my-tag-1", "my-tag-2"),
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+
+                val matchingEntry2 = Anime(
+                    sources = SortedList(
+                        URI("https://anidb.net/anime/15070"),
+                        URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
+                        URI("https://myanimelist.net/anime/40356"),
+                        URI("https://notify.moe/anime/rBaaLj2Wg"),
+                    ),
+                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    type = TV,
+                    episodes = 0,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = FALL,
+                        year = 2021,
+                    ),
+                    tags = SortedList("my-tag-1"),
+                )
+
+                val matchingEntry3 = Anime(
+                    sources = SortedList(
+                        URI("https://myanimelist.net/anime/46587"),
+                    ),
+                    _title = "Tenchi Souzou Design-bu Special",
+                    type = ONA,
+                    episodes = 1,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = UNDEFINED,
+                        year = 2021
+                    ),
+                    tags = SortedList("my-tag-2"),
+                )
+
+                val notMatchingEntry = Anime(
+                    sources = SortedList(
+                        URI("https://anidb.net/anime/15807"),
+                        URI("https://anilist.co/anime/125368"),
+                        URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                        URI("https://kitsu.io/anime/43731"),
+                        URI("https://myanimelist.net/anime/43609"),
+                        URI("https://notify.moe/anime/_RdVrLpGR"),
+                    ),
+                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    type = OVA,
+                    episodes = 1,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = SPRING,
+                        year = 2021,
+                    ),
+                    tags = SortedList("totally-different-tag")
+                )
+
+                val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                    matchingEntry1.sources.forEach {
+                        populate(it, PresentValue(matchingEntry1))
+                    }
+                    matchingEntry2.sources.forEach {
+                        populate(it, PresentValue(matchingEntry2))
+                    }
+                    matchingEntry3.sources.forEach {
+                        populate(it, PresentValue(matchingEntry3))
+                    }
+                    notMatchingEntry.sources.forEach {
+                        populate(it, PresentValue(notMatchingEntry))
+                    }
+                }
+
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object: EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
+                }
+
+                val defaultSearchHandler = DefaultSearchHandler(
+                    state = testState,
+                    cache = testCache,
+                    eventBus = testEventBus,
+                )
+
+                // when
+                defaultSearchHandler.findByTag(
+                    tags = setOf("my-tag-1", "my-tag-2"),
+                    metaDataProvider = "myanimelist.net",
+                    searchType = OR,
+                )
+
+                // then
+                sleep(1000)
+                assertThat(receivedEvents).hasSize(3)
+
+                assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
+                    "Tate no Yuusha no Nariagari Season 2",
+                    "Tenchi Souzou Design-bu Special",
+                )
+
+                assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
-
-            val matchingEntry1 = Anime(
-                sources = SortedList(
-                    URI("https://anidb.net/anime/15738"),
-                    URI("https://anilist.co/anime/124194"),
-                    URI("https://anime-planet.com/anime/fruits-basket-the-final"),
-                    URI("https://kitsu.io/anime/43578"),
-                    URI("https://myanimelist.net/anime/42938"),
-                    URI("https://notify.moe/anime/YiySZ9OMg"),
-                ),
-                _title = "Fruits Basket: The Final",
-                type = TV,
-                episodes = 1,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = SPRING,
-                    year = 2021,
-                ),
-                tags = SortedList("my-tag-1", "my-tag-2"),
-            )
-
-            val matchingEntry2 = Anime(
-                sources = SortedList(
-                    URI("https://anidb.net/anime/15070"),
-                    URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
-                    URI("https://myanimelist.net/anime/40356"),
-                    URI("https://notify.moe/anime/rBaaLj2Wg"),
-                ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
-                type = TV,
-                episodes = 0,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = FALL,
-                    year = 2021,
-                ),
-                tags = SortedList("my-tag-1"),
-            )
-
-            val matchingEntry3 = Anime(
-                sources = SortedList(
-                    URI("https://myanimelist.net/anime/46587"),
-                ),
-                _title = "Tenchi Souzou Design-bu Special",
-                type = ONA,
-                episodes = 1,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = UNDEFINED,
-                    year = 2021
-                ),
-                tags = SortedList("my-tag-2"),
-            )
-
-            val notMatchingEntry = Anime(
-                sources = SortedList(
-                    URI("https://anidb.net/anime/15807"),
-                    URI("https://anilist.co/anime/125368"),
-                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
-                    URI("https://myanimelist.net/anime/43609"),
-                    URI("https://notify.moe/anime/_RdVrLpGR"),
-                ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
-                type = OVA,
-                episodes = 1,
-                status = UPCOMING,
-                animeSeason = AnimeSeason(
-                    season = SPRING,
-                    year = 2021,
-                ),
-                tags = SortedList("totally-different-tag")
-            )
-
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
-                matchingEntry1.sources.forEach {
-                    populate(it, PresentValue(matchingEntry1))
-                }
-                matchingEntry2.sources.forEach {
-                    populate(it, PresentValue(matchingEntry2))
-                }
-                matchingEntry3.sources.forEach {
-                    populate(it, PresentValue(matchingEntry3))
-                }
-                notMatchingEntry.sources.forEach {
-                    populate(it, PresentValue(notMatchingEntry))
-                }
-            }
-
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object: EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
-                }
-            }
-
-            val defaultSearchHandler = DefaultSearchHandler(
-                state = testState,
-                cache = testCache,
-                eventBus = testEventBus,
-            )
-
-            // when
-            defaultSearchHandler.findByTag(
-                tags = setOf("my-tag-1", "my-tag-2"),
-                metaDataProvider = "myanimelist.net",
-                searchType = OR,
-            )
-
-            // then
-            sleep(1000)
-            assertThat(receivedEvents).hasSize(3)
-
-            assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
-                "Tate no Yuusha no Nariagari Season 2",
-                "Tenchi Souzou Design-bu Special",
-            )
-
-            assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
 
         @Test

@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.lists.LinkEntry
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
+import io.github.manamiproject.modb.core.extensions.directoryExists
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Episodes
 import io.github.manamiproject.modb.core.models.Title
@@ -19,6 +20,10 @@ data class AnimeListEntry(
     val type: Anime.Type,
     val location: URI,
 ): AnimeEntry {
+
+    init {
+        validateLocation()
+    }
 
     internal fun locationToRelativePathConverter(openedFile: OpenedFile): AnimeListEntry {
         val locationString = if (location.toString().startsWith("/")) "/$location" else location.toString()
@@ -40,5 +45,11 @@ data class AnimeListEntry(
 
         val newLocation = URI(location.toString())
         return copy(location = newLocation)
+    }
+
+    private fun validateLocation() {
+        if (location.toString().startsWith("/")) {
+            require(Path(location.toString()).directoryExists()) { "Location is not a directory or does not exist." }
+        }
     }
 }
