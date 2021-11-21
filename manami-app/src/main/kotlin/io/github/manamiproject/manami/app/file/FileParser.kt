@@ -16,8 +16,8 @@ import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
-import java.nio.file.Paths
 import javax.xml.parsers.SAXParserFactory
+import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 
 internal class FileParser : Parser<ParsedManamiFile> {
@@ -33,7 +33,7 @@ internal class FileParser : Parser<ParsedManamiFile> {
         require(file.fileSuffix() == handlesSuffix()) { "Parser doesn't support given file suffix." }
 
         val entityResolver = EntityResolver { _, systemId ->
-            val fileName = Paths.get(systemId).fileName
+            val fileName = Path(systemId).fileName
             InputSource(file.parent.resolve(fileName).toString())
         }
 

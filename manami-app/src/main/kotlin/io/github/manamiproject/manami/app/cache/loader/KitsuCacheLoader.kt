@@ -14,9 +14,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.net.URI
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectory
+import kotlin.io.path.createTempDirectory
 import kotlin.io.path.deleteIfExists
 
 internal class KitsuCacheLoader(
@@ -24,7 +24,7 @@ internal class KitsuCacheLoader(
     private val animeDownloader: Downloader = KitsuDownloader(config = kitsuConfig),
     private val relationsDownloader: Downloader = KitsuDownloader(config = KitsuRelationsConfig),
     private val tagsDownloader: Downloader = KitsuDownloader(config = KitsuTagsConfig),
-    private val tempFolder: Path = Files.createTempDirectory("manami-kitsu_"),
+    private val tempFolder: Path = createTempDirectory("manami-kitsu_"),
     private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
     private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
     private val converter: AnimeConverter = KitsuConverter(

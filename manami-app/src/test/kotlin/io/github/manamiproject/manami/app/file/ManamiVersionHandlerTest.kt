@@ -6,8 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
-import java.nio.file.Paths
 import javax.xml.parsers.SAXParserFactory
+import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 
 internal class ManamiVersionHandlerTest {
@@ -21,7 +21,7 @@ internal class ManamiVersionHandlerTest {
         val saxParser = SAXParserFactory.newInstance().apply { isValidating = true }.newSAXParser()
 
         val entityResolver = EntityResolver { _, systemId ->
-            val fileName = Paths.get(systemId).fileName
+            val fileName = Path(systemId).fileName
             InputSource(file.parent.resolve(fileName).toString())
         }
         versionHandler.entityResolver = entityResolver

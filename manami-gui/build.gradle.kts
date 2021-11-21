@@ -1,24 +1,72 @@
 plugins {
-    id("manami-base-plugin")
+    kotlin("jvm") version "1.6.0"
+    id("java-library")
     id("org.openjfx.javafxplugin") version("0.0.10")
+}
+
+val githubUsername = "manami-project"
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "modb-core"
+        url = uri("https://maven.pkg.github.com/$githubUsername/modb-core")
+        credentials {
+            username = parameter("GH_USERNAME", githubUsername)
+            password = parameter("GH_PACKAGES_READ_TOKEN")
+        }
+    }
 }
 
 dependencies {
     implementation(project(":manami-app"))
+    implementation("io.github.manamiproject:modb-core:7.1.0")
     implementation("no.tornado:tornadofx:1.7.20")
     implementation("no.tornado:tornadofx-controlsfx:0.1.1")
-    implementation("eu.hansolo:tilesfx:11.48")
-    implementation("org.openjfx:javafx-graphics:14:win")
-    implementation("org.openjfx:javafx-graphics:14:linux")
-    implementation("org.openjfx:javafx-graphics:14:mac")
+    implementation("eu.hansolo:tilesfx:17.0.7")
+    implementation("org.openjfx:javafx-graphics:17.0.1:win")
+    implementation("org.openjfx:javafx-graphics:17.0.1:linux")
+    implementation("org.openjfx:javafx-graphics:17.0.1:mac")
 }
 
 javafx {
-    version = "14"
+    version = "17"
     modules = listOf(
         "javafx.base",
         "javafx.controls",
         "javafx.graphics",
         "javafx.web",
     )
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = Versions.JVM_TARGET
+        freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    reports.html.required.set(false)
+    reports.junitXml.required.set(false)
+    maxParallelForks = Runtime.getRuntime().availableProcessors()
+}
+
+object Versions {
+    const val JVM_TARGET = "17"
+}
+
+fun parameter(name: String, default: String = ""): String {
+    val env = System.getenv(name) ?: ""
+    if (env.isNotBlank()) {
+        return env
+    }
+
+    val property = project.findProperty(name) as String? ?: ""
+    if (property.isNotEmpty()) {
+        return property
+    }
+
+    return default
 }

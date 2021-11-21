@@ -15,7 +15,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
-import java.nio.file.Files
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createFile
 
 internal class AnimeListEpisodesInconsistenciesHandlerTest {
 
@@ -115,8 +116,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `exclude entries without link`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
@@ -150,11 +150,10 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `exclude entries having the same amount of files as expected number of episodes`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
-                val dir = Files.createDirectory(tempDir.resolve("test"))
-                Files.createFile(dir.resolve("episode1.txt"))
-                Files.createFile(dir.resolve("episode2.txt"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val dir = tempDir.resolve("test").createDirectory()
+                dir.resolve("episode1.txt").createFile()
+                dir.resolve("episode2.txt").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
@@ -188,12 +187,11 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `ignore files starting with a dot (hidden files)`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
-                val dir = Files.createDirectory(tempDir.resolve("test"))
-                Files.createFile(dir.resolve("episode1.txt"))
-                Files.createFile(dir.resolve("episode2.txt"))
-                Files.createFile(dir.resolve(".hidden-file"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val dir = tempDir.resolve("test").createDirectory()
+                dir.resolve("episode1.txt").createFile()
+                dir.resolve("episode2.txt").createFile()
+                dir.resolve(".hidden-file").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
@@ -227,14 +225,13 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `ignore additional directories`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
-                val dir = Files.createDirectory(tempDir.resolve("test"))
-                Files.createFile(dir.resolve("episode1.txt"))
-                Files.createFile(dir.resolve("episode2.txt"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val dir = tempDir.resolve("test").createDirectory()
+                dir.resolve("episode1.txt").createFile()
+                dir.resolve("episode2.txt").createFile()
 
-                val subdir = Files.createDirectory(dir.resolve("subdir"))
-                Files.createFile(subdir.resolve("third-file.txt"))
+                val subdir = dir.resolve("subdir").createDirectory()
+                subdir.resolve("third-file.txt").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
@@ -268,12 +265,11 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `include entries if number of files and number of episodes differ - too many files`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
-                val dir = Files.createDirectory(tempDir.resolve("test"))
-                Files.createFile(dir.resolve("episode1.txt"))
-                Files.createFile(dir.resolve("episode2.txt"))
-                Files.createFile(dir.resolve("episode3.txt"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val dir = tempDir.resolve("test").createDirectory()
+                dir.resolve("episode1.txt").createFile()
+                dir.resolve("episode2.txt").createFile()
+                dir.resolve("episode3.txt").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
@@ -307,10 +303,9 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `include entries if number of files and number of episodes differ - not enough files`() {
             tempDirectory {
                 // given
-                //FIXME: use kotlin extensions
-                val testOpenedFile = Files.createFile(tempDir.resolve("testfile.xml"))
-                val dir = Files.createDirectory(tempDir.resolve("test"))
-                Files.createFile(dir.resolve("episode1.txt"))
+                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val dir = tempDir.resolve("test").createDirectory()
+                dir.resolve("episode1.txt").createFile()
 
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)

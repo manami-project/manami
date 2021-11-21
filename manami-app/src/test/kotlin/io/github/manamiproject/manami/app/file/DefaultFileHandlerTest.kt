@@ -15,7 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.nio.file.Paths
+import kotlin.io.path.Path
 import kotlin.io.path.createFile
 
 internal class DefaultFileHandlerTest {
@@ -98,7 +98,7 @@ internal class DefaultFileHandlerTest {
 
             // when
             val result = assertThrows<IllegalStateException> {
-                defaultFileHandler.open(Paths.get(".").resolve("test.xml"))
+                defaultFileHandler.open(Path(".").resolve("test.xml"))
             }
 
             // then
@@ -144,7 +144,7 @@ internal class DefaultFileHandlerTest {
             )
 
             // when
-            defaultFileHandler.open(Paths.get(".").resolve("test.xml"), ignoreUnsavedChanged = true)
+            defaultFileHandler.open(Path(".").resolve("test.xml"), ignoreUnsavedChanged = true)
 
             // then
             assertThat(isCommandExecuted).isTrue()
@@ -295,7 +295,7 @@ internal class DefaultFileHandlerTest {
         fun `return true if the opened file is of type CurrentFile which indicates that an file has been set`() {
             // given
             val testState = object: State by TestState {
-                override fun openedFile(): OpenedFile = CurrentFile(Paths.get("."))
+                override fun openedFile(): OpenedFile = CurrentFile(Path("."))
             }
 
             val defaultFileHandler = DefaultFileHandler(

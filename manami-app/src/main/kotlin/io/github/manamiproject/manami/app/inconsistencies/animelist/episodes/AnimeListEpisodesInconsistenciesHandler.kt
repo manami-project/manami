@@ -9,8 +9,7 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import java.nio.file.Files
-import kotlin.streams.asSequence
+import kotlin.io.path.listDirectoryEntries
 
 internal class AnimeListEpisodesInconsistenciesHandler(
     private val state: State = InternalState,
@@ -48,10 +47,9 @@ internal class AnimeListEpisodesInconsistenciesHandler(
     }
 
     private fun fetchNumberOfEpisodes(entry: AnimeListEntry): Int {
-        // FIXME: use kotlin's kotlin.io.path.listDirectoryEntries
         val folder = (state.openedFile() as CurrentFile).regularFile.parent.resolve(entry.location.toString())
 
-        return Files.list(folder)
+        return folder.listDirectoryEntries()
             .asSequence()
             .filter { it.regularFileExists() }
             .filterNot { it.fileName.toString().startsWith('.') }

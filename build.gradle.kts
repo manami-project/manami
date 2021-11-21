@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("manami-base-plugin")
+    id("java-library")
     application
     id("com.github.johnrengelman.shadow") version("6.1.0")
 }

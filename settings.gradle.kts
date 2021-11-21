@@ -4,7 +4,6 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
     }
-    includeBuild("manami-build-plugins")
 }
 
 include("manami-gui")

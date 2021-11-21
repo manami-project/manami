@@ -13,7 +13,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
-import java.nio.file.Paths
+import kotlin.io.path.Path
 
 internal class CmdOpenFileTest {
 
@@ -23,7 +23,7 @@ internal class CmdOpenFileTest {
         var hasCloseFileBeenCalled = false
         var hasClearStateBeenCalled = false
         var hasClearHistoryBeenCalled = false
-        var openedFile = Paths.get(".")
+        var openedFile = Path(".")
         val animeListEntries = mutableListOf<AnimeListEntry>()
         val watchListEntries = mutableListOf<WatchListEntry>()
         val ignoreListEntries = mutableListOf<IgnoreListEntry>()
@@ -41,7 +41,7 @@ internal class CmdOpenFileTest {
             override fun clear() { hasClearHistoryBeenCalled = true }
         }
 
-        val notExistingTestFile = Paths.get(".").resolve("test.xml")
+        val notExistingTestFile = Path(".").resolve("test.xml")
 
         val parsedFile = ParsedManamiFile(
             animeListEntries = setOf(

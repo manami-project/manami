@@ -33,12 +33,12 @@ import io.github.manamiproject.modb.notify.NotifyConverter
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import java.net.URI
-import java.nio.file.Files
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.io.path.createDirectory
+import kotlin.io.path.createTempDirectory
 
-private val anisearchRelationsDir = Files.createTempDirectory("manami-anisearch_").resolve("relations").createDirectory()
-private val notifyRelationsDir = Files.createTempDirectory("manami-notify_").resolve("relations").createDirectory()
+private val anisearchRelationsDir = createTempDirectory("manami-anisearch_").resolve("relations").createDirectory()
+private val notifyRelationsDir = createTempDirectory("manami-notify_").resolve("relations").createDirectory()
 
 internal class AnimeCache(
     private val cacheLoader: List<CacheLoader> = listOf(

@@ -9,7 +9,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Episodes
 import io.github.manamiproject.modb.core.models.Title
 import java.net.URI
-import java.nio.file.Paths
+import kotlin.io.path.Path
 
 data class AnimeListEntry(
     override val link: LinkEntry = NoLink,
@@ -22,7 +22,7 @@ data class AnimeListEntry(
 
     internal fun locationToRelativePathConverter(openedFile: OpenedFile): AnimeListEntry {
         val locationString = if (location.toString().startsWith("/")) "/$location" else location.toString()
-        var location = Paths.get(locationString)
+        var location = Path(locationString)
 
         if (openedFile is CurrentFile) {
             val startDir = openedFile.regularFile.parent
