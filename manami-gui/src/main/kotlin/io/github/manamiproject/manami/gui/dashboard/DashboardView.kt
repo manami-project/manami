@@ -36,6 +36,8 @@ class DashboardView: View() {
         put("notify.moe", SimpleStringProperty("0"))
         put("anilist.co", SimpleStringProperty("0"))
         put("anidb.net", SimpleStringProperty("0"))
+        put("anisearch.com", SimpleStringProperty("0"))
+        put("livechart.me", SimpleStringProperty("0"))
     }
 
     init {
@@ -112,21 +114,21 @@ class DashboardView: View() {
                 valueProperty = metaDataProviderSeenStringProperties["myanimelist.net"]!!
             }
             numberTile {
-                title = "kitsu.io"
-                color = SLATEGRAY
-                valueProperty = metaDataProviderSeenStringProperties["kitsu.io"]!!
-            }
-            numberTile {
                 title = "anime-planet.com"
                 color = SLATEGRAY
                 valueProperty = metaDataProviderSeenStringProperties["anime-planet.com"]!!
             }
+            numberTile {
+                title = "kitsu.io"
+                color = SLATEGRAY
+                valueProperty = metaDataProviderSeenStringProperties["kitsu.io"]!!
+            }
         }
         row {
             numberTile {
-                title = "notify.moe"
+                title = "anisearch.com"
                 color = SLATEGRAY
-                valueProperty = metaDataProviderSeenStringProperties["notify.moe"]!!
+                valueProperty = metaDataProviderSeenStringProperties["anisearch.com"]!!
             }
             numberTile {
                 title = "anilist.co"
@@ -134,9 +136,21 @@ class DashboardView: View() {
                 valueProperty = metaDataProviderSeenStringProperties["anilist.co"]!!
             }
             numberTile {
+                title = "notify.moe"
+                color = SLATEGRAY
+                valueProperty = metaDataProviderSeenStringProperties["notify.moe"]!!
+            }
+        }
+        row {
+            numberTile {
                 title = "anidb.net"
                 color = SLATEGRAY
                 valueProperty = metaDataProviderSeenStringProperties["anidb.net"]!!
+            }
+            numberTile {
+                title = "livechart.me"
+                color = SLATEGRAY
+                valueProperty = metaDataProviderSeenStringProperties["livechart.me"]!!
             }
         }
     }
