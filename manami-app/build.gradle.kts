@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm")
     id("java-library")
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.13"
     jacoco

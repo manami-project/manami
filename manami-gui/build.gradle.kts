@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm")
     id("java-library")
     id("org.openjfx.javafxplugin") version("0.0.10")
 }
@@ -19,8 +19,9 @@ repositories {
 }
 
 dependencies {
+    implementation(platform(kotlin("bom", "1.6.0")))
+    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":manami-app"))
-    implementation("io.github.manamiproject:modb-core:7.1.0")
     implementation("no.tornado:tornadofx:1.7.20")
     implementation("no.tornado:tornadofx-controlsfx:0.1.1")
     implementation("eu.hansolo:tilesfx:17.0.7")
