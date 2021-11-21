@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.gui.animelist
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.*
+import io.github.manamiproject.manami.gui.animelist.AnimeFormTrigger.*
 import io.github.manamiproject.manami.gui.components.ApplicationBlockedLoading
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.events.AddAnimeListEntryGuiEvent
@@ -42,11 +43,8 @@ class AnimeListView : View() {
         subscribe<AnimeEntryFoundGuiEvent> { event ->
             loadingIndicator.close()
             find<AnimeForm>().apply {
-                selectedTitle.set(event.anime.title)
-                selectedEpisodes.set(event.anime.episodes)
-                selectedType.set(event.anime.type.toString())
-                selectedThumbnail.set(event.anime.thumbnail.toString())
-                selectedLink.set(event.anime.sources.first().toString())
+                animeProperty.value = event.anime
+                trigger.value = CREATE_AUTOMATICALLY
             }.openModal(stageStyle = UTILITY, APPLICATION_MODAL)
         }
         subscribe<AnimeEntryFinishedGuiEvent> {
@@ -55,7 +53,6 @@ class AnimeListView : View() {
     }
 
     override val root = pane {
-
         vbox {
             vgrow = ALWAYS
             hgrow = ALWAYS
@@ -104,7 +101,9 @@ class AnimeListView : View() {
                             txtUrl.text = EMPTY
                         }
 
-                        find<AnimeForm>().openModal(stageStyle = UTILITY, APPLICATION_MODAL)
+                        find<AnimeForm>().apply {
+                            trigger.value = CREATE_CUSTOM
+                        }.openModal(stageStyle = UTILITY, APPLICATION_MODAL)
                     }
                 }
             }
@@ -115,16 +114,11 @@ class AnimeListView : View() {
                 withToWatchListButton = false
                 withToIgnoreListButton = false
                 withHideButton = false
-                withEditButton = false
+                withEditButton = true
                 onEdit = {
                     find<AnimeForm>().apply {
-                        selectedTitle.set(it.title)
-                        selectedEpisodes.set(it.episodes)
-                        selectedType.set(it.type.toString())
-                        selectedThumbnail.set(it.thumbnail.toString())
-                        selectedLink.set(it.link.toString())
-                        selectedLocation.set((it.location.toString()))
-                        isEdit.set(true)
+                        animeListEntryProperty.value = it
+                        trigger.value = EDIT
                     }.openModal(stageStyle = UTILITY, APPLICATION_MODAL)
                 }
                 withDeleteButton = true

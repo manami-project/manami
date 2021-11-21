@@ -4,13 +4,11 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.ManamiAccess
+import io.github.manamiproject.manami.gui.animelist.AnimeFormTrigger.*
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.Anime
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.geometry.Pos.CENTER_RIGHT
 import javafx.scene.Parent
@@ -30,13 +28,68 @@ class AnimeForm: Fragment() {
         return@Validator ValidationResult.fromErrorIf(control, "Required. Must not be empty", value.isBlank())
     }
 
-    val selectedTitle = SimpleStringProperty(EMPTY)
-    val selectedEpisodes = SimpleIntegerProperty(1)
-    val selectedType = SimpleStringProperty("TV")
-    val selectedThumbnail = SimpleStringProperty(EMPTY)
-    val selectedLink = SimpleStringProperty(EMPTY)
-    val selectedLocation = SimpleStringProperty(EMPTY)
-    val isEdit = SimpleBooleanProperty(false)
+    private val disableTitleProperty = SimpleBooleanProperty(false)
+    private val selectedTitle = SimpleStringProperty(EMPTY)
+
+    private val disableEpisodesProperty = SimpleBooleanProperty(false)
+    private val selectedEpisodes = SimpleIntegerProperty(1)
+
+    private val disableTypeProperty = SimpleBooleanProperty(false)
+    private val selectedType = SimpleStringProperty("TV")
+
+    private val disableThumbnailProperty = SimpleBooleanProperty(false)
+    private val selectedThumbnail = SimpleStringProperty(EMPTY)
+
+    private val disableLinkProperty = SimpleBooleanProperty(false)
+    private val selectedLink = SimpleStringProperty(EMPTY)
+
+    private val selectedLocation = SimpleStringProperty(EMPTY)
+
+    val animeProperty = SimpleAnimeProperty().apply {
+        addListener { _, _, newValue ->
+            if (newValue != null) {
+                selectedTitle.set(newValue.title)
+                selectedEpisodes.set(newValue.episodes)
+                selectedType.set(newValue.type.toString())
+                selectedThumbnail.set(newValue.thumbnail.toString())
+                selectedLink.set(newValue.sources.first().toString())
+            }
+        }
+    }
+
+    val animeListEntryProperty = SimpleAnimeListEntryProperty().apply {
+        addListener { _, _, newValue ->
+            if (newValue != null) {
+                selectedTitle.set(newValue.title)
+                selectedEpisodes.set(newValue.episodes)
+                selectedType.set(newValue.type.toString())
+                selectedThumbnail.set(newValue.thumbnail.toString())
+                selectedLink.set(newValue.link.toString())
+                selectedLocation.set(newValue.location.toString())
+            }
+        }
+    }
+
+    val trigger = SimpleAnimeFormTriggerProperty().apply {
+        addListener { _, _, newValue ->
+            when {
+                newValue == CREATE_AUTOMATICALLY || newValue == EDIT && selectedLink.get().isNotBlank() -> {
+                    disableTitleProperty.set(true)
+                    disableEpisodesProperty.set(true)
+                    disableTypeProperty.set(true)
+                    disableThumbnailProperty.set(true)
+                    disableLinkProperty.set(true)
+                }
+                else -> {
+                    disableTitleProperty.set(false)
+                    disableEpisodesProperty.set(false)
+                    disableTypeProperty.set(false)
+                    disableThumbnailProperty.set(false)
+                    disableLinkProperty.set(false)
+                }
+            }
+        }
+    }
 
     override val root: Parent = pane {
         form {
@@ -46,30 +99,36 @@ class AnimeForm: Fragment() {
                         field("Title") {
                             textfield(selectedTitle) {
                                 minWidthProperty().bindBidirectional(textFieldMinWidth)
+                                disableProperty().bindBidirectional(disableTitleProperty)
                             }.apply {
                                 validationSupport.registerValidator( this, true, validator )
                             }
                         }
 
                         field("Episodes") {
-                            spinner(min = 1, max = MAX_VALUE, enableScroll = true, property = selectedEpisodes)
+                            spinner(min = 1, max = MAX_VALUE, enableScroll = true, property = selectedEpisodes) {
+                                disableProperty().bindBidirectional(disableEpisodesProperty)
+                            }
                         }
 
                         field("Type") {
                             combobox<String>(selectedType) {
                                 items = FXCollections.observableArrayList(Anime.Type.values().map { it.toString() })
+                                disableProperty().bindBidirectional(disableTypeProperty)
                             }
                         }
 
                         field("Thumbnail") {
                             textfield(selectedThumbnail) {
                                 minWidthProperty().bindBidirectional(textFieldMinWidth)
+                                disableProperty().bindBidirectional(disableThumbnailProperty)
                             }
                         }
 
                         field("Link") {
                             textfield(selectedLink) {
                                 minWidthProperty().bindBidirectional(textFieldMinWidth)
+                                disableProperty().bindBidirectional(disableLinkProperty)
                             }
                         }
 
@@ -129,7 +188,8 @@ class AnimeForm: Fragment() {
                 location = URI(selectedLocation.get()),
             )
 
-            if (isEdit.get()) {
+            if (trigger.value == EDIT) {
+                manamiAccess.replaceAnimeListEntry(animeListEntryProperty.value, entry)
             } else {
                 manamiAccess.addAnimeListEntry(entry)
             }
