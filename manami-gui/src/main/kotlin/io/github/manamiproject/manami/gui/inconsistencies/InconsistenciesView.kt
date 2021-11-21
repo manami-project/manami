@@ -259,7 +259,7 @@ class InconsistenciesView : View() {
             add(
                 form {
                     fieldset {
-                        field("${episodeDiff.animeListEntry.title} ( ${episodeDiff.animeListEntry.link} ) expects ${episodeDiff.animeListEntry.episodes} files, but found${episodeDiff.numberOfFiles}") {
+                        field("${episodeDiff.animeListEntry.title} ( ${episodeDiff.animeListEntry.link} ) expects ${episodeDiff.animeListEntry.episodes} files, but found ${episodeDiff.numberOfFiles}") {
                             button("hide") {
                                 action {
                                     activeItems.remove(items["$ANIME_LIST_EPISODES_PREFIX-${episodeDiff.animeListEntry.link}"])
