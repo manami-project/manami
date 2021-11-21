@@ -26,8 +26,16 @@ data class AnimeListEntry(
 
         if (openedFile is CurrentFile) {
             val startDir = openedFile.regularFile.parent
-            location = startDir.resolve(location)
-            location = startDir.relativize(location)
+
+            when (startDir == location) {
+                true -> {
+                    location = Path(".")
+                }
+                false -> {
+                    location = startDir.resolve(location)
+                    location = startDir.relativize(location)
+                }
+            }
         }
 
         val newLocation = URI(location.toString())

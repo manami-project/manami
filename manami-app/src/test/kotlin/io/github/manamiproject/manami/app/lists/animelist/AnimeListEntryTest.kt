@@ -59,4 +59,27 @@ internal class AnimeListEntryTest {
             assertThat(result.location).isEqualTo(URI("anime/beck"))
         }
     }
+
+    @Test
+    fun `set location to a 'dot' if location and directory of the opened file are equal`() {
+        // given
+        tempDirectory {
+            val openedFile = tempDir.resolve("test.xml").createFile()
+
+            val animeListEntry = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/57"),
+                title = "Beck",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                episodes = 26,
+                type = TV,
+                location = URI(openedFile.parent.toAbsolutePath().toString()),
+            )
+
+            // when
+            val result = animeListEntry.locationToRelativePathConverter(CurrentFile(openedFile))
+
+            // then
+            assertThat(result.location).isEqualTo(URI("."))
+        }
+    }
 }
