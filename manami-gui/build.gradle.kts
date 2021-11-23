@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":manami-app"))
     implementation("no.tornado:tornadofx:1.7.20")
     implementation("no.tornado:tornadofx-controlsfx:0.1.1")
-    implementation("eu.hansolo:tilesfx:17.0.7")
+    implementation("eu.hansolo:tilesfx:17.0.11")
     implementation("org.openjfx:javafx-graphics:17.0.1:win")
     implementation("org.openjfx:javafx-graphics:17.0.1:linux")
     implementation("org.openjfx:javafx-graphics:17.0.1:mac")
