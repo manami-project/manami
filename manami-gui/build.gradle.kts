@@ -20,14 +20,14 @@ repositories {
 
 dependencies {
     implementation(platform(kotlin("bom", "1.6.0")))
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(project(":manami-app"))
-    implementation("no.tornado:tornadofx:1.7.20")
-    implementation("no.tornado:tornadofx-controlsfx:0.1.1")
-    implementation("eu.hansolo:tilesfx:17.0.11")
-    implementation("org.openjfx:javafx-graphics:17.0.1:win")
-    implementation("org.openjfx:javafx-graphics:17.0.1:linux")
-    implementation("org.openjfx:javafx-graphics:17.0.1:mac")
+    api(kotlin("stdlib-jdk8"))
+    api(project(":manami-app"))
+    api("no.tornado:tornadofx:1.7.20")
+    api("no.tornado:tornadofx-controlsfx:0.1.1")
+    api("eu.hansolo:tilesfx:17.0.11")
+    api("org.openjfx:javafx-graphics:17.0.1:win")
+    api("org.openjfx:javafx-graphics:17.0.1:linux")
+    api("org.openjfx:javafx-graphics:17.0.1:mac")
 }
 
 javafx {
