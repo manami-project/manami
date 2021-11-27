@@ -25,7 +25,7 @@ data class AnimeListEntry(
         validateLocation()
     }
 
-    internal fun locationToRelativePathConverter(openedFile: OpenedFile): AnimeListEntry {
+    internal fun convertLocationToRelativePath(openedFile: OpenedFile): AnimeListEntry {
         val locationString = if (location.toString().startsWith("/")) "/$location" else location.toString()
         var location = Path(locationString)
 

@@ -30,7 +30,7 @@ internal class AnimeListEntryTest {
             )
 
             // when
-            val result = animeListEntry.locationToRelativePathConverter(NoFile)
+            val result = animeListEntry.convertLocationToRelativePath(NoFile)
 
             // then
             assertThat(result.location).isEqualTo(animeListEntry.location)
@@ -100,7 +100,7 @@ internal class AnimeListEntryTest {
             )
 
             // when
-            val result = animeListEntry.locationToRelativePathConverter(CurrentFile(openedFile))
+            val result = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
             assertThat(result.location).isEqualTo(URI("anime/beck"))
@@ -123,7 +123,7 @@ internal class AnimeListEntryTest {
             )
 
             // when
-            val result = animeListEntry.locationToRelativePathConverter(CurrentFile(openedFile))
+            val result = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
             assertThat(result.location).isEqualTo(URI("."))
@@ -146,10 +146,10 @@ internal class AnimeListEntryTest {
                 location = URI(testLocation.toAbsolutePath().toString()),
             )
 
-            val animeListEntryWithRelativizedLocation = animeListEntry.locationToRelativePathConverter(CurrentFile(openedFile))
+            val animeListEntryWithRelativizedLocation = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // when
-            val result = animeListEntryWithRelativizedLocation.locationToRelativePathConverter(CurrentFile(openedFile))
+            val result = animeListEntryWithRelativizedLocation.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
             assertThat(result.location).isEqualTo(URI("anime/beck"))

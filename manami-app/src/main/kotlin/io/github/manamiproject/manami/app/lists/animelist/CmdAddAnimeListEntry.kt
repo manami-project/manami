@@ -13,7 +13,7 @@ internal class CmdAddAnimeListEntry(
             return false
         }
 
-        state.addAllAnimeListEntries(setOf(animeListEntry.locationToRelativePathConverter(state.openedFile())))
+        state.addAllAnimeListEntries(setOf(animeListEntry.convertLocationToRelativePath(state.openedFile())))
 
         return true
     }

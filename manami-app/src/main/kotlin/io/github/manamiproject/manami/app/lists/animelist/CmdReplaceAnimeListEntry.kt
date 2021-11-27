@@ -16,7 +16,7 @@ internal class CmdReplaceAnimeListEntry(
         }
 
         state.removeAnimeListEntry(currentEntry)
-        state.addAllAnimeListEntries(setOf(replacementEntry.locationToRelativePathConverter(state.openedFile())))
+        state.addAllAnimeListEntries(setOf(replacementEntry.convertLocationToRelativePath(state.openedFile())))
 
         return true
     }
