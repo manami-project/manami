@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
+import kotlin.io.path.Path
 import kotlin.io.path.createFile
 
 internal class FileParserTest {
@@ -109,7 +110,7 @@ internal class FileParserTest {
                         thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                         episodes = 4,
                         type = SPECIAL,
-                        location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                        location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 ),
                 AnimeListEntry(
                         link = Link("https://myanimelist.net/anime/57"),
@@ -117,7 +118,7 @@ internal class FileParserTest {
                         thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                         episodes = 26,
                         type = TV,
-                        location = URI("some/relative/path/beck"),
+                        location = Path("some/relative/path/beck"),
                 ),
         )
         assertThat(result.watchListEntries).containsExactlyInAnyOrder(

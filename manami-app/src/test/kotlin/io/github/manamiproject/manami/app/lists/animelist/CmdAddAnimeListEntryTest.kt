@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
 
@@ -31,7 +32,7 @@ internal class CmdAddAnimeListEntryTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         val command = CmdAddAnimeListEntry(
@@ -56,7 +57,7 @@ internal class CmdAddAnimeListEntryTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         val savedEntries = mutableListOf<AnimeListEntry>()
@@ -103,7 +104,7 @@ internal class CmdAddAnimeListEntryTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI(testLocation.toAbsolutePath().toString()),
+                location = testLocation.toAbsolutePath(),
             )
 
             val command = CmdAddAnimeListEntry(
@@ -116,7 +117,7 @@ internal class CmdAddAnimeListEntryTest {
 
             //then
             assertThat(result).isTrue()
-            assertThat(savedEntries.first().location).isEqualTo(URI("anime/beck"))
+            assertThat(savedEntries.first().location).isEqualTo(Path("anime/beck"))
         }
     }
 }

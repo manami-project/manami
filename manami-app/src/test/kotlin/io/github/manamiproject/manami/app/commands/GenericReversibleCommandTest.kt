@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class GenericReversibleCommandTest {
 
@@ -88,7 +89,7 @@ internal class GenericReversibleCommandTest {
                     title = "Death Note",
                     episodes = 37,
                     type = TV,
-                    location = URI("."),
+                    location = Path("."),
                 )
         )
         InternalState.addAllAnimeListEntries(initialAnimeList)
@@ -121,7 +122,7 @@ internal class GenericReversibleCommandTest {
                                         title = "Koe no Katachi",
                                         episodes = 1,
                                         type = SPECIAL,
-                                        location = URI("."),
+                                        location = Path("."),
                                 )
                         )
                 )

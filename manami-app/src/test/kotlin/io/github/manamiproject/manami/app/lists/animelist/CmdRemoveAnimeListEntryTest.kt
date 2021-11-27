@@ -7,6 +7,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class CmdRemoveAnimeListEntryTest {
 
@@ -19,7 +20,7 @@ internal class CmdRemoveAnimeListEntryTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = Anime.Type.TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         var receivedEntry: AnimeListEntry? = null
@@ -60,7 +61,7 @@ internal class CmdRemoveAnimeListEntryTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = Anime.Type.TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         val command = CmdRemoveAnimeListEntry(

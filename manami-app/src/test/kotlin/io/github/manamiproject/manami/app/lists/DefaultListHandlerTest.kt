@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.lang.Thread.sleep
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class DefaultListHandlerTest {
 
@@ -42,7 +43,7 @@ internal class DefaultListHandlerTest {
             title = "H2O: Footprints in the Sand",
             episodes = 4,
             type = SPECIAL,
-            location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+            location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
         )
         val entry2 = AnimeListEntry(
             link = Link("https://myanimelist.net/anime/57"),
@@ -50,7 +51,7 @@ internal class DefaultListHandlerTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         val state = object: State by TestState {
@@ -162,7 +163,7 @@ internal class DefaultListHandlerTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
 
             val savedEntries = mutableListOf<AnimeListEntry>()
@@ -480,7 +481,7 @@ internal class DefaultListHandlerTest {
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
             type = TV,
-            location = URI("some/relative/path/beck"),
+            location = Path("some/relative/path/beck"),
         )
 
         var resultingEntry: AnimeListEntry? = null

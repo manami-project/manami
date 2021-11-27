@@ -230,7 +230,7 @@ internal class DefaultSearchHandlerTest {
                     ),
                 )
 
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
                 val testState = object: State by TestState {
                     override fun animeList(): List<AnimeListEntry> = listOf(
                         AnimeListEntry(
@@ -839,7 +839,7 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in animelist`() {
             tempDirectory {
                 // given
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
 
                 val testState = object: State by TestState {
                     override fun animeList(): List<AnimeListEntry> = listOf(

@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
 
@@ -75,7 +76,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = URI(".")
+                            location = Path(".")
                         ),
                         AnimeListEntry(
                             link = NoLink,
@@ -83,7 +84,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"),
-                            location = URI("."),
+                            location = Path("."),
                         ),
                         AnimeListEntry(
                             link = Link("https://myanimelist.net/anime/37747"),
@@ -91,7 +92,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
-                            location = URI("."),
+                            location = Path("."),
                         )
                     )
                 }
@@ -118,7 +119,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 // given
                 val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
 
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
                 val testState = object : State by TestState {
                     override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
                     override fun animeList(): List<AnimeListEntry> {
@@ -166,7 +167,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("test")
+                                location = Path("test")
                             ),
                         )
                     }
@@ -204,7 +205,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("test")
+                                location = Path("test")
                             ),
                         )
                     }
@@ -244,7 +245,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("test")
+                                location = Path("test")
                             ),
                         )
                     }
@@ -282,7 +283,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("test")
+                                location = Path("test")
                             ),
                         )
                     }
@@ -318,7 +319,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = URI("test")
+                                location = Path("test")
                             ),
                         )
                     }

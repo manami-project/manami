@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
+import kotlin.io.path.Path
 import kotlin.io.path.createFile
 
 internal class InternalStateTest {
@@ -101,7 +102,7 @@ internal class InternalStateTest {
                 title = "Beck",
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
 
             // when
@@ -124,7 +125,7 @@ internal class InternalStateTest {
                 title = "Beck",
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
             val watchListEntry = WatchListEntry(
                 link = entry.link.asLink(),
@@ -150,7 +151,7 @@ internal class InternalStateTest {
                 title = "Beck",
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
             val ignoreListEntry = IgnoreListEntry(
                 link = entry.link.asLink(),
@@ -179,7 +180,7 @@ internal class InternalStateTest {
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
                 type = SPECIAL,
-                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val entry2 = AnimeListEntry(
                 link = Link("https://myanimelist.net/anime/57"),
@@ -187,14 +188,14 @@ internal class InternalStateTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
             val entry3 = AnimeListEntry(
                 link = Link("https://myanimelist.net/anime/12079"),
                 title = "Black★Rock Shooter",
                 episodes = 1,
                 type = SPECIAL,
-                location = URI("some/relative/path/black_rock_shooter"),
+                location = Path("some/relative/path/black_rock_shooter"),
             )
 
             InternalState.addAllAnimeListEntries(
@@ -386,7 +387,7 @@ internal class InternalStateTest {
                 title = "Beck",
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
             InternalState.addAllAnimeListEntries(setOf(animeListEntry))
 
@@ -427,7 +428,7 @@ internal class InternalStateTest {
                         title = "H2O: Footprints in the Sand",
                         episodes = 4,
                         type = SPECIAL,
-                        location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                        location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                     )
                 )
             )
@@ -455,7 +456,7 @@ internal class InternalStateTest {
                 title = "Beck",
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
 
             val watchListEntry = WatchListEntry(
@@ -499,7 +500,7 @@ internal class InternalStateTest {
                         title = "Beck",
                         episodes = 26,
                         type = TV,
-                        location = URI("some/relative/path/beck"),
+                        location = Path("some/relative/path/beck"),
                     )
                 )
             )

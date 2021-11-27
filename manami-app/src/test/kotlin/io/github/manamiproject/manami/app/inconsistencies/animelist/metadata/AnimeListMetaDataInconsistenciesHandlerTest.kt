@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
@@ -75,7 +76,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = URI(".")
+                            location = Path(".")
                         ),
                         AnimeListEntry(
                             link = NoLink,
@@ -83,7 +84,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"),
-                            location = URI("."),
+                            location = Path("."),
                         ),
                         AnimeListEntry(
                             link = Link("https://myanimelist.net/anime/37747"),
@@ -91,7 +92,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
-                            location = URI("."),
+                            location = Path("."),
                         )
                     )
                 }
@@ -125,7 +126,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                            location = URI(".")
+                            location = Path(".")
                         ),
                     )
                 }
@@ -159,7 +160,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = URI(".")
+                            location = Path(".")
                         ),
                     )
                 }
@@ -200,7 +201,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = URI(".")
+                location = Path(".")
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -250,7 +251,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 65,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = URI(".")
+                location = Path(".")
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -300,7 +301,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = UNKNOWN,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = URI(".")
+                location = Path(".")
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -350,7 +351,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111t.jpg"),
-                location = URI(".")
+                location = Path(".")
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {

@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
+import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
 
@@ -26,7 +27,7 @@ internal class AnimeListEntryTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI(testLocation.toAbsolutePath().toString()),
+                location = testLocation.toAbsolutePath(),
             )
 
             // when
@@ -51,7 +52,7 @@ internal class AnimeListEntryTest {
                     thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                     episodes = 26,
                     type = TV,
-                    location = URI(testLocation.toAbsolutePath().toString()),
+                    location = testLocation.toAbsolutePath(),
                 )
             }
 
@@ -74,7 +75,7 @@ internal class AnimeListEntryTest {
                     thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                     episodes = 26,
                     type = TV,
-                    location = URI(testLocation.toAbsolutePath().toString()),
+                    location = testLocation.toAbsolutePath(),
                 )
             }
 
@@ -96,14 +97,14 @@ internal class AnimeListEntryTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI(testLocation.toAbsolutePath().toString()),
+                location = testLocation.toAbsolutePath(),
             )
 
             // when
             val result = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
-            assertThat(result.location).isEqualTo(URI("anime/beck"))
+            assertThat(result.location).isEqualTo(Path("anime/beck"))
         }
     }
 
@@ -119,14 +120,14 @@ internal class AnimeListEntryTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI(openedFile.parent.toAbsolutePath().toString()),
+                location = openedFile.parent.toAbsolutePath(),
             )
 
             // when
             val result = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
-            assertThat(result.location).isEqualTo(URI("."))
+            assertThat(result.location).isEqualTo(Path("."))
         }
     }
 
@@ -143,7 +144,7 @@ internal class AnimeListEntryTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI(testLocation.toAbsolutePath().toString()),
+                location = testLocation.toAbsolutePath(),
             )
 
             val animeListEntryWithRelativizedLocation = animeListEntry.convertLocationToRelativePath(CurrentFile(openedFile))
@@ -152,7 +153,7 @@ internal class AnimeListEntryTest {
             val result = animeListEntryWithRelativizedLocation.convertLocationToRelativePath(CurrentFile(openedFile))
 
             // then
-            assertThat(result.location).isEqualTo(URI("anime/beck"))
+            assertThat(result.location).isEqualTo(Path("anime/beck"))
         }
     }
 }

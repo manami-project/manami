@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Episodes
 import io.github.manamiproject.modb.core.models.Title
 import java.net.URI
+import java.nio.file.Path
 import kotlin.io.path.Path
 
 data class AnimeListEntry(
@@ -18,7 +19,7 @@ data class AnimeListEntry(
     override val thumbnail: URI = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
     val episodes: Episodes,
     val type: Anime.Type,
-    val location: URI,
+    val location: Path,
 ): AnimeEntry {
 
     init {
@@ -43,13 +44,12 @@ data class AnimeListEntry(
             }
         }
 
-        val newLocation = URI(location.toString())
-        return copy(location = newLocation)
+        return copy(location = location)
     }
 
     private fun validateLocation() {
         if (location.toString().startsWith("/")) {
-            require(Path(location.toString()).directoryExists()) { "Location is not a directory or does not exist." }
+            require(location.directoryExists()) { "Location is not a directory or does not exist." }
         }
     }
 }

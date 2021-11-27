@@ -16,6 +16,7 @@ import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class DefaultFileWriterTest {
 
@@ -27,7 +28,7 @@ internal class DefaultFileWriterTest {
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
                 type = SPECIAL,
-                location = URI("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val animeListEntry2 = AnimeListEntry(
                 link = Link("https://myanimelist.net/anime/57"),
@@ -35,7 +36,7 @@ internal class DefaultFileWriterTest {
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 episodes = 26,
                 type = TV,
-                location = URI("some/relative/path/beck"),
+                location = Path("some/relative/path/beck"),
             )
             val watchListEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),

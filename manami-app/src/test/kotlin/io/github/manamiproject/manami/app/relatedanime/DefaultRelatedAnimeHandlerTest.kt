@@ -39,7 +39,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         fun `find related anime for entries in animelist`() {
             tempDirectory {
                 // given
-                val testLocation = tempDir.resolve("test1").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test1").createDirectory().toAbsolutePath()
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> {
@@ -114,7 +114,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         fun `find related anime for entries in animelist and exclude entries in watchlist`() {
             tempDirectory {
                 // given
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> {
@@ -179,7 +179,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         fun `find related anime for entries in animelist and exclude entries in ignorelist`() {
             tempDirectory {
                 // given
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath().toUri()
+                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> {
@@ -364,8 +364,8 @@ internal class DefaultRelatedAnimeHandlerTest {
         fun `find related anime for entries in ignorelist and exclude entries in animelist`() {
             tempDirectory {
                 // given
-                val testLocation1 = tempDir.resolve("test1").createDirectory().toAbsolutePath().toUri()
-                val testLocation2 = tempDir.resolve("test2").createDirectory().toAbsolutePath().toUri()
+                val testLocation1 = tempDir.resolve("test1").createDirectory().toAbsolutePath()
+                val testLocation2 = tempDir.resolve("test2").createDirectory().toAbsolutePath()
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> {

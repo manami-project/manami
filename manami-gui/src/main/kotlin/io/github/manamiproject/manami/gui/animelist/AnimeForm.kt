@@ -18,6 +18,7 @@ import org.controlsfx.validation.Validator
 import tornadofx.*
 import java.net.URI
 import kotlin.Int.Companion.MAX_VALUE
+import kotlin.io.path.Path
 
 class AnimeForm: Fragment() {
 
@@ -185,7 +186,7 @@ class AnimeForm: Fragment() {
                 type = Anime.Type.valueOf(selectedType.get()),
                 thumbnail = if (selectedThumbnail.get().trim().isNotBlank()) URI(selectedThumbnail.get()) else URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                 link = if (selectedLink.get().trim().isNotBlank()) Link(selectedLink.get().trim()) else NoLink,
-                location = URI(selectedLocation.get()),
+                location = Path(selectedLocation.get()),
             )
 
             if (trigger.value == EDIT) {
