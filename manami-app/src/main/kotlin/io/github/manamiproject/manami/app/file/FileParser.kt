@@ -149,11 +149,7 @@ private class ManamiFileHandler : DefaultHandler() {
                 try {
                     URLDecoder.decode(trimmedLocation, UTF_8) // necessary for locations from manami <= 3.6.1
                 } catch(e: IllegalArgumentException) {
-                    if (e.message?.contains("URLDecoder: Incomplete trailing escape") == true) {
-                        trimmedLocation
-                    } else {
-                        throw e
-                    }
+                    trimmedLocation
                 }
             }
             false -> trimmedLocation
