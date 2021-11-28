@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.modb.core.config.FileSuffix
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
@@ -16,9 +17,12 @@ import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.net.URI
+import java.net.URLDecoder
+import java.nio.file.Path
 import javax.xml.parsers.SAXParserFactory
 import kotlin.io.path.Path
 import kotlin.io.path.inputStream
+import kotlin.text.Charsets.UTF_8
 
 internal class FileParser : Parser<ParsedManamiFile> {
 
@@ -62,7 +66,7 @@ private class ManamiFileHandler : DefaultHandler() {
     val parsedFile
         get() = _parsedFile
 
-    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource("") }
+    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource(EMPTY) }
 
     override fun resolveEntity(publicId: String?, systemId: String?): InputSource = entityResolver.resolveEntity(publicId, systemId)
 
@@ -90,14 +94,14 @@ private class ManamiFileHandler : DefaultHandler() {
         }
 
         animeListEntries.add(
-                AnimeListEntry(
-                        link = link,
-                        title = attributes.getValue("title").trim(),
-                        thumbnail = URI(attributes.getValue("thumbnail").trim()),
-                        episodes = attributes.getValue("episodes").trim().toInt(),
-                        type = Anime.Type.valueOf(attributes.getValue("type").trim().uppercase()),
-                        location = Path(attributes.getValue("location").trim()),
-                )
+            AnimeListEntry(
+                link = link,
+                title = attributes.getValue("title").trim(),
+                thumbnail = URI(attributes.getValue("thumbnail").trim()),
+                episodes = attributes.getValue("episodes").trim().toInt(),
+                type = Anime.Type.valueOf(attributes.getValue("type").trim().uppercase()),
+                location = parseLocation(attributes.getValue("location")),
+            )
         )
     }
 
@@ -137,11 +141,32 @@ private class ManamiFileHandler : DefaultHandler() {
         )
     }
 
+    private fun parseLocation(value: String): Path {
+        val trimmedLocation = value.trim()
+
+        val location = when(trimmedLocation.contains('%')) {
+            true -> {
+                try {
+                    URLDecoder.decode(trimmedLocation, UTF_8) // necessary for locations from manami <= 3.6.1
+                } catch(e: IllegalArgumentException) {
+                    if (e.message?.contains("URLDecoder: Incomplete trailing escape") == true) {
+                        trimmedLocation
+                    } else {
+                        throw e
+                    }
+                }
+            }
+            false -> trimmedLocation
+        }
+
+        return Path(location)
+    }
+
     override fun endDocument() {
         _parsedFile = ParsedManamiFile(
-                animeListEntries = animeListEntries,
-                watchListEntries = watchListEntries,
-                ignoreListEntries = ignoreListEntries,
+            animeListEntries = animeListEntries,
+            watchListEntries = watchListEntries,
+            ignoreListEntries = ignoreListEntries,
         )
     }
 }

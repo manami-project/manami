@@ -105,21 +105,21 @@ internal class FileParserTest {
 
         // then
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
-                AnimeListEntry(
-                        title = "H2O: Footprints in the Sand",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                        episodes = 4,
-                        type = SPECIAL,
-                        location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
-                ),
-                AnimeListEntry(
-                        link = Link("https://myanimelist.net/anime/57"),
-                        title = "Beck",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                        episodes = 26,
-                        type = TV,
-                        location = Path("some/relative/path/beck"),
-                ),
+            AnimeListEntry(
+                title = "H2O: Footprints in the Sand",
+                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                episodes = 4,
+                type = SPECIAL,
+                location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+            ),
+            AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/248"),
+                title = "Ichigo 100%",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/5/20036.jpg"),
+                episodes = 12,
+                type = TV,
+                location = Path("some/relative/path/ichigo_100%"),
+            ),
         )
         assertThat(result.watchListEntries).containsExactlyInAnyOrder(
             WatchListEntry(
@@ -158,6 +158,36 @@ internal class FileParserTest {
                 link = Link("https://myanimelist.net/anime/37747"),
                 title = "Ame-iro Cocoa: Side G",
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
+            ),
+        )
+    }
+
+    @Test
+    fun `correctly parse location which is url encoded - from manami having a version smaller than 3 6 2 `() {
+        // given
+        val parser = FileParser()
+        val file = testResource("file/FileParser/url_encoded_location.xml")
+
+        // when
+        val result = parser.parse(file)
+
+        // then
+        assertThat(result.animeListEntries).containsExactlyInAnyOrder(
+            AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/11235"),
+                title = "Amagami SS+ Plus",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33359.jpg"),
+                episodes = 13,
+                type = TV,
+                location = Path("some/relative/path/amagami_ss+_plus"),
+            ),
+            AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/248"),
+                title = "Ichigo 100%",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/5/20036.jpg"),
+                episodes = 12,
+                type = TV,
+                location = Path("some/relative/path/ichigo_100%"),
             ),
         )
     }

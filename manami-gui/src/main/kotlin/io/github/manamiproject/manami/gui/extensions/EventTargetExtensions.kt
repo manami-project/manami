@@ -11,7 +11,7 @@ import java.net.URI
 
 data class HyperlinkConfig(
     var title: String = EMPTY,
-    var uri: URI = URI(""),
+    var uri: URI = URI(EMPTY),
     var font: Font = Font.font(20.0),
     var isDisable: Boolean = false
 )

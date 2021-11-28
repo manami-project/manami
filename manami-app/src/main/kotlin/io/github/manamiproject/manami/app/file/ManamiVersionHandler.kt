@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
@@ -14,7 +15,7 @@ internal class ManamiVersionHandler : DefaultHandler() {
     val version
         get() = _version
 
-    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource("") }
+    var entityResolver: EntityResolver = EntityResolver { _, _ -> InputSource(EMPTY) }
 
     override fun resolveEntity(publicId: String?, systemId: String?): InputSource = entityResolver.resolveEntity(publicId, systemId)
 

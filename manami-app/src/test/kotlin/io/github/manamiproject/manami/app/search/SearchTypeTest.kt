@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.search.SearchType.AND
 import io.github.manamiproject.manami.app.search.SearchType.OR
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -30,7 +31,7 @@ internal class SearchTypeTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["", "   ", "example"])
+    @ValueSource(strings = [EMPTY, "   ", "example"])
     fun `throws exception if given string doesn't match any enum value`(value: String) {
         // when
         val result = assertThrows<IllegalArgumentException> {

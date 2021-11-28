@@ -31,12 +31,20 @@ internal class DefaultFileWriterTest {
                 location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
             )
             val animeListEntry2 = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                episodes = 26,
+                link = Link("https://myanimelist.net/anime/248"),
+                title = "Ichigo 100%",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/5/20036.jpg"),
+                episodes = 12,
                 type = TV,
-                location = Path("some/relative/path/beck"),
+                location = Path("some/relative/path/ichigo_100%"),
+            )
+            val animeListEntry3 = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/11235"),
+                title = "Amagami SS+ Plus",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33359.jpg"),
+                episodes = 13,
+                type = TV,
+                location = Path("some/relative/path/amagami_ss+_plus"),
             )
             val watchListEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -60,7 +68,7 @@ internal class DefaultFileWriterTest {
             )
 
             val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(animeListEntry1, animeListEntry2)
+                override fun animeList(): List<AnimeListEntry> = listOf(animeListEntry1, animeListEntry2, animeListEntry3)
                 override fun watchList(): Set<WatchListEntry> = setOf(watchListEntry1, watchListEntry2)
                 override fun ignoreList(): Set<IgnoreListEntry> = setOf(ignoreListEntry1, ignoreListEntry2)
             }
@@ -77,8 +85,9 @@ internal class DefaultFileWriterTest {
                 <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
                 <manami version="3.0.0">
                   <animeList>
-                    <animeListEntry link="https://myanimelist.net/anime/57" title="Beck" thumbnail="https://cdn.myanimelist.net/images/anime/11/11636t.jpg" type="TV" episodes="26" location="some/relative/path/beck"/>
+                    <animeListEntry link="https://myanimelist.net/anime/11235" title="Amagami SS+ Plus" thumbnail="https://cdn.myanimelist.net/images/anime/13/33359.jpg" type="TV" episodes="13" location="some/relative/path/amagami_ss+_plus"/>
                     <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://cdn.myanimelist.net/images/qm_50.gif" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
+                    <animeListEntry link="https://myanimelist.net/anime/248" title="Ichigo 100%" thumbnail="https://cdn.myanimelist.net/images/anime/5/20036.jpg" type="TV" episodes="12" location="some/relative/path/ichigo_100%"/>
                   </animeList>
                   <watchList>
                     <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453t.jpg"/>
