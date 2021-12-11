@@ -44,6 +44,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions {
         jvmTarget = Versions.JVM_TARGET
         freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+        languageVersion = "1.6"
+        apiVersion = "1.6"
     }
 }
 
