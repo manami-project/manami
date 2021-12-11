@@ -1,16 +1,16 @@
 package io.github.manamiproject.manami.gui.components
 
-import eu.hansolo.tilesfx.Tile
-import eu.hansolo.tilesfx.Tile.SkinType.TEXT
-import eu.hansolo.tilesfx.Tile.TextSize.BIGGER
-import eu.hansolo.tilesfx.TileBuilder
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventTarget
-import javafx.geometry.Pos.CENTER
+import javafx.geometry.Pos
+import javafx.geometry.Pos.TOP_CENTER
+import javafx.scene.Group
+import javafx.scene.Node
 import javafx.scene.paint.Color
-import javafx.scene.text.TextAlignment
-import tornadofx.add
+import javafx.scene.shape.Rectangle
+import javafx.scene.text.Font
+import tornadofx.*
 
 data class NumberTileConfig(
     var title: String = EMPTY,
@@ -18,26 +18,48 @@ data class NumberTileConfig(
     var valueProperty: SimpleStringProperty = SimpleStringProperty(EMPTY),
 )
 
-inline fun EventTarget.numberTile(config: NumberTileConfig.() -> Unit): Tile {
+inline fun EventTarget.numberTile(config: NumberTileConfig.() -> Unit): Node {
     val numberTileConfig = NumberTileConfig().apply(config)
 
-    val tile = TileBuilder.create()
-        .skinType(TEXT)
-        .backgroundColor(numberTileConfig.color)
-        .maxSize(400.0, 150.0)
-        .text(numberTileConfig.title)
-        .description(numberTileConfig.valueProperty.get())
-        .descriptionAlignment(CENTER)
-        .textSize(BIGGER)
-        .textAlignment(TextAlignment.CENTER)
-        .textVisible(true)
-        .build()
-
-    numberTileConfig.valueProperty.addListener { _, _, newValue ->
-        tile.description = newValue
+    val tile = Rectangle(0.0, 0.0, 250.0, 150.0).apply {
+        fill = numberTileConfig.color
     }
 
-    this.add(tile)
+    val content = text {
+        text = "0"
+        fill = Color.WHITE
+        font = Font.font(16.0)
+    }
 
-    return tile
+    val innerPane = pane {
+        prefWidth = 250.0
+        prefHeight = 150.0
+
+        vbox {
+            padding = insets(5)
+            fitToParentSize()
+            hbox {
+                alignment = TOP_CENTER
+                text {
+                    text = numberTileConfig.title
+                    fill = Color.WHITE
+                }
+            }
+            hbox {
+                fitToParentSize()
+                alignment = Pos.CENTER
+                add(content)
+            }
+        }
+    }
+
+    numberTileConfig.valueProperty.addListener { _, _, newValue ->
+        content.text = newValue
+    }
+
+    val group = Group(tile, innerPane)
+
+    this.add(group)
+
+    return group
 }
