@@ -4,6 +4,10 @@ import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.DependentCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
+import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMetaDataProviderEvent
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
 import io.github.manamiproject.modb.anidb.AnidbDownloader
@@ -63,17 +67,22 @@ internal class AnimeCache(
             converter = NotifyConverter(relationsDir = notifyRelationsDir)
         ),
     ),
+    eventBus: EventBus = SimpleEventBus,
 ) : Cache<URI, CacheEntry<Anime>> {
 
     private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
 
-    private val _availableMetaDataProvider = mutableSetOf<Hostname>()
+    private val _availableMetaDataProvider = mutableListOf<Hostname>()
     val availableMetaDataProvider
         get() = _availableMetaDataProvider.toSet()
 
     private val _availableTags = mutableSetOf<Tag>()
     val availableTags
         get() = _availableTags.toSet()
+
+    init {
+        eventBus.subscribe(this)
+    }
 
     fun allEntries(metaDataProvider: Hostname): Sequence<Anime> {
         return entries.asSequence()
@@ -118,6 +127,11 @@ internal class AnimeCache(
     override fun clear() {
         log.info { "Clearing anime cache" }
         entries.clear()
+    }
+
+    @Subscribe(NumberOfEntriesPerMetaDataProviderEvent::class)
+    fun sort(event: NumberOfEntriesPerMetaDataProviderEvent) {
+        _availableMetaDataProvider.sortByDescending { event.entries[it] }
     }
 
     private fun loadEntry(uri: URI): CacheEntry<Anime> {
