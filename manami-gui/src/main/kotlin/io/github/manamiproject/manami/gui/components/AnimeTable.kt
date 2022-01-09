@@ -45,10 +45,6 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
     requireNotNull(animeTableConfig.manamiApp) { "Parameter manamiApp must be set" }
     val manamiApp: ManamiApp = animeTableConfig.manamiApp!!
 
-    val imageColWidth = SimpleDoubleProperty(0.0)
-    val actionsColWidth = SimpleDoubleProperty(0.0)
-    val columnSpacer = 20.0
-
     val tableView = TableView<T>().apply {
         style = "-fx-selection-bar: #e1e7f5; -fx-selection-bar-non-focused: #ebebeb;"
         isCache = true
@@ -65,7 +61,6 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                 style {
                     alignment = CENTER
                 }
-                prefWidthProperty().bindBidirectional(imageColWidth)
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<ImageView> {
                         ImageView((GuiCaches.imageCache.fetch(column.value.thumbnail) as PresentValue).value).apply {
@@ -96,11 +91,10 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
             TableColumn<T, Group>("Actions").apply {
                 isSortable = false
                 isEditable = false
-                isResizable = false
+                isResizable = true
                 style {
                     alignment = CENTER
                 }
-                prefWidthProperty().bindBidirectional(actionsColWidth)
                 setCellValueFactory { cellValueFactory ->
                     ReadOnlyObservableValue<Group> {
                         group {
@@ -149,12 +143,6 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                                 if (animeTableConfig.withHideButton) {
                                     button("hide") {
                                         action { animeTableConfig.items.get().remove(cellValueFactory.value) }
-                                    }
-                                }
-
-                                widthProperty().addListener { _, oldValue, newValue ->
-                                    if (oldValue.toDouble() < newValue.toDouble()) {
-                                        actionsColWidth.set(newValue.toDouble() + columnSpacer)
                                     }
                                 }
                             }
