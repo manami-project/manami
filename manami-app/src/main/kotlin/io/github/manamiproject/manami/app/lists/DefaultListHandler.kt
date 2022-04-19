@@ -86,7 +86,7 @@ internal class DefaultListHandler(
             uris.map { uri ->
                 Callable {
                     when(val anime = cache.fetch(uri)) {
-                        is Empty -> {
+                        is DeadEntry -> {
                             log.warn { "Unable to retrieve anime for [$uri]" }
                         }
                         is PresentValue -> {
@@ -126,7 +126,7 @@ internal class DefaultListHandler(
             uris.map { uri ->
                 Callable {
                     when(val anime = cache.fetch(uri)) {
-                        is Empty -> {
+                        is DeadEntry -> {
                             log.warn { "Unable to retrieve anime for [$uri]" }
                         }
                         is PresentValue -> {

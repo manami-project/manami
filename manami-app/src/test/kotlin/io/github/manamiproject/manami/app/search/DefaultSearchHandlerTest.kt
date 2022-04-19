@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
-import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.manami.app.lists.Link
@@ -1310,7 +1310,7 @@ internal class DefaultSearchHandlerTest {
         fun `don't return anime, because URI relates to a dead entry`() {
             // given
             val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
-                populate(URI("https://myanimelist.net/anime/10001"), Empty())
+                populate(URI("https://myanimelist.net/anime/10001"), DeadEntry())
             }
 
             val receivedEvents = mutableListOf<Event>()

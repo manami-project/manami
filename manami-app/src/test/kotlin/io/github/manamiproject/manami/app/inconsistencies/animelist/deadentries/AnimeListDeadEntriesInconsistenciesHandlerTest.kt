@@ -132,7 +132,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             }
 
             val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
             }
 
             val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
@@ -212,7 +212,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             }
 
             val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
             }
 
             val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(

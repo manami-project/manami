@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.gui
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import javafx.scene.image.Image
@@ -15,7 +15,7 @@ class ImageViewCache: Cache<URI, CacheEntry<Image>> {
 
     override fun fetch(key: URI): CacheEntry<Image> {
         return when(val entry = entries[key]) {
-            is PresentValue<Image>, is Empty<Image> -> entry
+            is PresentValue<Image>, is DeadEntry<Image> -> entry
             null -> createEntry(key)
         }
     }

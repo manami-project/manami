@@ -104,7 +104,7 @@ internal class AnimeCache(
     override fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
             is PresentValue<Anime> -> removeUnrequestedMetaDataProvider(entry, key)
-            is Empty<Anime> -> entry
+            is DeadEntry<Anime> -> entry
             null -> loadEntry(key)
         }
     }
@@ -141,7 +141,7 @@ internal class AnimeCache(
 
         if (cacheLoader == null) {
             log.warn { "Unable to find a CacheLoader for URI [$uri]" }
-            return Empty()
+            return DeadEntry()
         }
 
         return try {
@@ -152,8 +152,8 @@ internal class AnimeCache(
             }
             removeUnrequestedMetaDataProvider(cacheEntry, uri)
         } catch (t: Throwable) {
-            populate(uri, Empty())
-            Empty()
+            populate(uri, DeadEntry())
+            DeadEntry()
         }
     }
 

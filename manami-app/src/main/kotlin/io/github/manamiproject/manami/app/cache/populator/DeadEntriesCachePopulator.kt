@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
@@ -24,7 +24,7 @@ internal class DeadEntriesCachePopulator(
 
         parser.parse(url).forEach { animeId ->
             val source = config.buildAnimeLink(animeId)
-            cache.populate(source, Empty())
+            cache.populate(source, DeadEntry())
         }
 
         log.info { "Finished populating cache with dead entries from [${config.hostname()}]" }

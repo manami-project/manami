@@ -77,13 +77,13 @@ internal class AnimeCacheTest {
             val source = URI("https://example.org/anime/1535")
 
             val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
-            cache.populate(source, Empty())
+            cache.populate(source, DeadEntry())
 
             // when
             val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
-            assertThat(result).isInstanceOf(Empty::class.java)
+            assertThat(result).isInstanceOf(DeadEntry::class.java)
         }
 
         @Test
@@ -95,7 +95,7 @@ internal class AnimeCacheTest {
             val result = cache.fetch(URI("https://example.org/anime/1535"))
 
             // then
-            assertThat(result).isInstanceOf(Empty::class.java)
+            assertThat(result).isInstanceOf(DeadEntry::class.java)
         }
     }
 

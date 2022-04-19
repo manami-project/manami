@@ -124,7 +124,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 }
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                    override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
                 }
 
                 val inconsistencyHandler = MetaDataInconsistencyHandler(
@@ -400,7 +400,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 }
 
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> = Empty()
+                    override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
                 }
 
                 val inconsistencyHandler = MetaDataInconsistencyHandler(

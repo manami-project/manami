@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
-import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
@@ -35,7 +35,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
                 it
             }
             .map { it to cache.fetch(it.link.asLink().uri) }
-            .filter { it.second is Empty }
+            .filter { it.second is DeadEntry }
             .map { it.first }
             .toList()
 

@@ -300,7 +300,7 @@ internal class DefaultListHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry.sources.first() -> PresentValue(entry)
-                        deadEntry -> Empty()
+                        deadEntry -> DeadEntry()
                         else -> shouldNotBeInvoked()
                     }
                 }
@@ -438,7 +438,7 @@ internal class DefaultListHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry.sources.first() -> PresentValue(entry)
-                        deadEntry -> Empty()
+                        deadEntry -> DeadEntry()
                         else -> shouldNotBeInvoked()
                     }
                 }

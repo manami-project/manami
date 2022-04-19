@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.inconsistencies.lists.deadentries
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.Caches
-import io.github.manamiproject.manami.app.cache.Empty
+import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -35,7 +35,7 @@ internal class DeadEntriesInconsistencyHandler(
                 it
             }
             .map { watchListEntry -> watchListEntry to cache.fetch(watchListEntry.link.uri) }
-            .filter { it.second is Empty }
+            .filter { it.second is DeadEntry }
             .map { it.first }
             .toList()
 
@@ -46,7 +46,7 @@ internal class DeadEntriesInconsistencyHandler(
                 it
             }
             .map { ignoreListEntry -> ignoreListEntry to cache.fetch(ignoreListEntry.link.uri) }
-            .filter { it.second is Empty }
+            .filter { it.second is DeadEntry }
             .map { it.first }
             .toList()
 
