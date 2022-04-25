@@ -50,7 +50,6 @@ class Manami(
             DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anidb.json")).populate(Caches.animeCache)
             DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anilist.json")).populate(Caches.animeCache)
             DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$DEAD_ENTRIES_BASE_URL/kitsu.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = LivechartConfig, url = URL("$DEAD_ENTRIES_BASE_URL/livechart.json")).populate(Caches.animeCache)
             DeadEntriesCachePopulator(config = MalConfig, url = URL("$DEAD_ENTRIES_BASE_URL/myanimelist.json")).populate(Caches.animeCache)
         }
     }
