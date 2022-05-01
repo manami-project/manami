@@ -16,7 +16,7 @@ import java.net.URI
 
 internal class MetaDataInconsistencyHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
 ) : InconsistencyHandler<MetaDataInconsistenciesResult> {
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size

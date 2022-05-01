@@ -9,7 +9,7 @@ import io.github.manamiproject.manami.gui.animelist.ShowAnimeListTabRequest
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
-import io.github.manamiproject.manami.gui.recommendations.ShowRecommendationsTabRequest
+import io.github.manamiproject.manami.gui.migration.ShowMetaDataProviderMigrationViewTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
@@ -27,6 +27,7 @@ class MenuView : View() {
     private val isUndoPossible = SimpleBooleanProperty(true)
     private val isRedoPossible = SimpleBooleanProperty(true)
     private val isInconsistenciesDisabled = SimpleBooleanProperty(true)
+    private val isMetaDataProviderMigrationDisabled = SimpleBooleanProperty(true)
     private val isDisabledBecauseCacheIsNotYetPopulated = SimpleBooleanProperty(true)
 
     init {
@@ -35,6 +36,7 @@ class MenuView : View() {
         }
         subscribe<FileOpenedGuiEvent> {
             isInconsistenciesDisabled.set(false)
+            isMetaDataProviderMigrationDisabled.set(false)
         }
         subscribe<UndoRedoStatusGuiEvent> { event ->
             isUndoPossible.set(!event.isUndoPossible)
@@ -105,9 +107,9 @@ class MenuView : View() {
                 disableProperty().bindBidirectional(isInconsistenciesDisabled)
                 action { fire(ShowInconsistenciesTabRequest) }
             }
-            item("Recommendations", createMnemonic("8")) {
-                isDisable = true
-                action { fire(ShowRecommendationsTabRequest) }
+            item("Meta Data Provider Migration", createMnemonic("8")) {
+                disableProperty().bindBidirectional(isMetaDataProviderMigrationDisabled)
+                action { fire(ShowMetaDataProviderMigrationViewTabRequest) }
             }
             item("Related Anime", createMnemonic("9")) {
                 isDisable = false

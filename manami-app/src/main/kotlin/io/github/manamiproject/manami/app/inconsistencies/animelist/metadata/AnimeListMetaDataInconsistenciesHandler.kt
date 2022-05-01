@@ -17,7 +17,7 @@ import java.net.URI
 
 internal class AnimeListMetaDataInconsistenciesHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
 ): InconsistencyHandler<AnimeListMetaDataInconsistenciesResult> {
 
     override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }

@@ -34,6 +34,8 @@ import io.github.manamiproject.manami.app.commands.history.FileSavedStatusChange
 import io.github.manamiproject.manami.app.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.events.EventListType.*
 import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.migration.MetaDataMigrationProgressEvent
+import io.github.manamiproject.manami.app.migration.MetaDataMigrationResultEvent
 import io.github.manamiproject.manami.app.versioning.NewVersionAvailableEvent
 import io.github.manamiproject.manami.gui.events.*
 import tornadofx.Controller
@@ -73,6 +75,18 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AnimeListDeadEntriesInconsistenciesResultEvent -> AnimeListDeadEntriesInconsistenciesResultGuiEvent(this.entries)
                     is AnimeListEpisodesInconsistenciesResultEvent -> AnimeListEpisodesInconsistenciesResultGuiEvent(this.entries)
                     is NewVersionAvailableEvent -> NewVersionAvailableGuiEvent(this.version)
+                    is MetaDataMigrationProgressEvent -> MetaDataProviderMigrationGuiEvent(this.finishedTasks, this.numberOfTasks)
+                    is MetaDataMigrationResultEvent -> MetaDataMigrationResultGuiEvent(
+                        animeListEntriesWithoutMapping = animeListEntriesWithoutMapping,
+                        animeListEntiresMultipleMappings = animeListEntiresMultipleMappings,
+                        animeListMappings = animeListMappings,
+                        watchListEntriesWithoutMapping = watchListEntriesWithoutMapping,
+                        watchListEntiresMultipleMappings = watchListEntiresMultipleMappings,
+                        watchListMappings = watchListMappings,
+                        ignoreListEntriesWithoutMapping = ignoreListEntriesWithoutMapping,
+                        ignoreListEntiresMultipleMappings = ignoreListEntiresMultipleMappings,
+                        ignoreListMappings = ignoreListMappings,
+                    )
                     else -> throw IllegalStateException("Unmapped event: [${this::class.simpleName}]")
                 }
             )

@@ -33,7 +33,7 @@ internal class MetaDataInconsistencyHandlerTest {
             )
 
             val isExecutableConfig = InconsistenciesSearchConfig(
-                checkMetaData = true
+                checkMetaData = true,
             )
 
             // when
@@ -52,7 +52,7 @@ internal class MetaDataInconsistencyHandlerTest {
             )
 
             val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkMetaData = false
+                checkMetaData = false,
             )
 
             // when
@@ -81,12 +81,12 @@ internal class MetaDataInconsistencyHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/31139"),
                         title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"),
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/37747"),
                         title = "Ame-iro Cocoa: Side G",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
                     )
                 )
             }
@@ -123,7 +123,7 @@ internal class MetaDataInconsistencyHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
                 }
 
@@ -154,7 +154,7 @@ internal class MetaDataInconsistencyHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -206,7 +206,7 @@ internal class MetaDataInconsistencyHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -259,7 +259,7 @@ internal class MetaDataInconsistencyHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -327,7 +327,7 @@ internal class MetaDataInconsistencyHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -393,13 +393,13 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
                 }
 
@@ -424,13 +424,13 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/10001"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -463,13 +463,13 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -502,13 +502,13 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ameiro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -537,14 +537,14 @@ internal class MetaDataInconsistencyHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ameiro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
                 )
                 assertThat(entry.newEntry).isEqualTo(
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
                 )
             }
@@ -557,13 +557,13 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
                 }
 
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
                             sources = SortedList(
@@ -592,14 +592,14 @@ internal class MetaDataInconsistencyHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
                     )
                 )
                 assertThat(entry.newEntry).isEqualTo(
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
                 )
             }

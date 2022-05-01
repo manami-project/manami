@@ -16,7 +16,7 @@ import java.net.URI
 
 internal class DeadEntriesInconsistencyHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
 ): InconsistencyHandler<DeadEntriesInconsistenciesResult> {
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size

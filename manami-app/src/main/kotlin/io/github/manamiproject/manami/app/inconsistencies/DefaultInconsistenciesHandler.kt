@@ -36,7 +36,7 @@ import java.net.URI
 
 internal class DefaultInconsistenciesHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
         AnimeListMetaDataInconsistenciesHandler(state, cache),

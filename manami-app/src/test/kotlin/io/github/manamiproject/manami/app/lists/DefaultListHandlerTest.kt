@@ -58,7 +58,7 @@ internal class DefaultListHandlerTest {
             override fun animeList(): List<AnimeListEntry> = listOf(entry1, entry2)
         }
 
-        val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache { }
+        val testCache = object: AnimeCache by TestAnimeCache { }
         val testCommandHistory = object: CommandHistory by TestCommandHistory { }
         val testEventBus = object: EventBus by TestEventBus {
             override fun post(event: Event) { }
@@ -95,7 +95,7 @@ internal class DefaultListHandlerTest {
             override fun watchList(): Set<WatchListEntry> = setOf(entry1, entry2)
         }
 
-        val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache { }
+        val testCache = object: AnimeCache by TestAnimeCache { }
         val testCommandHistory = object: CommandHistory by TestCommandHistory { }
         val testEventBus = object: EventBus by TestEventBus {
             override fun post(event: Event) { }
@@ -131,7 +131,7 @@ internal class DefaultListHandlerTest {
         val state = object: State by TestState {
             override fun ignoreList(): Set<IgnoreListEntry> = setOf(entry1, entry2)
         }
-        val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache { }
+        val testCache = object: AnimeCache by TestAnimeCache { }
         val testCommandHistory = object: CommandHistory by TestCommandHistory { }
         val testEventBus = object: EventBus by TestEventBus {
             override fun post(event: Event) { }
@@ -234,7 +234,7 @@ internal class DefaultListHandlerTest {
                 }
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+            val testCache = object: AnimeCache by TestAnimeCache {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry1.sources.first() -> PresentValue(entry1)
@@ -296,7 +296,7 @@ internal class DefaultListHandlerTest {
                 }
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+            val testCache = object: AnimeCache by TestAnimeCache {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry.sources.first() -> PresentValue(entry)
@@ -372,7 +372,7 @@ internal class DefaultListHandlerTest {
                 }
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+            val testCache = object: AnimeCache by TestAnimeCache {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry1.sources.first() -> PresentValue(entry1)
@@ -434,7 +434,7 @@ internal class DefaultListHandlerTest {
                 }
             }
 
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+            val testCache = object: AnimeCache by TestAnimeCache {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return when(key) {
                         entry.sources.first() -> PresentValue(entry)

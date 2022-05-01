@@ -15,7 +15,7 @@ import java.net.URI
 
 internal class AnimeListDeadEntriesInconsistenciesHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
 ) : InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> {
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListDeadEnties

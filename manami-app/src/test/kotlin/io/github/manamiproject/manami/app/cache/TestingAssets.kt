@@ -11,6 +11,7 @@ import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.httpclient.RequestBody
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Tag
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import java.net.URI
 import java.net.URL
@@ -43,7 +44,13 @@ internal object TestHttpClient: HttpClient {
     override fun post(url: URL, requestBody: RequestBody, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
 }
 
-internal object TestAnimeCache: Cache<URI, CacheEntry<Anime>> {
+internal object TestAnimeCache: AnimeCache {
+    override val availableMetaDataProvider: Set<Hostname>
+        get() = shouldNotBeInvoked()
+    override val availableTags: Set<Tag>
+        get() = shouldNotBeInvoked()
+    override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = shouldNotBeInvoked()
+    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = shouldNotBeInvoked()
     override fun fetch(key: URI): CacheEntry<Anime> = shouldNotBeInvoked()
     override fun populate(key: URI, value: CacheEntry<Anime>) = shouldNotBeInvoked()
     override fun clear() = shouldNotBeInvoked()

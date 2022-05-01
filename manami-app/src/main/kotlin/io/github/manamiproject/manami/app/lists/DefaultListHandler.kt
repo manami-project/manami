@@ -1,8 +1,14 @@
 package io.github.manamiproject.manami.app.lists
 
-import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
@@ -10,20 +16,14 @@ import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEnt
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.CmdRemoveIgnoreListEntry
-import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
+import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdRemoveWatchListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger
 internal class DefaultListHandler(
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: AnimeCache = Caches.defaultAnimeCache,
     private val eventBus: EventBus = SimpleEventBus,
 ): ListHandler {
 

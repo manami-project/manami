@@ -8,6 +8,8 @@ import io.github.manamiproject.manami.gui.ignorelist.IgnoreListView
 import io.github.manamiproject.manami.gui.ignorelist.ShowIgnoreListTabRequest
 import io.github.manamiproject.manami.gui.inconsistencies.InconsistenciesView
 import io.github.manamiproject.manami.gui.inconsistencies.ShowInconsistenciesTabRequest
+import io.github.manamiproject.manami.gui.migration.MetaDataProviderMigrationView
+import io.github.manamiproject.manami.gui.migration.ShowMetaDataProviderMigrationViewTabRequest
 import io.github.manamiproject.manami.gui.relatedanime.RelatedAnimeView
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.anime.AnimeSearchView
@@ -32,6 +34,7 @@ class TabPaneView : View() {
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
     private val inconsistenciesView: InconsistenciesView by inject()
+    private val metaDataProviderMigrationView: MetaDataProviderMigrationView by inject()
 
     private val tabPane = tabpane {
         hgrow = ALWAYS
@@ -64,6 +67,9 @@ class TabPaneView : View() {
         }
         subscribe<ShowRelatedAnimeTabRequest> {
             tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }
+        }
+        subscribe<ShowMetaDataProviderMigrationViewTabRequest>() {
+            tabPane.openTab("Meta Data Provider Migration") { add(metaDataProviderMigrationView.root) }
         }
     }
 

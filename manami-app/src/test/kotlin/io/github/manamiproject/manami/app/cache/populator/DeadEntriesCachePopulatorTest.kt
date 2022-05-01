@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
@@ -21,7 +21,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
     @Test
     fun `successfully populate cache with dead entries`() {
         // given
-        val testCache = AnimeCache(listOf(TestCacheLoader))
+        val testCache = DefaultAnimeCache(listOf(TestCacheLoader))
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "example.org"

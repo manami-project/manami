@@ -14,12 +14,13 @@ import io.github.manamiproject.manami.app.search.*
 import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.events.Subscribe
+import io.github.manamiproject.manami.app.migration.DefaultMetaDataMigrationHandler
+import io.github.manamiproject.manami.app.migration.MetaDataMigrationHandler
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
-import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.mal.MalConfig
 import java.net.URL
 import java.util.concurrent.Executors
@@ -32,12 +33,14 @@ class Manami(
     private val listHandler: ListHandler = DefaultListHandler(),
     private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
     private val inconsistenciesHandler: InconsistenciesHandler = DefaultInconsistenciesHandler(),
+    private val metaDataMigrationHandler: MetaDataMigrationHandler = DefaultMetaDataMigrationHandler(),
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
     ListHandler by listHandler,
     RelatedAnimeHandler by relatedAnimeHandler,
-    InconsistenciesHandler by inconsistenciesHandler {
+    InconsistenciesHandler by inconsistenciesHandler,
+    MetaDataMigrationHandler by metaDataMigrationHandler {
 
     private var eventMapper = AtomicReference<Event.() -> Unit>()
 
@@ -46,11 +49,11 @@ class Manami(
         SimpleEventBus.subscribe(this)
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
-            AnimeCachePopulator().populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anidb.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anilist.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$DEAD_ENTRIES_BASE_URL/kitsu.json")).populate(Caches.animeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URL("$DEAD_ENTRIES_BASE_URL/myanimelist.json")).populate(Caches.animeCache)
+            AnimeCachePopulator().populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anidb.json")).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anilist.json")).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$DEAD_ENTRIES_BASE_URL/kitsu.json")).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URL("$DEAD_ENTRIES_BASE_URL/myanimelist.json")).populate(Caches.defaultAnimeCache)
         }
     }
 

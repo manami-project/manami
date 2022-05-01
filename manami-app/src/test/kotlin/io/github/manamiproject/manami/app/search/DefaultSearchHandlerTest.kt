@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.app.search
 
-import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
@@ -135,7 +135,7 @@ internal class DefaultSearchHandlerTest {
                 ),
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -245,7 +245,7 @@ internal class DefaultSearchHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
                 }
 
-                val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                     matchingEntry1.sources.forEach {
                         populate(it, PresentValue(matchingEntry1))
                     }
@@ -337,7 +337,7 @@ internal class DefaultSearchHandlerTest {
                 override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
             }
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -428,7 +428,7 @@ internal class DefaultSearchHandlerTest {
                 )
             }
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -492,7 +492,7 @@ internal class DefaultSearchHandlerTest {
                 ),
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
@@ -561,7 +561,7 @@ internal class DefaultSearchHandlerTest {
                 )
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
@@ -662,7 +662,7 @@ internal class DefaultSearchHandlerTest {
                 tags = SortedList("my-tag-2"),
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry.sources.forEach {
                     populate(it, PresentValue(matchingEntry))
                 }
@@ -787,7 +787,7 @@ internal class DefaultSearchHandlerTest {
                 tags = SortedList("totally-different-tag")
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -928,7 +928,7 @@ internal class DefaultSearchHandlerTest {
                     tags = SortedList("totally-different-tag")
                 )
 
-                val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                     matchingEntry1.sources.forEach {
                         populate(it, PresentValue(matchingEntry1))
                     }
@@ -1064,7 +1064,7 @@ internal class DefaultSearchHandlerTest {
                 tags = SortedList("totally-different-tag")
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -1199,7 +1199,7 @@ internal class DefaultSearchHandlerTest {
                 tags = SortedList("totally-different-tag")
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 matchingEntry1.sources.forEach {
                     populate(it, PresentValue(matchingEntry1))
                 }
@@ -1273,7 +1273,7 @@ internal class DefaultSearchHandlerTest {
                 tags = SortedList("my-tag-1", "my-tag-2"),
             )
 
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
@@ -1309,7 +1309,7 @@ internal class DefaultSearchHandlerTest {
         @Test
         fun `don't return anime, because URI relates to a dead entry`() {
             // given
-            val testCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 populate(URI("https://myanimelist.net/anime/10001"), DeadEntry())
             }
 

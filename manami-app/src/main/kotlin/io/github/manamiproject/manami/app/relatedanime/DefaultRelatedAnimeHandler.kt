@@ -1,9 +1,7 @@
 package io.github.manamiproject.manami.app.relatedanime
 
-import io.github.manamiproject.manami.app.cache.Cache
-import io.github.manamiproject.manami.app.cache.CacheEntry
+import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.Caches
-import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -18,7 +16,7 @@ import java.net.URI
 import java.util.*
 
 internal class DefaultRelatedAnimeHandler(
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.animeCache,
+    private val cache: AnimeCache = Caches.defaultAnimeCache,
     private val state: State = InternalState,
     private val eventBus: EventBus = SimpleEventBus,
 ) : RelatedAnimeHandler {

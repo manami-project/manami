@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
@@ -9,6 +11,8 @@ import io.github.manamiproject.modb.core.models.Anime.Status.UPCOMING
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
+import io.github.manamiproject.modb.kitsu.KitsuConfig
+import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -33,7 +37,7 @@ internal class AnimeCacheTest {
                     return Anime("Death Note")
                 }
             }
-            val cache = AnimeCache(cacheLoader = listOf(testCacheLoader))
+            val cache = DefaultAnimeCache(cacheLoader = listOf(testCacheLoader))
 
             // when
             cache.fetch(URI("https://example.org/anime/1535"))
@@ -59,7 +63,7 @@ internal class AnimeCacheTest {
                     return anime
                 }
             }
-            val cache = AnimeCache(cacheLoader = listOf(testCacheLoader))
+            val cache = DefaultAnimeCache(cacheLoader = listOf(testCacheLoader))
             cache.fetch(source)
 
             // when
@@ -76,7 +80,7 @@ internal class AnimeCacheTest {
             // given
             val source = URI("https://example.org/anime/1535")
 
-            val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
+            val cache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader))
             cache.populate(source, DeadEntry())
 
             // when
@@ -89,7 +93,7 @@ internal class AnimeCacheTest {
         @Test
         fun `return null if the key doesn't exist in the cache and there is no matching cache loader to populate the cache`() {
             // given
-            val cache = AnimeCache(cacheLoader = emptyList())
+            val cache = DefaultAnimeCache(cacheLoader = emptyList())
 
             // when
             val result = cache.fetch(URI("https://example.org/anime/1535"))
@@ -110,7 +114,7 @@ internal class AnimeCacheTest {
                 addSources(source)
             }
 
-            val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
+            val cache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader))
 
             // when
             cache.populate(source, PresentValue(anime))
@@ -128,7 +132,7 @@ internal class AnimeCacheTest {
                 addSources(source)
             }
 
-            val cache = AnimeCache(cacheLoader = listOf(TestCacheLoader))
+            val cache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader))
             cache.populate(source, PresentValue(anime))
 
             val otherAnime = Anime("Different title").apply {
@@ -179,7 +183,7 @@ internal class AnimeCacheTest {
                     }
                 }
             }
-            val cache = AnimeCache(cacheLoader = listOf(testCacheLoader)).apply {
+            val cache = DefaultAnimeCache(cacheLoader = listOf(testCacheLoader)).apply {
                 populate(source1, PresentValue(anime1))
                 populate(source1, PresentValue(anime2))
             }
@@ -220,14 +224,14 @@ internal class AnimeCacheTest {
                 ),
             )
 
-            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
             }
 
             // when
-            val result = animeCache.availableMetaDataProvider
+            val result = defaultAnimeCache.availableMetaDataProvider
 
             // then
             assertThat(result).containsExactlyInAnyOrder(
@@ -283,14 +287,14 @@ internal class AnimeCacheTest {
                 )
             )
 
-            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
             }
 
             // when
-            val result = animeCache.availableTags
+            val result = defaultAnimeCache.availableTags
 
             // then
             assertThat(result).containsExactlyInAnyOrder(
@@ -404,7 +408,7 @@ internal class AnimeCacheTest {
                 ),
             )
 
-            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry1.sources.forEach {
                     populate(it, PresentValue(entry1))
                 }
@@ -423,7 +427,7 @@ internal class AnimeCacheTest {
             }
 
             // when
-            val result = animeCache.allEntries("anime-planet.com").toList()
+            val result = defaultAnimeCache.allEntries("anime-planet.com").toList()
 
             // then
             assertThat(result).hasSize(3)
@@ -465,14 +469,14 @@ internal class AnimeCacheTest {
                 tags = SortedList("comedy"),
             )
 
-            val animeCache = AnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
                 entry.sources.forEach {
                     populate(it, PresentValue(entry))
                 }
             }
 
             // when
-            val result = animeCache.allEntries("myanimelist.net").toList()
+            val result = defaultAnimeCache.allEntries("myanimelist.net").toList()
 
             // then
             assertThat(result).hasSize(3)
@@ -480,6 +484,99 @@ internal class AnimeCacheTest {
                 URI("https://myanimelist.net/anime/48670"),
                 URI("https://myanimelist.net/anime/48671"),
                 URI("https://myanimelist.net/anime/48672"),
+            )
+        }
+    }
+
+    @Nested
+    inner class MapToMetaDataProviderTests {
+
+        @Test
+        fun `returns empty set if there is no mapping`() {
+            // given
+            val testEventBus = object : EventBus by TestEventBus {
+                override fun subscribe(subscriber: Any) { }
+            }
+
+            val defaultAnimeCache = DefaultAnimeCache(
+                cacheLoader = emptyList(),
+                eventBus = testEventBus,
+            )
+
+            // when
+            val result = defaultAnimeCache.mapToMetaDataProvider(MalConfig.buildAnimeLink("1535"), "kitsu.io")
+
+            // then
+            assertThat(result).isEmpty()
+        }
+
+        @Test
+        fun `successfully returns an entry`() {
+            // given
+            val testEventBus = object : EventBus by TestEventBus {
+                override fun subscribe(subscriber: Any) { }
+            }
+
+            val testAnime = Anime(
+                sources = SortedList(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+            )
+
+            val defaultAnimeCache = DefaultAnimeCache(
+                cacheLoader = emptyList(),
+                eventBus = testEventBus,
+            )
+
+            testAnime.sources.forEach {
+                defaultAnimeCache.populate(it, PresentValue(testAnime))
+            }
+
+            // when
+            val result = defaultAnimeCache.mapToMetaDataProvider(MalConfig.buildAnimeLink("43609"), "kitsu.io")
+
+            // then
+            assertThat(result).containsExactly(URI("https://kitsu.io/anime/43731"))
+        }
+
+        @Test
+        fun `successfully returns an entry having multiple mapping entries`() {
+            // given
+            val testEventBus = object : EventBus by TestEventBus {
+                override fun subscribe(subscriber: Any) { }
+            }
+
+            val testAnime = Anime(
+                sources = SortedList(
+                    URI("https://kitsu.io/anime/45724"),
+                    URI("https://myanimelist.net/anime/50731"),
+                    URI("https://myanimelist.net/anime/50814"),
+                ),
+                _title = "Kimi Shika Inai",
+            )
+
+            val defaultAnimeCache = DefaultAnimeCache(
+                cacheLoader = emptyList(),
+                eventBus = testEventBus,
+            )
+
+            testAnime.sources.forEach {
+                defaultAnimeCache.populate(it, PresentValue(testAnime))
+            }
+
+            // when
+            val result = defaultAnimeCache.mapToMetaDataProvider(KitsuConfig.buildAnimeLink("45724"), "myanimelist.net")
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder(
+                URI("https://myanimelist.net/anime/50731"),
+                URI("https://myanimelist.net/anime/50814"),
             )
         }
     }

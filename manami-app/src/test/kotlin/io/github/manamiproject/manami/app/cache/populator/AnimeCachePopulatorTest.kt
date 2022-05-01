@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.manami.app.events.Event
@@ -105,7 +105,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             )
         }
 
-        val testCache = AnimeCache(listOf(TestCacheLoader))
+        val testCache = DefaultAnimeCache(listOf(TestCacheLoader))
 
         val receivedEvents = mutableListOf<Event>()
         val testEventBus = object: EventBus by TestEventBus {
