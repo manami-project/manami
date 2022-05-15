@@ -12,6 +12,7 @@ Manami creates an index file for the anime that you already watched and stored o
 * Browse anime seasons
 * Related anime finder
 * Suggestions to ignore anime
+* Migrate entries from one meta data provider to another
 * Find inconsistencies
   * Find updated meta data in animelist/watchlist/ignorelist entries and automatically fix them
   * Find dead entries in animelist
