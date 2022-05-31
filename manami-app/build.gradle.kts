@@ -102,7 +102,7 @@ repositories {
 dependencies {
     api(kotlin("stdlib-jdk8"))
     api("io.github.manamiproject:modb-core:7.2.2")
-    api("io.github.manamiproject:modb-db-parser:3.2.4")
+    api("io.github.manamiproject:modb-db-parser:3.2.5")
 
     implementation(platform(kotlin("bom", "1.6.0")))
     implementation(kotlin("reflect"))
