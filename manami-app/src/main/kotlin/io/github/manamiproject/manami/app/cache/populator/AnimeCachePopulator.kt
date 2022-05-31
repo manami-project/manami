@@ -21,7 +21,7 @@ internal class AnimeCachePopulator(
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info {"Populating cache with anime from [$uri]." }
 
-        val parsedAnime =parser.parse(uri.toURL())
+        val parsedAnime = parser.parse(uri.toURL())
 
         parsedAnime.forEach { anime ->
             anime.sources.forEach { source ->

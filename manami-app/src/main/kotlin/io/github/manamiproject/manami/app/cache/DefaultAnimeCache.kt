@@ -23,6 +23,8 @@ import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
+import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
+import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Tag
@@ -57,7 +59,16 @@ internal class DefaultAnimeCache(
             converter = AnisearchConverter(relationsDir = anisearchRelationsDir)
         ),
         KitsuCacheLoader(),
-        SimpleCacheLoader(LivechartConfig, LivechartDownloader(LivechartConfig), LivechartConverter()),
+        SimpleCacheLoader(
+            config = LivechartConfig,
+            downloader = LivechartDownloader(
+                config = LivechartConfig,
+                httpClient = DefaultHttpClient(
+                    protocols = listOf(HTTP_1_1),
+                )
+            ),
+            converter = LivechartConverter(),
+        ),
         SimpleCacheLoader(MalConfig, MalDownloader(MalConfig), MalConverter()),
         DependentCacheLoader(
             config = NotifyConfig,
