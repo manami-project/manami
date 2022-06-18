@@ -36,6 +36,8 @@ import io.github.manamiproject.manami.app.events.EventListType.*
 import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.migration.MetaDataMigrationProgressEvent
 import io.github.manamiproject.manami.app.migration.MetaDataMigrationResultEvent
+import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeFoundEvent
+import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.versioning.NewVersionAvailableEvent
 import io.github.manamiproject.manami.gui.events.*
 import tornadofx.Controller
@@ -74,6 +76,8 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AnimeListMetaDataInconsistenciesResultEvent -> AnimeListMetaDataInconsistenciesResultGuiEvent(this.diff)
                     is AnimeListDeadEntriesInconsistenciesResultEvent -> AnimeListDeadEntriesInconsistenciesResultGuiEvent(this.entries)
                     is AnimeListEpisodesInconsistenciesResultEvent -> AnimeListEpisodesInconsistenciesResultGuiEvent(this.entries)
+                    is SimilarAnimeSearchFinishedEvent -> SimilarAnimeSearchFinishedGuiEvent
+                    is SimilarAnimeFoundEvent -> SimilarAnimeFoundGuiEvent(this.entries)
                     is NewVersionAvailableEvent -> NewVersionAvailableGuiEvent(this.version)
                     is MetaDataMigrationProgressEvent -> MetaDataProviderMigrationGuiEvent(this.finishedTasks, this.numberOfTasks)
                     is MetaDataMigrationResultEvent -> MetaDataMigrationResultGuiEvent(

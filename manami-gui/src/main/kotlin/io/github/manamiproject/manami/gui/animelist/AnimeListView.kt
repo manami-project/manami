@@ -86,7 +86,7 @@ class AnimeListView : View() {
 
                         if (txtUrl.text.isNotEmpty()) {
                             loadingIndicator.openModal(UNDECORATED)
-                            manamiAccess.find(URI(txtUrl.text))
+                            manamiAccess.find(URI(txtUrl.text.trim()))
                             txtUrl.text = EMPTY
                         }
                     }

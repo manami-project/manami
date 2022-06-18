@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.events
 
+import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.EpisodeDiff
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.manami.app.lists.Link
@@ -61,6 +62,10 @@ data class FileSearchIgnoreListResultsGuiEvent(val anime: Collection<IgnoreListE
 data class AnimeSearchEntryFoundGuiEvent(val anime: Anime): GuiEvent()
 object AnimeSearchFinishedGuiEvent: GuiEvent()
 data class AnimeEntryFoundGuiEvent(val anime: Anime): GuiEvent()
+
+// Similar Anime Search
+object SimilarAnimeSearchFinishedGuiEvent: GuiEvent()
+data class SimilarAnimeFoundGuiEvent(val entries: List<Anime>) : GuiEvent()
 
 // Inconsistencies
 data class InconsistenciesProgressGuiEvent(val finishedTasks: Int, val numberOfTasks: Int): GuiEvent()

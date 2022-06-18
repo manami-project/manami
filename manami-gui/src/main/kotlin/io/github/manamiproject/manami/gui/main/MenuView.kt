@@ -13,6 +13,7 @@ import io.github.manamiproject.manami.gui.migration.ShowMetaDataProviderMigratio
 import io.github.manamiproject.manami.gui.relatedanime.ShowRelatedAnimeTabRequest
 import io.github.manamiproject.manami.gui.search.anime.ShowAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
+import io.github.manamiproject.manami.gui.search.similaranime.ShowSimilarAnimeSearchTabRequest
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.Alert
@@ -84,36 +85,40 @@ class MenuView : View() {
             }
         }
         menu("Lists") {
-            item("Anime List", createMnemonic("1")) {
+            item("Anime List", createMnemonic("A")) {
                 action { fire(ShowAnimeListTabRequest) }
             }
-            item("Watch List", createMnemonic("2")) {
+            item("Watch List", createMnemonic("W")) {
                 action { fire(ShowWatchListTabRequest) }
             }
-            item("Ignore List", createMnemonic("3")) {
+            item("Ignore List", createMnemonic("I")) {
                 action { fire(ShowIgnoreListTabRequest) }
             }
         }
         menu("Find") {
-            item("Anime", createMnemonic("5")) {
+            item("Anime", createMnemonic("1")) {
                 disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
                 action { fire(ShowAnimeSearchTabRequest) }
             }
-            item("Season", createMnemonic("6")) {
+            item("Season", createMnemonic("2")) {
                 disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
                 action { fire(ShowAnimeSeasonTabRequest) }
             }
-            item("Inconsistencies", createMnemonic("7")) {
+            item("Inconsistencies", createMnemonic("3")) {
                 disableProperty().bindBidirectional(isInconsistenciesDisabled)
                 action { fire(ShowInconsistenciesTabRequest) }
             }
-            item("Meta Data Provider Migration", createMnemonic("8")) {
-                disableProperty().bindBidirectional(isMetaDataProviderMigrationDisabled)
-                action { fire(ShowMetaDataProviderMigrationViewTabRequest) }
-            }
-            item("Related Anime", createMnemonic("9")) {
+            item("Related Anime", createMnemonic("4")) {
                 isDisable = false
                 action { fire(ShowRelatedAnimeTabRequest) }
+            }
+            item("Similar Anime", createMnemonic("5")) {
+                disableProperty().bindBidirectional(isDisabledBecauseCacheIsNotYetPopulated)
+                action { fire(ShowSimilarAnimeSearchTabRequest) }
+            }
+            item("Meta Data Provider Migration", createMnemonic("6")) {
+                disableProperty().bindBidirectional(isMetaDataProviderMigrationDisabled)
+                action { fire(ShowMetaDataProviderMigrationViewTabRequest) }
             }
         }
         menu("Help") {

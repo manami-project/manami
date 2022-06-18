@@ -18,6 +18,8 @@ import io.github.manamiproject.manami.gui.search.file.FileSearchView
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.manami.gui.search.season.AnimeSeasonView
 import io.github.manamiproject.manami.gui.search.season.ShowAnimeSeasonTabRequest
+import io.github.manamiproject.manami.gui.search.similaranime.ShowSimilarAnimeSearchTabRequest
+import io.github.manamiproject.manami.gui.search.similaranime.SimilarAnimeSearchView
 import io.github.manamiproject.manami.gui.watchlist.ShowWatchListTabRequest
 import io.github.manamiproject.manami.gui.watchlist.WatchListView
 import javafx.scene.layout.Priority.ALWAYS
@@ -34,6 +36,7 @@ class TabPaneView : View() {
     private val animeSeasonView: AnimeSeasonView by inject()
     private val relatedAnimeView: RelatedAnimeView by inject()
     private val inconsistenciesView: InconsistenciesView by inject()
+    private val similarAnimeSearchView: SimilarAnimeSearchView by inject()
     private val metaDataProviderMigrationView: MetaDataProviderMigrationView by inject()
 
     private val tabPane = tabpane {
@@ -67,6 +70,9 @@ class TabPaneView : View() {
         }
         subscribe<ShowRelatedAnimeTabRequest> {
             tabPane.openTab("Related Anime") { add(relatedAnimeView.root) }
+        }
+        subscribe<ShowSimilarAnimeSearchTabRequest> {
+            tabPane.openTab("Similar Anime") { add(similarAnimeSearchView.root) }
         }
         subscribe<ShowMetaDataProviderMigrationViewTabRequest>() {
             tabPane.openTab("Meta Data Provider Migration") { add(metaDataProviderMigrationView.root) }
