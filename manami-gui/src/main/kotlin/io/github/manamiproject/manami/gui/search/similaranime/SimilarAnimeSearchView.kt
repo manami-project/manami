@@ -31,9 +31,11 @@ class SimilarAnimeSearchView : View() {
 
     init {
         subscribe<SimilarAnimeSearchFinishedGuiEvent> {
+            entries.get().clear()
             isProgessIndicatorVisible.set(false)
         }
         subscribe<SimilarAnimeFoundGuiEvent> { event ->
+            entries.get().clear()
             entries.get().addAll(event.entries.map { BigPicturedAnimeEntry(it) })
             isProgessIndicatorVisible.set(false)
         }
