@@ -10,7 +10,8 @@ Manami creates an index file for the anime that you already watched and stored o
   * supports multiple meta data providers using data from [anime-offline-database](https://github.com/manami-project/anime-offline-database)
 * Find anime by tags
 * Browse anime seasons
-* Related anime finder
+* Find related anime for all entries in your anime list
+* Find similar anime based on tags
 * Suggestions to ignore anime
 * Migrate entries from one meta data provider to another
 * Find inconsistencies
