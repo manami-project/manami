@@ -27,8 +27,7 @@ class MenuView : View() {
     private val isFileSaved = SimpleBooleanProperty(true)
     private val isUndoPossible = SimpleBooleanProperty(true)
     private val isRedoPossible = SimpleBooleanProperty(true)
-    private val isInconsistenciesDisabled = SimpleBooleanProperty(true)
-    private val isMetaDataProviderMigrationDisabled = SimpleBooleanProperty(true)
+    private val isFunctionsWhichNeedListEntriesDisabled = SimpleBooleanProperty(true)
     private val isDisabledBecauseCacheIsNotYetPopulated = SimpleBooleanProperty(true)
 
     init {
@@ -36,13 +35,12 @@ class MenuView : View() {
             isFileSaved.set(event.isFileSaved)
         }
         subscribe<FileOpenedGuiEvent> {
-            isInconsistenciesDisabled.set(false)
-            isMetaDataProviderMigrationDisabled.set(false)
+            isFunctionsWhichNeedListEntriesDisabled.set(false)
         }
         subscribe<UndoRedoStatusGuiEvent> { event ->
             isUndoPossible.set(!event.isUndoPossible)
             isRedoPossible.set(!event.isRedoPossible)
-            isInconsistenciesDisabled.set(!event.isUndoPossible)
+            isFunctionsWhichNeedListEntriesDisabled.set(!event.isUndoPossible)
         }
         subscribe<CachePopulatorFinishedGuiEvent> {
             isDisabledBecauseCacheIsNotYetPopulated.set(false)
@@ -105,11 +103,11 @@ class MenuView : View() {
                 action { fire(ShowAnimeSeasonTabRequest) }
             }
             item("Inconsistencies", createMnemonic("3")) {
-                disableProperty().bindBidirectional(isInconsistenciesDisabled)
+                disableProperty().bindBidirectional(isFunctionsWhichNeedListEntriesDisabled)
                 action { fire(ShowInconsistenciesTabRequest) }
             }
             item("Related Anime", createMnemonic("4")) {
-                isDisable = false
+                disableProperty().bindBidirectional(isFunctionsWhichNeedListEntriesDisabled)
                 action { fire(ShowRelatedAnimeTabRequest) }
             }
             item("Similar Anime", createMnemonic("5")) {
@@ -117,7 +115,7 @@ class MenuView : View() {
                 action { fire(ShowSimilarAnimeSearchTabRequest) }
             }
             item("Meta Data Provider Migration", createMnemonic("6")) {
-                disableProperty().bindBidirectional(isMetaDataProviderMigrationDisabled)
+                disableProperty().bindBidirectional(isFunctionsWhichNeedListEntriesDisabled)
                 action { fire(ShowMetaDataProviderMigrationViewTabRequest) }
             }
         }
