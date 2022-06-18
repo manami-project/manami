@@ -14,6 +14,8 @@ interface SearchHandler {
 
     fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND)
 
+    fun findSimilarAnime(uri: URI)
+
     fun find(uri: URI)
 
     fun availableMetaDataProviders(): Set<Hostname>
