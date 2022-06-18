@@ -163,7 +163,7 @@ class AnimeForm: Fragment() {
                             }
                         }
 
-                        button("save") {
+                        button("add") {
                             isDefaultButton = true
                             action {
                                 if (!validationSupport.isInvalid) {
