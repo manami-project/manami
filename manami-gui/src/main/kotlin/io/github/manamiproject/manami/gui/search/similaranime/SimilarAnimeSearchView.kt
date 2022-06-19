@@ -1,11 +1,10 @@
 package io.github.manamiproject.manami.gui.search.similaranime
 
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.BigPicturedAnimeEntry
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.components.animeTable
-import io.github.manamiproject.manami.gui.events.FileOpenedGuiEvent
-import io.github.manamiproject.manami.gui.events.SimilarAnimeFoundGuiEvent
-import io.github.manamiproject.manami.gui.events.SimilarAnimeSearchFinishedGuiEvent
+import io.github.manamiproject.manami.gui.events.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleBooleanProperty
@@ -41,6 +40,18 @@ class SimilarAnimeSearchView : View() {
         }
         subscribe<FileOpenedGuiEvent> {
             entries.get().clear()
+        }
+        subscribe<AddAnimeListEntryGuiEvent> { event ->
+            val uris = event.entries.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) }
+        }
+        subscribe<AddWatchListEntryGuiEvent> { event ->
+            val uris = event.entries.map { it.link }.map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) }
+        }
+        subscribe<AddIgnoreListEntryGuiEvent> { event ->
+            val uris = event.entries.map { it.link }.map { it.uri }.toSet()
+            entries.get().removeIf { uris.contains(it.link.uri) }
         }
     }
 
