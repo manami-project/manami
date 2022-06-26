@@ -1,5 +1,9 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
@@ -24,11 +28,13 @@ import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 import kotlin.text.Charsets.UTF_8
 
-internal class FileParser : Parser<ParsedManamiFile> {
+internal class FileParser(
+    cache: AnimeCache = Caches.defaultAnimeCache,
+) : Parser<ParsedManamiFile> {
 
     private val saxParser = SAXParserFactory.newInstance().apply { isValidating = true }.newSAXParser()
     private val versionHandler = ManamiVersionHandler()
-    private val documentHandler = ManamiFileHandler()
+    private val documentHandler = ManamiFileHandler(cache)
 
     override fun handlesSuffix(): FileSuffix = "xml"
 
@@ -55,7 +61,7 @@ internal class FileParser : Parser<ParsedManamiFile> {
     }
 }
 
-private class ManamiFileHandler : DefaultHandler() {
+private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler() {
 
     private var strBuilder = StringBuilder()
     private val animeListEntries = mutableSetOf<AnimeListEntry>()
@@ -119,6 +125,7 @@ private class ManamiFileHandler : DefaultHandler() {
                 link = link,
                 title = attributes.getValue("title").trim(),
                 thumbnail = URI(attributes.getValue("thumbnail").trim()),
+                status = (cache.fetch(link.uri) as PresentValue<Anime>).value.status
             )
         )
     }

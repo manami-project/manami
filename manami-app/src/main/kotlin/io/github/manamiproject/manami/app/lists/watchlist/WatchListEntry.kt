@@ -10,6 +10,7 @@ data class WatchListEntry(
     override val link: Link,
     override val title: Title,
     override val thumbnail: URI,
+    val status: Anime.Status = Anime.Status.UNKNOWN,
 ) : AnimeEntry {
 
     constructor(anime: Anime): this(
