@@ -39,7 +39,7 @@ internal class MetaDataInconsistencyHandler(
             .map { it.first to (it.second as PresentValue<Anime>).value }
             .map { it.first to WatchListEntry(it.second) }
             .filter { it.first.link == it.second.link }
-            .filter { it.first != it.second }
+            .filter { it.first.title != it.second.title || it.first.thumbnail != it.second.thumbnail }
             .map { MetaDataDiff(currentEntry = it.first, newEntry = it.second) }
             .toList()
 
