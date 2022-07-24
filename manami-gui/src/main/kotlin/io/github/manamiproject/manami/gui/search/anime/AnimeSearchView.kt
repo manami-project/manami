@@ -8,6 +8,8 @@ import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
 import io.github.manamiproject.manami.gui.events.*
+import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Status.*
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -25,6 +27,10 @@ class AnimeSearchView: View() {
     private val availableTags = manamiAccess.availableTags().sorted()
     private val selectedTags = SimpleListProperty<String>(FXCollections.observableArrayList())
     private val selectableTags = SimpleListProperty(FXCollections.observableArrayList(availableTags))
+    private val isFinishedSelected = SimpleBooleanProperty(true)
+    private val isOngoingSelected = SimpleBooleanProperty(true)
+    private val isUpcomingSelected = SimpleBooleanProperty(true)
+    private val isUnknownSelected = SimpleBooleanProperty(true)
 
     private val searchBoxExpanded = SimpleBooleanProperty(true).apply {
         addListener { _, _, newValue ->
@@ -100,6 +106,13 @@ class AnimeSearchView: View() {
                                 }
                             }
 
+                            field("Status") {
+                                checkbox("Finished") { selectedProperty().bindBidirectional(isFinishedSelected) }
+                                checkbox("Ongoing") { selectedProperty().bindBidirectional(isOngoingSelected) }
+                                checkbox("Upcoming") { selectedProperty().bindBidirectional(isUpcomingSelected) }
+                                checkbox("Unknown") { selectedProperty().bindBidirectional(isUnknownSelected) }
+                            }
+
                             hbox(20) {
                                 field("Tag filter") {
                                     textfield {
@@ -110,7 +123,7 @@ class AnimeSearchView: View() {
                                     }
                                 }
 
-                                field("Search Type") {
+                                field("Connect tags by") {
                                     togglebutton(selectedSearchType) {
                                         onAction = EventHandler {
                                             when(selectedSearchType.get()) {
@@ -133,7 +146,8 @@ class AnimeSearchView: View() {
                                     manamiAccess.findByTag(
                                         tags = selectedTags.toSet(),
                                         metaDataProvider = selectedMetaDataProvider.get(),
-                                        searchType = SearchType.of(selectedSearchType.get())
+                                        searchType = SearchType.of(selectedSearchType.get()),
+                                        status = fetchStatusSelection()
                                     )
                                 }
                             }
@@ -160,5 +174,27 @@ class AnimeSearchView: View() {
                 }
             }
         }
+    }
+
+    private fun fetchStatusSelection(): Set<Anime.Status> {
+        val ret = mutableSetOf<Anime.Status>()
+
+        if (isFinishedSelected.get()) {
+            ret.add(FINISHED)
+        }
+
+        if (isOngoingSelected.get()) {
+            ret.add(ONGOING)
+        }
+
+        if (isUpcomingSelected.get()) {
+            ret.add(UPCOMING)
+        }
+
+        if (isUnknownSelected.get()) {
+            ret.add(UNKNOWN)
+        }
+
+        return ret
     }
 }

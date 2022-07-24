@@ -24,7 +24,6 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.*
 import org.apache.commons.lang3.StringUtils.containsIgnoreCase
 import org.apache.commons.text.similarity.LevenshteinDistance
-import java.lang.Thread.sleep
 import java.net.URI
 
 internal class DefaultSearchHandler(
@@ -71,7 +70,7 @@ internal class DefaultSearchHandler(
         }
     }
 
-    override fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType) {
+    override fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType, status: Set<Anime.Status>) {
         runInBackground {
             val entriesInLists: Set<URI> = state.animeList()
                 .map { it.link }
@@ -83,10 +82,18 @@ internal class DefaultSearchHandler(
             val allEntriesNotInAnyList = cache.allEntries(metaDataProvider)
                 .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
 
-            when(searchType) {
-                OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> tags.contains(tag) } }
-                AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(tags) }
-            }.forEach {
+            val entriesWithMatchingTags = if (tags.isNotEmpty()) {
+                when(searchType) {
+                    OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> tags.contains(tag) } }
+                    AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(tags) }
+                }
+            } else {
+                allEntriesNotInAnyList
+            }
+
+            val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }
+
+            filteredByStatus.forEach {
                 eventBus.post(AnimeSearchEntryFoundEvent(it))
             }
 
