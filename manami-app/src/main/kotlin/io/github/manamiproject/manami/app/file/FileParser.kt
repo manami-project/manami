@@ -2,20 +2,20 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.Caches
-import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
-import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.fileSuffix
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
@@ -120,12 +120,19 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
             }
         }
 
+        val cacheEntry = cache.fetch(link.uri)
+        val status = if (cacheEntry is PresentValue<Anime>) {
+            cacheEntry.value.status
+        } else {
+            UNKNOWN
+        }
+
         watchListEntries.add(
             WatchListEntry(
                 link = link,
                 title = attributes.getValue("title").trim(),
                 thumbnail = URI(attributes.getValue("thumbnail").trim()),
-                status = (cache.fetch(link.uri) as PresentValue<Anime>).value.status
+                status = status
             )
         )
     }

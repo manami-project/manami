@@ -1,8 +1,6 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.cache.AnimeCache
-import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -188,6 +186,38 @@ internal class FileParserTest {
                 link = Link("https://myanimelist.net/anime/37747"),
                 title = "Ame-iro Cocoa: Side G",
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
+            ),
+        )
+    }
+
+    @Test
+    fun `set status of watchlist entry to UNKNOWN if it is a dead entry`() {
+        // given
+        val testCache = object: AnimeCache by TestAnimeCache {
+            override fun fetch(key: URI): CacheEntry<Anime> {
+                return when (key) {
+                    URI("https://myanimelist.net/anime/37989") -> PresentValue(Anime(
+                        _title = "Golden Kamuy 2nd Season",
+                        status = ONGOING,
+                    ))
+                    URI("https://myanimelist.net/anime/40059") -> DeadEntry()
+                    else -> shouldNotBeInvoked()
+                }
+            }
+        }
+        val parser = FileParser(testCache)
+        val file = testResource("file/FileParser/correctly_parse_entries.xml")
+
+        // when
+        val result = parser.parse(file)
+
+        // then
+        assertThat(result.watchListEntries).contains(
+            WatchListEntry(
+                link = Link("https://myanimelist.net/anime/40059"),
+                title = "Golden Kamuy 3rd Season",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                status = UNKNOWN,
             ),
         )
     }
