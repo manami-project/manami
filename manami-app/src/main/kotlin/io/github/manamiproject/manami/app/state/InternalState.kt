@@ -37,6 +37,7 @@ internal object InternalState : State {
 
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
         animeList.addAll(anime.distinct())
+
         val uris = anime.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
         watchList.removeIf { uris.contains(it.link.uri) }
         ignoreList.removeIf { uris.contains(it.link.uri) }
@@ -50,7 +51,9 @@ internal object InternalState : State {
 
     override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
         watchList.addAll(anime.distinct())
-        ignoreList.removeAll(anime.map { IgnoreListEntry(it) })
+
+        val uris = anime.map { it.link.uri }.toSet()
+        ignoreList.removeIf { uris.contains(it.link.uri) }
     }
 
     override fun removeWatchListEntry(entry: WatchListEntry) {
@@ -61,7 +64,9 @@ internal object InternalState : State {
 
     override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
         ignoreList.addAll(anime.distinct())
-        watchList.removeAll(anime.map { WatchListEntry(it) })
+
+        val uris = anime.map { it.link.uri }.toSet()
+        watchList.removeIf { uris.contains(it.link.uri) }
     }
 
     override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
