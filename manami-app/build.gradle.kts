@@ -111,7 +111,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-anilist:4.1.10")
     implementation("io.github.manamiproject:modb-anime-planet:3.3.14")
     implementation("io.github.manamiproject:modb-anisearch:1.2.13")
-    implementation("io.github.manamiproject:modb-kitsu:3.1.10")
+    implementation("io.github.manamiproject:modb-kitsu:3.1.11")
     implementation("io.github.manamiproject:modb-livechart:1.1.13")
     implementation("io.github.manamiproject:modb-mal:3.1.11")
     implementation("io.github.manamiproject:modb-notify:3.2.11")
