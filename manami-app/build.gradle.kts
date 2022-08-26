@@ -108,7 +108,7 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("io.github.manamiproject:modb-anidb:3.1.13")
-    implementation("io.github.manamiproject:modb-anilist:4.1.10")
+    implementation("io.github.manamiproject:modb-anilist:4.1.11")
     implementation("io.github.manamiproject:modb-anime-planet:3.3.14")
     implementation("io.github.manamiproject:modb-anisearch:1.2.13")
     implementation("io.github.manamiproject:modb-kitsu:3.1.11")
