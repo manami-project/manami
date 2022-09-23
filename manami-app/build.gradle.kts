@@ -119,7 +119,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")
 
-    testImplementation("io.github.manamiproject:modb-test:1.3.8")
+    testImplementation("io.github.manamiproject:modb-test:1.3.9")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
