@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     id("java-library")
-    id("org.openjfx.javafxplugin") version("0.0.10")
+    id("org.openjfx.javafxplugin") version("0.0.13")
 }
 
 val githubUsername = "manami-project"
@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(kotlin("bom", "1.6.0")))
+    implementation(platform(kotlin("bom", "1.7.10")))
     api(kotlin("stdlib-jdk8"))
     api(project(":manami-app"))
     api("no.tornado:tornadofx:1.7.20")
     api("no.tornado:tornadofx-controlsfx:0.1.1")
-    api("org.openjfx:javafx-graphics:17.0.1:win")
-    api("org.openjfx:javafx-graphics:17.0.1:linux")
-    api("org.openjfx:javafx-graphics:17.0.1:mac")
+    api("org.openjfx:javafx-graphics:19:win")
+    api("org.openjfx:javafx-graphics:19:linux")
+    api("org.openjfx:javafx-graphics:19:mac")
 }
 
 javafx {
@@ -43,8 +43,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions {
         jvmTarget = Versions.JVM_TARGET
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.6"
-        apiVersion = "1.6"
+        languageVersion = "1.7"
+        apiVersion = "1.7"
     }
 }
 

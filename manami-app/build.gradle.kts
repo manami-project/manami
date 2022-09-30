@@ -104,7 +104,7 @@ dependencies {
     api("io.github.manamiproject:modb-core:7.2.8")
     api("io.github.manamiproject:modb-db-parser:3.2.10")
 
-    implementation(platform(kotlin("bom", "1.6.0")))
+    implementation(platform(kotlin("bom", "1.7.10")))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("io.github.manamiproject:modb-anidb:3.1.14")
@@ -126,8 +126,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions {
         jvmTarget = Versions.JVM_TARGET
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.6"
-        apiVersion = "1.6"
+        languageVersion = "1.7"
+        apiVersion = "1.7"
     }
 }
 
