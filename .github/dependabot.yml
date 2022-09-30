@@ -73,27 +73,6 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 20
-  - package-ecosystem: "gradle"
-    directory: "/manami-app"
-    registries:
-      - modb-anidb
-      - modb-anilist
-      - modb-anime-planet
-      - modb-anisearch
-      - modb-core
-      - modb-db-parser
-      - modb-kitsu
-      - modb-livechart
-      - modb-mal
-      - modb-notify
-      - modb-test
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/manami-gui"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 20
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
