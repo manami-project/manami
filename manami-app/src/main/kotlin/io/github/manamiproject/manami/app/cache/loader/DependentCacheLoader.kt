@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 import java.nio.file.Path
 import kotlin.io.path.deleteIfExists
@@ -27,8 +28,8 @@ internal class DependentCacheLoader(
 
         loadRelations(id)
 
-        val result = animeDownloader.download(id)
-        val anime = converter.convert(result)
+        val result = runBlocking { animeDownloader.download(id) }
+        val anime = runBlocking { converter.convert(result) }
 
         relationsDir.resolve("$id.${config.fileSuffix()}").deleteIfExists()
 
@@ -37,7 +38,7 @@ internal class DependentCacheLoader(
 
     override fun hostname(): Hostname = config.hostname()
 
-    private fun loadRelations(id: AnimeId) {
+    private fun loadRelations(id: AnimeId) = runBlocking {
         relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${config.fileSuffix()}"))
     }
 

@@ -28,9 +28,9 @@ internal class KitsuCacheLoader(
     private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
     private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
     private val converter: AnimeConverter = KitsuConverter(
-            relationsDir = relationsDir,
-            tagsDir = tagsDir
-    )
+        relationsDir = relationsDir,
+        tagsDir = tagsDir,
+    ),
 ) : CacheLoader {
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -47,8 +47,8 @@ internal class KitsuCacheLoader(
             job2.join()
         }
 
-        val result = animeDownloader.download(id)
-        val anime = converter.convert(result)
+        val result = runBlocking { animeDownloader.download(id) }
+        val anime = runBlocking { converter.convert(result) }
 
         relationsDir.resolve("$id.${kitsuConfig.fileSuffix()}").deleteIfExists()
         tagsDir.resolve("$id.${kitsuConfig.fileSuffix()}").deleteIfExists()
@@ -58,11 +58,11 @@ internal class KitsuCacheLoader(
 
     override fun hostname(): Hostname = kitsuConfig.hostname()
 
-    private fun loadRelations(id: AnimeId) {
+    private fun loadRelations(id: AnimeId) = runBlocking {
         relationsDownloader.download(id).writeToFile(relationsDir.resolve("$id.${kitsuConfig.fileSuffix()}"))
     }
 
-    private fun loadTags(id: AnimeId) {
+    private fun loadTags(id: AnimeId) = runBlocking {
         tagsDownloader.download(id).writeToFile(tagsDir.resolve("$id.${kitsuConfig.fileSuffix()}"))
     }
 

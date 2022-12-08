@@ -8,10 +8,10 @@ import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.modb.core.extensions.RegularFile
 
 internal class CmdOpenFile(
-        private val state: State = InternalState,
-        private val commandHistory: CommandHistory = DefaultCommandHistory,
-        private val file: RegularFile,
-        private val parsedFile: ParsedManamiFile,
+    private val state: State = InternalState,
+    private val commandHistory: CommandHistory = DefaultCommandHistory,
+    private val file: RegularFile,
+    private val parsedFile: ParsedManamiFile,
 ) : Command {
 
     override fun execute(): Boolean {

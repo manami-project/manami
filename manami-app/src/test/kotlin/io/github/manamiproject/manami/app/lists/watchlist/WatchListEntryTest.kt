@@ -20,7 +20,7 @@ internal class WatchListEntryTest {
             status = Anime.Status.FINISHED,
             animeSeason = AnimeSeason(
                 season = AnimeSeason.Season.FALL,
-                year = 2006
+                year = 2006,
             ),
             picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
@@ -31,7 +31,7 @@ internal class WatchListEntryTest {
                 URI("https://anime-planet.com/anime/death-note"),
                 URI("https://kitsu.io/anime/1376"),
                 URI("https://myanimelist.net/anime/1535"),
-                URI("https://notify.moe/anime/0-A-5Fimg")
+                URI("https://notify.moe/anime/0-A-5Fimg"),
             )
             addSynonyms(
                 "DEATH NOTE",
@@ -50,7 +50,7 @@ internal class WatchListEntryTest {
                 "ですのーと",
                 "デスノート",
                 "死亡笔记",
-                "데스노트"
+                "데스노트",
             )
             addTags(
                 "alternative present",
@@ -115,7 +115,7 @@ internal class WatchListEntryTest {
         val ignoreListEntry = IgnoreListEntry(
             link = Link("https://myanimelist.net/anime/28981"),
             title = "Ame-iro Cocoa",
-            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
         )
 
         // when

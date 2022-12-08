@@ -211,7 +211,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
                 sources = SortedList(URI("https://myanimelist.net/anime/40059")),
@@ -222,7 +222,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
 
             val savedEntries = mutableListOf<WatchListEntry>()
@@ -283,7 +283,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
             val deadEntry = URI("https://myanimelist.net/anime/10001")
 
@@ -349,7 +349,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
                 sources = SortedList(URI("https://myanimelist.net/anime/40059")),
@@ -360,7 +360,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
 
             val savedEntries = mutableListOf<IgnoreListEntry>()
@@ -421,7 +421,7 @@ internal class DefaultListHandlerTest {
                 animeSeason = AnimeSeason(),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-                duration = Duration(23, MINUTES)
+                duration = Duration(23, MINUTES),
             )
             val deadEntry = URI("https://myanimelist.net/anime/10001")
 

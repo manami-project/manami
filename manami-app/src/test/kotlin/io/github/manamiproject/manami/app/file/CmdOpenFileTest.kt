@@ -45,13 +45,13 @@ internal class CmdOpenFileTest {
 
         val parsedFile = ParsedManamiFile(
             animeListEntries = setOf(
-                    AnimeListEntry(
-                            link = Link("https://myanimelist.net/anime/57"),
-                            title = "Beck",
-                            episodes = 26,
-                            type = Anime.Type.TV,
-                            location = Path("some/relative/path/beck"),
-                    )
+                AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    episodes = 26,
+                    type = Anime.Type.TV,
+                    location = Path("some/relative/path/beck"),
+                )
             ),
             watchListEntries = setOf(
                 WatchListEntry(
@@ -64,7 +64,7 @@ internal class CmdOpenFileTest {
                 IgnoreListEntry(
                     link = Link("https://myanimelist.net/anime/31139"),
                     title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg")
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg"),
                 )
             )
         )

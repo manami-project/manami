@@ -16,10 +16,10 @@ internal class GithubVersionProviderTest {
     fun `correctly extract version`() {
         // given
         val testHttpClient = object: HttpClient by TestHttpClient {
-            override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
+            override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
                 return HttpResponse(
                     code = 200,
-                    body = loadTestResource("versioning_tests/github_versioning_tests/latest_version_page.html")
+                    body = loadTestResource("versioning_tests/github_versioning_tests/latest_version_page.html"),
                 )
             }
         }
@@ -48,10 +48,10 @@ internal class GithubVersionProviderTest {
         """.trimIndent()
 
         val testHttpClient = object: HttpClient by TestHttpClient {
-            override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
+            override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
                 return HttpResponse(
                     code = 200,
-                    body = otherBody
+                    body = otherBody,
                 )
             }
         }
@@ -73,10 +73,10 @@ internal class GithubVersionProviderTest {
     fun `throws exception if response code is not 200`() {
         // given
         val testHttpClient = object: HttpClient by TestHttpClient {
-            override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
+            override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
                 return HttpResponse(
                     code = 429,
-                    body = EMPTY
+                    body = EMPTY,
                 )
             }
         }

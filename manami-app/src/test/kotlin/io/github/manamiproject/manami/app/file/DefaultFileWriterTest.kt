@@ -54,17 +54,17 @@ internal class DefaultFileWriterTest {
             val watchListEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
             val ignoreListEntry1 = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val ignoreListEntry2 = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
 
             val testState = object: State by TestState {

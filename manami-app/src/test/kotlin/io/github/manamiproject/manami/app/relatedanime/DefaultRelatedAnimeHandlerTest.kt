@@ -516,7 +516,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         status = FINISHED,
         animeSeason = AnimeSeason(
             season = WINTER,
-            year = 2017
+            year = 2017,
         ),
         relatedAnime = SortedList(
             URI("https://myanimelist.net/anime/31646"),
@@ -533,7 +533,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         status = FINISHED,
         animeSeason = AnimeSeason(
             season = FALL,
-            year = 2016
+            year = 2016,
         ),
         relatedAnime = SortedList(
             URI("https://myanimelist.net/anime/28789"),
@@ -551,7 +551,7 @@ internal class DefaultRelatedAnimeHandlerTest {
         status = FINISHED,
         animeSeason = AnimeSeason(
             season = FALL,
-            year = 2018
+            year = 2018,
         ),
         relatedAnime = SortedList(
             URI("https://myanimelist.net/anime/35180"),

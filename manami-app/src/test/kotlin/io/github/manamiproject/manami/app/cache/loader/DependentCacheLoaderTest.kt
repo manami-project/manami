@@ -38,11 +38,11 @@ internal class DependentCacheLoaderTest {
             }
 
             val cacheLoader = DependentCacheLoader(
-                    config = testConfig,
-                    animeDownloader = TestDownloader,
-                    relationsDownloader = TestDownloader,
-                    converter = TestAnimeConverter,
-                    relationsDir = tempDir
+                config = testConfig,
+                animeDownloader = TestDownloader,
+                relationsDownloader = TestDownloader,
+                converter = TestAnimeConverter,
+                relationsDir = tempDir,
             )
 
             // when
@@ -59,17 +59,17 @@ internal class DependentCacheLoaderTest {
 
             // given
             val expectedAnime = Anime(
-                    _title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
-                    type = TV,
-                    episodes = 12,
-                    status = ONGOING,
-                    animeSeason = AnimeSeason(
-                            season = SUMMER,
-                            year = 2020
-                    ),
-                    picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
-                    thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
-                    duration = Duration(24, MINUTES)
+                _title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
+                type = TV,
+                episodes = 12,
+                status = ONGOING,
+                animeSeason = AnimeSeason(
+                    season = SUMMER,
+                    year = 2020,
+                ),
+                picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
+                thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
+                duration = Duration(24, MINUTES),
             ).apply {
                 addSources(URI("https://notify.moe/anime/3lack4eiR"))
                 addSynonyms(
@@ -77,7 +77,7 @@ internal class DependentCacheLoaderTest {
                         "My youth romantic comedy is wrong as I expected 3",
                         "Oregairu 3",
                         "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
-                        "やはり俺の青春ラブコメはまちがっている。第3期"
+                        "やはり俺の青春ラブコメはまちがっている。第3期",
                 )
                 addRelations(URI("https://notify.moe/anime/Pk0AtFmmg"))
                 addTags(
@@ -90,7 +90,7 @@ internal class DependentCacheLoaderTest {
             }
 
             val testHttpClient = object: HttpClient by TestHttpClient {
-                override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
+                override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
                     val response = when(url.toString()) {
                         "https://notify.moe/api/anime/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR.json")
                         "https://notify.moe/api/animerelations/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR_relations.json")
@@ -102,17 +102,17 @@ internal class DependentCacheLoaderTest {
             }
 
             val cacheLoader = DependentCacheLoader(
+                config = NotifyConfig,
+                animeDownloader = NotifyDownloader(
                     config = NotifyConfig,
-                    animeDownloader = NotifyDownloader(
-                            config = NotifyConfig,
-                            httpClient = testHttpClient
-                    ),
-                    relationsDownloader = NotifyDownloader(
-                            config = NotifyRelationsConfig,
-                            httpClient = testHttpClient
-                    ),
-                    converter = NotifyConverter(relationsDir = tempDir),
-                    relationsDir = tempDir
+                    httpClient = testHttpClient,
+                ),
+                relationsDownloader = NotifyDownloader(
+                    config = NotifyRelationsConfig,
+                    httpClient = testHttpClient,
+                ),
+                converter = NotifyConverter(relationsDir = tempDir),
+                relationsDir = tempDir,
             )
 
             // when

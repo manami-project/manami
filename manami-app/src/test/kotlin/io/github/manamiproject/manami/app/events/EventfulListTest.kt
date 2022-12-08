@@ -36,7 +36,7 @@ internal class EventfulListTest {
             val entry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             // when
@@ -64,13 +64,13 @@ internal class EventfulListTest {
             val existingEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
                 eventBus = testEventBus,
                 listType = WATCH_LIST,
-                list = mutableListOf(existingEntry)
+                list = mutableListOf(existingEntry),
             )
 
             // when
@@ -100,12 +100,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -126,7 +126,7 @@ internal class EventfulListTest {
             val newEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             // when
@@ -153,12 +153,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -169,7 +169,7 @@ internal class EventfulListTest {
             val entryToBeAdded = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -243,12 +243,12 @@ internal class EventfulListTest {
             val entry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val entry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val entry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -285,12 +285,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
 
             val newEntry1 = WatchListEntry(
@@ -301,7 +301,7 @@ internal class EventfulListTest {
             val newEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -341,12 +341,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
 
             val newEntry1 = WatchListEntry(
@@ -357,7 +357,7 @@ internal class EventfulListTest {
             val newEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -393,12 +393,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -408,7 +408,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -448,15 +448,15 @@ internal class EventfulListTest {
             val entry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
                 eventBus = testEventBus,
                 listType = WATCH_LIST,
                 list = mutableListOf(
-                    entry
-                )
+                    entry,
+                ),
             )
 
             // when
@@ -484,13 +484,13 @@ internal class EventfulListTest {
             val existingEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
                 eventBus = testEventBus,
                 listType = WATCH_LIST,
-                list = mutableListOf(existingEntry)
+                list = mutableListOf(existingEntry),
             )
 
             val otherEntry = WatchListEntry(
@@ -526,12 +526,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -541,7 +541,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -552,7 +552,7 @@ internal class EventfulListTest {
                     existingEntry2,
                     existingEntry3,
                     existingEntry4,
-                )
+                ),
             )
 
             // when
@@ -617,12 +617,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -632,7 +632,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -643,7 +643,7 @@ internal class EventfulListTest {
                     existingEntry2,
                     existingEntry3,
                     existingEntry4,
-                )
+                ),
             )
 
             // when
@@ -670,12 +670,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -686,7 +686,7 @@ internal class EventfulListTest {
             val nonExistingEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -696,7 +696,7 @@ internal class EventfulListTest {
                     existingEntry1,
                     existingEntry2,
                     existingEntry3,
-                )
+                ),
             )
 
             // when
@@ -727,12 +727,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -742,7 +742,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -753,7 +753,7 @@ internal class EventfulListTest {
                     existingEntry2,
                     existingEntry3,
                     existingEntry4,
-                )
+                ),
             )
 
             // when
@@ -780,12 +780,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -795,7 +795,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -806,7 +806,7 @@ internal class EventfulListTest {
                     existingEntry2,
                     existingEntry3,
                     existingEntry4,
-                )
+                ),
             )
 
             // when
@@ -840,12 +840,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -855,7 +855,7 @@ internal class EventfulListTest {
             val existingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -866,7 +866,7 @@ internal class EventfulListTest {
                     existingEntry2,
                     existingEntry3,
                     existingEntry4,
-                )
+                ),
             )
 
             // when
@@ -893,12 +893,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
 
             val nonExistingEntry3 = WatchListEntry(
@@ -909,7 +909,7 @@ internal class EventfulListTest {
             val nonExistingEntry4 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -918,7 +918,7 @@ internal class EventfulListTest {
                 list = mutableListOf(
                     existingEntry1,
                     existingEntry2,
-                )
+                ),
             )
 
             // when
@@ -949,12 +949,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -965,7 +965,7 @@ internal class EventfulListTest {
             val newEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
             )
 
             val list = EventfulList(
@@ -975,7 +975,7 @@ internal class EventfulListTest {
                     existingEntry1,
                     existingEntry2,
                     existingEntry3,
-                )
+                ),
             )
 
             // when
@@ -1009,12 +1009,12 @@ internal class EventfulListTest {
             val existingEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val existingEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val existingEntry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -1029,7 +1029,7 @@ internal class EventfulListTest {
                     existingEntry1,
                     existingEntry2,
                     existingEntry3,
-                )
+                ),
             )
 
             // when
@@ -1055,12 +1055,12 @@ internal class EventfulListTest {
             val existingEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val nonExistingEntry = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
 
             val list = EventfulList(
@@ -1068,7 +1068,7 @@ internal class EventfulListTest {
                 listType = WATCH_LIST,
                 list = mutableListOf(
                     existingEntry
-                )
+                ),
             )
 
             // when
@@ -1102,12 +1102,12 @@ internal class EventfulListTest {
             val entry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
             )
             val entry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
             )
             val entry3 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
@@ -1122,7 +1122,7 @@ internal class EventfulListTest {
                     entry1,
                     entry2,
                     entry3,
-                )
+                ),
             )
 
             // when

@@ -20,7 +20,7 @@ internal class IgnoreListEntryTest {
             status = Anime.Status.FINISHED,
             animeSeason = AnimeSeason(
                 season = AnimeSeason.Season.FALL,
-                year = 2006
+                year = 2006,
             ),
             picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
@@ -50,7 +50,7 @@ internal class IgnoreListEntryTest {
                 "ですのーと",
                 "デスノート",
                 "死亡笔记",
-                "데스노트"
+                "데스노트",
             )
             addTags(
                 "alternative present",

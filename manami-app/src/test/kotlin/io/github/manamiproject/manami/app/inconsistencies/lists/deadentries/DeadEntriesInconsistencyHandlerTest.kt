@@ -29,7 +29,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
             )
 
             val isExecutableConfig = InconsistenciesSearchConfig(
-                checkDeadEntries = true
+                checkDeadEntries = true,
             )
 
             // when
@@ -48,7 +48,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
             )
 
             val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkDeadEntries = false
+                checkDeadEntries = false,
             )
 
             // when
@@ -77,12 +77,12 @@ internal class DeadEntriesInconsistencyHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/31139"),
                         title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"),
                     ),
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/37747"),
                         title = "Ame-iro Cocoa: Side G",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
                     )
                 )
             }
@@ -207,7 +207,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()
@@ -232,7 +232,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
                 )
             }
@@ -245,7 +245,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )
                     override fun watchList(): Set<WatchListEntry> = emptySet()

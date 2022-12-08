@@ -8,9 +8,9 @@ import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 
 internal class GenericReversibleCommand(
-        private val state: State = InternalState,
-        private val commandHistory: CommandHistory = DefaultCommandHistory,
-        private val command: Command,
+    private val state: State = InternalState,
+    private val commandHistory: CommandHistory = DefaultCommandHistory,
+    private val command: Command,
 ) : ReversibleCommand {
 
     private var snapshot: StatefulSnapshot = Uninitialized

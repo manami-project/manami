@@ -13,7 +13,7 @@ internal class EventfulList<T>(
 
     constructor(listType: EventListType, vararg values: T) : this(
         listType = listType,
-        list = values.toMutableList()
+        list = values.toMutableList(),
     )
 
     override fun add(element: T): Boolean {
@@ -28,7 +28,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = ADDED,
-                    obj = setOf(element)
+                    obj = setOf(element),
                 )
             )
         }
@@ -49,7 +49,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = ADDED,
-                    obj = setOf(element)
+                    obj = setOf(element),
                 )
             )
         }
@@ -66,7 +66,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = ADDED,
-                    obj = elements.toSet()
+                    obj = elements.toSet(),
                 )
             )
         }
@@ -85,7 +85,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = ADDED,
-                    obj = elements.toSet()
+                    obj = elements.toSet(),
                 )
             )
         }
@@ -105,7 +105,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = REMOVED,
-                    obj = setOf(element)
+                    obj = setOf(element),
                 )
             )
         }
@@ -124,7 +124,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = REMOVED,
-                    obj = elementsToRemove.toSet()
+                    obj = elementsToRemove.toSet(),
                 )
             )
         }
@@ -141,7 +141,7 @@ internal class EventfulList<T>(
             ListChangedEvent(
                 list = listType,
                 type = REMOVED,
-                obj = setOf(returnValue)
+                obj = setOf(returnValue),
             )
         )
 
@@ -159,7 +159,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = REMOVED,
-                    obj = elementsBeingRemoved.toSet()
+                    obj = elementsBeingRemoved.toSet(),
                 )
             )
         }
@@ -178,7 +178,7 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = REMOVED,
-                    obj = elementsToBeRemoved.toSet()
+                    obj = elementsToBeRemoved.toSet(),
                 )
             )
         }
@@ -196,14 +196,14 @@ internal class EventfulList<T>(
                 ListChangedEvent(
                     list = listType,
                     type = REMOVED,
-                    obj = setOf(replacedValue)
+                    obj = setOf(replacedValue),
                 )
             )
             eventBus.post(
                 ListChangedEvent(
                     list = listType,
                     type = ADDED,
-                    obj = setOf(element)
+                    obj = setOf(element),
                 )
             )
         }
@@ -220,7 +220,7 @@ internal class EventfulList<T>(
             ListChangedEvent(
                 list = listType,
                 type = REMOVED,
-                obj = list.toSet()
+                obj = list.toSet(),
             )
         )
 

@@ -31,17 +31,17 @@ internal object MetaDataProviderTestConfig: MetaDataProviderConfig {
 }
 
 internal object TestDownloader: Downloader {
-    override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String = shouldNotBeInvoked()
+    override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = shouldNotBeInvoked()
 }
 
 internal object TestAnimeConverter: AnimeConverter {
-    override fun convert(rawContent: String): Anime = shouldNotBeInvoked()
+    override suspend fun convert(rawContent: String): Anime = shouldNotBeInvoked()
 }
 
 internal object TestHttpClient: HttpClient {
-    override fun executeRetryable(retryWith: String, func: () -> HttpResponse): HttpResponse = shouldNotBeInvoked()
-    override fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
-    override fun post(url: URL, requestBody: RequestBody, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
+    override suspend fun executeRetryable(retryWith: String, func: suspend () -> HttpResponse): HttpResponse = shouldNotBeInvoked()
+    override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
+    override suspend fun post(url: URL, requestBody: RequestBody, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse = shouldNotBeInvoked()
 }
 
 internal object TestAnimeCache: AnimeCache {

@@ -31,7 +31,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             )
 
             val isExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListMetaData = true
+                checkAnimeListMetaData = true,
             )
 
             // when
@@ -50,7 +50,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             )
 
             val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListMetaData = false
+                checkAnimeListMetaData = false,
             )
 
             // when
@@ -76,7 +76,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                         AnimeListEntry(
                             link = NoLink,
@@ -93,7 +93,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
                             location = Path("."),
-                        )
+                        ),
                     )
                 }
             }
@@ -126,7 +126,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                     )
                 }
@@ -160,7 +160,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                     )
                 }
@@ -201,7 +201,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path(".")
+                location = Path("."),
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -251,7 +251,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 65,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path(".")
+                location = Path("."),
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -301,7 +301,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = UNKNOWN,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path(".")
+                location = Path("."),
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {
@@ -351,7 +351,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111t.jpg"),
-                location = Path(".")
+                location = Path("."),
             )
             val testState = object: State by TestState {
                 override fun animeList(): List<AnimeListEntry> {

@@ -32,6 +32,7 @@ import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser
 import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.tempDirectory
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -135,7 +136,7 @@ internal class DefaultSearchHandlerTest {
                 status = FINISHED,
                 animeSeason = AnimeSeason(
                     season = UNDEFINED,
-                    year = 0
+                    year = 0,
                 ),
             )
 
@@ -185,7 +186,7 @@ internal class DefaultSearchHandlerTest {
 
             assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
-                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
+                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
             )
 
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSeasonSearchFinishedEvent::class.java)
@@ -661,7 +662,7 @@ internal class DefaultSearchHandlerTest {
                 status = UPCOMING,
                 animeSeason = AnimeSeason(
                     season = UNDEFINED,
-                    year = 2021
+                    year = 2021,
                 ),
                 tags = SortedList("my-tag-2"),
             )
@@ -766,7 +767,7 @@ internal class DefaultSearchHandlerTest {
                 status = UPCOMING,
                 animeSeason = AnimeSeason(
                     season = UNDEFINED,
-                    year = 2021
+                    year = 2021,
                 ),
                 tags = SortedList("my-tag-2"),
             )
@@ -907,7 +908,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -1043,7 +1044,7 @@ internal class DefaultSearchHandlerTest {
                 status = UPCOMING,
                 animeSeason = AnimeSeason(
                     season = UNDEFINED,
-                    year = 2021
+                    year = 2021,
                 ),
                 tags = SortedList("my-tag-2"),
             )
@@ -1178,7 +1179,7 @@ internal class DefaultSearchHandlerTest {
                 status = UPCOMING,
                 animeSeason = AnimeSeason(
                     season = UNDEFINED,
-                    year = 2021
+                    year = 2021,
                 ),
                 tags = SortedList("my-tag-2"),
             )
@@ -1308,7 +1309,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -1441,7 +1442,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -1572,7 +1573,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -1703,7 +1704,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -1834,7 +1835,7 @@ internal class DefaultSearchHandlerTest {
                     status = UPCOMING,
                     animeSeason = AnimeSeason(
                         season = UNDEFINED,
-                        year = 2021
+                        year = 2021,
                     ),
                     tags = SortedList("my-tag-2"),
                 )
@@ -2081,9 +2082,12 @@ internal class DefaultSearchHandlerTest {
                 cacheLoader = emptyList(),
                 eventBus = testEventBus,
             )
-            AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
-                it.sources.forEach { source ->
-                    testCache.populate(source, PresentValue(it))
+
+            runBlocking {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                    it.sources.forEach { source ->
+                        testCache.populate(source, PresentValue(it))
+                    }
                 }
             }
 
@@ -2143,9 +2147,12 @@ internal class DefaultSearchHandlerTest {
                 cacheLoader = emptyList(),
                 eventBus = testEventBus,
             )
-            AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
-                it.sources.forEach { source ->
-                    testCache.populate(source, PresentValue(it))
+
+            runBlocking {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                    it.sources.forEach { source ->
+                        testCache.populate(source, PresentValue(it))
+                    }
                 }
             }
 
@@ -2193,7 +2200,7 @@ internal class DefaultSearchHandlerTest {
                     WatchListEntry(
                         title = "Mirai Nikki (TV)",
                         link = Link("https://myanimelist.net/anime/10620"),
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
                     )
                 )
                 override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -2203,9 +2210,12 @@ internal class DefaultSearchHandlerTest {
                 cacheLoader = emptyList(),
                 eventBus = testEventBus,
             )
-            AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
-                it.sources.forEach { source ->
-                    testCache.populate(source, PresentValue(it))
+
+            runBlocking {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                    it.sources.forEach { source ->
+                        testCache.populate(source, PresentValue(it))
+                    }
                 }
             }
 
@@ -2254,7 +2264,7 @@ internal class DefaultSearchHandlerTest {
                     IgnoreListEntry(
                         title = "Mirai Nikki (TV)",
                         link = Link("https://myanimelist.net/anime/10620"),
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
                     )
                 )
             }
@@ -2263,9 +2273,12 @@ internal class DefaultSearchHandlerTest {
                 cacheLoader = emptyList(),
                 eventBus = testEventBus,
             )
-            AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
-                it.sources.forEach { source ->
-                    testCache.populate(source, PresentValue(it))
+
+            runBlocking {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                    it.sources.forEach { source ->
+                        testCache.populate(source, PresentValue(it))
+                    }
                 }
             }
 

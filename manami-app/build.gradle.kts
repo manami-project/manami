@@ -101,25 +101,25 @@ repositories {
 
 dependencies {
     api(kotlin("stdlib-jdk8"))
-    api("io.github.manamiproject:modb-core:7.2.8")
-    api("io.github.manamiproject:modb-db-parser:3.2.10")
+    api("io.github.manamiproject:modb-core:8.0.0-beta.6")
+    api("io.github.manamiproject:modb-db-parser:4.0.0-beta.2")
 
     implementation(platform(kotlin("bom", "1.7.10")))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("io.github.manamiproject:modb-anidb:3.1.14")
-    implementation("io.github.manamiproject:modb-anilist:4.1.12")
-    implementation("io.github.manamiproject:modb-anime-planet:3.3.15")
-    implementation("io.github.manamiproject:modb-anisearch:1.2.17")
-    implementation("io.github.manamiproject:modb-kitsu:3.1.12")
-    implementation("io.github.manamiproject:modb-livechart:1.1.14")
-    implementation("io.github.manamiproject:modb-mal:3.1.12")
-    implementation("io.github.manamiproject:modb-notify:3.2.12")
+    implementation("io.github.manamiproject:modb-anidb:4.0.0-beta.3")
+    implementation("io.github.manamiproject:modb-anilist:5.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-anime-planet:4.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-anisearch:2.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-kitsu:4.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-livechart:2.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-mal:4.0.0-beta.2")
+    implementation("io.github.manamiproject:modb-notify:4.0.0-beta.2")
     implementation("ch.qos.logback:logback-classic:1.4.4")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.10.0")
 
-    testImplementation("io.github.manamiproject:modb-test:1.3.10")
+    testImplementation("io.github.manamiproject:modb-test:1.4.0-beta.5")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

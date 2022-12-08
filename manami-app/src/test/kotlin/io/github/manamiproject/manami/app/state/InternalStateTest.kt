@@ -156,7 +156,7 @@ internal class InternalStateTest {
             val ignoreListEntry = IgnoreListEntry(
                 link = entry.link.asLink(),
                 title = entry.title,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             )
 
             InternalState.addAllIgnoreListEntries(setOf(ignoreListEntry))
@@ -304,7 +304,7 @@ internal class InternalStateTest {
             val entry = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/28981"),
                 title = "Ame-iro Cocoa",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
             )
 
             // when
@@ -401,7 +401,7 @@ internal class InternalStateTest {
             val ignoreListEntry = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/28981"),
                 title = "Ame-iro Cocoa",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
             )
             InternalState.addAllIgnoreListEntries(setOf(ignoreListEntry))
 
@@ -437,7 +437,7 @@ internal class InternalStateTest {
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/40059"),
                         title = "Golden Kamuy 3rd Season",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
                     )
                 )
             )
@@ -446,7 +446,7 @@ internal class InternalStateTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/31139"),
                         title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg"),
                     )
                 )
             )
@@ -468,7 +468,7 @@ internal class InternalStateTest {
             val ignoreListEntry = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/28981"),
                 title = "Ame-iro Cocoa",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
             )
 
             val snapshot = StateSnapshot(
@@ -540,7 +540,7 @@ internal class InternalStateTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
                 )
             )

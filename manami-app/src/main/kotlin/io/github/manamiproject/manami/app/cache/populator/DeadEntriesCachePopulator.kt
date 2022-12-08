@@ -10,21 +10,24 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.dbparser.DatabaseFileParser
 import io.github.manamiproject.modb.dbparser.DeadEntriesJsonStringParser
 import io.github.manamiproject.modb.dbparser.ExternalResourceParser
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 import java.net.URL
 
 internal class DeadEntriesCachePopulator(
-        private val config: MetaDataProviderConfig,
-        private val url: URL,
-        private val parser: ExternalResourceParser<AnimeId> = DatabaseFileParser(fileParser = DeadEntriesJsonStringParser())
+    private val config: MetaDataProviderConfig,
+    private val url: URL,
+    private val parser: ExternalResourceParser<AnimeId> = DatabaseFileParser(fileParser = DeadEntriesJsonStringParser()),
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info { "Populating cache with dead entries from [${config.hostname()}]" }
 
-        parser.parse(url).forEach { animeId ->
-            val source = config.buildAnimeLink(animeId)
-            cache.populate(source, DeadEntry())
+        runBlocking {
+            parser.parse(url).forEach { animeId ->
+                val source = config.buildAnimeLink(animeId)
+                cache.populate(source, DeadEntry())
+            }
         }
 
         log.info { "Finished populating cache with dead entries from [${config.hostname()}]" }
