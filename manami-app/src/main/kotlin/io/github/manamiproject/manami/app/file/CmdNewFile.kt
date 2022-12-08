@@ -7,8 +7,8 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 
 internal class CmdNewFile(
-        private val state: State = InternalState,
-        private val commandHistory: CommandHistory = DefaultCommandHistory,
+    private val state: State = InternalState,
+    private val commandHistory: CommandHistory = DefaultCommandHistory,
 ) : Command {
 
     override fun execute(): Boolean {

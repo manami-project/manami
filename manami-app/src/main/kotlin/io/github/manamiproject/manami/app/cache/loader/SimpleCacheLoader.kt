@@ -6,12 +6,13 @@ import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 
 internal class SimpleCacheLoader(
-        private val config: MetaDataProviderConfig,
-        private val downloader: Downloader,
-        private val converter: AnimeConverter
+    private val config: MetaDataProviderConfig,
+    private val downloader: Downloader,
+    private val converter: AnimeConverter,
 ) : CacheLoader {
 
     override fun hostname(): Hostname = config.hostname()
@@ -20,8 +21,8 @@ internal class SimpleCacheLoader(
         log.debug { "Loading anime from [$uri]" }
 
         val id = config.extractAnimeId(uri)
-        val rawContent = downloader.download(id)
-        return converter.convert(rawContent)
+        val rawContent = runBlocking { downloader.download(id) }
+        return runBlocking { converter.convert(rawContent) }
     }
 
     private companion object {

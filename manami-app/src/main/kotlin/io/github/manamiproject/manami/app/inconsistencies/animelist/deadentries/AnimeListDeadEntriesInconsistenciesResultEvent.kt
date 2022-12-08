@@ -4,5 +4,5 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.events.Event
 
 data class AnimeListDeadEntriesInconsistenciesResultEvent(
-    val entries: List<AnimeListEntry>
+    val entries: List<AnimeListEntry>,
 ): Event

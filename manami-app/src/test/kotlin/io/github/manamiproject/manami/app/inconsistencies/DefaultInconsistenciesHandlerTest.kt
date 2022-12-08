@@ -52,7 +52,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 cache = TestAnimeCache,
                 commandHistory = TestCommandHistory,
                 inconsistencyHandlers = listOf(testInconsistencyHandler),
-                eventBus = testEventBus
+                eventBus = testEventBus,
             )
 
             val config = InconsistenciesSearchConfig()
@@ -86,7 +86,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 cache = TestAnimeCache,
                 commandHistory = TestCommandHistory,
                 inconsistencyHandlers = listOf(testInconsistencyHandler),
-                eventBus = testEventBus
+                eventBus = testEventBus,
             )
 
             val config = InconsistenciesSearchConfig()
@@ -124,7 +124,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 cache = TestAnimeCache,
                 commandHistory = TestCommandHistory,
                 inconsistencyHandlers = listOf(testInconsistencyHandler),
-                eventBus = testEventBus
+                eventBus = testEventBus,
             )
 
             val config = InconsistenciesSearchConfig()
@@ -220,12 +220,12 @@ internal class DefaultInconsistenciesHandlerTest {
                                 currentEntry = IgnoreListEntry(
                                     link = Link("https://myanimelist.net/anime/28981"),
                                     title = "Ameiro Cocoa",
-                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                                 ),
                                 newEntry = IgnoreListEntry(
                                     link = Link("https://myanimelist.net/anime/28981"),
                                     title = "Ame-iro Cocoa",
-                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                                 ),
                             )
                         )
@@ -289,12 +289,12 @@ internal class DefaultInconsistenciesHandlerTest {
                                 currentEntry = IgnoreListEntry(
                                     link = Link("https://myanimelist.net/anime/28981"),
                                     title = "Ameiro Cocoa",
-                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                                 ),
                                 newEntry = IgnoreListEntry(
                                     link = Link("https://myanimelist.net/anime/28981"),
                                     title = "Ame-iro Cocoa",
-                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                                 ),
                             )
                         )
@@ -425,12 +425,12 @@ internal class DefaultInconsistenciesHandlerTest {
                     currentEntry = IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ameiro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     ),
                     newEntry = IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/28981"),
                         title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     ),
                 )
                 val testMetaDataInconsistencyHandler = object: InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
@@ -554,7 +554,7 @@ internal class DefaultInconsistenciesHandlerTest {
                             IgnoreListEntry(
                                 link = Link("https://myanimelist.net/anime/28981"),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                             ),
                         )
                     )
@@ -565,7 +565,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     cache = TestAnimeCache,
                     commandHistory = TestCommandHistory,
                     inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
-                    eventBus = testEventBus
+                    eventBus = testEventBus,
                 )
 
                 val config = InconsistenciesSearchConfig(
@@ -609,7 +609,7 @@ internal class DefaultInconsistenciesHandlerTest {
                             IgnoreListEntry(
                                 link = Link("https://myanimelist.net/anime/28981"),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                             ),
                         )
                     )
@@ -620,7 +620,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     cache = TestAnimeCache,
                     commandHistory = TestCommandHistory,
                     inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
-                    eventBus = testEventBus
+                    eventBus = testEventBus,
                 )
 
                 val config = InconsistenciesSearchConfig(
@@ -726,7 +726,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 val ignoreListEntry = IgnoreListEntry(
                     link = Link("https://myanimelist.net/anime/28981"),
                     title = "Ame-iro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                 )
                 val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
                     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true

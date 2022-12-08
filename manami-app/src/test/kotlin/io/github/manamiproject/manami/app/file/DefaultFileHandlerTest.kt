@@ -136,11 +136,11 @@ internal class DefaultFileHandlerTest {
             }
 
             val defaultFileHandler = DefaultFileHandler(
-                    state = testState,
-                    commandHistory = testCommandHistory,
-                    parser = testParser,
-                    fileWriter = TestFileWriter,
-                    eventBus = testEventBus,
+                state = testState,
+                commandHistory = testCommandHistory,
+                parser = testParser,
+                fileWriter = TestFileWriter,
+                eventBus = testEventBus,
             )
 
             // when

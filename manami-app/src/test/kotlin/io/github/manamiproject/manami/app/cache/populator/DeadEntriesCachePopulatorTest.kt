@@ -29,23 +29,23 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
         }
 
         val animeCachePopulator = DeadEntriesCachePopulator(
-                config = testConfig,
-                url = URL("http://localhost:$port/dead-entires/all.json")
+            config = testConfig,
+            url = URL("http://localhost:$port/dead-entires/all.json")
         )
 
         serverInstance.stubFor(
                 get(urlPathEqualTo("/dead-entires/all.json")).willReturn(
-                        aResponse()
-                                .withHeader("Content-Type", "application/json")
-                                .withStatus(200)
-                                .withBody("""
-                                    {
-                                        "deadEntries": [
-                                            "12449",
-                                            "65562"
-                                        ]
-                                    }
-                                """.trimIndent())
+                    aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(200)
+                        .withBody("""
+                            {
+                                "deadEntries": [
+                                    "12449",
+                                    "65562"
+                                ]
+                            }
+                            """.trimIndent())
                 )
         )
 

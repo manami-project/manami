@@ -56,7 +56,7 @@ internal class DefaultAnimeCache(
             animeDownloader = AnisearchDownloader(config = AnisearchConfig),
             relationsDownloader = AnisearchDownloader(config = AnisearchRelationsConfig),
             relationsDir = anisearchRelationsDir,
-            converter = AnisearchConverter(relationsDir = anisearchRelationsDir)
+            converter = AnisearchConverter(relationsDir = anisearchRelationsDir),
         ),
         KitsuCacheLoader(),
         SimpleCacheLoader(
@@ -75,7 +75,7 @@ internal class DefaultAnimeCache(
             animeDownloader = NotifyDownloader(config = NotifyConfig),
             relationsDownloader = NotifyDownloader(config = NotifyRelationsConfig),
             relationsDir = notifyRelationsDir,
-            converter = NotifyConverter(relationsDir = notifyRelationsDir)
+            converter = NotifyConverter(relationsDir = notifyRelationsDir),
         ),
     ),
     eventBus: EventBus = SimpleEventBus,

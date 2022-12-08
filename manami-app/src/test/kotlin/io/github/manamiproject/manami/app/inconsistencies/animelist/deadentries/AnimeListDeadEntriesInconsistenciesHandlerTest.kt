@@ -30,7 +30,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             )
 
             val isExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListDeadEnties = true
+                checkAnimeListDeadEnties = true,
             )
 
             // when
@@ -49,7 +49,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             )
 
             val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListDeadEnties = false
+                checkAnimeListDeadEnties = false,
             )
 
             // when
@@ -75,7 +75,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                         AnimeListEntry(
                             link = NoLink,
@@ -92,7 +92,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                             episodes = 12,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
                             location = Path("."),
-                        )
+                        ),
                     )
                 }
             }
@@ -125,7 +125,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                     )
                 }
@@ -159,7 +159,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                     )
                 }
@@ -200,7 +200,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                 type = TV,
                 episodes = 64,
                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                location = Path(".")
+                location = Path("."),
             )
 
             val testState = object: State by TestState {

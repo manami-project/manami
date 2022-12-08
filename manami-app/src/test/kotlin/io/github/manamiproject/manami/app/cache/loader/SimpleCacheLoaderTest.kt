@@ -24,9 +24,9 @@ internal class SimpleCacheLoaderTest {
         }
 
         val simpleCacheLoader = SimpleCacheLoader(
-                config = testConfig,
-                downloader = TestDownloader,
-                converter = TestAnimeConverter
+            config = testConfig,
+            downloader = TestDownloader,
+            converter = TestAnimeConverter,
         )
 
         // when
@@ -47,21 +47,21 @@ internal class SimpleCacheLoaderTest {
         }
 
         val testDownloader = object: Downloader by TestDownloader {
-            override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String {
+            override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String {
                 return if (id == "1535") "{ }" else shouldNotBeInvoked()
             }
         }
 
         val testConverter = object: AnimeConverter by TestAnimeConverter {
-            override fun convert(rawContent: String): Anime {
+            override suspend fun convert(rawContent: String): Anime {
                 return if (rawContent == "{ }") anime else shouldNotBeInvoked()
             }
         }
 
         val simpleCacheLoader = SimpleCacheLoader(
-                config = testConfig,
-                downloader = testDownloader,
-                converter = testConverter
+            config = testConfig,
+            downloader = testDownloader,
+            converter = testConverter,
         )
 
         // when

@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser
 import io.github.manamiproject.modb.dbparser.DatabaseFileParser
 import io.github.manamiproject.modb.dbparser.ExternalResourceParser
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 
 internal class AnimeCachePopulator(
@@ -21,7 +22,7 @@ internal class AnimeCachePopulator(
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info {"Populating cache with anime from [$uri]." }
 
-        val parsedAnime = parser.parse(uri.toURL())
+        val parsedAnime = runBlocking { parser.parse(uri.toURL()) }
 
         parsedAnime.forEach { anime ->
             anime.sources.forEach { source ->

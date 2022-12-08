@@ -76,7 +76,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path(".")
+                            location = Path("."),
                         ),
                         AnimeListEntry(
                             link = NoLink,
@@ -130,7 +130,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = TV,
                                 episodes = 12,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = testLocation
+                                location = testLocation,
                             ),
                         )
                     }
@@ -167,7 +167,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = Path("test")
+                                location = Path("test"),
                             ),
                         )
                     }
@@ -205,7 +205,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = Path("test")
+                                location = Path("test"),
                             ),
                         )
                     }
@@ -245,7 +245,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = Path("test")
+                                location = Path("test"),
                             ),
                         )
                     }
@@ -283,7 +283,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = Path("test")
+                                location = Path("test"),
                             ),
                         )
                     }
@@ -319,7 +319,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 type = OVA,
                                 episodes = 2,
                                 thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
-                                location = Path("test")
+                                location = Path("test"),
                             ),
                         )
                     }
