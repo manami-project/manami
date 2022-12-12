@@ -37,3 +37,9 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew jacocoTestReport coverallsJacoco
+      - name: Workflow housekeeping
+        if: ${{ matrix.java == 17 }}
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 30
+          keep_minimum_runs: 1
