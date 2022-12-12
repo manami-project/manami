@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Extract release version
         run: echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
       - name: Set up JDK 17
@@ -36,3 +38,16 @@ jobs:
           files: build/libs/manami.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: fetch-latest-release
+        name: Fetch latest release tag
+        run: |
+          version=$(git tag --sort=creatordate | tail -2 | head -1)
+          echo "PREVIOUS_VERSION=$version" >> $GITHUB_OUTPUT
+      - name: Delete outdated release assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.fetch-latest-release.outputs.PREVIOUS_VERSION }}
+          assets: manami.jar
+          fail-if-no-release: false
+          fail-if-no-assets: false
