@@ -19,7 +19,7 @@ jobs:
           distribution-type: "bin"
 
       - name: create pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           commit-message: "Update gradle to ${{ steps.gradleUpdate.outputs.gradle-version }}"
           branch: "gradle_update/version_${{ steps.gradleUpdate.outputs.gradle-version }}"
