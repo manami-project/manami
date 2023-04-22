@@ -2,5 +2,15 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "prHourlyLimit": 20,
+  "hostRules": [
+    {
+      "matchHost": "maven.pkg.github.com",
+      "hostType": "maven",
+      "encrypted": {
+        "token": "wcFMA/xDdHCJBTolARAAlhZPErEzKGKjK2KSkRg+fCIY9FB7gQH/wQJwHPUCFMDvAwqQakiMGVMyw6J8zB0Y5qWCSDv6xa3dyKkas+f3klVN6Da+0sohMGv+VaISD53kb1oIX1eoellUaLjkcbchYbvXjmfDPGSIPUXIYwM9T8saPVueyy4n5f2K6QLrbMp2nhO40Dva5f3dawsB56M84qW+5XbLKQNXOwG83GZOA3hw9Ie1nGKgCNSXdzeib3DGfEY2KmkVTRQfRblGQVO7BJzmu+JZPkG0lE4Xib1er/eL2aZPTlczYbCCD8Y1u/x/PLUwtm3pxwE682NJt+FNN7Hm8Px4z6fiGCAhJxRbNXi+MqD29j9MwE4jzvDjGBXHifVdWQGUJehhC6LzGeAPt6dZRJsanW6hzDyA1/cVqD2nVkejZxjImnzyh0ddayovf5FrU1E5pwDdhOF67z5zmeei9RNEOZ5i8YK5hQ0AZo65r+pgnJ+cm99tfjSkHACFtHr0lD51iCyRbzVsrhDIOVBL2zHzGLxm8FOH4SdP8gNrs1SL+Boh2+5Z7zEuxzSZaqzGRZsf9/96jvDw65sa8qwSjdXPW96KYvRgGyiaAakV7zeiPAeSOdr+6/zyDBE+hwbFMXxMkrRr0ucoUPMlcIJC1ifOYBKyYFlDc5CchjCkxu+yWo8E98fr8gNr8wPSfQFCK478//E4jKfiDF6J041Du5hbRqplHt0lySli/KrgoYPF0+SU2l/J68vL6+rSg5zituBLxP4jF469y3fwrhfe72zv4WB7iEbcUlh2IgAG6z+5ysfJZaDGArYn+RinfhZUrbhSbkDb2HgTnpDK0YBa8NGH5k5JFw5nNIWt"
+      }
+    }
   ]
 }
