@@ -100,11 +100,11 @@ repositories {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8"))
+    api(kotlin("stdlib"))
     api("io.github.manamiproject:modb-core:8.0.2")
     api("io.github.manamiproject:modb-db-parser:4.0.2")
 
-    implementation(platform(kotlin("bom", "1.7.10")))
+    implementation(platform(kotlin("bom", "1.8.20")))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("io.github.manamiproject:modb-anidb:4.0.2")
@@ -124,17 +124,17 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = Versions.JVM_TARGET
+        jvmTarget = JavaVersion.VERSION_17.toString()
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.7"
-        apiVersion = "1.7"
+        languageVersion = "1.8"
+        apiVersion = "1.8"
     }
 }
 
 tasks.test {
     useJUnitPlatform()
     reports.html.required.set(false)
-    reports.junitXml.required.set(false)
+    reports.junitXml.required.set(true)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
 }
 
@@ -149,10 +149,6 @@ tasks.jacocoTestReport {
         xml.outputLocation.set(file("$buildDir/reports/jacoco/test/jacocoFullReport.xml"))
     }
     dependsOn(allprojects.map { it.tasks.named<Test>("test") })
-}
-
-object Versions {
-    const val JVM_TARGET = "17"
 }
 
 fun parameter(name: String, default: String = ""): String {

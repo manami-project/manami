@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
     id("java-library")
     application
     id("com.github.johnrengelman.shadow") version("7.1.2")
@@ -10,6 +10,12 @@ plugins {
 allprojects {
     group = "io.github.manamiproject"
     version = project.findProperty("release.version") as String? ?: ""
+
+    kotlin {
+        jvmToolchain {
+            jvmToolchain(17)
+        }
+    }
 }
 
 val githubUsername = "manami-project"
@@ -114,7 +120,6 @@ dependencies {
 val mainClassPath = "io.github.manamiproject.manami.gui.StartKt"
 application {
     mainClass.set(mainClassPath)
-    mainClassName = mainClassPath
 }
 
 tasks {

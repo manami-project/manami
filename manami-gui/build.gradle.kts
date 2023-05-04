@@ -29,6 +29,12 @@ dependencies {
     api("org.openjfx:javafx-graphics:19:mac")
 }
 
+kotlin {
+    jvmToolchain {
+        jvmToolchain(17)
+    }
+}
+
 javafx {
     version = "17"
     modules = listOf(

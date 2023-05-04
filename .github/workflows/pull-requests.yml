@@ -31,6 +31,12 @@ jobs:
         env:
           GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: ./gradlew test
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: ${{ matrix.java == 17 }}
+        with:
+          files: |
+            /home/runner/work/manami/manami/manami-app/build/test-results/test/**/*.xml
       - name: Generate coverage
         if: ${{ matrix.java == 17 }}
         env:
