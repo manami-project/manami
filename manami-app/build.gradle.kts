@@ -124,10 +124,10 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = Versions.JVM_TARGET
+        jvmTarget = JavaVersion.VERSION_17.toString()
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.7"
-        apiVersion = "1.7"
+        languageVersion = "1.8"
+        apiVersion = "1.8"
     }
 }
 
@@ -149,10 +149,6 @@ tasks.jacocoTestReport {
         xml.outputLocation.set(file("$buildDir/reports/jacoco/test/jacocoFullReport.xml"))
     }
     dependsOn(allprojects.map { it.tasks.named<Test>("test") })
-}
-
-object Versions {
-    const val JVM_TARGET = "17"
 }
 
 fun parameter(name: String, default: String = ""): String {

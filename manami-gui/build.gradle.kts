@@ -41,10 +41,10 @@ javafx {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = Versions.JVM_TARGET
+        jvmTarget = JavaVersion.VERSION_17.toString()
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.7"
-        apiVersion = "1.7"
+        languageVersion = "1.8"
+        apiVersion = "1.8"
     }
 }
 
@@ -53,10 +53,6 @@ tasks.test {
     reports.html.required.set(false)
     reports.junitXml.required.set(false)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
-}
-
-object Versions {
-    const val JVM_TARGET = "17"
 }
 
 fun parameter(name: String, default: String = ""): String {

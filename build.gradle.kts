@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.9.0"
     id("java-library")
     application
     id("com.github.johnrengelman.shadow") version("7.1.2")
@@ -114,7 +114,6 @@ dependencies {
 val mainClassPath = "io.github.manamiproject.manami.gui.StartKt"
 application {
     mainClass.set(mainClassPath)
-    mainClassName = mainClassPath
 }
 
 tasks {
