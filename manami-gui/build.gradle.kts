@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(kotlin("bom", "1.7.10")))
-    api(kotlin("stdlib-jdk8"))
+    implementation(platform(kotlin("bom", "1.9.0")))
+    api(kotlin("stdlib"))
     api(project(":manami-app"))
     api("no.tornado:tornadofx:1.7.20")
     api("no.tornado:tornadofx-controlsfx:0.1.1")
