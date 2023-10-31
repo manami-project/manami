@@ -7,7 +7,9 @@ import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.YES
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
-import io.github.manamiproject.manami.gui.events.*
+import io.github.manamiproject.manami.gui.events.FileOpenedGuiEvent
+import io.github.manamiproject.manami.gui.events.MetaDataMigrationResultGuiEvent
+import io.github.manamiproject.manami.gui.events.MetaDataProviderMigrationGuiEvent
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -20,7 +22,7 @@ import javafx.geometry.Pos.CENTER_LEFT
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
-import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY
+import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
 import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority.ALWAYS
@@ -208,7 +210,7 @@ private fun createTable(tableItems: SimpleObjectProperty<ObservableList<Migratio
                     alignment = CENTER_LEFT
                 }
                 comparator = Comparator<Hyperlink> { o1, o2 -> o1.text.compareTo(o2.text, true) }
-                columnResizePolicy = CONSTRAINED_RESIZE_POLICY
+                columnResizePolicy = CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<Hyperlink> {
                         hyperlink {
