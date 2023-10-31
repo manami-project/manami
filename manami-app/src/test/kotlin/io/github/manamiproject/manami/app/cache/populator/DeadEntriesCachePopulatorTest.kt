@@ -30,7 +30,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
 
         val animeCachePopulator = DeadEntriesCachePopulator(
             config = testConfig,
-            url = URL("http://localhost:$port/dead-entires/all.json")
+            url = URI("http://localhost:$port/dead-entires/all.json").toURL()
         )
 
         serverInstance.stubFor(

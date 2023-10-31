@@ -22,6 +22,7 @@ import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.mal.MalConfig
+import java.net.URI
 import java.net.URL
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -50,10 +51,10 @@ class Manami(
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
             AnimeCachePopulator().populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anidb.json")).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URL("$DEAD_ENTRIES_BASE_URL/anilist.json")).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URL("$DEAD_ENTRIES_BASE_URL/kitsu.json")).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URL("$DEAD_ENTRIES_BASE_URL/myanimelist.json")).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.json").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.json").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.json").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.json").toURL()).populate(Caches.defaultAnimeCache)
         }
     }
 
