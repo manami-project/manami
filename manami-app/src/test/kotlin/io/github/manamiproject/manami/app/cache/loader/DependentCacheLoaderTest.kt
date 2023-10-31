@@ -67,8 +67,8 @@ internal class DependentCacheLoaderTest {
                     season = SUMMER,
                     year = 2020,
                 ),
-                picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.webp"),
-                thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.webp"),
+                picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.jpg"),
+                thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.jpg"),
                 duration = Duration(24, MINUTES),
             ).apply {
                 addSources(URI("https://notify.moe/anime/3lack4eiR"))
