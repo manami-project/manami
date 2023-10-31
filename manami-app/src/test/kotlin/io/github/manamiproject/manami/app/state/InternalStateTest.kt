@@ -16,9 +16,11 @@ import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.io.path.createFile
+import kotlin.test.BeforeTest
 
 internal class InternalStateTest {
 
+    @BeforeTest
     @AfterEach
     fun after() {
         InternalState.closeFile()
