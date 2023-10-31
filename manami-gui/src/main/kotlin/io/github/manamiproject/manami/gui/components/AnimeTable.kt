@@ -10,10 +10,8 @@ import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.YES
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import javafx.event.EventTarget
@@ -23,7 +21,7 @@ import javafx.scene.Group
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
-import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY
+import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Priority.ALWAYS
 import javafx.scene.layout.Priority.NEVER
@@ -80,7 +78,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                     alignment = CENTER_LEFT
                 }
                 comparator = Comparator<Hyperlink> { o1, o2 -> o1.text.compareTo(o2.text, true) }
-                columnResizePolicy = CONSTRAINED_RESIZE_POLICY
+                columnResizePolicy = CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
                 setCellValueFactory { column ->
                     ReadOnlyObservableValue<Hyperlink> {
                         hyperlink {
