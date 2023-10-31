@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(kotlin("bom", "1.9.0")))
+    implementation(platform(kotlin("bom", "1.9.20")))
     api(kotlin("stdlib"))
     api(project(":manami-app"))
     api("no.tornado:tornadofx:1.7.20")
@@ -30,7 +30,7 @@ dependencies {
 }
 
 javafx {
-    version = "17"
+    version = "21"
     modules = listOf(
         "javafx.base",
         "javafx.controls",
@@ -41,10 +41,10 @@ javafx {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
         freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.8"
-        apiVersion = "1.8"
+        languageVersion = "1.9"
+        apiVersion = "1.9"
     }
 }
 
