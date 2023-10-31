@@ -134,7 +134,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 tasks.test {
     useJUnitPlatform()
     reports.html.required.set(false)
-    reports.junitXml.required.set(false)
+    reports.junitXml.required.set(true)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
 }
 
