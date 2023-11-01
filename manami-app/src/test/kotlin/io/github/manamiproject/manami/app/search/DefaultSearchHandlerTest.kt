@@ -32,13 +32,16 @@ import io.github.manamiproject.modb.dbparser.AnimeDatabaseJsonStringParser
 import io.github.manamiproject.modb.mal.MalConfig
 import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.tempDirectory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import java.lang.Thread.sleep
 import java.net.URI
 import java.nio.file.Paths
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.createDirectory
 
 internal class DefaultSearchHandlerTest {
@@ -2002,6 +2005,7 @@ internal class DefaultSearchHandlerTest {
     inner class FindSimilarAnimeTests {
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return with finished event if the host is not a supported meta data provider`() {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
@@ -2026,11 +2030,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://example.org/anime/1535"))
 
             // then
-            sleep(2000)
+            runBlocking {
+                do {
+                    delay(500)
+                } while (receivedEvents.isEmpty())
+            }
             assertThat(receivedEvents).containsExactly(SimilarAnimeSearchFinishedEvent)
         }
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return with finished event if the uri represents a dead entry`() {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
@@ -2057,11 +2066,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/10"))
 
             // then
-            sleep(2000)
+            runBlocking {
+                do {
+                    delay(500)
+                } while (receivedEvents.isEmpty())
+            }
             assertThat(receivedEvents).containsExactly(SimilarAnimeSearchFinishedEvent)
         }
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return 10 anime having the most amount tags which reside in both anime sorted by number of number of matching tags desc`() {
             // given
             val receivedEvents = mutableListOf<Event>()
@@ -2101,8 +2115,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
             // then
-            sleep(2000)
-            val event = receivedEvents.find { it is SimilarAnimeFoundEvent } as SimilarAnimeFoundEvent
+            var receivedEvent: Event?
+
+            runBlocking {
+                do {
+                    delay(500)
+                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
+                } while (receivedEvent == null)
+            }
+
+            val event = receivedEvent as SimilarAnimeFoundEvent
 
             assertThat(event.entries.map { it.sources.first() }).containsExactly(
                 URI("https://myanimelist.net/anime/19"),
@@ -2119,6 +2141,7 @@ internal class DefaultSearchHandlerTest {
         }
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from anime list`() {
             // given
             val receivedEvents = mutableListOf<Event>()
@@ -2166,8 +2189,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
             // then
-            sleep(2000)
-            val event = receivedEvents.find { it is SimilarAnimeFoundEvent } as SimilarAnimeFoundEvent
+            var receivedEvent: Event?
+
+            runBlocking {
+                do {
+                    delay(500)
+                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
+                } while (receivedEvent == null)
+            }
+
+            val event = receivedEvent as SimilarAnimeFoundEvent
 
             assertThat(event.entries.map { it.sources.first() }).containsExactly(
                 URI("https://myanimelist.net/anime/19"),
@@ -2184,6 +2215,7 @@ internal class DefaultSearchHandlerTest {
         }
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from watch list`() {
             // given
             val receivedEvents = mutableListOf<Event>()
@@ -2229,8 +2261,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
             // then
-            sleep(2000)
-            val event = receivedEvents.find { it is SimilarAnimeFoundEvent } as SimilarAnimeFoundEvent
+            var receivedEvent: Event?
+
+            runBlocking {
+                do {
+                    delay(500)
+                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
+                } while (receivedEvent == null)
+            }
+
+            val event = receivedEvent as SimilarAnimeFoundEvent
 
             assertThat(event.entries.map { it.sources.first() }).containsExactly(
                 URI("https://myanimelist.net/anime/19"),
@@ -2247,6 +2287,7 @@ internal class DefaultSearchHandlerTest {
         }
 
         @Test
+        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from ignore list`() {
             // given
             val receivedEvents = mutableListOf<Event>()
@@ -2292,8 +2333,16 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
             // then
-            sleep(2000)
-            val event = receivedEvents.find { it is SimilarAnimeFoundEvent } as SimilarAnimeFoundEvent
+            var receivedEvent: Event?
+
+            runBlocking {
+                do {
+                    delay(500)
+                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
+                } while (receivedEvent == null)
+            }
+
+            val event = receivedEvent as SimilarAnimeFoundEvent
 
             assertThat(event.entries.map { it.sources.first() }).containsExactly(
                 URI("https://myanimelist.net/anime/19"),
