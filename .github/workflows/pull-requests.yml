@@ -35,8 +35,8 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          check_name: Test results JDK ${{ matrix.java }} (LTS)
-          comment_title: Test results JDK ${{ matrix.java }} (latest)
+          check_name: Test results JDK ${{ matrix.java }}
+          comment_title: Test results JDK ${{ matrix.java }}
           files: |
             /github/workspace/**/build/test-results/**/*.xml
       - name: Generate coverage
