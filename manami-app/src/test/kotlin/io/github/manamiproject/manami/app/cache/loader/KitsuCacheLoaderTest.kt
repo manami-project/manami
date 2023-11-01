@@ -90,7 +90,7 @@ internal class KitsuCacheLoaderTest {
         }
 
         val testHttpClient = object: HttpClient by TestHttpClient {
-            override suspend fun get(url: URL, headers: Map<String, Collection<String>>, retryWith: String): HttpResponse {
+            override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 val response = when(url.toString()) {
                     "https://kitsu.io/api/edge/anime/42194" -> loadTestResource("cache_tests/loader/kitsu/42194.json")
                     "https://kitsu.io/api/edge/media-relationships?filter[source_id]=42194&filter[source_type]=Anime&include=destination&sort=role" -> loadTestResource("cache_tests/loader/kitsu/42194_relations.json")
