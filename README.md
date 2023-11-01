@@ -1,4 +1,4 @@
-![Build](https://github.com/manami-project/manami/workflows/Build/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/manami-project/manami/badge.svg)](https://coveralls.io/github/manami-project/manami) ![jdk21](https://img.shields.io/badge/jdk-21-informational)
+![Build](https://github.com/manami-project/manami/actions/workflows/build.yml/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/manami-project/manami/badge.svg)](https://coveralls.io/github/manami-project/manami) ![jdk21](https://img.shields.io/badge/jdk-21-informational)
 # Manami
 
 ## What does it do?
