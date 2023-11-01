@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.9.20"
     id("java-library")
     application
-    id("com.github.johnrengelman.shadow") version("7.1.2")
+    id("com.github.johnrengelman.shadow") version("8.1.1")
 }
 
 allprojects {
