@@ -64,7 +64,7 @@ internal class DefaultAnimeCache(
             downloader = LivechartDownloader(
                 config = LivechartConfig,
                 httpClient = DefaultHttpClient(
-                    protocols = listOf(HTTP_1_1),
+                    protocols = mutableListOf(HTTP_1_1),
                 )
             ),
             converter = LivechartConverter(),
