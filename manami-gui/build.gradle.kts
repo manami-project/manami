@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(kotlin("bom", "1.9.20")))
+    implementation(platform(kotlin("bom", "1.9.21")))
     api(kotlin("stdlib"))
     api(project(":manami-app"))
     api("no.tornado:tornadofx:1.7.20")
