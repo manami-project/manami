@@ -184,7 +184,7 @@ class AnimeForm: Fragment() {
                 title = selectedTitle.get().trim(),
                 episodes = selectedEpisodes.get(),
                 type = Anime.Type.valueOf(selectedType.get()),
-                thumbnail = if (selectedThumbnail.get().trim().isNotBlank()) URI(selectedThumbnail.get()) else URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                thumbnail = if (selectedThumbnail.get().trim().isNotBlank()) URI(selectedThumbnail.get()) else URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                 link = if (selectedLink.get().trim().isNotBlank()) Link(selectedLink.get().trim()) else NoLink,
                 location = Path(selectedLocation.get()),
             )

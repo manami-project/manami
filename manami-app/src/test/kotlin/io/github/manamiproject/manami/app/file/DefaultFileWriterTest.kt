@@ -86,7 +86,7 @@ internal class DefaultFileWriterTest {
                 <manami version="3.0.0">
                   <animeList>
                     <animeListEntry link="https://myanimelist.net/anime/11235" title="Amagami SS+ Plus" thumbnail="https://cdn.myanimelist.net/images/anime/13/33359.jpg" type="TV" episodes="13" location="some/relative/path/amagami_ss+_plus"/>
-                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://cdn.myanimelist.net/images/qm_50.gif" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
+                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                     <animeListEntry link="https://myanimelist.net/anime/248" title="Ichigo 100%" thumbnail="https://cdn.myanimelist.net/images/anime/5/20036.jpg" type="TV" episodes="12" location="some/relative/path/ichigo_100%"/>
                   </animeList>
                   <watchList>

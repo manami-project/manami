@@ -113,7 +113,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/10001"),
                             title = "Dead entry",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                         )
                     )
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -137,7 +137,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/10001"),
                         title = "Dead entry",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                     )
                 )
                 assertThat(result.ignoreListResults).isEmpty()
@@ -151,7 +151,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/31646"),
                             title = "3-gatsu no Lion",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                         )
                     )
                     override fun ignoreList(): Set<IgnoreListEntry> = emptySet()

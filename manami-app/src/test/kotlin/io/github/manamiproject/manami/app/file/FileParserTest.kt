@@ -133,7 +133,7 @@ internal class FileParserTest {
         assertThat(result.animeListEntries).containsExactlyInAnyOrder(
             AnimeListEntry(
                 title = "H2O: Footprints in the Sand",
-                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                 episodes = 4,
                 type = SPECIAL,
                 location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),

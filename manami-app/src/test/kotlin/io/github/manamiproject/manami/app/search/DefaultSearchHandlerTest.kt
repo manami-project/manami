@@ -339,7 +339,7 @@ internal class DefaultSearchHandlerTest {
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/42938"),
                         title = "Fruits Basket: The Final",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
                     )
                 )
                 override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -431,7 +431,7 @@ internal class DefaultSearchHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/42938"),
                         title = "Fruits Basket: The Final",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
                     )
                 )
             }
@@ -993,7 +993,7 @@ internal class DefaultSearchHandlerTest {
                     WatchListEntry(
                         link = Link("https://myanimelist.net/anime/42938"),
                         title = "Fruits Basket: The Final",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
                     )
                 )
                 override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -1129,7 +1129,7 @@ internal class DefaultSearchHandlerTest {
                     IgnoreListEntry(
                         link = Link("https://myanimelist.net/anime/42938"),
                         title = "Fruits Basket: The Final",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
                     )
                 )
             }

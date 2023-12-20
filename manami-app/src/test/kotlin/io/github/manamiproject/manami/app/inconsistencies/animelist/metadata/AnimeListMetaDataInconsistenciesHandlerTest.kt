@@ -125,7 +125,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                             title = "No Link Entry",
                             type = TV,
                             episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                             location = Path("."),
                         ),
                     )

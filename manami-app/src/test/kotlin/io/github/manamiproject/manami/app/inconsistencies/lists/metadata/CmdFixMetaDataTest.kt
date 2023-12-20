@@ -17,7 +17,7 @@ internal class CmdFixMetaDataTest {
         val currentWatchListEntry1 = WatchListEntry(
             link = Link("https://myanimelist.net/anime/40059"),
             title = "Golden Kamuy 3rd Season",
-            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
         )
         val newWatchListEntry1 = WatchListEntry(
             link = Link("https://myanimelist.net/anime/40059"),
@@ -72,7 +72,7 @@ internal class CmdFixMetaDataTest {
         val currentIgnoreListEntry1 = IgnoreListEntry(
             link = Link("https://myanimelist.net/anime/40059"),
             title = "Golden Kamuy 3rd Season",
-            thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
         )
         val newIgnoreListEntry1 = IgnoreListEntry(
             link = Link("https://myanimelist.net/anime/40059"),

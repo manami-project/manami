@@ -129,7 +129,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "No Link Entry",
                                 type = TV,
                                 episodes = 12,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = testLocation,
                             ),
                         )
@@ -166,7 +166,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "xxxHOLiC Rou",
                                 type = OVA,
                                 episodes = 2,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = Path("test"),
                             ),
                         )
@@ -204,7 +204,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "xxxHOLiC Rou",
                                 type = OVA,
                                 episodes = 2,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = Path("test"),
                             ),
                         )
@@ -244,7 +244,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "xxxHOLiC Rou",
                                 type = OVA,
                                 episodes = 2,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = Path("test"),
                             ),
                         )
@@ -282,7 +282,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "xxxHOLiC Rou",
                                 type = OVA,
                                 episodes = 2,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = Path("test"),
                             ),
                         )
@@ -318,7 +318,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                                 title = "xxxHOLiC Rou",
                                 type = OVA,
                                 episodes = 2,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/qm_50.gif"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                                 location = Path("test"),
                             ),
                         )
