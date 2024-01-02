@@ -19,7 +19,7 @@ internal class GithubVersionProviderTest {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 return HttpResponse(
                     code = 200,
-                    body = loadTestResource("versioning_tests/github_versioning_tests/latest_version_page.html"),
+                    body = loadTestResource("versioning_tests/github_versioning_tests/latest_version_page.html").toByteArray(),
                 )
             }
         }
@@ -51,7 +51,7 @@ internal class GithubVersionProviderTest {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 return HttpResponse(
                     code = 200,
-                    body = otherBody,
+                    body = otherBody.toByteArray(),
                 )
             }
         }
@@ -76,7 +76,7 @@ internal class GithubVersionProviderTest {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 return HttpResponse(
                     code = 429,
-                    body = EMPTY,
+                    body = EMPTY.toByteArray(),
                 )
             }
         }
