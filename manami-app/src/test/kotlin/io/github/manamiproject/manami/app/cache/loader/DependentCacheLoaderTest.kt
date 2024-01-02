@@ -97,7 +97,7 @@ internal class DependentCacheLoaderTest {
                         else -> shouldNotBeInvoked()
                     }
 
-                    return HttpResponse(200, response)
+                    return HttpResponse(200, response.toByteArray())
                 }
             }
 

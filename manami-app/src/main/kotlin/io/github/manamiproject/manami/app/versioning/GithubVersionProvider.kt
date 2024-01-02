@@ -15,7 +15,7 @@ internal class GithubVersionProvider(
         val response = runBlocking { httpClient.get(uri.toURL()) }
         check(response.isOk()) { "Unable to check latest version, because response code wasn't 200." }
 
-        val title = Regex("<title>.*?</title>").find(response.body)?.value ?: EMPTY
+        val title = Regex("<title>.*?</title>").find(response.bodyAsText)?.value ?: EMPTY
         val rawVersion = Regex("([0-9]+\\.?){3}").find(title)?.value ?: EMPTY
         return  SemanticVersion(rawVersion)
     }

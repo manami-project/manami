@@ -98,7 +98,7 @@ internal class KitsuCacheLoaderTest {
                     else -> shouldNotBeInvoked()
                 }
 
-                return HttpResponse(200, response)
+                return HttpResponse(200, response.toByteArray())
             }
         }
 
