@@ -112,7 +112,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-anime-planet:4.2.4")
     implementation("io.github.manamiproject:modb-anisearch:2.2.3")
     implementation("io.github.manamiproject:modb-kitsu:4.2.3")
-    implementation("io.github.manamiproject:modb-livechart:2.2.3")
+    implementation("io.github.manamiproject:modb-livechart:2.2.4")
     implementation("io.github.manamiproject:modb-mal:4.2.8")
     implementation("io.github.manamiproject:modb-notify:4.2.3")
     implementation("ch.qos.logback:logback-classic:1.4.14")
