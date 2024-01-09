@@ -2098,7 +2098,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             runBlocking {
-                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2172,7 +2172,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             runBlocking {
-                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2244,7 +2244,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             runBlocking {
-                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2316,7 +2316,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             runBlocking {
-                AnimeDatabaseJsonStringParser().parse(loadTestResource("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
+                AnimeDatabaseJsonStringParser().parse(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
