@@ -124,7 +124,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
                     aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(200)
-                        .withBody(loadTestResource("cache_tests/populator/test-database.json"))
+                        .withBody(loadTestResource<String>("cache_tests/populator/test-database.json"))
                 )
         )
 

@@ -92,8 +92,8 @@ internal class DependentCacheLoaderTest {
             val testHttpClient = object: HttpClient by TestHttpClient {
                 override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                     val response = when(url.toString()) {
-                        "https://notify.moe/api/anime/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR.json")
-                        "https://notify.moe/api/animerelations/3lack4eiR" -> loadTestResource("cache_tests/loader/notify/3lack4eiR_relations.json")
+                        "https://notify.moe/api/anime/3lack4eiR" -> loadTestResource<String>("cache_tests/loader/notify/3lack4eiR.json")
+                        "https://notify.moe/api/animerelations/3lack4eiR" -> loadTestResource<String>("cache_tests/loader/notify/3lack4eiR_relations.json")
                         else -> shouldNotBeInvoked()
                     }
 
