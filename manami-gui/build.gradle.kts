@@ -24,9 +24,9 @@ dependencies {
     api(project(":manami-app"))
     api("no.tornado:tornadofx:1.7.20")
     api("no.tornado:tornadofx-controlsfx:0.1.1")
-    api("org.openjfx:javafx-graphics:22-ea+27:win")
-    api("org.openjfx:javafx-graphics:22-ea+27:linux")
-    api("org.openjfx:javafx-graphics:22-ea+27:mac")
+    api("org.openjfx:javafx-graphics:23-ea+3:win")
+    api("org.openjfx:javafx-graphics:23-ea+3:linux")
+    api("org.openjfx:javafx-graphics:23-ea+3:mac")
 }
 
 javafx {
