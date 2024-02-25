@@ -77,6 +77,7 @@ class RelatedAnimeView : View() {
             animeTable<BigPicturedAnimeEntry> {
                 manamiApp = manamiAccess
                 items = entries
+                hostServicesInstance = hostServices
             }
         }
     }

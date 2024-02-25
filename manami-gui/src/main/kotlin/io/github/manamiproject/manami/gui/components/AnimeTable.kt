@@ -11,6 +11,7 @@ import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.YES
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
+import javafx.application.HostServices
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
@@ -39,6 +40,7 @@ data class AnimeTableConfig<T: AnimeEntry>(
     var withEditButton: Boolean = false,
     var onEdit: (T) -> Unit = {},
     var items: ObjectProperty<ObservableList<T>> = SimpleObjectProperty(observableListOf()),
+    var hostServicesInstance: HostServices? = null,
 )
 
 inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConfig<T>.() -> Unit): TableView<T> {
@@ -86,6 +88,7 @@ inline fun <reified T: AnimeEntry> EventTarget.animeTable(config: AnimeTableConf
                             uri = if(column.value.link is NoLink) URI(EMPTY) else column.value.link.asLink().uri
                             isDisable = column.value.link is NoLink
                             animeStatus = if (T::class == WatchListEntry::class) (column.value as WatchListEntry).status else UNKNOWN
+                            hostServicesInstance = animeTableConfig.hostServicesInstance
                         }
                     }
                 }

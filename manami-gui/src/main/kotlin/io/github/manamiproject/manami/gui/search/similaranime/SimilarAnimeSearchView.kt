@@ -117,6 +117,7 @@ class SimilarAnimeSearchView : View() {
                 manamiApp = manamiAccess
                 withSortableTitle = false
                 items = entries
+                hostServicesInstance = hostServices
             }
         }
     }

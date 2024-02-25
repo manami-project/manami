@@ -171,6 +171,7 @@ class AnimeSearchView: View() {
                 animeTable<BigPicturedAnimeEntry> {
                     manamiApp = manamiAccess
                     items = entries
+                    hostServicesInstance = hostServices
                 }
             }
         }

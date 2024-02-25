@@ -125,6 +125,7 @@ class AnimeListView : View() {
                 onDelete = {
                     manamiAccess.removeAnimeListEntry(it)
                 }
+                hostServicesInstance = hostServices
             }
         }
     }

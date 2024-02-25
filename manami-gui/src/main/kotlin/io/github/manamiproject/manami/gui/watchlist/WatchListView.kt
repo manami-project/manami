@@ -60,6 +60,7 @@ class WatchListView : View() {
                 withDeleteButton = true
                 onDelete = { entry -> manamiAccess.removeWatchListEntry(entry) }
                 items = entries
+                hostServicesInstance = hostServices
             }
         }
     }

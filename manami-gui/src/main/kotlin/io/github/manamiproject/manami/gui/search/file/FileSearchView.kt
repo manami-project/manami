@@ -90,6 +90,7 @@ class FileSearchView : View() {
                     withToIgnoreListButton = false
                     withHideButton = false
                     withDeleteButton = false
+                    hostServicesInstance = hostServices
                 }
             }
 
@@ -103,6 +104,7 @@ class FileSearchView : View() {
                     withToIgnoreListButton = false
                     withHideButton = false
                     withDeleteButton = false
+                    hostServicesInstance = hostServices
                 }
             }
 
@@ -119,6 +121,7 @@ class FileSearchView : View() {
                     onDelete = {
                         manamiAccess.removeIgnoreListEntry(it)
                     }
+                    hostServicesInstance = hostServices
                 }
             }
         }

@@ -98,6 +98,7 @@ class IgnoreListView : View() {
                 manamiApp = manamiAccess
                 withToWatchListButton = false
                 items = entries
+                hostServicesInstance = hostServices
             }
         }
     }
