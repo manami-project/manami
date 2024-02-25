@@ -8,7 +8,6 @@ import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -133,8 +132,8 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
 
         // then
         val expectedAnidbEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://anidb.net/anime/4563")),
-            relatedAnime = SortedList(
+            sources = hashSetOf(URI("https://anidb.net/anime/4563")),
+            relatedAnime = hashSetOf(
                 URI("https://anidb.net/anime/8146"),
                 URI("https://anidb.net/anime/8147")
             ),
@@ -142,14 +141,14 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         assertThat((testCache.fetch(URI("https://anidb.net/anime/4563")) as PresentValue).value).isEqualTo(expectedAnidbEntry)
 
         val expectedAnilistEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://anilist.co/anime/1535")),
-            relatedAnime = SortedList(URI("https://anilist.co/anime/2994")),
+            sources = hashSetOf(URI("https://anilist.co/anime/1535")),
+            relatedAnime = hashSetOf(URI("https://anilist.co/anime/2994")),
         )
         assertThat((testCache.fetch(URI("https://anilist.co/anime/1535")) as PresentValue).value).isEqualTo(expectedAnilistEntry)
 
         val expectedAnimePlanetEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://anime-planet.com/anime/death-note")),
-            relatedAnime = SortedList(
+            sources = hashSetOf(URI("https://anime-planet.com/anime/death-note")),
+            relatedAnime = hashSetOf(
                 URI("https://anime-planet.com/anime/death-note-rewrite-1-visions-of-a-god"),
                 URI("https://anime-planet.com/anime/death-note-rewrite-2-ls-successors"),
             ),
@@ -157,20 +156,20 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         assertThat((testCache.fetch(URI("https://anime-planet.com/anime/death-note")) as PresentValue).value).isEqualTo(expectedAnimePlanetEntry)
 
         val expectedKitsuEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://kitsu.io/anime/1376")),
-            relatedAnime = SortedList(URI("https://kitsu.io/anime/2707")),
+            sources = hashSetOf(URI("https://kitsu.io/anime/1376")),
+            relatedAnime = hashSetOf(URI("https://kitsu.io/anime/2707")),
         )
         assertThat((testCache.fetch(URI("https://kitsu.io/anime/1376")) as PresentValue).value).isEqualTo(expectedKitsuEntry)
 
         val expectedMalEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://myanimelist.net/anime/1535")),
-            relatedAnime = SortedList(URI("https://myanimelist.net/anime/2994")),
+            sources = hashSetOf(URI("https://myanimelist.net/anime/1535")),
+            relatedAnime = hashSetOf(URI("https://myanimelist.net/anime/2994")),
         )
         assertThat((testCache.fetch(URI("https://myanimelist.net/anime/1535")) as PresentValue).value).isEqualTo(expectedMalEntry)
 
         val expectedNotifyEntry = expectedAnime.copy(
-            sources = SortedList(URI("https://notify.moe/anime/0-A-5Fimg")),
-            relatedAnime = SortedList(URI("https://notify.moe/anime/DBBU5Kimg")),
+            sources = hashSetOf(URI("https://notify.moe/anime/0-A-5Fimg")),
+            relatedAnime = hashSetOf(URI("https://notify.moe/anime/DBBU5Kimg")),
         )
         assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedNotifyEntry)
 

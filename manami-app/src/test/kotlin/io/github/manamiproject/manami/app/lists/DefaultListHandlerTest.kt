@@ -17,7 +17,6 @@ import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
@@ -203,7 +202,7 @@ internal class DefaultListHandlerTest {
         fun `add watch list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -214,7 +213,7 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/40059")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -275,7 +274,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -341,7 +340,7 @@ internal class DefaultListHandlerTest {
         fun `add ignore list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -352,7 +351,7 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/40059")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -413,7 +412,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/37989")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,

@@ -79,7 +79,7 @@ internal class DependentCacheLoaderTest {
                         "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
                         "やはり俺の青春ラブコメはまちがっている。第3期",
                 )
-                addRelations(URI("https://notify.moe/anime/Pk0AtFmmg"))
+                addRelatedAnime(URI("https://notify.moe/anime/Pk0AtFmmg"))
                 addTags(
                     "comedy",
                     "drama",

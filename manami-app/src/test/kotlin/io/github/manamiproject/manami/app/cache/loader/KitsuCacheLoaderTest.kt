@@ -74,7 +74,7 @@ internal class KitsuCacheLoaderTest {
                     "Oregairu 3",
                     "やはり俺の青春ラブコメはまちがっている。完",
             )
-            addRelations(URI("https://kitsu.io/anime/8478"))
+            addRelatedAnime(URI("https://kitsu.io/anime/8478"))
             addTags(
                 "asia",
                 "comedy",

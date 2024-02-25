@@ -13,7 +13,6 @@ import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.EventListType.ANIME_LIST
 import io.github.manamiproject.manami.app.events.EventListType.IGNORE_LIST
 import io.github.manamiproject.manami.app.events.TestEventBus
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
 import io.github.manamiproject.modb.core.models.Anime.Type.*
@@ -433,7 +432,7 @@ internal class DefaultRelatedAnimeHandlerTest {
     }
 
     val anime1 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
         _title = "3-gatsu no Lion",
@@ -444,7 +443,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
             URI("https://myanimelist.net/anime/34611"),
             URI("https://myanimelist.net/anime/34647"),
@@ -454,7 +453,7 @@ internal class DefaultRelatedAnimeHandlerTest {
     )
 
     val anime2 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/35180"),
         ),
         _title = "3-gatsu no Lion 2nd Season",
@@ -465,14 +464,14 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2017,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
             URI("https://myanimelist.net/anime/38864"),
         ),
     )
 
     val anime3 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
         ),
         _title = "3-gatsu no Lion meets Bump of Chicken",
@@ -483,14 +482,14 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2014,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
             URI("https://myanimelist.net/anime/34611"),
         ),
     )
 
     val anime4 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/34647"),
         ),
         _title = "3-gatsu no Lion Recap",
@@ -501,13 +500,13 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime5 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/38154"),
         ),
         _title = "3-gatsu no Lion: Ugoku! Nya Shogi",
@@ -518,13 +517,13 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = WINTER,
             year = 2017,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime6 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/34611"),
         ),
         _title = "Answer (2016)",
@@ -535,14 +534,14 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime7 = Anime(
-        sources = SortedList(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/38864"),
         ),
         _title = "Lion meets HachiClo",
@@ -553,7 +552,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2018,
         ),
-        relatedAnime = SortedList(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/35180"),
         ),
     )

@@ -3,7 +3,6 @@ package io.github.manamiproject.manami.app.cache
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
@@ -206,7 +205,7 @@ internal class AnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -252,7 +251,7 @@ internal class AnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -268,7 +267,7 @@ internal class AnimeCacheTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = SortedList(
+                tags = hashSetOf(
                     "based on a manga",
                     "comedy",
                     "ensemble cast",
@@ -324,7 +323,7 @@ internal class AnimeCacheTest {
         fun `return all entries of a specific provider`() {
             // given
             val entry1 = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -343,7 +342,7 @@ internal class AnimeCacheTest {
             )
 
             val entry2 = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -362,7 +361,7 @@ internal class AnimeCacheTest {
             )
 
             val entry3 = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -379,7 +378,7 @@ internal class AnimeCacheTest {
             )
 
             val entry4 = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -393,7 +392,7 @@ internal class AnimeCacheTest {
             )
 
             val entry5 = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://kitsu.io/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
@@ -443,7 +442,7 @@ internal class AnimeCacheTest {
         fun `create individual entries for duplicates`() {
             // given
             val entry = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/48670"),
                     URI("https://myanimelist.net/anime/48671"),
                     URI("https://myanimelist.net/anime/48672"),
@@ -458,15 +457,15 @@ internal class AnimeCacheTest {
                 ),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1469/114202.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1469/114202t.jpg"),
-                synonyms = SortedList(
+                synonyms = hashSetOf(
                     "Tsugu Tsugumomo Mini Anime",
                     "継つぐももミニアニメ"
                 ),
-                relatedAnime = SortedList(
+                relatedAnime = hashSetOf(
                     URI("https://myanimelist.net/anime/34019"),
                     URI("https://myanimelist.net/anime/39469"),
                 ),
-                tags = SortedList("comedy"),
+                tags = hashSetOf("comedy"),
             )
 
             val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -518,7 +517,7 @@ internal class AnimeCacheTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -553,7 +552,7 @@ internal class AnimeCacheTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(
+                sources = hashSetOf(
                     URI("https://kitsu.io/anime/45724"),
                     URI("https://myanimelist.net/anime/50731"),
                     URI("https://myanimelist.net/anime/50814"),

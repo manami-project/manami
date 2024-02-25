@@ -7,7 +7,6 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import org.assertj.core.api.Assertions.assertThat
@@ -160,7 +159,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = SortedList(
+                            sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
                             _title = "3-gatsu no Lion",
@@ -171,7 +170,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                                 season = AnimeSeason.Season.FALL,
                                 year = 2016,
                             ),
-                            relatedAnime = SortedList(
+                            relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -254,7 +253,7 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = SortedList(
+                            sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
                             _title = "Ame-iro Cocoa",

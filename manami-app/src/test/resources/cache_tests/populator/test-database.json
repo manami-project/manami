@@ -1,4 +1,10 @@
 {
+  "license": {
+    "name": "GNU Affero General Public License v3.0",
+    "url": "https://github.com/manami-project/anime-offline-database/blob/master/LICENSE"
+  },
+  "repository": "https://github.com/manami-project/anime-offline-database",
+  "lastUpdate": "2020-01-01",
   "data": [
     {
       "sources": [
@@ -38,7 +44,7 @@
         "死亡笔记",
         "데스노트"
       ],
-      "relations": [
+      "relatedAnime": [
         "https://anidb.net/anime/8146",
         "https://anidb.net/anime/8147",
         "https://anilist.co/anime/2994",

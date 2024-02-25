@@ -15,7 +15,6 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -224,7 +223,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(kitsuLink),
+                        sources = hashSetOf(kitsuLink),
                     )
                 )
             }
@@ -303,7 +302,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(firstKitsuLink, secondKitsuLink),
+                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
                     ),
                 )
             }
@@ -441,7 +440,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(kitsuLink),
+                        sources = hashSetOf(kitsuLink),
                     )
                 )
             }
@@ -515,7 +514,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(firstKitsuLink, secondKitsuLink),
+                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
                     ),
                 )
             }
@@ -650,7 +649,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(kitsuLink),
+                        sources = hashSetOf(kitsuLink),
                     ),
                 )
             }
@@ -726,7 +725,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                     Anime(
                         _title = "Beck",
-                        sources = SortedList(firstKitsuLink, secondKitsuLink),
+                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
                     ),
                 )
             }

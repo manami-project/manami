@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
 import io.github.manamiproject.modb.core.config.AnimeId
@@ -14,7 +14,6 @@ import io.github.manamiproject.modb.test.WireMockServerCreator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
-import java.net.URL
 
 internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 
@@ -40,6 +39,12 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
                         .withStatus(200)
                         .withBody("""
                             {
+                                "license": {
+                                  "name": "GNU Affero General Public License v3.0",
+                                  "url": "https://github.com/manami-project/anime-offline-database/blob/master/LICENSE"
+                                },
+                                "repository": "https://github.com/manami-project/anime-offline-database",
+                                "lastUpdate": "2020-01-01",
                                 "deadEntries": [
                                     "12449",
                                     "65562"
