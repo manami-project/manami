@@ -7,7 +7,6 @@ import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
@@ -170,7 +169,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return PresentValue(
                         Anime(
-                            sources = SortedList(URI("https://myanimelist.net/anime/5114")),
+                            sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                             _title = "Fullmetal Alchemist: Brotherhood",
                             type = TV,
                             episodes = 64,
@@ -212,7 +211,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/5114")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                 _title = "Fullmetal Alchemist: Brotherhood",
                 type = TV,
                 episodes = 64,
@@ -262,7 +261,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/5114")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                 _title = "Fullmetal Alchemist: Brotherhood",
                 type = TV,
                 episodes = 64,
@@ -312,7 +311,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/5114")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                 _title = "Fullmetal Alchemist: Brotherhood",
                 type = TV,
                 episodes = 64,
@@ -362,7 +361,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             }
 
             val testAnime = Anime(
-                sources = SortedList(URI("https://myanimelist.net/anime/5114")),
+                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                 _title = "Fullmetal Alchemist: Brotherhood",
                 type = TV,
                 episodes = 64,

@@ -51,10 +51,10 @@ class Manami(
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
             AnimeCachePopulator().populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.json").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.json").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.json").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.json").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = MalConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(Caches.defaultAnimeCache)
         }
     }
 

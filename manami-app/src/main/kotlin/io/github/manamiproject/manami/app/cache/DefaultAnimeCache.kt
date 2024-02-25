@@ -21,7 +21,6 @@ import io.github.manamiproject.modb.anisearch.AnisearchConfig
 import io.github.manamiproject.modb.anisearch.AnisearchConverter
 import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
-import io.github.manamiproject.modb.core.collections.SortedList
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
@@ -104,8 +103,8 @@ internal class DefaultAnimeCache(
             .flatMap { anime ->
                 anime.sources.filter { it.toString().contains(metaDataProvider) }.map { link ->
                     anime.copy(
-                        sources = SortedList(link),
-                        relatedAnime = SortedList(anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toMutableList()),
+                        sources = hashSetOf(link),
+                        relatedAnime = anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toHashSet(),
                     )
                 }
             }
@@ -178,13 +177,13 @@ internal class DefaultAnimeCache(
     }
 
     private fun removeUnrequestedMetaDataProvider(entry: PresentValue<Anime>, requestedKey: URI): PresentValue<Anime> {
-        val source = entry.value.sources.filter { it == requestedKey }.toMutableList()
+        val source = entry.value.sources.filter { it == requestedKey }.toHashSet()
         check(source.isNotEmpty())
 
-        val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(requestedKey.host) }.toMutableList()
+        val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(requestedKey.host) }.toHashSet()
         val entryWithRequestedUri = entry.value.copy(
-            sources = SortedList(source),
-            relatedAnime = SortedList(relatedAnime),
+            sources = source,
+            relatedAnime = relatedAnime,
         )
 
         return PresentValue(entryWithRequestedUri)
