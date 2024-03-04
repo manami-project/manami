@@ -115,7 +115,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-livechart:2.3.0")
     implementation("io.github.manamiproject:modb-mal:4.3.0")
     implementation("io.github.manamiproject:modb-notify:4.3.0")
-    implementation("ch.qos.logback:logback-classic:1.5.2")
+    implementation("ch.qos.logback:logback-classic:1.5.3")
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-text:1.11.0")
 
