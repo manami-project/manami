@@ -104,7 +104,7 @@ dependencies {
     api("io.github.manamiproject:modb-core:11.0.0")
     api("io.github.manamiproject:modb-serde:5.0.0")
 
-    implementation(platform(kotlin("bom", "1.9.22")))
+    implementation(platform(kotlin("bom", "1.9.23")))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("io.github.manamiproject:modb-anidb:4.4.0")
