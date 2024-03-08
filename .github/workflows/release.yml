@@ -33,7 +33,7 @@ jobs:
           GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: ./gradlew shadowJar -Prelease.version=$RELEASE_VERSION
       - name: Upload file to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: build/libs/manami.jar
         env:
