@@ -39,6 +39,10 @@ javafx {
     )
 }
 
+kotlin {
+    jvmToolchain(JavaVersion.VERSION_21.toString().toInt())
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_21.toString()

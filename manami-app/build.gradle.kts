@@ -122,6 +122,10 @@ dependencies {
     testImplementation("io.github.manamiproject:modb-test:1.6.4")
 }
 
+kotlin {
+    jvmToolchain(JavaVersion.VERSION_21.toString().toInt())
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_21.toString()
