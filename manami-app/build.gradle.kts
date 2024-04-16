@@ -117,7 +117,7 @@ dependencies {
     implementation("io.github.manamiproject:modb-notify:4.3.0")
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("org.apache.commons:commons-lang3:3.14.0")
-    implementation("org.apache.commons:commons-text:1.11.0")
+    implementation("org.apache.commons:commons-text:1.12.0")
 
     testImplementation("io.github.manamiproject:modb-test:1.6.7")
 }
