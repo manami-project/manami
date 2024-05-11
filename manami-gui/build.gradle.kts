@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     id("java-library")
-    id("org.openjfx.javafxplugin") version("0.0.14")
+    id("org.openjfx.javafxplugin") version("0.1.0")
 }
 
 val githubUsername = "manami-project"
