@@ -12,7 +12,7 @@ import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbConverter
 import io.github.manamiproject.modb.anidb.AnidbDownloader
 import io.github.manamiproject.modb.anilist.AnilistConfig
-import io.github.manamiproject.modb.anilist.AnilistConverter
+import io.github.manamiproject.modb.anilist.AnilistAnimeConverter
 import io.github.manamiproject.modb.anilist.AnilistDownloader
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetConverter
@@ -48,7 +48,7 @@ private val notifyRelationsDir = createTempDirectory("manami-notify_").resolve("
 internal class DefaultAnimeCache(
     private val cacheLoader: List<CacheLoader> = listOf(
         SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbConverter()),
-        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistConverter()),
+        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistAnimeConverter()),
         SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetConverter()),
         DependentCacheLoader(
             config = AnisearchConfig,
