@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.gui.components
 
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
@@ -74,7 +75,7 @@ inline fun EventTarget.simpleAnimeAddition(config: SimpleAnimeAdditionConfig.() 
             text = "add"
             isDefaultButton = true
             action {
-                if (txtUrls.text.isBlank()) {
+                if (txtUrls.text.eitherNullOrBlank()) {
                     txtUrls.text = EMPTY
                 }
 

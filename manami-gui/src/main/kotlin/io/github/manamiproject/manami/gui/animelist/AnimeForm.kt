@@ -7,6 +7,8 @@ import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.animelist.AnimeFormTrigger.*
 import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import io.github.manamiproject.modb.core.models.Anime
 import javafx.beans.property.*
 import javafx.collections.FXCollections
@@ -26,7 +28,7 @@ class AnimeForm: Fragment() {
     private val textFieldMinWidth = SimpleDoubleProperty(500.0)
     private val validationSupport = ValidationSupport()
     private val validator = Validator<String> { control, value ->
-        return@Validator ValidationResult.fromErrorIf(control, "Required. Must not be empty", value.isBlank())
+        return@Validator ValidationResult.fromErrorIf(control, "Required. Must not be empty", value.eitherNullOrBlank())
     }
 
     private val disableTitleProperty = SimpleBooleanProperty(false)
@@ -74,7 +76,7 @@ class AnimeForm: Fragment() {
     val trigger = SimpleAnimeFormTriggerProperty().apply {
         addListener { _, _, newValue ->
             when {
-                newValue == CREATE_AUTOMATICALLY || newValue == EDIT && selectedLink.get().isNotBlank() -> {
+                newValue == CREATE_AUTOMATICALLY || newValue == EDIT && selectedLink.get().neitherNullNorBlank() -> {
                     disableTitleProperty.set(true)
                     disableEpisodesProperty.set(true)
                     disableTypeProperty.set(true)
@@ -184,8 +186,8 @@ class AnimeForm: Fragment() {
                 title = selectedTitle.get().trim(),
                 episodes = selectedEpisodes.get(),
                 type = Anime.Type.valueOf(selectedType.get()),
-                thumbnail = if (selectedThumbnail.get().trim().isNotBlank()) URI(selectedThumbnail.get()) else URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                link = if (selectedLink.get().trim().isNotBlank()) Link(selectedLink.get().trim()) else NoLink,
+                thumbnail = if (selectedThumbnail.get().trim().neitherNullNorBlank()) URI(selectedThumbnail.get()) else URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                link = if (selectedLink.get().trim().neitherNullNorBlank()) Link(selectedLink.get().trim()) else NoLink,
                 location = Path(selectedLocation.get()),
             )
 

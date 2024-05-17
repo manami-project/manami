@@ -11,6 +11,7 @@ import io.github.manamiproject.manami.gui.events.FileOpenedGuiEvent
 import io.github.manamiproject.manami.gui.events.MetaDataMigrationResultGuiEvent
 import io.github.manamiproject.manami.gui.events.MetaDataProviderMigrationGuiEvent
 import io.github.manamiproject.manami.gui.extensions.hyperlink
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -236,7 +237,7 @@ private fun createTable(tableItems: SimpleObjectProperty<ObservableList<Migratio
                             }
                             button("open") {
                                 action {
-                                    if (options.value != null && options.value.isNotBlank()) {
+                                    if (options.value != null && options.value.neitherNullNorBlank()) {
                                         Desktop.getDesktop().browse(URI(options.value))
                                     }
                                 }

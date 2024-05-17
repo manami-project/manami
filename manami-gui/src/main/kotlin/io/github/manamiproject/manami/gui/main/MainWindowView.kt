@@ -9,6 +9,7 @@ import io.github.manamiproject.manami.gui.events.SavedAsFileGuiEvent
 import io.github.manamiproject.manami.gui.extensions.focus
 import io.github.manamiproject.manami.gui.search.SearchBoxView
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import javafx.beans.property.SimpleStringProperty
 import javafx.event.EventHandler
 import javafx.scene.control.Alert
@@ -63,7 +64,7 @@ class MainWindowView : View() {
     private fun generateTitle(fileName: String = EMPTY): String {
         val titleBuilder = StringBuilder("Manami")
 
-        if (fileName.isNotBlank()) {
+        if (fileName.neitherNullNorBlank()) {
             titleBuilder.append(" - $fileName")
         }
 

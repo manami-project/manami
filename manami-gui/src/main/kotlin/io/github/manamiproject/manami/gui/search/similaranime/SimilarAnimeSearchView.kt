@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.events.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -93,7 +94,7 @@ class SimilarAnimeSearchView : View() {
                     })
 
                     action {
-                        if (txtUrl.text.isBlank()) {
+                        if (txtUrl.text.eitherNullOrBlank()) {
                             txtUrl.text = EMPTY
                         }
 

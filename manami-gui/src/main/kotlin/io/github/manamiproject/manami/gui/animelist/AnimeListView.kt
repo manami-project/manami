@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.gui.events.AnimeEntryFinishedGuiEvent
 import io.github.manamiproject.manami.gui.events.AnimeEntryFoundGuiEvent
 import io.github.manamiproject.manami.gui.events.RemoveAnimeListEntryGuiEvent
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -80,7 +81,7 @@ class AnimeListView : View() {
                     text = "add"
                     isDefaultButton = true
                     action {
-                        if (txtUrl.text.isBlank()) {
+                        if (txtUrl.text.eitherNullOrBlank()) {
                             txtUrl.text = EMPTY
                         }
 
@@ -97,7 +98,7 @@ class AnimeListView : View() {
                     isDefaultButton = false
                     isCancelButton = true
                     action {
-                        if (txtUrl.text.isBlank()) {
+                        if (txtUrl.text.eitherNullOrBlank()) {
                             txtUrl.text = EMPTY
                         }
 

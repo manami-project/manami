@@ -10,10 +10,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.config.FileSuffix
-import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.fileSuffix
-import io.github.manamiproject.modb.core.extensions.regularFileExists
+import io.github.manamiproject.modb.core.extensions.*
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
 import org.xml.sax.Attributes
@@ -92,7 +89,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
 
     private fun createAnimeEntry(attributes: Attributes) {
         val link = attributes.getValue("link").trim().let {
-            if (it.isBlank()) {
+            if (it.eitherNullOrBlank()) {
                 NoLink
             } else {
                 Link(it)
@@ -113,7 +110,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
 
     private fun createWatchListEntry(attributes: Attributes) {
         val link = attributes.getValue("link").trim().let {
-            if (it.isBlank()) {
+            if (it.eitherNullOrBlank()) {
                 throw IllegalStateException("Link must not be blank")
             } else {
                 Link(it)
@@ -139,7 +136,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
 
     private fun createIgnoreListEntry(attributes: Attributes) {
         val link = attributes.getValue("link").trim().let {
-            if (it.isBlank()) {
+            if (it.eitherNullOrBlank()) {
                 throw IllegalStateException("Link must not be blank")
             } else {
                 Link(it)

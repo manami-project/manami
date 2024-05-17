@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.gui.events.AddWatchListEntryGuiEvent
 import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import io.github.manamiproject.modb.core.models.Title
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
@@ -49,7 +50,7 @@ class SearchBoxView: View() {
         button("Search") {
             isDefaultButton = true
             isDisable = true
-            searchStringProperty.onChange { e -> isDisable = e?.isBlank() ?: true }
+            searchStringProperty.onChange { e -> isDisable = e?.eitherNullOrBlank() ?: true }
             action {
                 controller.search(searchStringProperty.get())
                 searchStringProperty.set(EMPTY)
