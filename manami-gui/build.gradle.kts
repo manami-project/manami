@@ -1,8 +1,14 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    kotlin("jvm")
-    id("java-library")
-    id("org.openjfx.javafxplugin") version("0.0.14")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.javafxplugin)
+    alias(libs.plugins.shadow)
+    application
 }
+
+group = "io.github.manamiproject"
+version = project.findProperty("release.version") as String? ?: ""
 
 val githubUsername = "manami-project"
 
@@ -16,17 +22,33 @@ repositories {
             password = parameter("GH_PACKAGES_READ_TOKEN")
         }
     }
+    maven {
+        name = "modb-serde"
+        url = uri("https://maven.pkg.github.com/$githubUsername/modb-serde")
+        credentials {
+            username = parameter("GH_USERNAME", githubUsername)
+            password = parameter("GH_PACKAGES_READ_TOKEN")
+        }
+    }
 }
 
 dependencies {
-    implementation(platform(kotlin("bom", "1.9.24")))
-    api(kotlin("stdlib"))
     api(project(":manami-app"))
-    api("no.tornado:tornadofx:1.7.20")
-    api("no.tornado:tornadofx-controlsfx:0.1.1")
-    api("org.openjfx:javafx-graphics:23-ea+3:win")
-    api("org.openjfx:javafx-graphics:23-ea+3:linux")
-    api("org.openjfx:javafx-graphics:23-ea+3:mac")
+    api(libs.kotlin.stdlib)
+    api(libs.modb.core)
+    api(libs.modb.serde)
+    api(libs.tornadofx)
+    api(libs.tornadofx.controlsfx)
+
+    setOf("win", "linux", "mac").forEach { os ->
+        libs.bundles.javafx.get().forEach { dependency ->
+            implementation(dependency) {
+                artifact {
+                    classifier = os
+                }
+            }
+        }
+    }
 }
 
 javafx {
@@ -46,17 +68,31 @@ kotlin {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_21.toString()
-        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.9"
-        apiVersion = "1.9"
     }
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
     reports.html.required.set(false)
-    reports.junitXml.required.set(false)
+    reports.junitXml.required.set(true)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
+}
+
+val mainClassPath = "io.github.manamiproject.manami.gui.StartKt"
+application {
+    mainClass = mainClassPath
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveClassifier.set("")
+        archiveVersion.set("")
+        manifest {
+            attributes["Main-Class"] = mainClassPath
+        }
+        exclude(".gitemptydir")
+        archiveFileName = "manami.jar"
+    }
 }
 
 fun parameter(name: String, default: String = ""): String {

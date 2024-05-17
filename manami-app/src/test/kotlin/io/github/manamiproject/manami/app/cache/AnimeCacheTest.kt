@@ -11,7 +11,7 @@ import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.kitsu.KitsuConfig
-import io.github.manamiproject.modb.mal.MalConfig
+import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -503,7 +503,7 @@ internal class AnimeCacheTest {
             )
 
             // when
-            val result = defaultAnimeCache.mapToMetaDataProvider(MalConfig.buildAnimeLink("1535"), "kitsu.io")
+            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("1535"), "kitsu.io")
 
             // then
             assertThat(result).isEmpty()
@@ -538,7 +538,7 @@ internal class AnimeCacheTest {
             }
 
             // when
-            val result = defaultAnimeCache.mapToMetaDataProvider(MalConfig.buildAnimeLink("43609"), "kitsu.io")
+            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("43609"), "kitsu.io")
 
             // then
             assertThat(result).containsExactly(URI("https://kitsu.io/anime/43731"))

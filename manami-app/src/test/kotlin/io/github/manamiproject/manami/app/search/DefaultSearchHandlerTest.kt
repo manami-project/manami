@@ -27,7 +27,7 @@ import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
-import io.github.manamiproject.modb.mal.MalConfig
+import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
 import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.tempDirectory
@@ -2009,7 +2009,7 @@ internal class DefaultSearchHandlerTest {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname())
             }
 
             val receivedEvents = mutableListOf<Event>()
@@ -2043,7 +2043,7 @@ internal class DefaultSearchHandlerTest {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname())
 
                 override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
             }

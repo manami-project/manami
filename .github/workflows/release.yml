@@ -35,7 +35,7 @@ jobs:
       - name: Upload file to release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/manami.jar
+          files: manami-gui/build/libs/manami.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: fetch-latest-release

@@ -1,8 +1,8 @@
 plugins {
-    kotlin("jvm")
-    id("java-library")
-    id("com.github.nbaztec.coveralls-jacoco") version "1.2.20"
+    alias(libs.plugins.kotlin.jvm)
+    `java-library`
     jacoco
+    alias(libs.plugins.coveralls.jacoco)
 }
 
 val githubUsername = "manami-project"
@@ -50,8 +50,8 @@ repositories {
         }
     }
     maven {
-        name = "modb-db-parser"
-        url = uri("https://maven.pkg.github.com/$githubUsername/modb-db-parser")
+        name = "modb-serde"
+        url = uri("https://maven.pkg.github.com/$githubUsername/modb-serde")
         credentials {
             username = parameter("GH_USERNAME", githubUsername)
             password = parameter("GH_PACKAGES_READ_TOKEN")
@@ -74,8 +74,8 @@ repositories {
         }
     }
     maven {
-        name = "modb-mal"
-        url = uri("https://maven.pkg.github.com/$githubUsername/modb-mal")
+        name = "modb-myanimelist"
+        url = uri("https://maven.pkg.github.com/$githubUsername/modb-myanimelist")
         credentials {
             username = parameter("GH_USERNAME", githubUsername)
             password = parameter("GH_PACKAGES_READ_TOKEN")
@@ -100,26 +100,24 @@ repositories {
 }
 
 dependencies {
-    api(kotlin("stdlib"))
-    api("io.github.manamiproject:modb-core:12.1.0")
-    api("io.github.manamiproject:modb-serde:5.1.1")
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.modb.core)
+    implementation(libs.modb.serde)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.core.jvm)
+    implementation(libs.modb.anidb)
+    implementation(libs.modb.anilist)
+    implementation(libs.modb.animeplanet)
+    implementation(libs.modb.anisearch)
+    implementation(libs.modb.kitsu)
+    implementation(libs.modb.livechart)
+    implementation(libs.modb.myanimelist)
+    implementation(libs.modb.notify)
+    implementation(libs.logback.classic)
+    implementation(libs.commons.lang3)
+    implementation(libs.commons.text)
 
-    implementation(platform(kotlin("bom", "1.9.24")))
-    implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("io.github.manamiproject:modb-anidb:5.0.0")
-    implementation("io.github.manamiproject:modb-anilist:6.0.0")
-    implementation("io.github.manamiproject:modb-anime-planet:5.0.0")
-    implementation("io.github.manamiproject:modb-anisearch:3.0.0")
-    implementation("io.github.manamiproject:modb-kitsu:5.0.0")
-    implementation("io.github.manamiproject:modb-livechart:3.0.0")
-    implementation("io.github.manamiproject:modb-mal:5.0.0")
-    implementation("io.github.manamiproject:modb-notify:5.0.0")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
-    implementation("org.apache.commons:commons-lang3:3.14.0")
-    implementation("org.apache.commons:commons-text:1.12.0")
-
-    testImplementation("io.github.manamiproject:modb-test:1.6.11")
+    testImplementation(libs.modb.test)
 }
 
 kotlin {
@@ -129,13 +127,10 @@ kotlin {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_21.toString()
-        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        languageVersion = "1.9"
-        apiVersion = "1.9"
     }
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
     reports.html.required.set(false)
     reports.junitXml.required.set(true)

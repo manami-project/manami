@@ -21,9 +21,8 @@ import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
-import io.github.manamiproject.modb.mal.MalConfig
+import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import java.net.URI
-import java.net.URL
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
@@ -54,7 +53,7 @@ class Manami(
             DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(Caches.defaultAnimeCache)
             DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(Caches.defaultAnimeCache)
             DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = MalConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(Caches.defaultAnimeCache)
+            DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(Caches.defaultAnimeCache)
         }
     }
 

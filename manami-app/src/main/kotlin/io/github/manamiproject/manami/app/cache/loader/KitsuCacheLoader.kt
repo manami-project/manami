@@ -27,7 +27,7 @@ internal class KitsuCacheLoader(
     private val tempFolder: Path = createTempDirectory("manami-kitsu_"),
     private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
     private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
-    private val converter: AnimeConverter = KitsuConverter(
+    private val converter: AnimeConverter = KitsuAnimeConverter(
         relationsDir = relationsDir,
         tagsDir = tagsDir,
     ),

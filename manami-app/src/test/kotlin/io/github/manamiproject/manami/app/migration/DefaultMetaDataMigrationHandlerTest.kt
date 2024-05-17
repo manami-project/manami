@@ -19,7 +19,7 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
 import io.github.manamiproject.modb.kitsu.KitsuConfig
-import io.github.manamiproject.modb.mal.MalConfig
+import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -49,7 +49,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             // when
             val result = assertThrows<IllegalArgumentException> {
-                defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
             }
 
             // then
@@ -61,7 +61,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             // given
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname())
             }
 
             val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
@@ -73,7 +73,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             // when
             val result = assertThrows<IllegalArgumentException> {
-                defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
             }
 
             // then
@@ -92,7 +92,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
             }
 
             val testState = object: State by TestState {
@@ -118,7 +118,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(1)
@@ -149,7 +149,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
             }
 
@@ -178,7 +178,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -215,7 +215,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     kitsuLink
                 )
@@ -253,7 +253,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -293,7 +293,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     firstKitsuLink,
                     secondKitsuLink,
@@ -332,7 +332,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -369,7 +369,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
             }
 
@@ -395,7 +395,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -432,7 +432,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     kitsuLink
                 )
@@ -465,7 +465,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -505,7 +505,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     firstKitsuLink,
                     secondKitsuLink,
@@ -541,7 +541,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -578,7 +578,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
             }
 
@@ -604,7 +604,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -641,7 +641,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     kitsuLink
                 )
@@ -676,7 +676,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)
@@ -716,7 +716,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val testCache = object: AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MalConfig.hostname(), KitsuConfig.hostname())
+                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
                     firstKitsuLink,
                     secondKitsuLink,
@@ -752,7 +752,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             )
 
             // when
-            defaultMetaDataMigrationHandler.checkMigration(MalConfig.hostname(), KitsuConfig.hostname())
+            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
             // then
             assertThat(catchedEvents).hasSize(2)

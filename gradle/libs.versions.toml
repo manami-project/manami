@@ -1,0 +1,59 @@
+[versions]
+kotlin = "1.9.24"
+kotlinx-coroutines-core-jvm = "1.8.1"
+modb-core = "12.1.0"
+modb-serde = "5.1.1"
+modb-anidb = "5.0.1"
+modb-anilist = "6.0.1"
+modb-animeplanet = "5.0.1"
+modb-anisearch = "3.0.1"
+modb-kitsu = "5.0.1"
+modb-livechart = "3.0.1"
+modb-myanimelist = "6.0.0"
+modb-notify = "5.0.1"
+modb-test = "1.6.11"
+commons-text = "1.12.0"
+commons-lang3 = "3.14.0"
+logback-classic = "1.5.6"
+tornadofx = "1.7.20"
+tornadofx-controlsfx = "0.1.1"
+javafx = "23-ea+3"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines-core-jvm" }
+modb-core = { module = "io.github.manamiproject:modb-core", version.ref = "modb-core" }
+modb-serde = { module = "io.github.manamiproject:modb-serde", version.ref = "modb-serde" }
+modb-anidb = { module = "io.github.manamiproject:modb-anidb", version.ref = "modb-anidb" }
+modb-anilist = { module = "io.github.manamiproject:modb-anilist", version.ref = "modb-anilist" }
+modb-animeplanet = { module = "io.github.manamiproject:modb-anime-planet", version.ref = "modb-animeplanet" }
+modb-anisearch = { module = "io.github.manamiproject:modb-anisearch", version.ref = "modb-anisearch" }
+modb-kitsu = { module = "io.github.manamiproject:modb-kitsu", version.ref = "modb-kitsu" }
+modb-livechart = { module = "io.github.manamiproject:modb-livechart", version.ref = "modb-livechart" }
+modb-myanimelist = { module = "io.github.manamiproject:modb-myanimelist", version.ref = "modb-myanimelist" }
+modb-notify = { module = "io.github.manamiproject:modb-notify", version.ref = "modb-notify" }
+modb-test = { module = "io.github.manamiproject:modb-test", version.ref = "modb-test" }
+commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-classic" }
+tornadofx = { module = "no.tornado:tornadofx", version.ref = "tornadofx" }
+tornadofx-controlsfx = { module = "no.tornado:tornadofx-controlsfx", version.ref = "tornadofx-controlsfx" }
+javafx-base = { module = "org.openjfx:javafx-base", version.ref = "javafx" }
+javafx-controls = { module = "org.openjfx:javafx-controls", version.ref = "javafx" }
+javafx-graphics = { module = "org.openjfx:javafx-graphics", version.ref = "javafx" }
+javafx-web = { module = "org.openjfx:javafx-web", version.ref = "javafx" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.24" }
+javafxplugin = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+coveralls-jacoco = { id = "com.github.nbaztec.coveralls-jacoco", version = "1.2.20" }
+
+[bundles]
+javafx = [
+    "javafx-base",
+    "javafx-controls",
+    "javafx-graphics",
+    "javafx-web",
+]
