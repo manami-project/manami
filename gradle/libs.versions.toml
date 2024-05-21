@@ -45,7 +45,7 @@ javafx-graphics = { module = "org.openjfx:javafx-graphics", version.ref = "javaf
 javafx-web = { module = "org.openjfx:javafx-web", version.ref = "javafx" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.24" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }
 javafxplugin = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 coveralls-jacoco = { id = "com.github.nbaztec.coveralls-jacoco", version = "1.2.20" }
