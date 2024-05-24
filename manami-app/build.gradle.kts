@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
     jacoco
-    alias(libs.plugins.coveralls.jacoco)
 }
 
 val githubUsername = "manami-project"
@@ -125,8 +126,10 @@ kotlin {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
     }
 }
 
@@ -135,10 +138,6 @@ tasks.withType<Test> {
     reports.html.required.set(false)
     reports.junitXml.required.set(true)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
-}
-
-coverallsJacoco {
-    reportPath = "${layout.buildDirectory.asFile.get().absolutePath}/reports/jacoco/test/jacocoFullReport.xml"
 }
 
 tasks.jacocoTestReport {
