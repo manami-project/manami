@@ -1,18 +1,24 @@
-name: Pull Requests
+name: 'Tests'
 
 on:
+  push:
+    branches:
+      - 'master'
   pull_request:
     branches:
       - '**'
+  merge_group:
+    branches:
+      - 'master'
     paths-ignore:
       - 'README.md'
       - '.gitignore'
       - '.gitattributes'
       - '.github/workflows/**'
-      - '!.github/workflows/pull-requests.yml'
+      - '!.github/workflows/tests.yml'
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,7 +39,7 @@ jobs:
         run: ./gradlew test
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+        if: github.ref != 'refs/heads/master'
         with:
           check_name: Test results JDK ${{ matrix.java }}
           comment_title: Test results JDK ${{ matrix.java }}
@@ -41,7 +47,9 @@ jobs:
             /github/workspace/**/build/test-results/**/*.xml
       - name: Generate coverage
         if: ${{ matrix.java == 21 }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew manami-app:jacocoTestReport manami-app:coverallsJacoco
+        run: ./gradlew jacocoTestReport
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4.4.1
+        if: ${{ matrix.java == 21 }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
