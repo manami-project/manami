@@ -33,6 +33,8 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
       - if: matrix.build-mode == 'manual'
+        env:
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         shell: bash
         run: |
           chmod +x gradlew
@@ -40,5 +42,7 @@ jobs:
           ./gradlew manami-gui:compileKotlin
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        env:
+          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         with:
           category: "/language:${{matrix.language}}"
