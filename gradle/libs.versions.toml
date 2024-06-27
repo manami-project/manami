@@ -50,9 +50,34 @@ javafxplugin = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 
 [bundles]
+kotlin = [
+    "kotlin-stdlib",
+    "kotlin-reflect",
+    "kotlinx-coroutines-core-jvm",
+]
+modb = [
+    "modb-core",
+    "modb-serde",
+    "modb-anidb",
+    "modb-anilist",
+    "modb-animeplanet",
+    "modb-anisearch",
+    "modb-kitsu",
+    "modb-livechart",
+    "modb-myanimelist",
+    "modb-notify",
+]
 javafx = [
     "javafx-base",
     "javafx-controls",
     "javafx-graphics",
     "javafx-web",
+]
+tornadofx = [
+    "tornadofx",
+    "tornadofx-controlsfx",
+]
+apache-commons = [
+    "commons-text",
+    "commons-lang3",
 ]
