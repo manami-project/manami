@@ -101,22 +101,10 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.modb.core)
-    implementation(libs.modb.serde)
-    implementation(libs.kotlin.reflect)
-    implementation(libs.kotlinx.coroutines.core.jvm)
-    implementation(libs.modb.anidb)
-    implementation(libs.modb.anilist)
-    implementation(libs.modb.animeplanet)
-    implementation(libs.modb.anisearch)
-    implementation(libs.modb.kitsu)
-    implementation(libs.modb.livechart)
-    implementation(libs.modb.myanimelist)
-    implementation(libs.modb.notify)
+    implementation(libs.bundles.kotlin)
+    implementation(libs.bundles.modb)
     implementation(libs.logback.classic)
-    implementation(libs.commons.lang3)
-    implementation(libs.commons.text)
+    implementation(libs.bundles.apache.commons)
 
     testImplementation(libs.modb.test)
 }

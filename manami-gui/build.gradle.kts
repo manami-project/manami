@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -22,23 +23,13 @@ repositories {
             password = parameter("GH_PACKAGES_READ_TOKEN")
         }
     }
-    maven {
-        name = "modb-serde"
-        url = uri("https://maven.pkg.github.com/$githubUsername/modb-serde")
-        credentials {
-            username = parameter("GH_USERNAME", githubUsername)
-            password = parameter("GH_PACKAGES_READ_TOKEN")
-        }
-    }
 }
 
 dependencies {
     api(project(":manami-app"))
     api(libs.kotlin.stdlib)
     api(libs.modb.core)
-    api(libs.modb.serde)
-    api(libs.tornadofx)
-    api(libs.tornadofx.controlsfx)
+    api(libs.bundles.tornadofx)
 
     setOf("win", "linux", "mac").forEach { os ->
         libs.bundles.javafx.get().forEach { dependency ->
@@ -66,8 +57,10 @@ kotlin {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
     }
 }
 
