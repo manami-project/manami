@@ -47,9 +47,10 @@ jobs:
             /github/workspace/**/build/test-results/**/*.xml
       - name: Generate coverage
         if: ${{ matrix.java == 21 }}
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew koverXmlReportJvm
       - name: Upload coverage
         uses: codecov/codecov-action@v4.5.0
         if: ${{ matrix.java == 21 }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          file: manami-app/build/reports/kover/reportJvm.xml
