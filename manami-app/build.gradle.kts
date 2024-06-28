@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kover)
     `java-library`
-    jacoco
 }
 
 val githubUsername = "manami-project"
@@ -126,15 +126,6 @@ tasks.withType<Test> {
     reports.html.required.set(false)
     reports.junitXml.required.set(true)
     maxParallelForks = Runtime.getRuntime().availableProcessors()
-}
-
-tasks.jacocoTestReport {
-    reports {
-        html.required.set(false)
-        xml.required.set(true)
-        xml.outputLocation.set(file("${layout.buildDirectory.asFile.get().absolutePath}/reports/jacoco/test/jacocoFullReport.xml"))
-    }
-    dependsOn(allprojects.map { it.tasks.named<Test>("test") })
 }
 
 fun parameter(name: String, default: String = ""): String {
