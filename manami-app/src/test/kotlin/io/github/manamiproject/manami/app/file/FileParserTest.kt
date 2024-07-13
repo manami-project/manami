@@ -1,10 +1,9 @@
 package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.TestAnimeCache
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
-import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.*

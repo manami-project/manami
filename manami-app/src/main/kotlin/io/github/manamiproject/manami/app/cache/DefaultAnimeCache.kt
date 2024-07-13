@@ -8,17 +8,17 @@ import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMeta
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.events.Subscribe
-import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbAnimeConverter
+import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anidb.AnidbDownloader
-import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.anilist.AnilistAnimeConverter
+import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.anilist.AnilistDownloader
-import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetAnimeConverter
+import io.github.manamiproject.modb.animeplanet.AnimePlanetConfig
 import io.github.manamiproject.modb.animeplanet.AnimePlanetDownloader
-import io.github.manamiproject.modb.anisearch.AnisearchConfig
 import io.github.manamiproject.modb.anisearch.AnisearchAnimeConverter
+import io.github.manamiproject.modb.anisearch.AnisearchConfig
 import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.config.Hostname
@@ -27,14 +27,14 @@ import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Tag
-import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.livechart.LivechartAnimeConverter
+import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.livechart.LivechartDownloader
-import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistAnimeConverter
+import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistDownloader
-import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyAnimeConverter
+import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import java.net.URI
@@ -47,8 +47,8 @@ private val notifyRelationsDir = createTempDirectory("manami-notify_").resolve("
 
 internal class DefaultAnimeCache(
     private val cacheLoader: List<CacheLoader> = listOf(
-        SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbAnimeConverter()),
-        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistAnimeConverter()),
+        SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbAnimeConverter.instance),
+        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistAnimeConverter.instance),
         SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetAnimeConverter()),
         DependentCacheLoader(
             config = AnisearchConfig,
@@ -68,7 +68,7 @@ internal class DefaultAnimeCache(
             ),
             converter = LivechartAnimeConverter(),
         ),
-        SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader(MyanimelistConfig), MyanimelistAnimeConverter()),
+        SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader(MyanimelistConfig), MyanimelistAnimeConverter.instance),
         DependentCacheLoader(
             config = NotifyConfig,
             animeDownloader = NotifyDownloader(config = NotifyConfig),
@@ -189,7 +189,13 @@ internal class DefaultAnimeCache(
         return PresentValue(entryWithRequestedUri)
     }
 
-    private companion object {
+    companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DefaultAnimeCache]
+         * @since 3.12.7
+         */
+        val instance: DefaultAnimeCache by lazy { DefaultAnimeCache() }
     }
 }

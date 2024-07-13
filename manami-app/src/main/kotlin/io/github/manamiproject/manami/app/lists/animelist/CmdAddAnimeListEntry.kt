@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.lists.animelist
 
-import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.commands.Command
+import io.github.manamiproject.manami.app.state.State
 
 internal class CmdAddAnimeListEntry(
     private val state: State,

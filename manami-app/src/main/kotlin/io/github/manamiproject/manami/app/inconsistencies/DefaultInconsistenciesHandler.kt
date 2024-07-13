@@ -2,11 +2,20 @@ package io.github.manamiproject.manami.app.inconsistencies
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
+import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.manami.app.file.FileOpenedEvent
 import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResult
 import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesHandler
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResult
@@ -22,21 +31,12 @@ import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDat
 import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.SimpleEventBus
-import io.github.manamiproject.manami.app.events.Subscribe
-import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesHandler
-import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
 
 internal class DefaultInconsistenciesHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val inconsistencyHandlers: List<InconsistencyHandler<*>> = listOf(
         AnimeListMetaDataInconsistenciesHandler(state, cache),

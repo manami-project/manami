@@ -17,7 +17,7 @@ import java.net.URL
 internal class DeadEntriesCachePopulator(
     private val config: MetaDataProviderConfig,
     private val url: URL,
-    private val parser: ExternalResourceJsonDeserializer<DeadEntries> = DefaultExternalResourceJsonDeserializer(deserializer = DeadEntriesJsonStringDeserializer()),
+    private val parser: ExternalResourceJsonDeserializer<DeadEntries> = DefaultExternalResourceJsonDeserializer(deserializer = DeadEntriesJsonStringDeserializer.instance),
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
     override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 
-internal class AnimeCacheTest {
+internal class DefaultAnimeCacheTest {
 
     @Nested
     inner class FetchTests {
@@ -577,6 +577,23 @@ internal class AnimeCacheTest {
                 URI("https://myanimelist.net/anime/50731"),
                 URI("https://myanimelist.net/anime/50814"),
             )
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultAnimeCache.instance
+
+            // when
+            val result = DefaultAnimeCache.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultAnimeCache::class.java)
+            assertThat(result===previous).isTrue()
         }
     }
 }

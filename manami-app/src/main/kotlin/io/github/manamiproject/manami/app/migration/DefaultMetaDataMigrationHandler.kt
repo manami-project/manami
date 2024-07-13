@@ -1,7 +1,8 @@
 package io.github.manamiproject.manami.app.migration
 
-import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
@@ -17,7 +18,7 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.models.Anime
 
 internal class DefaultMetaDataMigrationHandler(
-    private val cache: AnimeCache = Caches.defaultAnimeCache,
+    private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val eventBus: EventBus = SimpleEventBus,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val state: State = InternalState,

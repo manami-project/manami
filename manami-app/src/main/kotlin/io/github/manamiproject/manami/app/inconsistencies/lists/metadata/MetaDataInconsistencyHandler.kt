@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.inconsistencies.lists.metadata
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
@@ -16,7 +16,7 @@ import java.net.URI
 
 internal class MetaDataInconsistencyHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
 ) : InconsistencyHandler<MetaDataInconsistenciesResult> {
 
     override fun calculateWorkload(): Int = state.watchList().size + state.ignoreList().size

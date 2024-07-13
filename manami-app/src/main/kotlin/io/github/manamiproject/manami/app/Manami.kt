@@ -1,21 +1,23 @@
 package io.github.manamiproject.manami.app
 
-import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.cache.populator.DeadEntriesCachePopulator
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
-import io.github.manamiproject.manami.app.relatedanime.*
-import io.github.manamiproject.manami.app.search.*
-import io.github.manamiproject.manami.app.events.Event
-import io.github.manamiproject.manami.app.events.SimpleEventBus
-import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.manami.app.migration.DefaultMetaDataMigrationHandler
 import io.github.manamiproject.manami.app.migration.MetaDataMigrationHandler
+import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
+import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeHandler
+import io.github.manamiproject.manami.app.search.DefaultSearchHandler
+import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
@@ -49,11 +51,11 @@ class Manami(
         SimpleEventBus.subscribe(this)
         runInBackground {
             DefaultLatestVersionChecker().checkLatestVersion()
-            AnimeCachePopulator().populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(Caches.defaultAnimeCache)
-            DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(Caches.defaultAnimeCache)
+            AnimeCachePopulator().populate(DefaultAnimeCache.instance)
+            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(DefaultAnimeCache.instance)
+            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(DefaultAnimeCache.instance)
+            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(DefaultAnimeCache.instance)
+            DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(DefaultAnimeCache.instance)
         }
     }
 

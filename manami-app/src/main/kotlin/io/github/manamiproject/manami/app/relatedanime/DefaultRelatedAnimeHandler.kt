@@ -1,22 +1,23 @@
 package io.github.manamiproject.manami.app.relatedanime
 
-import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.Caches
-import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.state.InternalState
-import io.github.manamiproject.manami.app.state.State
+import io.github.manamiproject.manami.app.cache.AnimeCache
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.EventListType
 import io.github.manamiproject.manami.app.events.EventListType.ANIME_LIST
 import io.github.manamiproject.manami.app.events.EventListType.IGNORE_LIST
 import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.state.InternalState
+import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
 import java.util.*
 
 internal class DefaultRelatedAnimeHandler(
-    private val cache: AnimeCache = Caches.defaultAnimeCache,
+    private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val state: State = InternalState,
     private val eventBus: EventBus = SimpleEventBus,
 ) : RelatedAnimeHandler {

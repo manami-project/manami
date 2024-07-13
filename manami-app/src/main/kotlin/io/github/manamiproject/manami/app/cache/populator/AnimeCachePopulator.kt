@@ -16,7 +16,7 @@ import java.net.URI
 
 internal class AnimeCachePopulator(
     private val uri: URI = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.zip"),
-    private val parser: ExternalResourceJsonDeserializer<Dataset> = DefaultExternalResourceJsonDeserializer(deserializer = AnimeListJsonStringDeserializer()),
+    private val parser: ExternalResourceJsonDeserializer<Dataset> = DefaultExternalResourceJsonDeserializer(deserializer = AnimeListJsonStringDeserializer.instance),
     private val eventBus: EventBus = SimpleEventBus,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
