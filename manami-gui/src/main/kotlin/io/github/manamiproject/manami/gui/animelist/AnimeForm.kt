@@ -116,7 +116,7 @@ class AnimeForm: Fragment() {
 
                         field("Type") {
                             combobox<String>(selectedType) {
-                                items = FXCollections.observableArrayList(Anime.Type.values().map { it.toString() })
+                                items = FXCollections.observableArrayList(Anime.Type.entries.map { it.toString() })
                                 disableProperty().bindBidirectional(disableTypeProperty)
                             }
                         }

@@ -4,7 +4,7 @@ import io.github.manamiproject.manami.gui.animelist.AnimeFormTrigger.CREATE_CUST
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import javafx.beans.property.ObjectPropertyBase
 
-class SimpleAnimeFormTriggerProperty(private var initialValue: AnimeFormTrigger = CREATE_CUSTOM): ObjectPropertyBase<AnimeFormTrigger>(initialValue) {
+class SimpleAnimeFormTriggerProperty(initialValue: AnimeFormTrigger = CREATE_CUSTOM): ObjectPropertyBase<AnimeFormTrigger>(initialValue) {
 
     override fun getBean(): Any = this
     override fun getName(): String = EMPTY
