@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries
 
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
-import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
@@ -15,7 +15,7 @@ import java.net.URI
 
 internal class AnimeListDeadEntriesInconsistenciesHandler(
     private val state: State = InternalState,
-    private val cache: Cache<URI, CacheEntry<Anime>> = Caches.defaultAnimeCache,
+    private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
 ) : InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> {
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListDeadEnties

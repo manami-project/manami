@@ -8,7 +8,7 @@ import java.net.URI
 
 internal class GithubVersionProvider(
     private val uri: URI = URI("https://github.com/manami-project/manami/releases/latest"),
-    private val httpClient: HttpClient = DefaultHttpClient(),
+    private val httpClient: HttpClient = DefaultHttpClient.instance,
 ): VersionProvider {
 
     override fun version(): SemanticVersion {

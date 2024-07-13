@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
-import io.github.manamiproject.manami.app.cache.Caches
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
@@ -26,7 +26,7 @@ import kotlin.io.path.inputStream
 import kotlin.text.Charsets.UTF_8
 
 internal class FileParser(
-    cache: AnimeCache = Caches.defaultAnimeCache,
+    cache: AnimeCache = DefaultAnimeCache.instance,
 ) : Parser<ParsedManamiFile> {
 
     private val saxParser = SAXParserFactory.newInstance().apply { isValidating = true }.newSAXParser()
