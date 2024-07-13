@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
-import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.SimpleEventBus
@@ -21,13 +21,16 @@ import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeSearch
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.models.*
+import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.AnimeSeason
+import io.github.manamiproject.modb.core.models.Tag
+import io.github.manamiproject.modb.core.models.Title
 import org.apache.commons.lang3.StringUtils.containsIgnoreCase
 import org.apache.commons.text.similarity.LevenshteinDistance
 import java.net.URI
 
 internal class DefaultSearchHandler(
-    private val cache: AnimeCache = Caches.defaultAnimeCache,
+    private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val eventBus: EventBus = SimpleEventBus,
     private val state: State = InternalState,
 ) : SearchHandler {

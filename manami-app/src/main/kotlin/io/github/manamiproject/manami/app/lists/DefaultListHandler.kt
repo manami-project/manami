@@ -1,8 +1,8 @@
 package io.github.manamiproject.manami.app.lists
 
 import io.github.manamiproject.manami.app.cache.AnimeCache
-import io.github.manamiproject.manami.app.cache.Caches
 import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger
 internal class DefaultListHandler(
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
-    private val cache: AnimeCache = Caches.defaultAnimeCache,
+    private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val eventBus: EventBus = SimpleEventBus,
 ): ListHandler {
 

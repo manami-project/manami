@@ -15,8 +15,8 @@ import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.SUMMER
 import io.github.manamiproject.modb.core.models.Duration
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
-import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyAnimeConverter
+import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import io.github.manamiproject.modb.test.loadTestResource

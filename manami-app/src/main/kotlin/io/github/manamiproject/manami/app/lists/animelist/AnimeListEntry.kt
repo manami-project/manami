@@ -16,7 +16,7 @@ import kotlin.io.path.Path
 data class AnimeListEntry(
     override val link: LinkEntry = NoLink,
     override val title: Title,
-    override val thumbnail: URI = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+    override val thumbnail: URI = Anime.NO_PICTURE_THUMBNAIL,
     val episodes: Episodes,
     val type: Anime.Type,
     val location: Path,

@@ -1,6 +1,12 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
+import io.github.manamiproject.manami.app.commands.ReversibleCommand
+import io.github.manamiproject.manami.app.commands.TestCommandHistory
+import io.github.manamiproject.manami.app.commands.history.CommandHistory
+import io.github.manamiproject.manami.app.events.Event
+import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResult
 import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResultEvent
 import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistencyHandler
@@ -13,12 +19,6 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.manami.app.commands.ReversibleCommand
-import io.github.manamiproject.manami.app.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.events.Event
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import org.assertj.core.api.Assertions.assertThat
