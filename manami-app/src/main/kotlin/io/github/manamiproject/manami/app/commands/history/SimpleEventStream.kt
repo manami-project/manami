@@ -63,5 +63,5 @@ internal class SimpleEventStream<T> : EventStream<T> {
 }
 
 private sealed class Events
-private object InitialState : Events()
+private data object InitialState : Events()
 private data class Event<T>(val element: T) : Events()

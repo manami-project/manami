@@ -98,5 +98,5 @@ internal object InternalState : State {
 }
 
 internal sealed class OpenedFile
-internal object NoFile : OpenedFile()
+internal data object NoFile : OpenedFile()
 internal data class CurrentFile(val regularFile: RegularFile) : OpenedFile()

@@ -13,7 +13,7 @@ interface SearchHandler {
 
     fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
 
-    fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND, status: Set<Anime.Status> = Anime.Status.values().toSet())
+    fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND, status: Set<Anime.Status> = Anime.Status.entries.toSet())
 
     fun findSimilarAnime(uri: URI)
 
