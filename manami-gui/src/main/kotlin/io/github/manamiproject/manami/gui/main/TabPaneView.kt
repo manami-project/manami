@@ -74,7 +74,7 @@ class TabPaneView : View() {
         subscribe<ShowSimilarAnimeSearchTabRequest> {
             tabPane.openTab("Similar Anime") { add(similarAnimeSearchView.root) }
         }
-        subscribe<ShowMetaDataProviderMigrationViewTabRequest>() {
+        subscribe<ShowMetaDataProviderMigrationViewTabRequest> {
             tabPane.openTab("Meta Data Provider Migration") { add(metaDataProviderMigrationView.root) }
         }
     }

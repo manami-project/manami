@@ -49,5 +49,5 @@ internal class GenericReversibleCommand(
 }
 
 private sealed class StatefulSnapshot
-private object Uninitialized : StatefulSnapshot()
+private data object Uninitialized : StatefulSnapshot()
 private data class Initialized(val snapshot: Snapshot) : StatefulSnapshot()
