@@ -29,7 +29,7 @@ internal class WatchListEntryTest {
                 URI("https://anidb.net/anime/4563"),
                 URI("https://anilist.co/anime/1535"),
                 URI("https://anime-planet.com/anime/death-note"),
-                URI("https://kitsu.io/anime/1376"),
+                URI("https://kitsu.app/anime/1376"),
                 URI("https://myanimelist.net/anime/1535"),
                 URI("https://notify.moe/anime/0-A-5Fimg"),
             )

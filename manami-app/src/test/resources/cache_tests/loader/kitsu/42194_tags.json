@@ -4,7 +4,7 @@
       "id": "184",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/184"
+        "self": "https://kitsu.app/api/edge/categories/184"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:28.357Z",
@@ -20,26 +20,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/184/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/184/parent"
+            "self": "https://kitsu.app/api/edge/categories/184/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/184/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/184/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/184/anime"
+            "self": "https://kitsu.app/api/edge/categories/184/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/184/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/184/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/184/drama"
+            "self": "https://kitsu.app/api/edge/categories/184/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/184/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/184/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/184/manga"
+            "self": "https://kitsu.app/api/edge/categories/184/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/184/manga"
           }
         }
       }
@@ -48,7 +48,7 @@
       "id": "169",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/169"
+        "self": "https://kitsu.app/api/edge/categories/169"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:25.594Z",
@@ -64,26 +64,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/169/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/169/parent"
+            "self": "https://kitsu.app/api/edge/categories/169/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/169/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/169/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/169/anime"
+            "self": "https://kitsu.app/api/edge/categories/169/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/169/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/169/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/169/drama"
+            "self": "https://kitsu.app/api/edge/categories/169/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/169/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/169/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/169/manga"
+            "self": "https://kitsu.app/api/edge/categories/169/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/169/manga"
           }
         }
       }
@@ -92,7 +92,7 @@
       "id": "144",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/144"
+        "self": "https://kitsu.app/api/edge/categories/144"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:18.931Z",
@@ -104,11 +104,11 @@
         "nsfw": false,
         "childCount": 3,
         "image": {
-          "tiny": "https://media.kitsu.io/categories/images/144/tiny.jpg?1496212758",
-          "small": "https://media.kitsu.io/categories/images/144/small.jpg?1496212758",
-          "medium": "https://media.kitsu.io/categories/images/144/medium.jpg?1496212758",
-          "large": "https://media.kitsu.io/categories/images/144/large.jpg?1496212758",
-          "original": "https://media.kitsu.io/categories/images/144/original.jpg?1496212758",
+          "tiny": "https://media.kitsu.app/categories/images/144/tiny.jpg?1496212758",
+          "small": "https://media.kitsu.app/categories/images/144/small.jpg?1496212758",
+          "medium": "https://media.kitsu.app/categories/images/144/medium.jpg?1496212758",
+          "large": "https://media.kitsu.app/categories/images/144/large.jpg?1496212758",
+          "original": "https://media.kitsu.app/categories/images/144/original.jpg?1496212758",
           "meta": {
             "dimensions": {
               "tiny": {
@@ -134,26 +134,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/144/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/144/parent"
+            "self": "https://kitsu.app/api/edge/categories/144/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/144/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/144/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/144/anime"
+            "self": "https://kitsu.app/api/edge/categories/144/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/144/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/144/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/144/drama"
+            "self": "https://kitsu.app/api/edge/categories/144/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/144/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/144/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/144/manga"
+            "self": "https://kitsu.app/api/edge/categories/144/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/144/manga"
           }
         }
       }
@@ -162,7 +162,7 @@
       "id": "160",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/160"
+        "self": "https://kitsu.app/api/edge/categories/160"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:23.938Z",
@@ -178,26 +178,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/160/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/160/parent"
+            "self": "https://kitsu.app/api/edge/categories/160/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/160/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/160/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/160/anime"
+            "self": "https://kitsu.app/api/edge/categories/160/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/160/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/160/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/160/drama"
+            "self": "https://kitsu.app/api/edge/categories/160/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/160/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/160/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/160/manga"
+            "self": "https://kitsu.app/api/edge/categories/160/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/160/manga"
           }
         }
       }
@@ -206,7 +206,7 @@
       "id": "54",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/54"
+        "self": "https://kitsu.app/api/edge/categories/54"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:38:48.575Z",
@@ -218,11 +218,11 @@
         "nsfw": false,
         "childCount": 5,
         "image": {
-          "tiny": "https://media.kitsu.io/categories/images/54/tiny.jpg?1496212727",
-          "small": "https://media.kitsu.io/categories/images/54/small.jpg?1496212727",
-          "medium": "https://media.kitsu.io/categories/images/54/medium.jpg?1496212727",
-          "large": "https://media.kitsu.io/categories/images/54/large.jpg?1496212727",
-          "original": "https://media.kitsu.io/categories/images/54/original.jpg?1496212727",
+          "tiny": "https://media.kitsu.app/categories/images/54/tiny.jpg?1496212727",
+          "small": "https://media.kitsu.app/categories/images/54/small.jpg?1496212727",
+          "medium": "https://media.kitsu.app/categories/images/54/medium.jpg?1496212727",
+          "large": "https://media.kitsu.app/categories/images/54/large.jpg?1496212727",
+          "original": "https://media.kitsu.app/categories/images/54/original.jpg?1496212727",
           "meta": {
             "dimensions": {
               "tiny": {
@@ -248,26 +248,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/54/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/54/parent"
+            "self": "https://kitsu.app/api/edge/categories/54/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/54/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/54/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/54/anime"
+            "self": "https://kitsu.app/api/edge/categories/54/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/54/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/54/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/54/drama"
+            "self": "https://kitsu.app/api/edge/categories/54/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/54/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/54/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/54/manga"
+            "self": "https://kitsu.app/api/edge/categories/54/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/54/manga"
           }
         }
       }
@@ -276,7 +276,7 @@
       "id": "167",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/167"
+        "self": "https://kitsu.app/api/edge/categories/167"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:25.523Z",
@@ -292,26 +292,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/167/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/167/parent"
+            "self": "https://kitsu.app/api/edge/categories/167/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/167/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/167/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/167/anime"
+            "self": "https://kitsu.app/api/edge/categories/167/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/167/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/167/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/167/drama"
+            "self": "https://kitsu.app/api/edge/categories/167/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/167/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/167/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/167/manga"
+            "self": "https://kitsu.app/api/edge/categories/167/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/167/manga"
           }
         }
       }
@@ -320,7 +320,7 @@
       "id": "22",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/22"
+        "self": "https://kitsu.app/api/edge/categories/22"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:38:34.917Z",
@@ -336,26 +336,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/22/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/22/parent"
+            "self": "https://kitsu.app/api/edge/categories/22/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/22/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/22/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/22/anime"
+            "self": "https://kitsu.app/api/edge/categories/22/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/22/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/22/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/22/drama"
+            "self": "https://kitsu.app/api/edge/categories/22/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/22/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/22/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/22/manga"
+            "self": "https://kitsu.app/api/edge/categories/22/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/22/manga"
           }
         }
       }
@@ -364,7 +364,7 @@
       "id": "81",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/81"
+        "self": "https://kitsu.app/api/edge/categories/81"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:38:50.904Z",
@@ -380,26 +380,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/81/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/81/parent"
+            "self": "https://kitsu.app/api/edge/categories/81/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/81/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/81/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/81/anime"
+            "self": "https://kitsu.app/api/edge/categories/81/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/81/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/81/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/81/drama"
+            "self": "https://kitsu.app/api/edge/categories/81/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/81/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/81/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/81/manga"
+            "self": "https://kitsu.app/api/edge/categories/81/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/81/manga"
           }
         }
       }
@@ -408,7 +408,7 @@
       "id": "48",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/48"
+        "self": "https://kitsu.app/api/edge/categories/48"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:38:46.987Z",
@@ -424,26 +424,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/48/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/48/parent"
+            "self": "https://kitsu.app/api/edge/categories/48/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/48/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/48/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/48/anime"
+            "self": "https://kitsu.app/api/edge/categories/48/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/48/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/48/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/48/drama"
+            "self": "https://kitsu.app/api/edge/categories/48/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/48/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/48/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/48/manga"
+            "self": "https://kitsu.app/api/edge/categories/48/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/48/manga"
           }
         }
       }
@@ -452,7 +452,7 @@
       "id": "164",
       "type": "categories",
       "links": {
-        "self": "https://kitsu.io/api/edge/categories/164"
+        "self": "https://kitsu.app/api/edge/categories/164"
       },
       "attributes": {
         "createdAt": "2017-05-31T06:39:24.657Z",
@@ -468,26 +468,26 @@
       "relationships": {
         "parent": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/164/relationships/parent",
-            "related": "https://kitsu.io/api/edge/categories/164/parent"
+            "self": "https://kitsu.app/api/edge/categories/164/relationships/parent",
+            "related": "https://kitsu.app/api/edge/categories/164/parent"
           }
         },
         "anime": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/164/relationships/anime",
-            "related": "https://kitsu.io/api/edge/categories/164/anime"
+            "self": "https://kitsu.app/api/edge/categories/164/relationships/anime",
+            "related": "https://kitsu.app/api/edge/categories/164/anime"
           }
         },
         "drama": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/164/relationships/drama",
-            "related": "https://kitsu.io/api/edge/categories/164/drama"
+            "self": "https://kitsu.app/api/edge/categories/164/relationships/drama",
+            "related": "https://kitsu.app/api/edge/categories/164/drama"
           }
         },
         "manga": {
           "links": {
-            "self": "https://kitsu.io/api/edge/categories/164/relationships/manga",
-            "related": "https://kitsu.io/api/edge/categories/164/manga"
+            "self": "https://kitsu.app/api/edge/categories/164/relationships/manga",
+            "related": "https://kitsu.app/api/edge/categories/164/manga"
           }
         }
       }
@@ -497,8 +497,8 @@
     "count": 12
   },
   "links": {
-    "first": "https://kitsu.io/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=0",
-    "next": "https://kitsu.io/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=10",
-    "last": "https://kitsu.io/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=2"
+    "first": "https://kitsu.app/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "next": "https://kitsu.app/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=10",
+    "last": "https://kitsu.app/api/edge/anime/42194/categories?page%5Blimit%5D=10&page%5Boffset%5D=2"
   }
 }
