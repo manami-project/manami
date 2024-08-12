@@ -77,7 +77,7 @@ internal class DefaultMetaDataMigrationHandlerTest {
             }
 
             // then
-            assertThat(result).hasMessage("MetaDataProvider [kitsu.io] is not supported.")
+            assertThat(result).hasMessage("MetaDataProvider [kitsu.app] is not supported.")
         }
 
         @Test

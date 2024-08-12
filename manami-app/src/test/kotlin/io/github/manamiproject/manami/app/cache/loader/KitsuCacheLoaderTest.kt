@@ -62,11 +62,11 @@ internal class KitsuCacheLoaderTest {
                 season = SUMMER,
                 year = 2020,
             ),
-            picture = URI("https://media.kitsu.io/anime/poster_images/42194/small.jpg?1592953088"),
-            thumbnail = URI("https://media.kitsu.io/anime/poster_images/42194/tiny.jpg?1592953088"),
+            picture = URI("https://media.kitsu.app/anime/poster_images/42194/small.jpg?1592953088"),
+            thumbnail = URI("https://media.kitsu.app/anime/poster_images/42194/tiny.jpg?1592953088"),
             duration = Duration(24, MINUTES),
         ).apply {
-            addSources(URI("https://kitsu.io/anime/42194"))
+            addSources(URI("https://kitsu.app/anime/42194"))
             addSynonyms(
                     "My Teen Romantic Comedy SNAFU 3",
                     "My Teen Romantic Comedy SNAFU Climax",
@@ -74,7 +74,7 @@ internal class KitsuCacheLoaderTest {
                     "Oregairu 3",
                     "やはり俺の青春ラブコメはまちがっている。完",
             )
-            addRelatedAnime(URI("https://kitsu.io/anime/8478"))
+            addRelatedAnime(URI("https://kitsu.app/anime/8478"))
             addTags(
                 "asia",
                 "comedy",
@@ -92,9 +92,9 @@ internal class KitsuCacheLoaderTest {
         val testHttpClient = object: HttpClient by TestHttpClient {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 val response = when(url.toString()) {
-                    "https://kitsu.io/api/edge/anime/42194" -> loadTestResource<String>("cache_tests/loader/kitsu/42194.json")
-                    "https://kitsu.io/api/edge/media-relationships?filter[source_id]=42194&filter[source_type]=Anime&include=destination&sort=role" -> loadTestResource<String>("cache_tests/loader/kitsu/42194_relations.json")
-                    "https://kitsu.io/api/edge/anime/42194/categories" -> loadTestResource<String>("cache_tests/loader/kitsu/42194_tags.json")
+                    "https://kitsu.app/api/edge/anime/42194" -> loadTestResource<String>("cache_tests/loader/kitsu/42194.json")
+                    "https://kitsu.app/api/edge/media-relationships?filter[source_id]=42194&filter[source_type]=Anime&include=destination&sort=role" -> loadTestResource<String>("cache_tests/loader/kitsu/42194_relations.json")
+                    "https://kitsu.app/api/edge/anime/42194/categories" -> loadTestResource<String>("cache_tests/loader/kitsu/42194_tags.json")
                     else -> shouldNotBeInvoked()
                 }
 
@@ -118,7 +118,7 @@ internal class KitsuCacheLoaderTest {
         )
 
         // when
-        val result = notifyCacheLoader.loadAnime(URI("https://kitsu.io/anime/42194"))
+        val result = notifyCacheLoader.loadAnime(URI("https://kitsu.app/anime/42194"))
 
         // then
         assertThat(result).isEqualTo(expectedAnime)

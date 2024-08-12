@@ -31,7 +31,7 @@ class DashboardView: View() {
     private val metaDataProviderTotalNumberOfEntries = mutableMapOf<Hostname, Int>()
     private val metaDataProviderSeenStringProperties = mutableMapOf<Hostname, SimpleStringProperty>().apply {
         put("myanimelist.net", SimpleStringProperty("0"))
-        put("kitsu.io", SimpleStringProperty("0"))
+        put("kitsu.app", SimpleStringProperty("0"))
         put("anime-planet.com", SimpleStringProperty("0"))
         put("notify.moe", SimpleStringProperty("0"))
         put("anilist.co", SimpleStringProperty("0"))
@@ -119,9 +119,9 @@ class DashboardView: View() {
                 valueProperty = metaDataProviderSeenStringProperties["anime-planet.com"]!!
             }
             numberTile {
-                title = "kitsu.io"
+                title = "kitsu.app"
                 color = SLATEGRAY
-                valueProperty = metaDataProviderSeenStringProperties["kitsu.io"]!!
+                valueProperty = metaDataProviderSeenStringProperties["kitsu.app"]!!
             }
         }
         row {

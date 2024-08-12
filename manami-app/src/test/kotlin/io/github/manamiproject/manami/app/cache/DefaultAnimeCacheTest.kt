@@ -209,7 +209,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://kitsu.app/anime/43731"),
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
@@ -237,7 +237,7 @@ internal class DefaultAnimeCacheTest {
                 "anidb.net",
                 "anilist.co",
                 "anime-planet.com",
-                "kitsu.io",
+                "kitsu.app",
                 "myanimelist.net",
                 "notify.moe",
             )
@@ -255,7 +255,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://kitsu.app/anime/43731"),
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
@@ -327,7 +327,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
-                    URI("https://kitsu.io/anime/43578"),
+                    URI("https://kitsu.app/anime/43578"),
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
@@ -346,7 +346,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://kitsu.app/anime/43731"),
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
@@ -393,7 +393,7 @@ internal class DefaultAnimeCacheTest {
 
             val entry5 = Anime(
                 sources = hashSetOf(
-                    URI("https://kitsu.io/anime/40614"),
+                    URI("https://kitsu.app/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
                 ),
@@ -503,7 +503,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             // when
-            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("1535"), "kitsu.io")
+            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("1535"), "kitsu.app")
 
             // then
             assertThat(result).isEmpty()
@@ -521,7 +521,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
-                    URI("https://kitsu.io/anime/43731"),
+                    URI("https://kitsu.app/anime/43731"),
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
@@ -538,10 +538,10 @@ internal class DefaultAnimeCacheTest {
             }
 
             // when
-            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("43609"), "kitsu.io")
+            val result = defaultAnimeCache.mapToMetaDataProvider(MyanimelistConfig.buildAnimeLink("43609"), "kitsu.app")
 
             // then
-            assertThat(result).containsExactly(URI("https://kitsu.io/anime/43731"))
+            assertThat(result).containsExactly(URI("https://kitsu.app/anime/43731"))
         }
 
         @Test
@@ -553,7 +553,7 @@ internal class DefaultAnimeCacheTest {
 
             val testAnime = Anime(
                 sources = hashSetOf(
-                    URI("https://kitsu.io/anime/45724"),
+                    URI("https://kitsu.app/anime/45724"),
                     URI("https://myanimelist.net/anime/50731"),
                     URI("https://myanimelist.net/anime/50814"),
                 ),

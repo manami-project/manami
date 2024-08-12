@@ -156,10 +156,10 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         assertThat((testCache.fetch(URI("https://anime-planet.com/anime/death-note")) as PresentValue).value).isEqualTo(expectedAnimePlanetEntry)
 
         val expectedKitsuEntry = expectedAnime.copy(
-            sources = hashSetOf(URI("https://kitsu.io/anime/1376")),
-            relatedAnime = hashSetOf(URI("https://kitsu.io/anime/2707")),
+            sources = hashSetOf(URI("https://kitsu.app/anime/1376")),
+            relatedAnime = hashSetOf(URI("https://kitsu.app/anime/2707")),
         )
-        assertThat((testCache.fetch(URI("https://kitsu.io/anime/1376")) as PresentValue).value).isEqualTo(expectedKitsuEntry)
+        assertThat((testCache.fetch(URI("https://kitsu.app/anime/1376")) as PresentValue).value).isEqualTo(expectedKitsuEntry)
 
         val expectedMalEntry = expectedAnime.copy(
             sources = hashSetOf(URI("https://myanimelist.net/anime/1535")),
@@ -178,7 +178,7 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anidb.net"]).isEqualTo(1)
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anilist.co"]).isEqualTo(1)
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["anime-planet.com"]).isEqualTo(1)
-        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["kitsu.io"]).isEqualTo(1)
+        assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["kitsu.app"]).isEqualTo(1)
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["myanimelist.net"]).isEqualTo(1)
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["notify.moe"]).isEqualTo(1)
         assertThat(receivedEvents.last()).isInstanceOf(CachePopulatorFinishedEvent::class.java)
