@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew test
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: github.ref != 'refs/heads/master'
+        if: github.ref != 'refs/heads/master' && always()
         with:
           check_name: Test results JDK ${{ matrix.java }}
           comment_title: Test results JDK ${{ matrix.java }}
