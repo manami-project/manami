@@ -104,16 +104,16 @@ internal class KitsuCacheLoaderTest {
 
         val notifyCacheLoader = KitsuCacheLoader(
                 animeDownloader = KitsuDownloader(
-                    config = KitsuConfig,
-                    httpClient = testHttpClient
+                    metaDataProviderConfig = KitsuConfig,
+                    httpClient = testHttpClient,
                 ),
                 relationsDownloader = KitsuDownloader(
-                    config = KitsuRelationsConfig,
-                    httpClient = testHttpClient
+                    metaDataProviderConfig = KitsuRelationsConfig,
+                    httpClient = testHttpClient,
                 ),
                 tagsDownloader = KitsuDownloader(
-                    config = KitsuTagsConfig,
-                    httpClient = testHttpClient
+                    metaDataProviderConfig = KitsuTagsConfig,
+                    httpClient = testHttpClient,
                 ),
         )
 

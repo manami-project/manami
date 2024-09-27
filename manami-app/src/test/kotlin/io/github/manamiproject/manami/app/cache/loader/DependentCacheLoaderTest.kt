@@ -104,11 +104,11 @@ internal class DependentCacheLoaderTest {
             val cacheLoader = DependentCacheLoader(
                 config = NotifyConfig,
                 animeDownloader = NotifyDownloader(
-                    config = NotifyConfig,
+                    metaDataProviderConfig = NotifyConfig,
                     httpClient = testHttpClient,
                 ),
                 relationsDownloader = NotifyDownloader(
-                    config = NotifyRelationsConfig,
+                    metaDataProviderConfig = NotifyRelationsConfig,
                     httpClient = testHttpClient,
                 ),
                 converter = NotifyAnimeConverter(relationsDir = tempDir),

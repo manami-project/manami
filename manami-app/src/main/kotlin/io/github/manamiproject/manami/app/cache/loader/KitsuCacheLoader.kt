@@ -21,9 +21,9 @@ import kotlin.io.path.deleteIfExists
 
 internal class KitsuCacheLoader(
     private val kitsuConfig: MetaDataProviderConfig = KitsuConfig,
-    private val animeDownloader: Downloader = KitsuDownloader(config = kitsuConfig),
-    private val relationsDownloader: Downloader = KitsuDownloader(config = KitsuRelationsConfig),
-    private val tagsDownloader: Downloader = KitsuDownloader(config = KitsuTagsConfig),
+    private val animeDownloader: Downloader = KitsuDownloader(metaDataProviderConfig = kitsuConfig),
+    private val relationsDownloader: Downloader = KitsuDownloader(metaDataProviderConfig = KitsuRelationsConfig),
+    private val tagsDownloader: Downloader = KitsuDownloader(metaDataProviderConfig = KitsuTagsConfig),
     private val tempFolder: Path = createTempDirectory("manami-kitsu_"),
     private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
     private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),

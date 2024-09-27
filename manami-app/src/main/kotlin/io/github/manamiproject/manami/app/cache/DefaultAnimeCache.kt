@@ -52,8 +52,8 @@ internal class DefaultAnimeCache(
         SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetAnimeConverter()),
         DependentCacheLoader(
             config = AnisearchConfig,
-            animeDownloader = AnisearchDownloader(config = AnisearchConfig),
-            relationsDownloader = AnisearchDownloader(config = AnisearchRelationsConfig),
+            animeDownloader = AnisearchDownloader(metaDataProviderConfig = AnisearchConfig),
+            relationsDownloader = AnisearchDownloader(metaDataProviderConfig = AnisearchRelationsConfig),
             relationsDir = anisearchRelationsDir,
             converter = AnisearchAnimeConverter(relationsDir = anisearchRelationsDir),
         ),
@@ -61,7 +61,7 @@ internal class DefaultAnimeCache(
         SimpleCacheLoader(
             config = LivechartConfig,
             downloader = LivechartDownloader(
-                config = LivechartConfig,
+                metaDataProviderConfig = LivechartConfig,
                 httpClient = DefaultHttpClient(
                     protocols = mutableListOf(HTTP_1_1),
                 )
@@ -71,8 +71,8 @@ internal class DefaultAnimeCache(
         SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader(MyanimelistConfig), MyanimelistAnimeConverter.instance),
         DependentCacheLoader(
             config = NotifyConfig,
-            animeDownloader = NotifyDownloader(config = NotifyConfig),
-            relationsDownloader = NotifyDownloader(config = NotifyRelationsConfig),
+            animeDownloader = NotifyDownloader(metaDataProviderConfig = NotifyConfig),
+            relationsDownloader = NotifyDownloader(metaDataProviderConfig = NotifyRelationsConfig),
             relationsDir = notifyRelationsDir,
             converter = NotifyAnimeConverter(relationsDir = notifyRelationsDir),
         ),
