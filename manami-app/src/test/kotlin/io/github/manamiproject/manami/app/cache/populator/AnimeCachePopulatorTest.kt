@@ -5,9 +5,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
+import io.github.manamiproject.manami.app.cache.TestConfigRegistry
 import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
+import io.github.manamiproject.modb.core.config.ConfigRegistry
 import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
 import io.github.manamiproject.modb.core.models.Anime.Type.TV
@@ -114,9 +116,14 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             }
         }
 
+        val testConfigRegistry = object: ConfigRegistry by TestConfigRegistry {
+            override fun boolean(key: String): Boolean = false
+        }
+
         val animeCachePopulator = AnimeCachePopulator(
-                uri = URI("http://localhost:$port/anime/1535"),
-                eventBus = testEventBus,
+            uri = URI("http://localhost:$port/anime/1535"),
+            eventBus = testEventBus,
+            configRegistry = testConfigRegistry,
         )
 
         serverInstance.stubFor(

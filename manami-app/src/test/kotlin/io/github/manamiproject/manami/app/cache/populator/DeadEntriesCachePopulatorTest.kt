@@ -2,11 +2,13 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
+import io.github.manamiproject.manami.app.cache.TestConfigRegistry
 import io.github.manamiproject.modb.core.config.AnimeId
+import io.github.manamiproject.modb.core.config.ConfigRegistry
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.test.MockServerTestCase
@@ -28,9 +30,14 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
             override fun buildAnimeLink(id: AnimeId): URI = URI("https://${hostname()}/anime/$id")
         }
 
-        val animeCachePopulator = DeadEntriesCachePopulator(
+        val testConfigRegistry = object: ConfigRegistry by TestConfigRegistry {
+            override fun boolean(key: String): Boolean = false
+        }
+
+        val cachePopulator = DeadEntriesCachePopulator(
             config = testConfig,
-            url = URI("http://localhost:$port/dead-entires/all.json").toURL()
+            url = URI("http://localhost:$port/dead-entires/all.json").toURL(),
+            configRegistry = testConfigRegistry,
         )
 
         serverInstance.stubFor(
@@ -57,7 +64,7 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
 
         // when
         runBlocking {
-            animeCachePopulator.populate(testCache)
+            cachePopulator.populate(testCache)
         }
 
         // then

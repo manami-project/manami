@@ -1,10 +1,7 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
-import io.github.manamiproject.modb.core.config.AnimeId
-import io.github.manamiproject.modb.core.config.FileSuffix
-import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
+import io.github.manamiproject.modb.core.config.*
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.httpclient.HttpClient
@@ -15,6 +12,9 @@ import io.github.manamiproject.modb.core.models.Tag
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import java.net.URI
 import java.net.URL
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 internal object TestCacheLoader : CacheLoader {
     override fun hostname(): Hostname = shouldNotBeInvoked()
@@ -53,4 +53,17 @@ internal object TestAnimeCache: AnimeCache {
     override fun fetch(key: URI): CacheEntry<Anime> = shouldNotBeInvoked()
     override fun populate(key: URI, value: CacheEntry<Anime>) = shouldNotBeInvoked()
     override fun clear() = shouldNotBeInvoked()
+}
+
+internal object TestConfigRegistry: ConfigRegistry {
+    override fun boolean(key: String): Boolean = shouldNotBeInvoked()
+    override fun double(key: String): Double = shouldNotBeInvoked()
+    override fun int(key: String): Int = shouldNotBeInvoked()
+    override fun <T : Any> list(key: String): List<T> = shouldNotBeInvoked()
+    override fun localDate(key: String): LocalDate = shouldNotBeInvoked()
+    override fun localDateTime(key: String): LocalDateTime = shouldNotBeInvoked()
+    override fun long(key: String): Long = shouldNotBeInvoked()
+    override fun <T : Any> map(key: String): Map<String, T> = shouldNotBeInvoked()
+    override fun offsetDateTime(key: String): OffsetDateTime = shouldNotBeInvoked()
+    override fun string(key: String): String? = shouldNotBeInvoked()
 }
