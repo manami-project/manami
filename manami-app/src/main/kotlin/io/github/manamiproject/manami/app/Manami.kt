@@ -21,10 +21,13 @@ import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.net.URI
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -51,12 +54,14 @@ class Manami(
         log.info {"Starting manami" }
         SimpleEventBus.subscribe(this)
         runInBackground {
-            DefaultLatestVersionChecker().checkLatestVersion()
-            AnimeCachePopulator().populate(DefaultAnimeCache.instance)
-            DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(DefaultAnimeCache.instance)
-            DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(DefaultAnimeCache.instance)
-            DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(DefaultAnimeCache.instance)
-            DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(DefaultAnimeCache.instance)
+            withContext(ModbDispatchers.LIMITED_CPU) {
+                launch { DefaultLatestVersionChecker().checkLatestVersion() }
+                launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(DefaultAnimeCache.instance) }
+            }
         }
     }
 

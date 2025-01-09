@@ -32,3 +32,11 @@ Manami creates an index file for the anime that you already watched and stored o
 * Requires JDK 21 and the possibility to run JavaFX
 * Download the *.jar file of the latest release
 * No installation or additional setup needed. Just Download the `*.jar` and start it by double click or via console `java -jar manami.jar`.
+
+## Configuration
+
+See ["Configuration Management"](https://github.com/manami-project/modb-core/tree/master#configuration-management)
+
+| parameter                    | type      | default | description                                                                                                  |
+|------------------------------|-----------|---------|--------------------------------------------------------------------------------------------------------------|
+| `manami.cache.useLocalFiles` | `Boolean` | `true`  | Downloads anime-offline-database files once and stores them next to the *.jar file. Redownload after 24 hrs. |
