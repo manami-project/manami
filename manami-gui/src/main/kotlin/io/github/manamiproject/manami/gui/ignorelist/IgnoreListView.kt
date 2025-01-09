@@ -36,18 +36,11 @@ class IgnoreListView : View() {
             finishedAddingEntriesTasks.set(event.finishedTasks)
             addingEntriesTasks.set(event.tasks)
         }
-        subscribe<IgnoreListRelatedAnimeFoundGuiEvent> { event ->
-            entries.value.add(IgnoreListEntry(event.anime))
-        }
-        subscribe<IgnoreListRelatedAnimeStatusGuiEvent> { event ->
-            finishedRelatedAnimeTasks.set(event.finishedChecking)
-            relatedAnimeTasks.set(event.toBeChecked)
-
-            if (event.finishedChecking == 1) {
-                entries.get().clear()
-            }
-        }
-        subscribe<IgnoreListRelatedAnimeFinishedGuiEvent> {
+        subscribe<IgnoreListRelatedAnimeFinishedGuiEvent> { event ->
+            finishedRelatedAnimeTasks.set(1)
+            relatedAnimeTasks.set(1)
+            entries.get().clear()
+            event.result.forEach {entries.value.add(it) }
             isRelatedAnimeProgressIndicatorVisible.set(false)
         }
         subscribe<AddAnimeListEntryGuiEvent> { event ->

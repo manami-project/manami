@@ -14,7 +14,6 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.models.Anime
 import java.net.URI
-import java.util.*
 
 internal class DefaultRelatedAnimeHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
@@ -33,49 +32,33 @@ internal class DefaultRelatedAnimeHandler(
     }
 
     private fun findRelatedAnime(eventListType: EventListType, initialSources: Collection<URI>) {
-        var numberOfEntriesToBeChecked: Int
-        val entriesToCheck = Stack<URI>()
+        val entriesToCheck = HashSet<URI>()
+        var lastSize = 0
 
         val initialRelatedAnime = initialSources.map { cache.fetch(it) }
             .filterIsInstance<PresentValue<Anime>>()
             .flatMap { it.value.relatedAnime }
         initialSources.union(initialRelatedAnime).forEach { entriesToCheck.add(it) }
-        numberOfEntriesToBeChecked = entriesToCheck.size
 
         val animeList = state.animeList().map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
         val watchList = state.watchList().map { it.link.uri }.toSet()
         val ignoreList = state.ignoreList().map { it.link.uri }.toSet()
 
-        val checkedEntries = mutableSetOf<URI>()
-
         log.info { "Initializing search for [$eventListType] related anime is done." }
 
-        while (entriesToCheck.isNotEmpty()) {
-            log.trace { "Checking ${checkedEntries.size+1}/$numberOfEntriesToBeChecked for [$eventListType] related anime" }
-            val currentEntry = entriesToCheck.pop()
-
-            if (!checkedEntries.contains(currentEntry)) {
-                val entry = cache.fetch(currentEntry)
-                if (entry is PresentValue<Anime>) {
-                    entry.value.relatedAnime.filterNot { checkedEntries.contains(it) }
-                        .filterNot { entriesToCheck.contains(it) }
-                        .forEach {
-                            entriesToCheck.push(it)
-                            numberOfEntriesToBeChecked++
-                        }
-
-                    val entrySource = entry.value.sources.first()
-                    if (!animeList.contains(entrySource) && !watchList.contains(entrySource) && !ignoreList.contains(entrySource)) {
-                        eventBus.post(RelatedAnimeFoundEvent(eventListType, entry.value))
-                    }
-                }
-            }
-
-            checkedEntries.add(currentEntry)
-            eventBus.post(RelatedAnimeStatusEvent(eventListType, checkedEntries.size, numberOfEntriesToBeChecked))
+        while (entriesToCheck.size != lastSize) {
+            lastSize = entriesToCheck.size
+            entriesToCheck.map { cache.fetch(it) }
+                .filterIsInstance<PresentValue<Anime>>()
+                .flatMap { it.value.relatedAnime }
+                .forEach { entriesToCheck.add(it) }
         }
 
-        eventBus.post(RelatedAnimeFinishedEvent(eventListType))
+        entriesToCheck.removeAll(animeList)
+        entriesToCheck.removeAll(watchList)
+        entriesToCheck.removeAll(ignoreList)
+
+        eventBus.post(RelatedAnimeFinishedEvent(eventListType, entriesToCheck.map { cache.fetch(it) }.filterIsInstance<PresentValue<Anime>>().map { it.value }))
         log.info { "Finished searching for [$eventListType] related anime" }
     }
 

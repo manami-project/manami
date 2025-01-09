@@ -39,14 +39,10 @@ data class RemoveIgnoreListEntryGuiEvent(val entries: Set<IgnoreListEntry>) : Gu
 data class AddIgnoreListStatusUpdateGuiEvent(val finishedTasks: Int, val tasks: Int): GuiEvent()
 
 // Related Anime
-data class AnimeListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
-data class AnimeListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
-data object AnimeListRelatedAnimeFinishedGuiEvent: GuiEvent()
+data class AnimeListRelatedAnimeFinishedGuiEvent(val result: List<Anime>): GuiEvent()
 
 // IgnoreList Search
-data class IgnoreListRelatedAnimeFoundGuiEvent(val anime: Anime): GuiEvent()
-data class IgnoreListRelatedAnimeStatusGuiEvent(val finishedChecking: Int, val toBeChecked: Int): GuiEvent()
-data object IgnoreListRelatedAnimeFinishedGuiEvent: GuiEvent()
+data class IgnoreListRelatedAnimeFinishedGuiEvent(val result: List<IgnoreListEntry>): GuiEvent()
 
 // Anime Season
 data class AnimeSeasonEntryFoundGuiEvent(val anime: Anime): GuiEvent()
