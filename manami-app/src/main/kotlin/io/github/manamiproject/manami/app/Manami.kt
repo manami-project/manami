@@ -24,6 +24,7 @@ import io.github.manamiproject.modb.anilist.AnilistConfig
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -85,8 +86,10 @@ class Manami(
 
 private val backgroundTasks = Executors.newCachedThreadPool()
 
-internal fun runInBackground(action: () -> Unit) {
+internal fun runInBackground(action: suspend () -> Unit) {
     backgroundTasks.submit {
-        action.invoke()
+        runBlocking {
+            action.invoke()
+        }
     }
 }
