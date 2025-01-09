@@ -19,7 +19,7 @@ internal class GithubVersionProviderTest {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                 return HttpResponse(
                     code = 200,
-                    body = loadTestResource<String>("versioning_tests/github_versioning_tests/latest_version_page.html").toByteArray(),
+                    body = loadTestResource<String>("versioning_tests/github_versioning_tests/latest_version.json").toByteArray(),
                 )
             }
         }
@@ -32,19 +32,16 @@ internal class GithubVersionProviderTest {
         val result = versionProvider.version()
 
         // then
-        assertThat(result).isEqualTo(SemanticVersion("3.2.2"))
+        assertThat(result).isEqualTo(SemanticVersion("3.12.18"))
     }
 
     @Test
     fun `throws exception if version cannot be extracted`() {
         // given
         val otherBody = """
-            <html>
-             <head>
-                <title>Latest Release</title>
-            </head>
-            <bod>Some content</body>
-            </html>
+            {
+                "name": "value"
+            }
         """.trimIndent()
 
         val testHttpClient = object: HttpClient by TestHttpClient {
