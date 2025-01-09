@@ -4,5 +4,5 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 
 internal interface CachePopulator<KEY, VALUE: CacheEntry<*>> {
-    fun populate(cache: Cache<KEY, VALUE>)
+    suspend fun populate(cache: Cache<KEY, VALUE>)
 }

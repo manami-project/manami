@@ -11,6 +11,7 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
@@ -55,7 +56,9 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
         )
 
         // when
-        animeCachePopulator.populate(testCache)
+        runBlocking {
+            animeCachePopulator.populate(testCache)
+        }
 
         // then
         assertThat(testCache.fetch(URI("https://example.org/anime/12449"))).isInstanceOf(DeadEntry::class.java)

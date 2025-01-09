@@ -16,6 +16,7 @@ import io.github.manamiproject.modb.core.models.AnimeSeason.Season.FALL
 import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
@@ -128,7 +129,9 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         )
 
         // when
-        animeCachePopulator.populate(testCache)
+        runBlocking {
+            animeCachePopulator.populate(testCache)
+        }
 
         // then
         val expectedAnidbEntry = expectedAnime.copy(

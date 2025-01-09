@@ -20,7 +20,7 @@ internal class DeadEntriesCachePopulator(
     private val parser: ExternalResourceJsonDeserializer<DeadEntries> = DefaultExternalResourceJsonDeserializer(deserializer = DeadEntriesJsonStringDeserializer.instance),
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
-    override fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
+    override suspend fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info { "Populating cache with dead entries from [${config.hostname()}]" }
 
         runBlocking {
