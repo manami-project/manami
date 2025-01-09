@@ -19,8 +19,6 @@ import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOV
 import io.github.manamiproject.manami.app.lists.ignorelist.AddIgnoreListStatusUpdateEvent
 import io.github.manamiproject.manami.app.lists.watchlist.AddWatchListStatusUpdateEvent
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFinishedEvent
-import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeFoundEvent
-import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeStatusEvent
 import io.github.manamiproject.manami.app.search.FileSearchAnimeListResultsEvent
 import io.github.manamiproject.manami.app.search.FileSearchIgnoreListResultsEvent
 import io.github.manamiproject.manami.app.search.FileSearchWatchListResultsEvent
@@ -34,6 +32,7 @@ import io.github.manamiproject.manami.app.commands.history.FileSavedStatusChange
 import io.github.manamiproject.manami.app.commands.history.UndoRedoStatusEvent
 import io.github.manamiproject.manami.app.events.EventListType.*
 import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResultEvent
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.migration.MetaDataMigrationProgressEvent
 import io.github.manamiproject.manami.app.migration.MetaDataMigrationResultEvent
 import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeFoundEvent
@@ -55,8 +54,6 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
                     is AddIgnoreListStatusUpdateEvent -> AddIgnoreListStatusUpdateGuiEvent(this.finishedTasks, this.tasks)
                     is FileSavedStatusChangedEvent -> FileSavedStatusChangedGuiEvent(this.isFileSaved)
                     is UndoRedoStatusEvent -> UndoRedoStatusGuiEvent(this.isUndoPossible, this.isRedoPossible)
-                    is RelatedAnimeFoundEvent -> mapRelatedAnimeFoundEvent(this)
-                    is RelatedAnimeStatusEvent -> mapRelatedAnimeStatusEvent(this)
                     is RelatedAnimeFinishedEvent -> mapRelatedAnimeFinsihedEvent(this)
                     is AnimeSeasonEntryFoundEvent -> AnimeSeasonEntryFoundGuiEvent(this.anime)
                     is AnimeSeasonSearchFinishedEvent -> AnimeSeasonSearchFinishedGuiEvent
@@ -105,27 +102,11 @@ class ManamiAccess(private val manami: ManamiApp = manamiInstance) : Controller(
         }
     }
 
-    private fun mapRelatedAnimeFoundEvent(event: RelatedAnimeFoundEvent): GuiEvent {
-        return when(event.listType) {
-            ANIME_LIST -> AnimeListRelatedAnimeFoundGuiEvent(event.anime)
-            WATCH_LIST -> throw IllegalStateException("Unsupported list type")
-            IGNORE_LIST -> IgnoreListRelatedAnimeFoundGuiEvent(event.anime)
-        }
-    }
-
-    private fun mapRelatedAnimeStatusEvent(event: RelatedAnimeStatusEvent): GuiEvent {
-        return when(event.listType) {
-            ANIME_LIST -> AnimeListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
-            WATCH_LIST -> throw IllegalStateException("Unsupported list type")
-            IGNORE_LIST -> IgnoreListRelatedAnimeStatusGuiEvent(event.finishedChecking, event.toBeChecked)
-        }
-    }
-
     private fun mapRelatedAnimeFinsihedEvent(event: RelatedAnimeFinishedEvent): GuiEvent {
         return when(event.listType) {
-            ANIME_LIST -> AnimeListRelatedAnimeFinishedGuiEvent
+            ANIME_LIST -> AnimeListRelatedAnimeFinishedGuiEvent(event.resultList)
             WATCH_LIST -> throw IllegalStateException("Unsupported list type")
-            IGNORE_LIST -> IgnoreListRelatedAnimeFinishedGuiEvent
+            IGNORE_LIST -> IgnoreListRelatedAnimeFinishedGuiEvent(event.resultList.map { IgnoreListEntry(it) })
         }
     }
 

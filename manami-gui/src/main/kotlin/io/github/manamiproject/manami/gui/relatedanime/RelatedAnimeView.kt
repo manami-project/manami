@@ -26,18 +26,11 @@ class RelatedAnimeView : View() {
     )
 
     init {
-        subscribe<AnimeListRelatedAnimeFoundGuiEvent> { event ->
-            entries.value.add(BigPicturedAnimeEntry(event.anime))
-        }
-        subscribe<AnimeListRelatedAnimeStatusGuiEvent> { event ->
-            finishedTasks.set(event.finishedChecking)
-            tasks.set(event.toBeChecked)
-
-            if (event.finishedChecking == 1) {
-                entries.get().clear()
-            }
-        }
-        subscribe<AnimeListRelatedAnimeFinishedGuiEvent> {
+        subscribe<AnimeListRelatedAnimeFinishedGuiEvent> { event ->
+            finishedTasks.set(1)
+            tasks.set(1)
+            entries.get().clear()
+            event.result.forEach { entries.value.add(BigPicturedAnimeEntry(it)) }
             isRelatedAnimeProgressIndicatorVisible.set(false)
         }
         subscribe<AddAnimeListEntryGuiEvent> { event ->

@@ -87,11 +87,11 @@ internal class DefaultRelatedAnimeHandlerTest {
                 defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
 
                 // then
-                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-                assertThat(animeFoundEvents).hasSize(6)
+                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+                assertThat(animeFoundEvents).hasSize(1)
                 assertThat(animeFoundEvents.map { it.listType }.distinct()).containsExactly(ANIME_LIST)
 
-                val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+                val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime3.sources.first(),
@@ -100,13 +100,6 @@ internal class DefaultRelatedAnimeHandlerTest {
                     anime6.sources.first(),
                     anime7.sources.first(),
                 )
-
-                val statusEvents = receivedEvents.filterIsInstance<RelatedAnimeStatusEvent>()
-                assertThat(statusEvents).hasSize(7)
-                assertThat(statusEvents.map { it.listType }.distinct()).containsExactly(ANIME_LIST)
-
-                assertThat(receivedEvents.last()).isInstanceOf(RelatedAnimeFinishedEvent::class.java)
-                assertThat((receivedEvents.last() as RelatedAnimeFinishedEvent).listType).isEqualTo(ANIME_LIST)
             }
         }
 
@@ -162,10 +155,10 @@ internal class DefaultRelatedAnimeHandlerTest {
                 defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
 
                 // then
-                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-                assertThat(animeFoundEvents).hasSize(4)
+                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+                assertThat(animeFoundEvents).hasSize(1)
 
-                val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+                val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime3.sources.first(),
@@ -227,10 +220,10 @@ internal class DefaultRelatedAnimeHandlerTest {
                 defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
 
                 // then
-                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-                assertThat(animeFoundEvents).hasSize(4)
+                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+                assertThat(animeFoundEvents).hasSize(1)
 
-                val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+                val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime5.sources.first(),
@@ -285,11 +278,11 @@ internal class DefaultRelatedAnimeHandlerTest {
             defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
 
             // then
-            val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-            assertThat(animeFoundEvents).hasSize(6)
+            val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+            assertThat(animeFoundEvents).hasSize(1)
             assertThat(animeFoundEvents.map { it.listType }.distinct()).containsExactly(IGNORE_LIST)
 
-            val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+            val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
             assertThat(foundEntries).containsExactlyInAnyOrder(
                 anime1.sources.first(),
                 anime3.sources.first(),
@@ -298,13 +291,6 @@ internal class DefaultRelatedAnimeHandlerTest {
                 anime6.sources.first(),
                 anime7.sources.first(),
             )
-
-            val statusEvents = receivedEvents.filterIsInstance<RelatedAnimeStatusEvent>()
-            assertThat(statusEvents).hasSize(7)
-            assertThat(statusEvents.map { it.listType }.distinct()).containsExactly(IGNORE_LIST)
-
-            assertThat(receivedEvents.last()).isInstanceOf(RelatedAnimeFinishedEvent::class.java)
-            assertThat((receivedEvents.last() as RelatedAnimeFinishedEvent).listType).isEqualTo(IGNORE_LIST)
         }
 
         @Test
@@ -348,10 +334,10 @@ internal class DefaultRelatedAnimeHandlerTest {
             defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
 
             // then
-            val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-            assertThat(animeFoundEvents).hasSize(4)
+            val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+            assertThat(animeFoundEvents).hasSize(1)
 
-            val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+            val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
             assertThat(foundEntries).containsExactlyInAnyOrder(
                 anime1.sources.first(),
                 anime3.sources.first(),
@@ -420,10 +406,10 @@ internal class DefaultRelatedAnimeHandlerTest {
                 defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
 
                 // then
-                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFoundEvent>()
-                assertThat(animeFoundEvents).hasSize(4)
+                val animeFoundEvents = receivedEvents.filterIsInstance<RelatedAnimeFinishedEvent>()
+                assertThat(animeFoundEvents).hasSize(1)
 
-                val foundEntries = animeFoundEvents.map { it.anime.sources.first() }
+                val foundEntries = animeFoundEvents.flatMap { it.resultList.map { anime -> anime.sources.first() } }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime5.sources.first(),
