@@ -155,7 +155,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
                             _title = "3-gatsu no Lion",
@@ -166,7 +166,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 season = FALL,
                                 year = 2016,
                             ),
-                            relatedAnime = hashSetOf(
+                            _relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -207,7 +207,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
                             _title = "3-gatsu no Lion",
@@ -219,7 +219,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 season = FALL,
                                 year = 2016,
                             ),
-                            relatedAnime = hashSetOf(
+                            _relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -260,7 +260,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
                             _title = "3-gatsu no Lion",
@@ -272,7 +272,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 season = FALL,
                                 year = 2016,
                             ),
-                            relatedAnime = hashSetOf(
+                            _relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -328,7 +328,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
                             _title = "3-gatsu no Lion",
@@ -340,7 +340,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 season = FALL,
                                 year = 2016,
                             ),
-                            relatedAnime = hashSetOf(
+                            _relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -431,7 +431,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
                             _title = "Ame-iro Cocoa",
@@ -470,7 +470,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
                             _title = "Ame-iro Cocoa",
@@ -509,7 +509,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
                             _title = "Ame-iro Cocoa",
@@ -564,7 +564,7 @@ internal class MetaDataInconsistencyHandlerTest {
                 val testCache = object: AnimeCache by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            sources = hashSetOf(
+                            _sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
                             _title = "Ame-iro Cocoa",

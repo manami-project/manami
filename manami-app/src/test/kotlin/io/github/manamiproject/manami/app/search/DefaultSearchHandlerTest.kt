@@ -58,7 +58,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -77,7 +77,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -96,7 +96,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -113,7 +113,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -127,7 +127,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching3 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://kitsu.app/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
@@ -200,7 +200,7 @@ internal class DefaultSearchHandlerTest {
 
                 // given
                 val matchingEntry1 = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -219,7 +219,7 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 val matchingEntry2 = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -295,7 +295,7 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in watchlist`() {
             // given
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -314,7 +314,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -386,7 +386,7 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in ignorelist`() {
             // given
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -405,7 +405,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -481,7 +481,7 @@ internal class DefaultSearchHandlerTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -533,7 +533,7 @@ internal class DefaultSearchHandlerTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -549,7 +549,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf(
+                _tags = hashSetOf(
                     "based on a manga",
                     "comedy",
                     "ensemble cast",
@@ -617,7 +617,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -633,11 +633,11 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1", "my-tag-2"),
+                _tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val notMatching1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -651,11 +651,11 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1"),
+                _tags = hashSetOf("my-tag-1"),
             )
 
             val notMatching2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -666,7 +666,7 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-2"),
+                _tags = hashSetOf("my-tag-2"),
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -722,7 +722,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -738,11 +738,11 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1", "my-tag-2"),
+                _tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -756,11 +756,11 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1"),
+                _tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -771,11 +771,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-2"),
+                _tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -791,7 +791,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("totally-different-tag")
+                _tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -863,7 +863,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val matchingEntry1 = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -879,11 +879,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val matchingEntry2 = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -897,11 +897,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val matchingEntry3 = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -912,11 +912,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val notMatchingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -932,7 +932,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -999,7 +999,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1015,11 +1015,11 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1", "my-tag-2"),
+                _tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -1033,11 +1033,11 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1"),
+                _tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -1048,11 +1048,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-2"),
+                _tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1068,7 +1068,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("totally-different-tag")
+                _tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1134,7 +1134,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1150,11 +1150,11 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1", "my-tag-2"),
+                _tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -1168,11 +1168,11 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1"),
+                _tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -1183,11 +1183,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-2"),
+                _tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1203,7 +1203,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("totally-different-tag")
+                _tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1264,7 +1264,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1280,11 +1280,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -1298,11 +1298,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -1313,11 +1313,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1333,7 +1333,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1397,7 +1397,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1413,11 +1413,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -1431,11 +1431,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -1446,11 +1446,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1466,7 +1466,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1528,7 +1528,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1544,11 +1544,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -1562,11 +1562,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -1577,11 +1577,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1597,7 +1597,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1659,7 +1659,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1675,11 +1675,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -1693,11 +1693,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -1708,11 +1708,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1728,7 +1728,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1790,7 +1790,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1806,11 +1806,11 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
@@ -1824,11 +1824,11 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-1"),
+                    _tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
                     _title = "Tenchi Souzou Design-bu Special",
@@ -1839,11 +1839,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    tags = hashSetOf("my-tag-2"),
+                    _tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    sources = hashSetOf(
+                    _sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1859,7 +1859,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    tags = hashSetOf("totally-different-tag")
+                    _tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1918,7 +1918,7 @@ internal class DefaultSearchHandlerTest {
         fun `successfully find anime`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1934,7 +1934,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf("my-tag-1", "my-tag-2"),
+                _tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {

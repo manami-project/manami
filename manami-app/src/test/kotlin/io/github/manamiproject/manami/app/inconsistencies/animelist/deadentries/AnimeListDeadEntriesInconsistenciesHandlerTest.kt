@@ -168,7 +168,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return PresentValue(
                         Anime(
-                            sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                            _sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
                             _title = "Fullmetal Alchemist: Brotherhood",
                             type = TV,
                             episodes = 64,
