@@ -200,7 +200,7 @@ internal class DefaultListHandlerTest {
         fun `add watch list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -211,7 +211,7 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -272,7 +272,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -338,7 +338,7 @@ internal class DefaultListHandlerTest {
         fun `add ignore list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
@@ -349,7 +349,7 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
                 _title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
@@ -410,7 +410,7 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
                 _title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,

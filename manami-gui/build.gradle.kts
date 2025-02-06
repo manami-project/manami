@@ -16,8 +16,8 @@ val githubUsername = "manami-project"
 repositories {
     mavenCentral()
     maven {
-        name = "modb-core"
-        url = uri("https://maven.pkg.github.com/$githubUsername/modb-core")
+        name = "modb-app"
+        url = uri("https://maven.pkg.github.com/$githubUsername/modb-app")
         credentials {
             username = parameter("GH_USERNAME", githubUsername)
             password = parameter("GH_PACKAGES_READ_TOKEN")

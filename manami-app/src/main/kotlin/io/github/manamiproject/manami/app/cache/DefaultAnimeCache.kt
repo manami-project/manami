@@ -103,8 +103,8 @@ internal class DefaultAnimeCache(
             .flatMap { anime ->
                 anime.sources.filter { it.toString().contains(metaDataProvider) }.map { link ->
                     anime.copy(
-                        sources = hashSetOf(link),
-                        relatedAnime = anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toHashSet(),
+                        _sources = hashSetOf(link),
+                        _relatedAnime = anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toHashSet(),
                     )
                 }
             }
@@ -182,8 +182,8 @@ internal class DefaultAnimeCache(
 
         val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(requestedKey.host) }.toHashSet()
         val entryWithRequestedUri = entry.value.copy(
-            sources = source,
-            relatedAnime = relatedAnime,
+            _sources = source,
+            _relatedAnime = relatedAnime,
         )
 
         return PresentValue(entryWithRequestedUri)

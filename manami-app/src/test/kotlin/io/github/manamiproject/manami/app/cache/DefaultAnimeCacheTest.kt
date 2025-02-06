@@ -205,7 +205,7 @@ internal class DefaultAnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -251,7 +251,7 @@ internal class DefaultAnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -267,7 +267,7 @@ internal class DefaultAnimeCacheTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                tags = hashSetOf(
+                _tags = hashSetOf(
                     "based on a manga",
                     "comedy",
                     "ensemble cast",
@@ -323,7 +323,7 @@ internal class DefaultAnimeCacheTest {
         fun `return all entries of a specific provider`() {
             // given
             val entry1 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -342,7 +342,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry2 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -361,7 +361,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry3 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
@@ -378,7 +378,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry4 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
                 _title = "Tenchi Souzou Design-bu Special",
@@ -392,7 +392,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry5 = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://kitsu.app/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
@@ -442,7 +442,7 @@ internal class DefaultAnimeCacheTest {
         fun `create individual entries for duplicates`() {
             // given
             val entry = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://myanimelist.net/anime/48670"),
                     URI("https://myanimelist.net/anime/48671"),
                     URI("https://myanimelist.net/anime/48672"),
@@ -457,15 +457,15 @@ internal class DefaultAnimeCacheTest {
                 ),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1469/114202.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1469/114202t.jpg"),
-                synonyms = hashSetOf(
+                _synonyms = hashSetOf(
                     "Tsugu Tsugumomo Mini Anime",
                     "継つぐももミニアニメ"
                 ),
-                relatedAnime = hashSetOf(
+                _relatedAnime = hashSetOf(
                     URI("https://myanimelist.net/anime/34019"),
                     URI("https://myanimelist.net/anime/39469"),
                 ),
-                tags = hashSetOf("comedy"),
+                _tags = hashSetOf("comedy"),
             )
 
             val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -517,7 +517,7 @@ internal class DefaultAnimeCacheTest {
             }
 
             val testAnime = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -552,7 +552,7 @@ internal class DefaultAnimeCacheTest {
             }
 
             val testAnime = Anime(
-                sources = hashSetOf(
+                _sources = hashSetOf(
                     URI("https://kitsu.app/anime/45724"),
                     URI("https://myanimelist.net/anime/50731"),
                     URI("https://myanimelist.net/anime/50814"),
