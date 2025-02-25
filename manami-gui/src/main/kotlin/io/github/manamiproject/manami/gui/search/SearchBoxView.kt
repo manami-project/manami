@@ -8,7 +8,7 @@ import io.github.manamiproject.manami.gui.ManamiAccess
 import io.github.manamiproject.manami.gui.search.file.ShowFileSearchTabRequest
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
-import io.github.manamiproject.modb.core.models.Title
+import io.github.manamiproject.modb.core.anime.Title
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos.CENTER_RIGHT
 import tornadofx.*

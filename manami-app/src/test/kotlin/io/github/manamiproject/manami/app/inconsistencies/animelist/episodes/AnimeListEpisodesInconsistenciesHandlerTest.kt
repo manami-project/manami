@@ -8,8 +8,8 @@ import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime.Type.OVA
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.anime.AnimeType.OVA
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

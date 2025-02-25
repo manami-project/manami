@@ -7,8 +7,11 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.AnimeSeason
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -159,18 +162,18 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            _sources = hashSetOf(
+                            sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/31646"),
                             ),
-                            _title = "3-gatsu no Lion",
-                            type = Anime.Type.TV,
+                            title = "3-gatsu no Lion",
+                            type = TV,
                             episodes = 22,
-                            status = Anime.Status.FINISHED,
+                            status = FINISHED,
                             animeSeason = AnimeSeason(
-                                season = AnimeSeason.Season.FALL,
+                                season = FALL,
                                 year = 2016,
                             ),
-                            _relatedAnime = hashSetOf(
+                            relatedAnime = hashSetOf(
                                 URI("https://myanimelist.net/anime/28789"),
                                 URI("https://myanimelist.net/anime/34611"),
                                 URI("https://myanimelist.net/anime/34647"),
@@ -253,10 +256,10 @@ internal class DeadEntriesInconsistencyHandlerTest {
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
                         Anime(
-                            _sources = hashSetOf(
+                            sources = hashSetOf(
                                 URI("https://myanimelist.net/anime/28981"),
                             ),
-                            _title = "Ame-iro Cocoa",
+                            title = "Ame-iro Cocoa",
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                         )
                     )

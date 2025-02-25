@@ -8,8 +8,9 @@ import io.github.manamiproject.manami.gui.*
 import io.github.manamiproject.manami.gui.components.animeTable
 import io.github.manamiproject.manami.gui.components.simpleServiceStart
 import io.github.manamiproject.manami.gui.events.*
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.*
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -177,8 +178,8 @@ class AnimeSearchView: View() {
         }
     }
 
-    private fun fetchStatusSelection(): Set<Anime.Status> {
-        val ret = mutableSetOf<Anime.Status>()
+    private fun fetchStatusSelection(): Set<AnimeStatus> {
+        val ret = mutableSetOf<AnimeStatus>()
 
         if (isFinishedSelected.get()) {
             ret.add(FINISHED)

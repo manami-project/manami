@@ -11,8 +11,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.*
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
+import io.github.manamiproject.modb.core.anime.AnimeType
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
@@ -102,7 +103,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
                 title = attributes.getValue("title").trim(),
                 thumbnail = URI(attributes.getValue("thumbnail").trim()),
                 episodes = attributes.getValue("episodes").trim().toInt(),
-                type = Anime.Type.valueOf(attributes.getValue("type").trim().uppercase()),
+                type = AnimeType.valueOf(attributes.getValue("type").trim().uppercase()),
                 location = parseLocation(attributes.getValue("location")),
             )
         )

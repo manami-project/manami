@@ -8,13 +8,14 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.SUMMER
-import io.github.manamiproject.modb.core.models.Duration
-import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SUMMER
+import io.github.manamiproject.modb.core.anime.Duration
+import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.kitsu.KitsuDownloader
 import io.github.manamiproject.modb.kitsu.KitsuRelationsConfig
@@ -54,7 +55,7 @@ internal class KitsuCacheLoaderTest {
     fun `correctly load an anime`() {
         // given
         val expectedAnime = Anime(
-            _title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
+            title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
             type = TV,
             episodes = 12,
             status = ONGOING,
@@ -65,17 +66,25 @@ internal class KitsuCacheLoaderTest {
             picture = URI("https://media.kitsu.app/anime/poster_images/42194/small.jpg?1592953088"),
             thumbnail = URI("https://media.kitsu.app/anime/poster_images/42194/tiny.jpg?1592953088"),
             duration = Duration(24, MINUTES),
-        ).apply {
-            addSources(URI("https://kitsu.app/anime/42194"))
-            addSynonyms(
-                    "My Teen Romantic Comedy SNAFU 3",
-                    "My Teen Romantic Comedy SNAFU Climax",
-                    "My youth romantic comedy is wrong as I expected 3",
-                    "Oregairu 3",
-                    "やはり俺の青春ラブコメはまちがっている。完",
-            )
-            addRelatedAnime(URI("https://kitsu.app/anime/8478"))
-            addTags(
+            score = ScoreValue(
+                arithmeticGeometricMean = 8.399090909090908,
+                arithmeticMean = 8.399090909090908,
+                median = 8.399090909090908,
+            ),
+            sources = hashSetOf(
+                URI("https://kitsu.app/anime/42194"),
+            ),
+            synonyms = hashSetOf(
+                "My Teen Romantic Comedy SNAFU 3",
+                "My Teen Romantic Comedy SNAFU Climax",
+                "My youth romantic comedy is wrong as I expected 3",
+                "Oregairu 3",
+                "やはり俺の青春ラブコメはまちがっている。完",
+            ),
+            relatedAnime = hashSetOf(
+                URI("https://kitsu.app/anime/8478"),
+            ),
+            tags = hashSetOf(
                 "asia",
                 "comedy",
                 "drama",
@@ -86,8 +95,8 @@ internal class KitsuCacheLoaderTest {
                 "present",
                 "romance",
                 "slice of life",
-            )
-        }
+            ),
+        )
 
         val testHttpClient = object: HttpClient by TestHttpClient {
             override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {

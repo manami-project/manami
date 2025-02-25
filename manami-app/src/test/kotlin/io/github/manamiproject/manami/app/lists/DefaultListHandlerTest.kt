@@ -15,14 +15,14 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
-import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
-import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.Duration
-import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.Duration
+import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -200,8 +200,8 @@ internal class DefaultListHandlerTest {
         fun `add watch list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
-                _title = "Golden Kamuy 2nd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
                 status = FINISHED,
@@ -211,8 +211,8 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
-                _title = "Golden Kamuy 3rd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
+                title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
                 status = ONGOING,
@@ -272,8 +272,8 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
-                _title = "Golden Kamuy 2nd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
                 status = FINISHED,
@@ -338,8 +338,8 @@ internal class DefaultListHandlerTest {
         fun `add ignore list entries and fire command containing the progress`() {
             // given
             val entry1 = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
-                _title = "Golden Kamuy 2nd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
                 status = FINISHED,
@@ -349,8 +349,8 @@ internal class DefaultListHandlerTest {
                 duration = Duration(23, MINUTES),
             )
             val entry2 = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
-                _title = "Golden Kamuy 3rd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/40059")),
+                title = "Golden Kamuy 3rd Season",
                 type = TV,
                 episodes = 12,
                 status = ONGOING,
@@ -410,8 +410,8 @@ internal class DefaultListHandlerTest {
         fun `don't do anything with entries for which the cache does not return anything, but the update events must indicate that we actually processed it`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
-                _title = "Golden Kamuy 2nd Season",
+                sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                title = "Golden Kamuy 2nd Season",
                 type = TV,
                 episodes = 12,
                 status = FINISHED,

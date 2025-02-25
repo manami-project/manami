@@ -21,12 +21,12 @@ import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeSearch
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.*
-import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
-import io.github.manamiproject.modb.core.models.Anime.Type.*
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
+import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
+import io.github.manamiproject.modb.core.anime.AnimeType.*
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
 import io.github.manamiproject.modb.test.loadTestResource
@@ -58,7 +58,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -66,7 +66,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -77,7 +77,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -85,7 +85,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -96,13 +96,13 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -113,10 +113,10 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -127,12 +127,12 @@ internal class DefaultSearchHandlerTest {
             )
 
             val notMatching3 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://kitsu.app/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
                 ),
-                _title = "Tejina Shi",
+                title = "Tejina Shi",
                 type = MOVIE,
                 episodes = 1,
                 status = FINISHED,
@@ -200,7 +200,7 @@ internal class DefaultSearchHandlerTest {
 
                 // given
                 val matchingEntry1 = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -208,7 +208,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 24,
                     status = UPCOMING,
@@ -219,7 +219,7 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 val matchingEntry2 = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -227,7 +227,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UPCOMING,
@@ -295,7 +295,7 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in watchlist`() {
             // given
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -303,7 +303,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 24,
                 status = UPCOMING,
@@ -314,7 +314,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -322,7 +322,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -386,7 +386,7 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in ignorelist`() {
             // given
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -394,7 +394,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 24,
                 status = UPCOMING,
@@ -405,7 +405,7 @@ internal class DefaultSearchHandlerTest {
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -413,7 +413,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -481,7 +481,7 @@ internal class DefaultSearchHandlerTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -489,7 +489,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -533,7 +533,7 @@ internal class DefaultSearchHandlerTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -541,7 +541,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -549,7 +549,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf(
+                tags = hashSetOf(
                     "based on a manga",
                     "comedy",
                     "ensemble cast",
@@ -617,7 +617,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -625,7 +625,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -633,17 +633,17 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val notMatching1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -651,14 +651,14 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1"),
+                tags = hashSetOf("my-tag-1"),
             )
 
             val notMatching2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -666,7 +666,7 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-2"),
+                tags = hashSetOf("my-tag-2"),
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -722,7 +722,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -730,7 +730,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -738,17 +738,17 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -756,14 +756,14 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1"),
+                tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -771,11 +771,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-2"),
+                tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -783,7 +783,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -791,7 +791,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("totally-different-tag")
+                tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -863,7 +863,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val matchingEntry1 = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -871,7 +871,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = UPCOMING,
@@ -879,17 +879,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val matchingEntry2 = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = UPCOMING,
@@ -897,14 +897,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val matchingEntry3 = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -912,11 +912,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val notMatchingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -924,7 +924,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UPCOMING,
@@ -932,7 +932,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -999,7 +999,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1007,7 +1007,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -1015,17 +1015,17 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -1033,14 +1033,14 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1"),
+                tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -1048,11 +1048,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-2"),
+                tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1060,7 +1060,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -1068,7 +1068,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("totally-different-tag")
+                tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1134,7 +1134,7 @@ internal class DefaultSearchHandlerTest {
             }
 
             val matchingEntry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1142,7 +1142,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -1150,17 +1150,17 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val matchingEntry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -1168,14 +1168,14 @@ internal class DefaultSearchHandlerTest {
                     season = FALL,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1"),
+                tags = hashSetOf("my-tag-1"),
             )
 
             val matchingEntry3 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -1183,11 +1183,11 @@ internal class DefaultSearchHandlerTest {
                     season = UNDEFINED,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-2"),
+                tags = hashSetOf("my-tag-2"),
             )
 
             val notMatchingEntry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1195,7 +1195,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -1203,7 +1203,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("totally-different-tag")
+                tags = hashSetOf("totally-different-tag")
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1264,7 +1264,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1272,7 +1272,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = FINISHED,
@@ -1280,17 +1280,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = ONGOING,
@@ -1298,14 +1298,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -1313,11 +1313,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1325,7 +1325,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UNKNOWN,
@@ -1333,7 +1333,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1397,7 +1397,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1405,7 +1405,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = FINISHED,
@@ -1413,17 +1413,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = ONGOING,
@@ -1431,14 +1431,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -1446,11 +1446,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1458,7 +1458,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UNKNOWN,
@@ -1466,7 +1466,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1528,7 +1528,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1536,7 +1536,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = FINISHED,
@@ -1544,17 +1544,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = ONGOING,
@@ -1562,14 +1562,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -1577,11 +1577,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1589,7 +1589,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UNKNOWN,
@@ -1597,7 +1597,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1659,7 +1659,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1667,7 +1667,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = FINISHED,
@@ -1675,17 +1675,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = ONGOING,
@@ -1693,14 +1693,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -1708,11 +1708,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1720,7 +1720,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UNKNOWN,
@@ -1728,7 +1728,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1790,7 +1790,7 @@ internal class DefaultSearchHandlerTest {
                 }
 
                 val finishedEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15738"),
                         URI("https://anilist.co/anime/124194"),
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1798,7 +1798,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/42938"),
                         URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
-                    _title = "Fruits Basket: The Final",
+                    title = "Fruits Basket: The Final",
                     type = TV,
                     episodes = 1,
                     status = FINISHED,
@@ -1806,17 +1806,17 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
                 )
 
                 val ongoingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15070"),
                         URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                         URI("https://myanimelist.net/anime/40356"),
                         URI("https://notify.moe/anime/rBaaLj2Wg"),
                     ),
-                    _title = "Tate no Yuusha no Nariagari Season 2",
+                    title = "Tate no Yuusha no Nariagari Season 2",
                     type = TV,
                     episodes = 0,
                     status = ONGOING,
@@ -1824,14 +1824,14 @@ internal class DefaultSearchHandlerTest {
                         season = FALL,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-1"),
+                    tags = hashSetOf("my-tag-1"),
                 )
 
                 val upcomingEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://myanimelist.net/anime/46587"),
                     ),
-                    _title = "Tenchi Souzou Design-bu Special",
+                    title = "Tenchi Souzou Design-bu Special",
                     type = ONA,
                     episodes = 1,
                     status = UPCOMING,
@@ -1839,11 +1839,11 @@ internal class DefaultSearchHandlerTest {
                         season = UNDEFINED,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("my-tag-2"),
+                    tags = hashSetOf("my-tag-2"),
                 )
 
                 val unknownEntry = Anime(
-                    _sources = hashSetOf(
+                    sources = hashSetOf(
                         URI("https://anidb.net/anime/15807"),
                         URI("https://anilist.co/anime/125368"),
                         URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -1851,7 +1851,7 @@ internal class DefaultSearchHandlerTest {
                         URI("https://myanimelist.net/anime/43609"),
                         URI("https://notify.moe/anime/_RdVrLpGR"),
                     ),
-                    _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                    title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                     type = OVA,
                     episodes = 1,
                     status = UNKNOWN,
@@ -1859,7 +1859,7 @@ internal class DefaultSearchHandlerTest {
                         season = SPRING,
                         year = 2021,
                     ),
-                    _tags = hashSetOf("totally-different-tag")
+                    tags = hashSetOf("totally-different-tag")
                 )
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -1918,7 +1918,7 @@ internal class DefaultSearchHandlerTest {
         fun `successfully find anime`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -1926,7 +1926,7 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -1934,7 +1934,7 @@ internal class DefaultSearchHandlerTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf("my-tag-1", "my-tag-2"),
+                tags = hashSetOf("my-tag-1", "my-tag-2"),
             )
 
             val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {

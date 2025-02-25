@@ -1,8 +1,9 @@
 package io.github.manamiproject.manami.gui.extensions
 
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.*
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import javafx.application.HostServices
 import javafx.event.EventHandler
 import javafx.event.EventTarget
@@ -16,7 +17,7 @@ data class HyperlinkConfig(
     var uri: URI = URI(EMPTY),
     var font: Font = Font.font(20.0),
     var isDisable: Boolean = false,
-    var animeStatus: Anime.Status = UNKNOWN,
+    var animeStatus: AnimeStatus = UNKNOWN,
     var hostServicesInstance: HostServices? = null,
 )
 

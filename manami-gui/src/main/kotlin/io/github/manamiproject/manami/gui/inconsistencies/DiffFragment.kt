@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.gui.inconsistencies
 
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.models.Episodes
-import io.github.manamiproject.modb.core.models.Title
+import io.github.manamiproject.modb.core.anime.Episodes
+import io.github.manamiproject.modb.core.anime.Title
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty

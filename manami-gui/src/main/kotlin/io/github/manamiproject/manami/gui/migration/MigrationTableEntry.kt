@@ -4,7 +4,7 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.modb.core.models.Title
+import io.github.manamiproject.modb.core.anime.Title
 import java.net.URI
 
 internal data class MigrationTableEntry(

@@ -7,7 +7,9 @@ import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeRawToAnimeTransformer
+import io.github.manamiproject.modb.core.anime.DefaultAnimeRawToAnimeTransformer
 import kotlinx.coroutines.runBlocking
 import java.net.URI
 import java.nio.file.Path
@@ -19,6 +21,7 @@ internal class DependentCacheLoader(
     private val relationsDownloader: Downloader,
     private val relationsDir: Path,
     private val converter: AnimeConverter,
+    private val transformer: AnimeRawToAnimeTransformer = DefaultAnimeRawToAnimeTransformer.instance,
 ) : CacheLoader {
 
     override fun loadAnime(uri: URI): Anime {
@@ -33,7 +36,7 @@ internal class DependentCacheLoader(
 
         relationsDir.resolve("$id.${config.fileSuffix()}").deleteIfExists()
 
-        return anime
+        return transformer.transform(anime)
     }
 
     override fun hostname(): Hostname = config.hostname()

@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.lists.animelist
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
@@ -19,7 +19,7 @@ internal class CmdRemoveAnimeListEntryTest {
             title = "Beck",
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
-            type = Anime.Type.TV,
+            type = TV,
             location = Path("some/relative/path/beck"),
         )
 
@@ -60,7 +60,7 @@ internal class CmdRemoveAnimeListEntryTest {
             title = "Beck",
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
             episodes = 26,
-            type = Anime.Type.TV,
+            type = TV,
             location = Path("some/relative/path/beck"),
         )
 

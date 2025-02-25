@@ -10,7 +10,7 @@ import io.github.manamiproject.manami.gui.ReadOnlyObservableValue
 import io.github.manamiproject.manami.gui.components.Alerts.AlertOption.YES
 import io.github.manamiproject.manami.gui.extensions.hyperlink
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.models.Anime.Status.UNKNOWN
+import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import javafx.application.HostServices
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty

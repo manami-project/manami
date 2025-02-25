@@ -7,8 +7,8 @@ import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -168,8 +168,8 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                 override fun fetch(key: URI): CacheEntry<Anime> {
                     return PresentValue(
                         Anime(
-                            _sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                            _title = "Fullmetal Alchemist: Brotherhood",
+                            sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                            title = "Fullmetal Alchemist: Brotherhood",
                             type = TV,
                             episodes = 64,
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),

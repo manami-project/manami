@@ -7,8 +7,9 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.httpclient.RequestBody
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Tag
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeRaw
+import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import java.net.URI
 import java.net.URL
@@ -35,7 +36,7 @@ internal object TestDownloader: Downloader {
 }
 
 internal object TestAnimeConverter: AnimeConverter {
-    override suspend fun convert(rawContent: String): Anime = shouldNotBeInvoked()
+    override suspend fun convert(rawContent: String): AnimeRaw = shouldNotBeInvoked()
 }
 
 internal object TestHttpClient: HttpClient {
@@ -65,5 +66,5 @@ internal object TestConfigRegistry: ConfigRegistry {
     override fun long(key: String): Long = shouldNotBeInvoked()
     override fun <T : Any> map(key: String): Map<String, T> = shouldNotBeInvoked()
     override fun offsetDateTime(key: String): OffsetDateTime = shouldNotBeInvoked()
-    override fun string(key: String): String? = shouldNotBeInvoked()
+    override fun string(key: String): String = shouldNotBeInvoked()
 }

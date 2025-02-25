@@ -15,13 +15,13 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
-import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.FALL
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.WINTER
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.WINTER
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
@@ -421,10 +421,10 @@ internal class DefaultRelatedAnimeHandlerTest {
     }
 
     val anime1 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
-        _title = "3-gatsu no Lion",
+        title = "3-gatsu no Lion",
         type = TV,
         episodes = 22,
         status = FINISHED,
@@ -432,7 +432,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
             URI("https://myanimelist.net/anime/34611"),
             URI("https://myanimelist.net/anime/34647"),
@@ -442,10 +442,10 @@ internal class DefaultRelatedAnimeHandlerTest {
     )
 
     val anime2 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/35180"),
         ),
-        _title = "3-gatsu no Lion 2nd Season",
+        title = "3-gatsu no Lion 2nd Season",
         type = TV,
         episodes = 22,
         status = FINISHED,
@@ -453,17 +453,17 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2017,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
             URI("https://myanimelist.net/anime/38864"),
         ),
     )
 
     val anime3 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
         ),
-        _title = "3-gatsu no Lion meets Bump of Chicken",
+        title = "3-gatsu no Lion meets Bump of Chicken",
         type = SPECIAL,
         episodes = 1,
         status = FINISHED,
@@ -471,17 +471,17 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2014,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
             URI("https://myanimelist.net/anime/34611"),
         ),
     )
 
     val anime4 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/34647"),
         ),
-        _title = "3-gatsu no Lion Recap",
+        title = "3-gatsu no Lion Recap",
         type = SPECIAL,
         episodes = 1,
         status = FINISHED,
@@ -489,16 +489,16 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime5 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/38154"),
         ),
-        _title = "3-gatsu no Lion: Ugoku! Nya Shogi",
+        title = "3-gatsu no Lion: Ugoku! Nya Shogi",
         type = SPECIAL,
         episodes = 10,
         status = FINISHED,
@@ -506,16 +506,16 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = WINTER,
             year = 2017,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime6 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/34611"),
         ),
-        _title = "Answer (2016)",
+        title = "Answer (2016)",
         type = SPECIAL,
         episodes = 1,
         status = FINISHED,
@@ -523,17 +523,17 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2016,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/28789"),
             URI("https://myanimelist.net/anime/31646"),
         ),
     )
 
     val anime7 = Anime(
-        _sources = hashSetOf(
+        sources = hashSetOf(
             URI("https://myanimelist.net/anime/38864"),
         ),
-        _title = "Lion meets HachiClo",
+        title = "Lion meets HachiClo",
         type = SPECIAL,
         episodes = 2,
         status = FINISHED,
@@ -541,7 +541,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             season = FALL,
             year = 2018,
         ),
-        _relatedAnime = hashSetOf(
+        relatedAnime = hashSetOf(
             URI("https://myanimelist.net/anime/35180"),
         ),
     )

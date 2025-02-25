@@ -3,12 +3,13 @@ package io.github.manamiproject.manami.app.cache.loader
 import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestAnimeConverter
 import io.github.manamiproject.manami.app.cache.TestDownloader
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeRaw
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
-import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,7 +40,8 @@ internal class SimpleCacheLoaderTest {
     @Test
     fun `correctly load an anime`() {
         // given
-        val anime = Anime("Death Note")
+        val anime = AnimeRaw("Death Note")
+        val expectedAnime = Anime("Death Note")
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun extractAnimeId(uri: URI): AnimeId = "1535"
@@ -53,7 +55,7 @@ internal class SimpleCacheLoaderTest {
         }
 
         val testConverter = object: AnimeConverter by TestAnimeConverter {
-            override suspend fun convert(rawContent: String): Anime {
+            override suspend fun convert(rawContent: String): AnimeRaw {
                 return if (rawContent == "{ }") anime else shouldNotBeInvoked()
             }
         }
@@ -68,6 +70,6 @@ internal class SimpleCacheLoaderTest {
         val result = simpleCacheLoader.loadAnime(URI("https://example.org/anime/1535"))
 
         // then
-        assertThat(result).isEqualTo(anime)
+        assertThat(result).isEqualTo(expectedAnime)
     }
 }

@@ -1,6 +1,6 @@
 package io.github.manamiproject.manami.gui.components
 
-import io.github.manamiproject.modb.core.models.Title
+import io.github.manamiproject.modb.core.anime.Title
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType.CONFIRMATION
 import javafx.scene.control.ButtonBar.ButtonData.*
