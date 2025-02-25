@@ -20,11 +20,8 @@ import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeFoundE
 import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
+import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.Tag
-import io.github.manamiproject.modb.core.models.Title
 import org.apache.commons.lang3.StringUtils.containsIgnoreCase
 import org.apache.commons.text.similarity.LevenshteinDistance
 import java.net.URI
@@ -73,7 +70,7 @@ internal class DefaultSearchHandler(
         }
     }
 
-    override fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType, status: Set<Anime.Status>) {
+    override fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType, status: Set<AnimeStatus>) {
         runInBackground {
             val entriesInLists: Set<URI> = state.animeList()
                 .map { it.link }

@@ -8,8 +8,8 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.models.Anime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
@@ -49,7 +49,7 @@ internal class CmdOpenFileTest {
                     link = Link("https://myanimelist.net/anime/57"),
                     title = "Beck",
                     episodes = 26,
-                    type = Anime.Type.TV,
+                    type = TV,
                     location = Path("some/relative/path/beck"),
                 )
             ),

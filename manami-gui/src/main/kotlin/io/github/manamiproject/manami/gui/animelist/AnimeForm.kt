@@ -9,7 +9,8 @@ import io.github.manamiproject.manami.gui.components.PathChooser
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeType
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.geometry.Pos.CENTER_RIGHT
@@ -116,7 +117,7 @@ class AnimeForm: Fragment() {
 
                         field("Type") {
                             combobox<String>(selectedType) {
-                                items = FXCollections.observableArrayList(Anime.Type.entries.map { it.toString() })
+                                items = FXCollections.observableArrayList(AnimeType.entries.map { it.toString() })
                                 disableProperty().bindBidirectional(disableTypeProperty)
                             }
                         }
@@ -185,7 +186,7 @@ class AnimeForm: Fragment() {
             val entry = AnimeListEntry(
                 title = selectedTitle.get().trim(),
                 episodes = selectedEpisodes.get(),
-                type = Anime.Type.valueOf(selectedType.get()),
+                type = AnimeType.valueOf(selectedType.get()),
                 thumbnail = if (selectedThumbnail.get().trim().neitherNullNorBlank()) URI(selectedThumbnail.get()) else URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
                 link = if (selectedLink.get().trim().neitherNullNorBlank()) Link(selectedLink.get().trim()) else NoLink,
                 location = Path(selectedLocation.get()),

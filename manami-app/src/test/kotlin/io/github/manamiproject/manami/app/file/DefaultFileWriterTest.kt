@@ -10,8 +10,8 @@ import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.versioning.TestVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.readFile
-import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

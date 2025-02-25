@@ -7,7 +7,9 @@ import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeRawToAnimeTransformer
+import io.github.manamiproject.modb.core.anime.DefaultAnimeRawToAnimeTransformer
 import io.github.manamiproject.modb.kitsu.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -27,6 +29,7 @@ internal class KitsuCacheLoader(
     private val tempFolder: Path = createTempDirectory("manami-kitsu_"),
     private val relationsDir: Path = tempFolder.resolve("relations").createDirectory(),
     private val tagsDir: Path = tempFolder.resolve("tags").createDirectory(),
+    private val transformer: AnimeRawToAnimeTransformer = DefaultAnimeRawToAnimeTransformer.instance,
     private val converter: AnimeConverter = KitsuAnimeConverter(
         relationsDir = relationsDir,
         tagsDir = tagsDir,
@@ -53,7 +56,7 @@ internal class KitsuCacheLoader(
         relationsDir.resolve("$id.${kitsuConfig.fileSuffix()}").deleteIfExists()
         tagsDir.resolve("$id.${kitsuConfig.fileSuffix()}").deleteIfExists()
 
-        return anime
+        return transformer.transform(anime)
     }
 
     override fun hostname(): Hostname = kitsuConfig.hostname()

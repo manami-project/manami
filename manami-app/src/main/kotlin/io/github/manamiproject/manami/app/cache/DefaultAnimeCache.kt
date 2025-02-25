@@ -25,8 +25,8 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Tag
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.livechart.LivechartAnimeConverter
 import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.livechart.LivechartDownloader
@@ -103,8 +103,8 @@ internal class DefaultAnimeCache(
             .flatMap { anime ->
                 anime.sources.filter { it.toString().contains(metaDataProvider) }.map { link ->
                     anime.copy(
-                        _sources = hashSetOf(link),
-                        _relatedAnime = anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toHashSet(),
+                        sources = hashSetOf(link),
+                        relatedAnime = anime.relatedAnime.filter { it.toString().contains(metaDataProvider) }.toHashSet(),
                     )
                 }
             }
@@ -182,8 +182,8 @@ internal class DefaultAnimeCache(
 
         val relatedAnime = entry.value.relatedAnime.filter { it.toString().contains(requestedKey.host) }.toHashSet()
         val entryWithRequestedUri = entry.value.copy(
-            _sources = source,
-            _relatedAnime = relatedAnime,
+            sources = source,
+            relatedAnime = relatedAnime,
         )
 
         return PresentValue(entryWithRequestedUri)

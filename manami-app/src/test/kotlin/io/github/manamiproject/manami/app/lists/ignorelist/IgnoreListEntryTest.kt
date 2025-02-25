@@ -2,8 +2,11 @@ package io.github.manamiproject.manami.app.lists.ignorelist
 
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.AnimeSeason
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
+import io.github.manamiproject.modb.core.anime.AnimeType.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
@@ -14,26 +17,25 @@ internal class IgnoreListEntryTest {
     fun `correctly convert Anime to IgnoreListEntry`() {
         // given
         val anime = Anime(
-            _title = "Death Note",
-            type = Anime.Type.TV,
+            title = "Death Note",
+            type = TV,
             episodes = 37,
-            status = Anime.Status.FINISHED,
+            status = FINISHED,
             animeSeason = AnimeSeason(
-                season = AnimeSeason.Season.FALL,
+                season = FALL,
                 year = 2006,
             ),
             picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
-        ).apply {
-            addSources(
+            sources = hashSetOf(
                 URI("https://anidb.net/anime/4563"),
                 URI("https://anilist.co/anime/1535"),
                 URI("https://anime-planet.com/anime/death-note"),
                 URI("https://kitsu.app/anime/1376"),
                 URI("https://myanimelist.net/anime/1535"),
-                URI("https://notify.moe/anime/0-A-5Fimg")
-            )
-            addSynonyms(
+                URI("https://notify.moe/anime/0-A-5Fimg"),
+            ),
+            synonyms = hashSetOf(
                 "DEATH NOTE",
                 "DN",
                 "Death Note - A halállista",
@@ -51,8 +53,8 @@ internal class IgnoreListEntryTest {
                 "デスノート",
                 "死亡笔记",
                 "데스노트",
-            )
-            addTags(
+            ),
+            tags = hashSetOf(
                 "alternative present",
                 "amnesia",
                 "anti-hero",
@@ -97,8 +99,8 @@ internal class IgnoreListEntryTest {
                 "urban fantasy",
                 "vigilantes",
                 "work",
-            )
-        }
+            ),
+        )
 
         // when
         val result = IgnoreListEntry(anime)

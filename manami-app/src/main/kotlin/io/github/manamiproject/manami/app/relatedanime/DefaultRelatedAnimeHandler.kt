@@ -12,7 +12,7 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.anime.Anime
 import java.net.URI
 
 internal class DefaultRelatedAnimeHandler(

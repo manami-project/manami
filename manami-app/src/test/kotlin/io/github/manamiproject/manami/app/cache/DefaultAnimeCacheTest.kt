@@ -4,12 +4,12 @@ import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
 import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.FINISHED
-import io.github.manamiproject.modb.core.models.Anime.Status.UPCOMING
-import io.github.manamiproject.modb.core.models.Anime.Type.*
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeStatus.UPCOMING
+import io.github.manamiproject.modb.core.anime.AnimeType.*
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
@@ -50,9 +50,10 @@ internal class DefaultAnimeCacheTest {
             // given
             var timesLoadExternallyHasBeenTriggered = 0
             val source = URI("https://example.org/anime/1535")
-            val anime = Anime("Death Note").apply {
-                addSources(source)
-            }
+            val anime = Anime(
+                title = "Death Note",
+                sources = hashSetOf(source)
+            )
 
             val testCacheLoader = object: CacheLoader by TestCacheLoader {
                 override fun hostname(): Hostname = "example.org"
@@ -109,9 +110,10 @@ internal class DefaultAnimeCacheTest {
         fun `populate cache`() {
             // given
             val source = URI("https://example.org/anime/1535")
-            val anime = Anime("Death Note").apply {
-                addSources(source)
-            }
+            val anime = Anime(
+                title = "Death Note",
+                sources = hashSetOf(source)
+            )
 
             val cache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader))
 
@@ -127,16 +129,18 @@ internal class DefaultAnimeCacheTest {
         fun `don't override an existing entry`() {
             // given
             val source = URI("https://example.org/anime/1535")
-            val anime = Anime("Death Note").apply {
-                addSources(source)
-            }
+            val anime = Anime(
+                title = "Death Note",
+                sources = hashSetOf(source)
+            )
 
             val cache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader))
             cache.populate(source, PresentValue(anime))
 
-            val otherAnime = Anime("Different title").apply {
-                addSources(source)
-            }
+            val otherAnime = Anime(
+                title = "Different title",
+                sources = hashSetOf(source)
+            )
 
             // when
             cache.populate(source, PresentValue(otherAnime))
@@ -154,14 +158,20 @@ internal class DefaultAnimeCacheTest {
         fun `clear all entries`() {
             // given
             val source1 = URI("https://example.org/anime/1")
-            val anime1 = Anime("Entry1").apply {
-                addSources(source1)
-            }
+            val anime1 = Anime(
+                title = "Entry1",
+                sources = hashSetOf(
+                    source1,
+                )
+            )
 
             val source2 = URI("https://example.org/anime/2")
-            val anime2 = Anime("Entry2").apply {
-                addSources(source2)
-            }
+            val anime2 = Anime(
+                title = "Entry2",
+                sources = hashSetOf(
+                    source2,
+                )
+            )
 
             var loadCacheHasBeenTriggeredFor1 = false
             var loadCacheHasBeenTriggeredFor2 = false
@@ -205,7 +215,7 @@ internal class DefaultAnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -213,7 +223,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -251,7 +261,7 @@ internal class DefaultAnimeCacheTest {
         fun `return the values from the AnimeCache`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -259,7 +269,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -267,7 +277,7 @@ internal class DefaultAnimeCacheTest {
                     season = SPRING,
                     year = 2021,
                 ),
-                _tags = hashSetOf(
+                tags = hashSetOf(
                     "based on a manga",
                     "comedy",
                     "ensemble cast",
@@ -323,7 +333,7 @@ internal class DefaultAnimeCacheTest {
         fun `return all entries of a specific provider`() {
             // given
             val entry1 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15738"),
                     URI("https://anilist.co/anime/124194"),
                     URI("https://anime-planet.com/anime/fruits-basket-the-final"),
@@ -331,7 +341,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://myanimelist.net/anime/42938"),
                     URI("https://notify.moe/anime/YiySZ9OMg"),
                 ),
-                _title = "Fruits Basket: The Final",
+                title = "Fruits Basket: The Final",
                 type = TV,
                 episodes = 1,
                 status = UPCOMING,
@@ -342,7 +352,7 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry2 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -350,7 +360,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 type = OVA,
                 episodes = 1,
                 status = UPCOMING,
@@ -361,13 +371,13 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry3 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15070"),
                     URI("https://anime-planet.com/anime/the-rising-of-the-shield-hero-2nd-season"),
                     URI("https://myanimelist.net/anime/40356"),
                     URI("https://notify.moe/anime/rBaaLj2Wg"),
                 ),
-                _title = "Tate no Yuusha no Nariagari Season 2",
+                title = "Tate no Yuusha no Nariagari Season 2",
                 type = TV,
                 episodes = 0,
                 status = UPCOMING,
@@ -378,10 +388,10 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry4 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/46587"),
                 ),
-                _title = "Tenchi Souzou Design-bu Special",
+                title = "Tenchi Souzou Design-bu Special",
                 type = ONA,
                 episodes = 1,
                 status = UPCOMING,
@@ -392,12 +402,12 @@ internal class DefaultAnimeCacheTest {
             )
 
             val entry5 = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://kitsu.app/anime/40614"),
                     URI("https://myanimelist.net/anime/34705"),
                     URI("https://notify.moe/anime/3I2v2FmiR"),
                 ),
-                _title = "Tejina Shi",
+                title = "Tejina Shi",
                 type = MOVIE,
                 episodes = 1,
                 status = FINISHED,
@@ -442,12 +452,12 @@ internal class DefaultAnimeCacheTest {
         fun `create individual entries for duplicates`() {
             // given
             val entry = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://myanimelist.net/anime/48670"),
                     URI("https://myanimelist.net/anime/48671"),
                     URI("https://myanimelist.net/anime/48672"),
                 ),
-                _title = "Tsugumomo Mini Anime",
+                title = "Tsugumomo Mini Anime",
                 type = ONA,
                 episodes = 59,
                 status = FINISHED,
@@ -457,15 +467,15 @@ internal class DefaultAnimeCacheTest {
                 ),
                 picture = URI("https://cdn.myanimelist.net/images/anime/1469/114202.jpg"),
                 thumbnail = URI("https://cdn.myanimelist.net/images/anime/1469/114202t.jpg"),
-                _synonyms = hashSetOf(
+                synonyms = hashSetOf(
                     "Tsugu Tsugumomo Mini Anime",
                     "継つぐももミニアニメ"
                 ),
-                _relatedAnime = hashSetOf(
+                relatedAnime = hashSetOf(
                     URI("https://myanimelist.net/anime/34019"),
                     URI("https://myanimelist.net/anime/39469"),
                 ),
-                _tags = hashSetOf("comedy"),
+                tags = hashSetOf("comedy"),
             )
 
             val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -517,7 +527,7 @@ internal class DefaultAnimeCacheTest {
             }
 
             val testAnime = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
                     URI("https://anilist.co/anime/125368"),
                     URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
@@ -525,7 +535,7 @@ internal class DefaultAnimeCacheTest {
                     URI("https://myanimelist.net/anime/43609"),
                     URI("https://notify.moe/anime/_RdVrLpGR"),
                 ),
-                _title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
             )
 
             val defaultAnimeCache = DefaultAnimeCache(
@@ -552,12 +562,12 @@ internal class DefaultAnimeCacheTest {
             }
 
             val testAnime = Anime(
-                _sources = hashSetOf(
+                sources = hashSetOf(
                     URI("https://kitsu.app/anime/45724"),
                     URI("https://myanimelist.net/anime/50731"),
                     URI("https://myanimelist.net/anime/50814"),
                 ),
-                _title = "Kimi Shika Inai",
+                title = "Kimi Shika Inai",
             )
 
             val defaultAnimeCache = DefaultAnimeCache(

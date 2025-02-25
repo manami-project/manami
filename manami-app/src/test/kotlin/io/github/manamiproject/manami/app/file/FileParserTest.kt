@@ -5,10 +5,10 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.*
-import io.github.manamiproject.modb.core.models.Anime.Type.SPECIAL
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
+import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import io.github.manamiproject.modb.test.testResource
@@ -111,11 +111,11 @@ internal class FileParserTest {
             override fun fetch(key: URI): CacheEntry<Anime> {
                 return when (key) {
                     URI("https://myanimelist.net/anime/37989") -> PresentValue(Anime(
-                        _title = "Golden Kamuy 2nd Season",
+                        title = "Golden Kamuy 2nd Season",
                         status = ONGOING,
                     ))
                     URI("https://myanimelist.net/anime/40059") -> PresentValue(Anime(
-                        _title = "Golden Kamuy 3rd Season",
+                        title = "Golden Kamuy 3rd Season",
                         status = UPCOMING,
                     ))
                     else -> shouldNotBeInvoked()
@@ -196,7 +196,7 @@ internal class FileParserTest {
             override fun fetch(key: URI): CacheEntry<Anime> {
                 return when (key) {
                     URI("https://myanimelist.net/anime/37989") -> PresentValue(Anime(
-                        _title = "Golden Kamuy 2nd Season",
+                        title = "Golden Kamuy 2nd Season",
                         status = ONGOING,
                     ))
                     URI("https://myanimelist.net/anime/40059") -> DeadEntry()

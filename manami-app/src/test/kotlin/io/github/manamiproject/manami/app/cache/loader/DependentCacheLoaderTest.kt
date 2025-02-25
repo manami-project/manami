@@ -8,13 +8,14 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
-import io.github.manamiproject.modb.core.models.Anime
-import io.github.manamiproject.modb.core.models.Anime.Status.ONGOING
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
-import io.github.manamiproject.modb.core.models.AnimeSeason
-import io.github.manamiproject.modb.core.models.AnimeSeason.Season.SUMMER
-import io.github.manamiproject.modb.core.models.Duration
-import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SUMMER
+import io.github.manamiproject.modb.core.anime.Duration
+import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.notify.NotifyAnimeConverter
 import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
@@ -56,10 +57,9 @@ internal class DependentCacheLoaderTest {
     @Test
     fun `correctly load an anime`() {
         tempDirectory {
-
             // given
             val expectedAnime = Anime(
-                _title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
+                title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
                 type = TV,
                 episodes = 12,
                 status = ONGOING,
@@ -70,24 +70,32 @@ internal class DependentCacheLoaderTest {
                 picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.jpg"),
                 thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.jpg"),
                 duration = Duration(24, MINUTES),
-            ).apply {
-                addSources(URI("https://notify.moe/anime/3lack4eiR"))
-                addSynonyms(
-                        "My Teen Romantic Comedy SNAFU 3",
-                        "My youth romantic comedy is wrong as I expected 3",
-                        "Oregairu 3",
-                        "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
-                        "やはり俺の青春ラブコメはまちがっている。第3期",
-                )
-                addRelatedAnime(URI("https://notify.moe/anime/Pk0AtFmmg"))
-                addTags(
+                score = ScoreValue(
+                    arithmeticGeometricMean = 7.5,
+                    arithmeticMean = 7.5,
+                    median = 7.5,
+                ),
+                sources = hashSetOf(
+                    URI("https://notify.moe/anime/3lack4eiR"),
+                ),
+                synonyms = hashSetOf(
+                    "My Teen Romantic Comedy SNAFU 3",
+                    "My youth romantic comedy is wrong as I expected 3",
+                    "Oregairu 3",
+                    "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
+                    "やはり俺の青春ラブコメはまちがっている。第3期",
+                ),
+                relatedAnime = hashSetOf(
+                    URI("https://notify.moe/anime/Pk0AtFmmg"),
+                ),
+                tags = hashSetOf(
                     "comedy",
                     "drama",
                     "romance",
                     "school",
                     "slice of life",
                 )
-            }
+            )
 
             val testHttpClient = object: HttpClient by TestHttpClient {
                 override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {

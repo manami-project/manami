@@ -6,7 +6,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.models.Anime.Type.TV
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
