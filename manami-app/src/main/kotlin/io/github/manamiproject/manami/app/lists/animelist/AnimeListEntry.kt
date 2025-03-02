@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
 import io.github.manamiproject.modb.core.anime.*
+import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE_THUMBNAIL
 import io.github.manamiproject.modb.core.extensions.directoryExists
 import java.net.URI
 import java.nio.file.Path
@@ -14,7 +15,7 @@ import kotlin.io.path.Path
 data class AnimeListEntry(
     override val link: LinkEntry = NoLink,
     override val title: Title,
-    override val thumbnail: URI = AnimeRaw.NO_PICTURE_THUMBNAIL,
+    override val thumbnail: URI = NO_PICTURE_THUMBNAIL,
     val episodes: Episodes,
     val type: AnimeType,
     val location: Path,
