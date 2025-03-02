@@ -1,48 +1,50 @@
-name: 'CodeQL'
+name: CodeQL
 
 on:
   push:
     branches:
-      - 'master'
+      - main
   pull_request:
     branches:
-      - 'master'
+      - main
 
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: 'ubuntu-latest'
-    timeout-minutes: 360
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
     permissions:
       security-events: write
       packages: read
       actions: read
       contents: read
+
     strategy:
       fail-fast: false
       matrix:
         include:
-          - language: java-kotlin
+          - language: kotlin
             build-mode: manual
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-      - if: matrix.build-mode == 'manual'
+
+      - name: Build project
+        if: matrix.build-mode == 'manual'
         env:
           GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         shell: bash
-        run: |
-          chmod +x gradlew
-          ./gradlew manami-app:compileKotlin
-          ./gradlew manami-gui:compileKotlin
-      - name: Perform CodeQL Analysis
+        run: ./gradlew compileKotlin
+
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
-        env:
-          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         with:
-          category: "/language:${{matrix.language}}"
+          category: /language:${{ matrix.language }}
