@@ -46,8 +46,6 @@ tasks.withType<Test> {
     reports.html.required.set(false)
     reports.junitXml.required.set(true)
     maxParallelForks = rootProject.extra["maxParallelForks"] as Int
-    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
-    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
 }
 
 fun parameter(name: String, default: String = ""): String {
