@@ -1,9 +1,14 @@
 {
+  "$schema": "https://raw.githubusercontent.com/manami-project/anime-offline-database/refs/tags/2025-10/anime-offline-database.schema.json",
   "license": {
     "name": "GNU Affero General Public License v3.0",
-    "url": "https://github.com/manami-project/anime-offline-database/blob/master/LICENSE"
+    "url": "https://github.com/manami-project/anime-offline-database/blob/2025-10/LICENSE"
   },
   "repository": "https://github.com/manami-project/anime-offline-database",
+  "scoreRange": {
+    "minInclusive": 1.0,
+    "maxInclusive": 10.0
+  },
   "lastUpdate": "2020-01-01",
   "data": [
     {
@@ -25,6 +30,15 @@
       },
       "picture": "https://cdn.myanimelist.net/images/anime/9/9453.jpg",
       "thumbnail": "https://cdn.myanimelist.net/images/anime/9/9453t.jpg",
+      "duration": {
+        "value": 1500,
+        "unit": "SECONDS"
+      },
+      "score": {
+        "arithmeticGeometricMean": 8.631697859409492,
+        "arithmeticMean": 8.631818181818183,
+        "median": 8.65
+      },
       "synonyms": [
         "DEATH NOTE",
         "DN",

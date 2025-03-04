@@ -47,9 +47,10 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
                         .withStatus(200)
                         .withBody("""
                             {
+                                "${'$'}schema": "https://raw.githubusercontent.com/manami-project/anime-offline-database/refs/tags/2025-10/anime-offline-database-minified.schema.json",
                                 "license": {
                                   "name": "GNU Affero General Public License v3.0",
-                                  "url": "https://github.com/manami-project/anime-offline-database/blob/master/LICENSE"
+                                  "url": "https://github.com/manami-project/anime-offline-database/blob/2025-10/LICENSE"
                                 },
                                 "repository": "https://github.com/manami-project/anime-offline-database",
                                 "lastUpdate": "2020-01-01",

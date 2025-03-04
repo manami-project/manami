@@ -15,6 +15,9 @@ import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
+import io.github.manamiproject.modb.core.anime.Duration
+import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
@@ -39,6 +42,15 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             ),
             picture = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
             thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
+            duration = Duration(
+                value = 25,
+                unit = MINUTES,
+            ),
+            score = ScoreValue(
+                arithmeticGeometricMean = 8.631697859409492,
+                arithmeticMean = 8.631818181818183,
+                median = 8.65,
+            ),
             synonyms = hashSetOf(
                 "DEATH NOTE",
                 "DN",
