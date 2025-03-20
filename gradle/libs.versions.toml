@@ -11,6 +11,7 @@ modb-kitsu = "6.1.3"
 modb-livechart = "4.1.3"
 modb-myanimelist = "7.1.3"
 modb-notify = "6.1.3"
+modb-simkl = "1.1.4"
 modb-test = "1.7.2"
 commons-text = "1.13.0"
 commons-lang3 = "3.17.0"
@@ -34,6 +35,7 @@ modb-kitsu = { module = "io.github.manamiproject:modb-kitsu", version.ref = "mod
 modb-livechart = { module = "io.github.manamiproject:modb-livechart", version.ref = "modb-livechart" }
 modb-myanimelist = { module = "io.github.manamiproject:modb-myanimelist", version.ref = "modb-myanimelist" }
 modb-notify = { module = "io.github.manamiproject:modb-notify", version.ref = "modb-notify" }
+modb-simkl = { module = "io.github.manamiproject:modb-simkl", version.ref = "modb-simkl" }
 modb-test = { module = "io.github.manamiproject:modb-test", version.ref = "modb-test" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
@@ -68,6 +70,7 @@ modb = [
     "modb-livechart",
     "modb-myanimelist",
     "modb-notify",
+    "modb-simkl",
 ]
 javafx = [
     "javafx-base",
