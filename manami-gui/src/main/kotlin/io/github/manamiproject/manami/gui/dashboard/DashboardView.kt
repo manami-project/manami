@@ -38,6 +38,7 @@ class DashboardView: View() {
         put("anidb.net", SimpleStringProperty("0"))
         put("anisearch.com", SimpleStringProperty("0"))
         put("livechart.me", SimpleStringProperty("0"))
+        put("simkl.com", SimpleStringProperty("0"))
     }
 
     init {
@@ -142,6 +143,11 @@ class DashboardView: View() {
             }
         }
         row {
+            numberTile {
+                title = "simkl.com"
+                color = SLATEGRAY
+                valueProperty = metaDataProviderSeenStringProperties["simkl.com"]!!
+            }
             numberTile {
                 title = "anidb.net"
                 color = SLATEGRAY

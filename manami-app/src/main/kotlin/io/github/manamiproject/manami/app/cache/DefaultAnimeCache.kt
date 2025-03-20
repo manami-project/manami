@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.modb.anidb.AnidbAnimeConverter
 import io.github.manamiproject.modb.anidb.AnidbConfig
+import io.github.manamiproject.modb.simkl.SimklConfig
 import io.github.manamiproject.modb.anidb.AnidbDownloader
 import io.github.manamiproject.modb.anilist.AnilistAnimeConverter
 import io.github.manamiproject.modb.anilist.AnilistConfig
@@ -37,6 +38,8 @@ import io.github.manamiproject.modb.notify.NotifyAnimeConverter
 import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
+import io.github.manamiproject.modb.simkl.SimklAnimeConverter
+import io.github.manamiproject.modb.simkl.SimklDownloader
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.io.path.createDirectory
@@ -47,9 +50,9 @@ private val notifyRelationsDir = createTempDirectory("manami-notify_").resolve("
 
 internal class DefaultAnimeCache(
     private val cacheLoader: List<CacheLoader> = listOf(
-        SimpleCacheLoader(AnidbConfig, AnidbDownloader(AnidbConfig), AnidbAnimeConverter.instance),
-        SimpleCacheLoader(AnilistConfig, AnilistDownloader(AnilistConfig), AnilistAnimeConverter.instance),
-        SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader(AnimePlanetConfig), AnimePlanetAnimeConverter()),
+        SimpleCacheLoader(AnidbConfig, AnidbDownloader.instance, AnidbAnimeConverter.instance),
+        SimpleCacheLoader(AnilistConfig, AnilistDownloader.instance, AnilistAnimeConverter.instance),
+        SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader.instance, AnimePlanetAnimeConverter.instance),
         DependentCacheLoader(
             config = AnisearchConfig,
             animeDownloader = AnisearchDownloader(metaDataProviderConfig = AnisearchConfig),
@@ -68,7 +71,7 @@ internal class DefaultAnimeCache(
             ),
             converter = LivechartAnimeConverter(),
         ),
-        SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader(MyanimelistConfig), MyanimelistAnimeConverter.instance),
+        SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader.instance, MyanimelistAnimeConverter.instance),
         DependentCacheLoader(
             config = NotifyConfig,
             animeDownloader = NotifyDownloader(metaDataProviderConfig = NotifyConfig),
@@ -76,6 +79,7 @@ internal class DefaultAnimeCache(
             relationsDir = notifyRelationsDir,
             converter = NotifyAnimeConverter(relationsDir = notifyRelationsDir),
         ),
+        SimpleCacheLoader(SimklConfig, SimklDownloader.instance, SimklAnimeConverter.instance),
     ),
     eventBus: EventBus = SimpleEventBus,
 ) : AnimeCache {
