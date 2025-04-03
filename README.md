@@ -19,6 +19,7 @@ Manami creates an index file for the anime that you already watched and stored o
   * Find dead entries in animelist
   * Find dead entries in watchlist/ignorelist and automatically remove them
   * Check if number of files equals number of expected episodes
+* No lock-in. The data is persisted as XML file and therefore can be converted and migrated very easily
 * No need to provide username or password
 * No installer, it's portable
 
