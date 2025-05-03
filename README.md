@@ -42,7 +42,7 @@ See ["Configuration Management"](https://github.com/manami-project/modb-core/tre
 |------------------------------|-----------|---------|--------------------------------------------------------------------------------------------------------------|
 | `manami.cache.useLocalFiles` | `Boolean` | `true`  | Downloads anime-offline-database files once and stores them next to the *.jar file. Redownload after 24 hrs. |
 
-# Dataset
+## Dataset
 
 Uses data from [https://github.com/manami-project/anime-offline-database](https://github.com/manami-project/anime-offline-database), which is made available
 here under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).
