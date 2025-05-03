@@ -133,6 +133,9 @@ class MenuView : View() {
 
                 Project / Source code: https://github.com/manami-project/manami
                 License: https://github.com/manami-project/manami/blob/${ResourceBasedVersionProvider.version()}/LICENSE
+                
+                Uses data from https://github.com/manami-project/anime-offline-database which is made available here under the Open Database License (ODbL)
+                License: https://opendatacommons.org/licenses/odbl/1-0/
             """.trimIndent()
             dialogPane.minWidth = 450.0
         }.showAndWait()
