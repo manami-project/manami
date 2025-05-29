@@ -2,7 +2,6 @@ package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.DependentCacheLoader
-import io.github.manamiproject.manami.app.cache.loader.KitsuCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
 import io.github.manamiproject.manami.app.cache.populator.NumberOfEntriesPerMetaDataProviderEvent
 import io.github.manamiproject.manami.app.events.EventBus
@@ -28,6 +27,9 @@ import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.Tag
+import io.github.manamiproject.modb.kitsu.KitsuAnimeConverter
+import io.github.manamiproject.modb.kitsu.KitsuConfig
+import io.github.manamiproject.modb.kitsu.KitsuDownloader
 import io.github.manamiproject.modb.livechart.LivechartAnimeConverter
 import io.github.manamiproject.modb.livechart.LivechartConfig
 import io.github.manamiproject.modb.livechart.LivechartDownloader
@@ -60,7 +62,7 @@ internal class DefaultAnimeCache(
             relationsDir = anisearchRelationsDir,
             converter = AnisearchAnimeConverter(relationsDir = anisearchRelationsDir),
         ),
-        KitsuCacheLoader(),
+        SimpleCacheLoader(KitsuConfig, KitsuDownloader.instance, KitsuAnimeConverter.instance),
         SimpleCacheLoader(
             config = LivechartConfig,
             downloader = LivechartDownloader(
