@@ -4,7 +4,7 @@
   "extends": [
     "config:recommended"
   ],
-  "prHourlyLimit": 20,
+  "prHourlyLimit": 25,
   "hostRules": [
     {
       "matchHost": "maven.pkg.github.com",
@@ -20,7 +20,8 @@
         "patch"
       ],
       "automerge": true,
-      "platformAutomerge": false
+      "platformAutomerge": false,
+      "automergeStrategy": "fast-forward"
     }
   ]
 }
