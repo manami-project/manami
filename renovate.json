@@ -21,7 +21,8 @@
       ],
       "automerge": true,
       "platformAutomerge": false,
-      "automergeStrategy": "fast-forward"
+      "automergeStrategy": "fast-forward",
+      "rebaseWhen": "behind-base-branch"
     }
   ]
 }
