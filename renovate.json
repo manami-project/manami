@@ -20,8 +20,8 @@
       "automergeStrategy": "fast-forward",
       "rebaseWhen": "behind-base-branch",
       "separateMajorMinor": true,
-      "matchPackagePrefixes": [
-        "io.github.manamiproject"
+      "matchPackageNames": [
+        "io.github.manamiproject{/,}**"
       ]
     }
   ]
