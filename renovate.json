@@ -15,14 +15,11 @@
   "packageRules": [
     {
       "description": "Automerge non-major updates",
-      "automerge": true,
-      "platformAutomerge": false,
-      "automergeStrategy": "fast-forward",
-      "rebaseWhen": "behind-base-branch",
-      "separateMajorMinor": true,
-      "matchPackageNames": [
-        "io.github.manamiproject{/,}**"
-      ]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
     }
   ]
 }
