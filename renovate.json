@@ -15,10 +15,6 @@
   "packageRules": [
     {
       "description": "Automerge non-major updates",
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
       "automerge": true,
       "platformAutomerge": false,
       "automergeStrategy": "fast-forward",
