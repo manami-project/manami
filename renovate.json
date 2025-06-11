@@ -22,7 +22,11 @@
       "automerge": true,
       "platformAutomerge": false,
       "automergeStrategy": "fast-forward",
-      "rebaseWhen": "behind-base-branch"
+      "rebaseWhen": "behind-base-branch",
+      "separateMajorMinor": true,
+      "matchPackagePrefixes": [
+        "io.github.manamiproject"
+      ]
     }
   ]
 }
