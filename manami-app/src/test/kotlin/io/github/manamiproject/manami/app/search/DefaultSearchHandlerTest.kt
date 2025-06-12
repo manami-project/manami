@@ -27,6 +27,7 @@ import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType.*
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.coroutines.CoroutineManager.runCoroutine
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
 import io.github.manamiproject.modb.test.loadTestResource
@@ -2076,285 +2077,284 @@ internal class DefaultSearchHandlerTest {
         @Test
         @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return 10 anime having the most amount tags which reside in both anime sorted by number of number of matching tags desc`() {
-            // given
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
-                }
-                override fun subscribe(subscriber: Any) {}
-            }
-
-            val testState = object : State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = DefaultAnimeCache(
-                cacheLoader = emptyList(),
-                eventBus = testEventBus,
-            )
-
             runBlocking {
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).data.forEach {
+                // given
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object : EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
+
+                    override fun subscribe(subscriber: Any) {}
+                }
+
+                val testState = object : State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = DefaultAnimeCache(
+                    cacheLoader = emptyList(),
+                    eventBus = testEventBus,
+                )
+
+                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
                 }
-            }
 
-            val defaultSearchHandler = DefaultSearchHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                state = testState,
-            )
+                val defaultSearchHandler = DefaultSearchHandler(
+                    cache = testCache,
+                    eventBus = testEventBus,
+                    state = testState,
+                )
 
-            // when
-            defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                // when
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
-            // then
-            var receivedEvent: Event?
+                // then
+                var receivedEvent: Event?
 
-            runBlocking {
                 do {
                     delay(500)
                     receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 } while (receivedEvent == null)
+
+                val event = receivedEvent as SimilarAnimeFoundEvent
+
+                assertThat(event.entries.map { it.sources.first() }).containsExactly(
+                    URI("https://myanimelist.net/anime/10620"),
+                    URI("https://myanimelist.net/anime/38003"),
+                    URI("https://myanimelist.net/anime/2904"),
+                    URI("https://myanimelist.net/anime/2025"),
+                    URI("https://myanimelist.net/anime/19"),
+                    URI("https://myanimelist.net/anime/32867"),
+                    URI("https://myanimelist.net/anime/1575"),
+                    URI("https://myanimelist.net/anime/235"),
+                    URI("https://myanimelist.net/anime/31478"),
+                    URI("https://myanimelist.net/anime/4879"),
+                )
             }
-
-            val event = receivedEvent as SimilarAnimeFoundEvent
-
-            assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                URI("https://myanimelist.net/anime/19"),
-                URI("https://myanimelist.net/anime/235"),
-                URI("https://myanimelist.net/anime/2904"),
-                URI("https://myanimelist.net/anime/40046"),
-                URI("https://myanimelist.net/anime/13601"),
-                URI("https://myanimelist.net/anime/10620"),
-                URI("https://myanimelist.net/anime/4896"),
-                URI("https://myanimelist.net/anime/23283"),
-                URI("https://myanimelist.net/anime/37525"),
-                URI("https://myanimelist.net/anime/31478"),
-            )
         }
 
         @Test
         @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from anime list`() {
-            // given
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
-                }
-                override fun subscribe(subscriber: Any) {}
-            }
-
-            val testState = object : State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    AnimeListEntry(
-                        title = "Mirai Nikki (TV)",
-                        link = Link("https://myanimelist.net/anime/10620"),
-                        episodes = 26,
-                        type = TV,
-                        location = Paths.get("."),
-                    )
-                )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = DefaultAnimeCache(
-                cacheLoader = emptyList(),
-                eventBus = testEventBus,
-            )
-
             runBlocking {
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).data.forEach {
+                // given
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object : EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
+
+                    override fun subscribe(subscriber: Any) {}
+                }
+
+                val testState = object : State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        AnimeListEntry(
+                            title = "Mirai Nikki (TV)",
+                            link = Link("https://myanimelist.net/anime/10620"),
+                            episodes = 26,
+                            type = TV,
+                            location = Paths.get("."),
+                        )
+                    )
+
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = DefaultAnimeCache(
+                    cacheLoader = emptyList(),
+                    eventBus = testEventBus,
+                )
+
+
+                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
                 }
-            }
 
-            val defaultSearchHandler = DefaultSearchHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                state = testState,
-            )
+                val defaultSearchHandler = DefaultSearchHandler(
+                    cache = testCache,
+                    eventBus = testEventBus,
+                    state = testState,
+                )
 
-            // when
-            defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                // when
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
-            // then
-            var receivedEvent: Event?
+                // then
+                var receivedEvent: Event?
 
-            runBlocking {
                 do {
                     delay(500)
                     receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 } while (receivedEvent == null)
+
+                val event = receivedEvent as SimilarAnimeFoundEvent
+
+                assertThat(event.entries.map { it.sources.first() }).containsExactly(
+                    URI("https://myanimelist.net/anime/38003"),
+                    URI("https://myanimelist.net/anime/2904"),
+                    URI("https://myanimelist.net/anime/2025"),
+                    URI("https://myanimelist.net/anime/19"),
+                    URI("https://myanimelist.net/anime/32867"),
+                    URI("https://myanimelist.net/anime/1575"),
+                    URI("https://myanimelist.net/anime/235"),
+                    URI("https://myanimelist.net/anime/31478"),
+                    URI("https://myanimelist.net/anime/4879"),
+                    URI("https://myanimelist.net/anime/553"),
+                )
             }
-
-            val event = receivedEvent as SimilarAnimeFoundEvent
-
-            assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                URI("https://myanimelist.net/anime/19"),
-                URI("https://myanimelist.net/anime/235"),
-                URI("https://myanimelist.net/anime/2904"),
-                URI("https://myanimelist.net/anime/40046"),
-                URI("https://myanimelist.net/anime/13601"),
-                URI("https://myanimelist.net/anime/4896"),
-                URI("https://myanimelist.net/anime/23283"),
-                URI("https://myanimelist.net/anime/37525"),
-                URI("https://myanimelist.net/anime/31478"),
-                URI("https://myanimelist.net/anime/32867"),
-            )
         }
 
         @Test
         @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from watch list`() {
-            // given
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
-                }
-                override fun subscribe(subscriber: Any) {}
-            }
-
-            val testState = object : State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = setOf(
-                    WatchListEntry(
-                        title = "Mirai Nikki (TV)",
-                        link = Link("https://myanimelist.net/anime/10620"),
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
-                    )
-                )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val testCache = DefaultAnimeCache(
-                cacheLoader = emptyList(),
-                eventBus = testEventBus,
-            )
-
             runBlocking {
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).data.forEach {
+                // given
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object : EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
+
+                    override fun subscribe(subscriber: Any) {}
+                }
+
+                val testState = object : State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        WatchListEntry(
+                            title = "Mirai Nikki (TV)",
+                            link = Link("https://myanimelist.net/anime/10620"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
+                        )
+                    )
+
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val testCache = DefaultAnimeCache(
+                    cacheLoader = emptyList(),
+                    eventBus = testEventBus,
+                )
+
+                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
                 }
-            }
 
-            val defaultSearchHandler = DefaultSearchHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                state = testState,
-            )
+                val defaultSearchHandler = DefaultSearchHandler(
+                    cache = testCache,
+                    eventBus = testEventBus,
+                    state = testState,
+                )
 
-            // when
-            defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                // when
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
-            // then
-            var receivedEvent: Event?
+                // then
+                var receivedEvent: Event?
 
-            runBlocking {
                 do {
                     delay(500)
                     receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 } while (receivedEvent == null)
+
+                val event = receivedEvent as SimilarAnimeFoundEvent
+
+                assertThat(event.entries.map { it.sources.first() }).containsExactly(
+                    URI("https://myanimelist.net/anime/38003"),
+                    URI("https://myanimelist.net/anime/2904"),
+                    URI("https://myanimelist.net/anime/2025"),
+                    URI("https://myanimelist.net/anime/19"),
+                    URI("https://myanimelist.net/anime/32867"),
+                    URI("https://myanimelist.net/anime/1575"),
+                    URI("https://myanimelist.net/anime/235"),
+                    URI("https://myanimelist.net/anime/31478"),
+                    URI("https://myanimelist.net/anime/4879"),
+                    URI("https://myanimelist.net/anime/553"),
+                )
             }
-
-            val event = receivedEvent as SimilarAnimeFoundEvent
-
-            assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                URI("https://myanimelist.net/anime/19"),
-                URI("https://myanimelist.net/anime/235"),
-                URI("https://myanimelist.net/anime/2904"),
-                URI("https://myanimelist.net/anime/40046"),
-                URI("https://myanimelist.net/anime/13601"),
-                URI("https://myanimelist.net/anime/4896"),
-                URI("https://myanimelist.net/anime/23283"),
-                URI("https://myanimelist.net/anime/37525"),
-                URI("https://myanimelist.net/anime/31478"),
-                URI("https://myanimelist.net/anime/32867"),
-            )
         }
 
         @Test
         @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from ignore list`() {
-            // given
-            val receivedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvents.add(event)
-                }
-                override fun subscribe(subscriber: Any) {}
-            }
-
-            val testState = object : State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    IgnoreListEntry(
-                        title = "Mirai Nikki (TV)",
-                        link = Link("https://myanimelist.net/anime/10620"),
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
-                    )
-                )
-            }
-
-            val testCache = DefaultAnimeCache(
-                cacheLoader = emptyList(),
-                eventBus = testEventBus,
-            )
-
             runBlocking {
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/anime-offline-database-minified.json")).data.forEach {
+                // given
+                val receivedEvents = mutableListOf<Event>()
+                val testEventBus = object : EventBus by TestEventBus {
+                    override fun post(event: Event) {
+                        receivedEvents.add(event)
+                    }
+
+                    override fun subscribe(subscriber: Any) {}
+                }
+
+                val testState = object : State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        IgnoreListEntry(
+                            title = "Mirai Nikki (TV)",
+                            link = Link("https://myanimelist.net/anime/10620"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
+                        )
+                    )
+                }
+
+                val testCache = DefaultAnimeCache(
+                    cacheLoader = emptyList(),
+                    eventBus = testEventBus,
+                )
+
+                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
                 }
-            }
 
-            val defaultSearchHandler = DefaultSearchHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                state = testState,
-            )
+                val defaultSearchHandler = DefaultSearchHandler(
+                    cache = testCache,
+                    eventBus = testEventBus,
+                    state = testState,
+                )
 
-            // when
-            defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                // when
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
-            // then
-            var receivedEvent: Event?
+                // then
+                var receivedEvent: Event? = null
 
-            runBlocking {
                 do {
                     delay(500)
                     receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 } while (receivedEvent == null)
+
+                val event = receivedEvent as SimilarAnimeFoundEvent
+
+                assertThat(event.entries.map { it.sources.first() }).containsExactly(
+                    URI("https://myanimelist.net/anime/38003"),
+                    URI("https://myanimelist.net/anime/2904"),
+                    URI("https://myanimelist.net/anime/2025"),
+                    URI("https://myanimelist.net/anime/19"),
+                    URI("https://myanimelist.net/anime/32867"),
+                    URI("https://myanimelist.net/anime/1575"),
+                    URI("https://myanimelist.net/anime/235"),
+                    URI("https://myanimelist.net/anime/31478"),
+                    URI("https://myanimelist.net/anime/4879"),
+                    URI("https://myanimelist.net/anime/553"),
+                )
             }
-
-            val event = receivedEvent as SimilarAnimeFoundEvent
-
-            assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                URI("https://myanimelist.net/anime/19"),
-                URI("https://myanimelist.net/anime/235"),
-                URI("https://myanimelist.net/anime/2904"),
-                URI("https://myanimelist.net/anime/40046"),
-                URI("https://myanimelist.net/anime/13601"),
-                URI("https://myanimelist.net/anime/4896"),
-                URI("https://myanimelist.net/anime/23283"),
-                URI("https://myanimelist.net/anime/37525"),
-                URI("https://myanimelist.net/anime/31478"),
-                URI("https://myanimelist.net/anime/32867"),
-            )
         }
     }
 }
