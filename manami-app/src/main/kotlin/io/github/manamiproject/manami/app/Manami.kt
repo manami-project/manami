@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app
 
+import io.github.manamiproject.AnimenewsnetworkConfig
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.cache.populator.DeadEntriesCachePopulator
@@ -61,6 +62,7 @@ class Manami(
                 launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(DefaultAnimeCache.instance) }
                 launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(DefaultAnimeCache.instance) }
                 launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork.zip").toURL()).populate(DefaultAnimeCache.instance) }
             }
         }
     }

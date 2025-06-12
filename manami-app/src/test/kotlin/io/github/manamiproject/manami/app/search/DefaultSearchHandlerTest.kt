@@ -27,7 +27,6 @@ import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType.*
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
-import io.github.manamiproject.modb.core.coroutines.CoroutineManager.runCoroutine
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
 import io.github.manamiproject.modb.test.loadTestResource

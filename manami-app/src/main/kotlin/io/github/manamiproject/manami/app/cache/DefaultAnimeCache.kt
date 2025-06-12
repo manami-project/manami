@@ -1,5 +1,8 @@
 package io.github.manamiproject.manami.app.cache
 
+import io.github.manamiproject.AnimenewsnetworkAnimeConverter
+import io.github.manamiproject.AnimenewsnetworkConfig
+import io.github.manamiproject.AnimenewsnetworkDownloader
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
 import io.github.manamiproject.manami.app.cache.loader.DependentCacheLoader
 import io.github.manamiproject.manami.app.cache.loader.SimpleCacheLoader
@@ -55,6 +58,7 @@ internal class DefaultAnimeCache(
         SimpleCacheLoader(AnidbConfig, AnidbDownloader.instance, AnidbAnimeConverter.instance),
         SimpleCacheLoader(AnilistConfig, AnilistDownloader.instance, AnilistAnimeConverter.instance),
         SimpleCacheLoader(AnimePlanetConfig, AnimePlanetDownloader.instance, AnimePlanetAnimeConverter.instance),
+        SimpleCacheLoader(AnimenewsnetworkConfig, AnimenewsnetworkDownloader.instance, AnimenewsnetworkAnimeConverter.instance),
         DependentCacheLoader(
             config = AnisearchConfig,
             animeDownloader = AnisearchDownloader(metaDataProviderConfig = AnisearchConfig),
