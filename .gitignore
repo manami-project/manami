@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/macos,windows,linux,intellij+all,intellij,intellij+iml,visualstudiocode,gradle,kotlin
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,linux,intellij+all,intellij,intellij+iml,visualstudiocode,gradle,kotlin
+# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,gradle,kotlin,windows,intellij,intellij+all,intellij+iml,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,gradle,kotlin,windows,intellij,intellij+all,intellij+iml,visualstudiocode
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -375,4 +375,4 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,intellij+all,intellij,intellij+iml,visualstudiocode,gradle,kotlin
+# End of https://www.toptal.com/developers/gitignore/api/linux,macos,gradle,kotlin,windows,intellij,intellij+all,intellij+iml,visualstudiocode
