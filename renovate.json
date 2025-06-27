@@ -22,8 +22,12 @@
       "automerge": true
     },
     {
-      "matchManagers": ["maven"],
-      "matchPackagePatterns": ["^io\\.github\\.manamiproject"]
+      "matchManagers": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^io\\.github\\.manamiproject/"
+      ]
     }
   ]
 }
