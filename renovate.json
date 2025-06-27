@@ -20,6 +20,10 @@
         "patch"
       ],
       "automerge": true
+    },
+    {
+      "matchManagers": ["maven"],
+      "matchPackagePatterns": ["^io\\.github\\.manamiproject"]
     }
   ]
 }
