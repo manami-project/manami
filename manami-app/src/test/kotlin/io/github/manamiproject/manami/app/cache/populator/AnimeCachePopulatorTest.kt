@@ -9,15 +9,17 @@ import io.github.manamiproject.manami.app.cache.TestConfigRegistry
 import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
-import io.github.manamiproject.modb.core.config.ConfigRegistry
 import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
-import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.Duration
 import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.core.anime.ScoreValue
+import io.github.manamiproject.modb.core.config.ConfigRegistry
+import io.github.manamiproject.modb.core.extensions.writeToZstandardFile
+import io.github.manamiproject.modb.serde.json.serializer.DatasetJsonLinesSerializer
 import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
@@ -25,6 +27,7 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.net.URI
+import kotlin.io.path.Path
 
 internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 
@@ -216,12 +219,12 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         )
 
         serverInstance.stubFor(
-                get(urlPathEqualTo("/anime/1535")).willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withStatus(200)
-                        .withBody(loadTestResource<String>("cache_tests/populator/test-database.json"))
-                )
+        get(urlPathEqualTo("/anime/1535")).willReturn(
+            aResponse()
+                .withHeader("Content-Type", "application/zstd")
+                .withStatus(200)
+                .withBody(loadTestResource<ByteArray>("cache_tests/populator/test-database.jsonl.zst"))
+            )
         )
 
         // when

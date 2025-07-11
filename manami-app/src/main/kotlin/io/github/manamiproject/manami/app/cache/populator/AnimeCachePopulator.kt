@@ -15,12 +15,16 @@ import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
-import io.github.manamiproject.modb.serde.json.DefaultExternalResourceJsonDeserializer
-import io.github.manamiproject.modb.serde.json.ExternalResourceJsonDeserializer
-import io.github.manamiproject.modb.serde.json.models.Dataset
+import io.github.manamiproject.modb.core.config.Hostname
+import io.github.manamiproject.modb.core.extensions.RegularFile
+import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonLinesInputStreamDeserializer
+import io.github.manamiproject.modb.serde.json.deserializer.Deserializer
+import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
+import io.github.manamiproject.modb.serde.json.deserializer.FromUrlDeserializer
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.net.URI
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributes
 import java.time.LocalDate
@@ -29,9 +33,10 @@ import java.time.temporal.ChronoUnit
 import kotlin.io.path.Path
 
 internal class AnimeCachePopulator(
-    private val fileName: String = "anime-offline-database.zip",
-    private val uri: URI = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/$fileName"),
-    private val parser: ExternalResourceJsonDeserializer<Dataset> = DefaultExternalResourceJsonDeserializer(deserializer = AnimeListJsonStringDeserializer.instance),
+    private val fileName: String = "anime-offline-database.jsonl.zst",
+    private val uri: URI = URI("https://github.com/manami-project/anime-offline-database/releases/download/latest/$fileName"),
+    private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
+    private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
     private val eventBus: EventBus = SimpleEventBus,
     private val httpClient: HttpClient = DefaultHttpClient.instance,
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
@@ -44,7 +49,7 @@ internal class AnimeCachePopulator(
     )
 
     override suspend fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
-        val parsedAnime = if (isUseLocalFiles) {
+        val animeFlow = if (isUseLocalFiles) {
             val file = Path(fileName)
 
             val isDownloadFile = if (!file.regularFileExists()) {
@@ -63,28 +68,25 @@ internal class AnimeCachePopulator(
 
             if (isDownloadFile) {
                 log.info {"Downloading dataset from [$uri], because a local file doesn't exist." }
-                httpClient.get(uri.toURL()).body.writeToFile(file)
+                httpClient.get(uri.toURL()).bodyAsByteArray().writeToFile(file)
             }
 
             log.info {"Populating cache with anime." }
 
-            parser.deserialize(file).data
+            fileDeserializer.deserialize(file)
         } else {
             log.info {"Populating cache with anime from [$uri]." }
-            parser.deserialize(uri.toURL()).data
+            urlDeserializer.deserialize(uri.toURL())
         }
 
-        parsedAnime.forEach { anime ->
+        val numberOfEntriesPerMetaDataProvider = mutableMapOf<Hostname, Int>()
+
+        animeFlow.collect { anime ->
             anime.sources.forEach { source ->
                 cache.populate(source, PresentValue(anime))
+                numberOfEntriesPerMetaDataProvider[source.host]?.inc() ?: { numberOfEntriesPerMetaDataProvider[source.host] = 1 }.invoke()
             }
         }
-
-        val numberOfEntriesPerMetaDataProvider = parsedAnime.flatMap { anime -> anime.sources.map { it to anime } }
-            .groupBy { it.first.host }
-            .map { (key, value) ->
-                key to value.size
-            }.toMap()
 
         eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider))
 

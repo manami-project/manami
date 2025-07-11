@@ -58,11 +58,11 @@ class Manami(
             withContext(ModbDispatchers.LIMITED_CPU) {
                 launch { DefaultLatestVersionChecker().checkLatestVersion() }
                 launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zip").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zip").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zip").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zip").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork.zip").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork.zst").toURL()).populate(DefaultAnimeCache.instance) }
             }
         }
     }

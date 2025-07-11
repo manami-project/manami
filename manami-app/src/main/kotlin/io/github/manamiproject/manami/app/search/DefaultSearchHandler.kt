@@ -22,7 +22,7 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.config.Hostname
-import org.apache.commons.lang3.StringUtils.containsIgnoreCase
+import org.apache.commons.lang3.Strings
 import org.apache.commons.text.similarity.LevenshteinDistance
 import java.net.URI
 
@@ -153,7 +153,7 @@ internal class DefaultSearchHandler(
     private fun isEntryMatchingSearchString(title: Title, searchString: String): Boolean {
         val levenshteinDistance = levenshteinDistance.apply(title.lowercase(), searchString.lowercase())
         val isTitleNearlyEqual = levenshteinDistance in 0..2
-        val isInTitle = containsIgnoreCase(title, searchString)
+        val isInTitle = Strings.CI.contains(title, searchString)
 
         return when {
             isTitleNearlyEqual || isInTitle -> true
