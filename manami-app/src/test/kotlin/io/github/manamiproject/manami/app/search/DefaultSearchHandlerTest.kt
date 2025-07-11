@@ -20,17 +20,18 @@ import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeFoundE
 import io.github.manamiproject.manami.app.search.similaranime.SimilarAnimeSearchFinishedEvent
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType.*
-import io.github.manamiproject.modb.core.anime.AnimeSeason
-import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
-import io.github.manamiproject.modb.serde.json.AnimeListJsonStringDeserializer
-import io.github.manamiproject.modb.test.loadTestResource
+import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonInputStreamDeserializer
+import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
 import io.github.manamiproject.modb.test.tempDirectory
+import io.github.manamiproject.modb.test.testResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -2098,7 +2099,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2173,7 +2174,7 @@ internal class DefaultSearchHandlerTest {
                 )
 
 
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2245,7 +2246,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2316,7 +2317,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                AnimeListJsonStringDeserializer().deserialize(loadTestResource<String>("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).data.forEach {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2332,7 +2333,7 @@ internal class DefaultSearchHandlerTest {
                 defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
 
                 // then
-                var receivedEvent: Event? = null
+                var receivedEvent: Event?
 
                 do {
                     delay(500)

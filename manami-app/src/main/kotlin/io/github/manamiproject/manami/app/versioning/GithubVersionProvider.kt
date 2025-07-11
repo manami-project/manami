@@ -17,7 +17,7 @@ internal class GithubVersionProvider(
             val response = httpClient.get(uri.toURL())
             check(response.isOk()) { "Unable to check latest version, because response code wasn't 200." }
 
-            val version =  Json.parseJson<GithubResponse>(response.bodyAsText)!!.name
+            val version =  Json.parseJson<GithubResponse>(response.bodyAsString())!!.name
             SemanticVersion(version)
         }
     }
