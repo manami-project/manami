@@ -58,11 +58,11 @@ class Manami(
             withContext(ModbDispatchers.LIMITED_CPU) {
                 launch { DefaultLatestVersionChecker().checkLatestVersion() }
                 launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
             }
         }
     }
@@ -87,7 +87,7 @@ class Manami(
 
     companion object {
         private val log by LoggerDelegate()
-        private const val DEAD_ENTRIES_BASE_URL = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/dead-entries"
+        private const val DEAD_ENTRIES_BASE_URL = "https://github.com/manami-project/anime-offline-database/releases/download/latest"
     }
 }
 

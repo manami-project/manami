@@ -35,7 +35,7 @@ internal class DeadEntriesCachePopulator(
     private val url: URL,
     private val fileDeserializer: Deserializer<RegularFile, DeadEntries> = FromRegularFileDeserializer(deserializer = DeadEntriesFromInputStreamDeserializer.instance),
     private val urlDeserializer: Deserializer<URL, DeadEntries> = FromUrlDeserializer(deserializer = DeadEntriesFromInputStreamDeserializer.instance),
-    private val httpClient: HttpClient = DefaultHttpClient.instance,
+    private val httpClient: HttpClient = DefaultHttpClient(useCustomRedirectInterceptor = true),
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 

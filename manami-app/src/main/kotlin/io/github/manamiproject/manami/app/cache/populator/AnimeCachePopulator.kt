@@ -38,7 +38,7 @@ internal class AnimeCachePopulator(
     private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
     private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
     private val eventBus: EventBus = SimpleEventBus,
-    private val httpClient: HttpClient = DefaultHttpClient.instance,
+    private val httpClient: HttpClient = DefaultHttpClient(useCustomRedirectInterceptor = true),
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
@@ -84,7 +84,7 @@ internal class AnimeCachePopulator(
         animeFlow.collect { anime ->
             anime.sources.forEach { source ->
                 cache.populate(source, PresentValue(anime))
-                numberOfEntriesPerMetaDataProvider[source.host]?.inc() ?: { numberOfEntriesPerMetaDataProvider[source.host] = 1 }.invoke()
+                numberOfEntriesPerMetaDataProvider[source.host] = numberOfEntriesPerMetaDataProvider.getOrPut(source.host) { 0 } + 1
             }
         }
 
