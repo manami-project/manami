@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.2.0"
 kotlinx-coroutines-core-jvm = "1.10.2"
-modb-core = "19.0.2"
+modb-core = "19.0.3"
 modb-serde = "6.0.3"
 modb-anidb = "7.0.6"
 modb-anilist = "7.2.7"
