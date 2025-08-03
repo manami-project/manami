@@ -52,7 +52,7 @@ javafx-web = { module = "org.openjfx:javafx-web", version.ref = "javafx" }
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 javafxplugin = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
-shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.8" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 [bundles]
