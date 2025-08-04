@@ -42,14 +42,14 @@ internal class AnimeCachePopulator(
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
-    private val isUseLocalFiles by BooleanPropertyDelegate(
-        namespace = "manami.cache.useLocalFiles",
+    private val useLocalFiles by BooleanPropertyDelegate(
+        namespace = "manami.cache",
         configRegistry = configRegistry,
         default = true
     )
 
     override suspend fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
-        val animeFlow = if (isUseLocalFiles) {
+        val animeFlow = if (useLocalFiles) {
             val file = Path(fileName)
 
             val isDownloadFile = if (!file.regularFileExists()) {
@@ -71,11 +71,11 @@ internal class AnimeCachePopulator(
                 httpClient.get(uri.toURL()).bodyAsByteArray().writeToFile(file)
             }
 
-            log.info {"Populating cache with anime." }
+            log.info { "Populating cache with anime." }
 
             fileDeserializer.deserialize(file)
         } else {
-            log.info {"Populating cache with anime from [$uri]." }
+            log.info { "Populating cache with anime from [$uri]." }
             urlDeserializer.deserialize(uri.toURL())
         }
 

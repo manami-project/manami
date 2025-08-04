@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.httpclient.RequestBody
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeRaw
 import io.github.manamiproject.modb.core.anime.Tag
+import io.github.manamiproject.modb.core.httpclient.RetryCase
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import java.net.URI
 import java.net.URL
@@ -41,6 +42,7 @@ internal object TestAnimeConverter: AnimeConverter {
 
 internal object TestHttpClient: HttpClient {
     override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse = shouldNotBeInvoked()
+    override fun addRetryCases(vararg retryCases: RetryCase): HttpClient = shouldNotBeInvoked()
     override suspend fun post(url: URL, requestBody: RequestBody, headers: Map<String, Collection<String>>): HttpResponse = shouldNotBeInvoked()
 }
 

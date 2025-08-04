@@ -39,8 +39,8 @@ internal class DeadEntriesCachePopulator(
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
 
-    private val isUseLocalFiles by BooleanPropertyDelegate(
-        namespace = "manami.cache.useLocalFiles",
+    private val useLocalFiles by BooleanPropertyDelegate(
+        namespace = "manami.cache",
         configRegistry = configRegistry,
         default = true,
     )
@@ -48,7 +48,7 @@ internal class DeadEntriesCachePopulator(
     override suspend fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
         log.info { "Populating cache with dead entries from [${config.hostname()}]" }
 
-        val deadEntries = if (isUseLocalFiles) {
+        val deadEntries = if (useLocalFiles) {
             val file = Path("${config.hostname()}.zst")
 
             val isDownloadFile = if (!file.regularFileExists()) {
@@ -66,7 +66,7 @@ internal class DeadEntriesCachePopulator(
             }
 
             if (isDownloadFile) {
-                log.info {"Downloading dead entries file from [$url], because a local file doesn't exist." }
+                log.info { "Downloading dead entries file from [$url], because a local file doesn't exist." }
                 httpClient.get(url).bodyAsByteArray().writeToFile(file)
             }
 
