@@ -19,7 +19,7 @@ commons-lang3 = "3.18.0"
 logback-classic = "1.5.18"
 tornadofx = "1.7.20"
 tornadofx-controlsfx = "0.1.1"
-kover = "0.9.1"
+kover = "0.9.2"
 javafx = "23.0.2"
 
 [libraries]
