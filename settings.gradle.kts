@@ -5,7 +5,6 @@ plugins {
 
 rootProject.name = "manami"
 
-include("manami-gui")
 include("manami-app")
 
 val maxParallelForks = if (System.getenv("CI") == "true") {
