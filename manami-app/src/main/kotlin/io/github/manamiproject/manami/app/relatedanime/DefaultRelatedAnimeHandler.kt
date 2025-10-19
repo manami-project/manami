@@ -11,14 +11,14 @@ import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.net.URI
 
 internal class DefaultRelatedAnimeHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val state: State = InternalState,
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
 ) : RelatedAnimeHandler {
 
     override fun findRelatedAnimeForAnimeList() {
@@ -58,7 +58,7 @@ internal class DefaultRelatedAnimeHandler(
         entriesToCheck.removeAll(watchList)
         entriesToCheck.removeAll(ignoreList)
 
-        eventBus.post(RelatedAnimeFinishedEvent(eventListType, entriesToCheck.map { cache.fetch(it) }.filterIsInstance<PresentValue<Anime>>().map { it.value }))
+        eventBus.post(RelatedAnimeFinishedEvent(eventListType, entriesToCheck.map { cache.fetch(it) }.filterIsInstance<PresentValue<Anime>>().map { it.value })) // TODO 4.0.0: Migrate
         log.info { "Finished searching for [$eventListType] related anime" }
     }
 

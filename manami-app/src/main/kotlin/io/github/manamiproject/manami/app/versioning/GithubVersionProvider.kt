@@ -3,7 +3,6 @@ package io.github.manamiproject.manami.app.versioning
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.json.Json
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import kotlinx.coroutines.runBlocking
 import java.net.URI
 
@@ -13,7 +12,7 @@ internal class GithubVersionProvider(
 ): VersionProvider {
 
     override fun version(): SemanticVersion {
-        return runBlocking {
+        return runBlocking { // TODO 4.0.0: Improve
             val response = httpClient.get(uri.toURL())
             check(response.isOk()) { "Unable to check latest version, because response code wasn't 200." }
 

@@ -33,7 +33,7 @@ internal class DefaultListHandler(
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val cache: AnimeCache = DefaultAnimeCache.instance,
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
 ): ListHandler {
 
     private val totalNumberOfWatchListTasks = AtomicInteger(0)
@@ -42,7 +42,7 @@ internal class DefaultListHandler(
     private val totalNumberOfIgnoreListTasks = AtomicInteger(0)
     private val finishedAddIgnoreListTasks = AtomicInteger(0)
 
-    private val pool = Executors.newSingleThreadExecutor()
+    private val pool = Executors.newSingleThreadExecutor() // TODO 4.0.0: Remove
 
     override fun addAnimeListEntry(entry: AnimeListEntry) {
         GenericReversibleCommand(
@@ -82,7 +82,7 @@ internal class DefaultListHandler(
 
     override fun addWatchListEntry(uris: Collection<URI>) {
         totalNumberOfWatchListTasks.addAndGet(uris.size)
-        pool.invokeAll(
+        pool.invokeAll( // TODO 4.0.0: Coroutines
             uris.map { uri ->
                 Callable {
                     when(val anime = cache.fetch(uri)) {
@@ -101,7 +101,7 @@ internal class DefaultListHandler(
                         }
                     }
 
-                    eventBus.post(AddWatchListStatusUpdateEvent(finishedAddWatchListTasks.incrementAndGet(), totalNumberOfWatchListTasks.get()))
+                    eventBus.post(AddWatchListStatusUpdateEvent(finishedAddWatchListTasks.incrementAndGet(), totalNumberOfWatchListTasks.get())) // TODO 4.0.0: Migrate
                 }
             }
         )
@@ -122,7 +122,7 @@ internal class DefaultListHandler(
 
     override fun addIgnoreListEntry(uris: Collection<URI>) {
         totalNumberOfIgnoreListTasks.addAndGet(uris.size)
-        pool.invokeAll(
+        pool.invokeAll( // TODO 4.0.0: Coroutines
             uris.map { uri ->
                 Callable {
                     when(val anime = cache.fetch(uri)) {
@@ -141,7 +141,7 @@ internal class DefaultListHandler(
                         }
                     }
 
-                    eventBus.post(AddIgnoreListStatusUpdateEvent(finishedAddIgnoreListTasks.incrementAndGet(), totalNumberOfIgnoreListTasks.get()))
+                    eventBus.post(AddIgnoreListStatusUpdateEvent(finishedAddIgnoreListTasks.incrementAndGet(), totalNumberOfIgnoreListTasks.get())) // TODO 4.0.0: Migrate
                 }
             }
         )

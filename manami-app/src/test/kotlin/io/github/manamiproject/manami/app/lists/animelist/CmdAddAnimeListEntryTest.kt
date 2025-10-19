@@ -19,7 +19,7 @@ internal class CmdAddAnimeListEntryTest {
         val savedEntries = mutableListOf<AnimeListEntry>()
         val testState = object: State by TestState {
             override fun openedFile(): OpenedFile = NoFile
-            override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = false
+            override fun animeListEntryExists(anime: AnimeListEntry): Boolean = false
             override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                 savedEntries.addAll(anime)
             }
@@ -62,7 +62,7 @@ internal class CmdAddAnimeListEntryTest {
         val savedEntries = mutableListOf<AnimeListEntry>()
         val testState = object: State by TestState {
             override fun openedFile(): OpenedFile = NoFile
-            override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = true
+            override fun animeListEntryExists(anime: AnimeListEntry): Boolean = true
             override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                 savedEntries.addAll(anime)
             }
@@ -91,7 +91,7 @@ internal class CmdAddAnimeListEntryTest {
             val savedEntries = mutableListOf<AnimeListEntry>()
             val testState = object: State by TestState {
                 override fun openedFile(): OpenedFile = CurrentFile(openedFile)
-                override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = false
+                override fun animeListEntryExists(anime: AnimeListEntry): Boolean = false
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {
                     savedEntries.addAll(anime)
                 }

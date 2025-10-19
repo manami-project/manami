@@ -12,7 +12,6 @@ import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.events.Subscribe
 import io.github.manamiproject.modb.anidb.AnidbAnimeConverter
 import io.github.manamiproject.modb.anidb.AnidbConfig
-import io.github.manamiproject.modb.simkl.SimklConfig
 import io.github.manamiproject.modb.anidb.AnidbDownloader
 import io.github.manamiproject.modb.anilist.AnilistAnimeConverter
 import io.github.manamiproject.modb.anilist.AnilistConfig
@@ -24,12 +23,12 @@ import io.github.manamiproject.modb.anisearch.AnisearchAnimeConverter
 import io.github.manamiproject.modb.anisearch.AnisearchConfig
 import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.kitsu.KitsuAnimeConverter
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.kitsu.KitsuDownloader
@@ -44,6 +43,7 @@ import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
 import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import io.github.manamiproject.modb.simkl.SimklAnimeConverter
+import io.github.manamiproject.modb.simkl.SimklConfig
 import io.github.manamiproject.modb.simkl.SimklDownloader
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap

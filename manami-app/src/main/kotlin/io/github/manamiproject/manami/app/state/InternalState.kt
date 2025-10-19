@@ -31,7 +31,7 @@ internal object InternalState : State {
         openedFile = NoFile
     }
 
-    override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = animeList.contains(anime)
+    override fun animeListEntryExists(anime: AnimeListEntry): Boolean = animeList.contains(anime)
 
     override fun animeList(): List<AnimeListEntry> = animeList.toList()
 

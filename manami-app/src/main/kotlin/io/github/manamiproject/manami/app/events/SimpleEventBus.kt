@@ -7,8 +7,16 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.KParameter.Kind.VALUE
 import kotlin.reflect.full.isSubclassOf
 
+/**
+ * TODO 4.0.0: Remove
+ */
+@Deprecated("Remove")
 private typealias ClassName = String
 
+/**
+ * TODO 4.0.0: Remove
+ */
+@Deprecated("Remove")
 internal object SimpleEventBus : EventBus {
 
     private val mapSubscribers = mutableMapOf<ClassName, MutableSet<Any>>()

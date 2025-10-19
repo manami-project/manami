@@ -14,12 +14,12 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.config.Hostname
 
 internal class DefaultMetaDataMigrationHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val state: State = InternalState,
 ) : MetaDataMigrationHandler {
@@ -34,7 +34,7 @@ internal class DefaultMetaDataMigrationHandler(
         val totalNumberOfTasks = animeList.size + watchList.size + ignoreList.size
 
         val animeListEntriesWithoutMapping = mutableListOf<AnimeListEntry>()
-        val animeListEntiresMultipleMappings = mutableMapOf<AnimeListEntry, Set<Link>>()
+        val animeListEntriesMultipleMappings = mutableMapOf<AnimeListEntry, Set<Link>>()
         val animeListMappings = mutableMapOf<AnimeListEntry, Link>()
 
         animeList.forEachIndexed { index, animeListEntry ->
@@ -44,7 +44,7 @@ internal class DefaultMetaDataMigrationHandler(
                 newMetaDataProviderLinks.isEmpty() -> animeListEntriesWithoutMapping.add(animeListEntry)
                 newMetaDataProviderLinks.size > 1 -> {
                     val cacheEntries = newMetaDataProviderLinks.map { cache.fetch(it) as PresentValue<Anime>}.map { it.value }.flatMap { it.sources }.map { Link(it) }
-                    animeListEntiresMultipleMappings[animeListEntry] = cacheEntries.toSet()
+                    animeListEntriesMultipleMappings[animeListEntry] = cacheEntries.toSet()
                 }
                 else -> {
                     val cacheEntry = cache.fetch(newMetaDataProviderLinks.first()) as PresentValue<Anime>
@@ -52,11 +52,11 @@ internal class DefaultMetaDataMigrationHandler(
                 }
             }
 
-            eventBus.post(MetaDataMigrationProgressEvent(index + 1, totalNumberOfTasks))
+            eventBus.post(MetaDataMigrationProgressEvent(index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
         val watchListEntriesWithoutMapping = mutableListOf<WatchListEntry>()
-        val watchListEntiresMultipleMappings = mutableMapOf<WatchListEntry, Set<Link>>()
+        val watchListEntriesMultipleMappings = mutableMapOf<WatchListEntry, Set<Link>>()
         val watchListMappings = mutableMapOf<WatchListEntry, Link>()
 
         watchList.forEachIndexed { index, watchListEntry ->
@@ -66,7 +66,7 @@ internal class DefaultMetaDataMigrationHandler(
                 newMetaDataProviderLinks.isEmpty() -> watchListEntriesWithoutMapping.add(watchListEntry)
                 newMetaDataProviderLinks.size > 1 -> {
                     val cacheEntries = newMetaDataProviderLinks.map { cache.fetch(it) as PresentValue<Anime>}.map { it.value }.flatMap { it.sources }.map { Link(it) }
-                    watchListEntiresMultipleMappings[watchListEntry] = cacheEntries.toSet()
+                    watchListEntriesMultipleMappings[watchListEntry] = cacheEntries.toSet()
                 }
                 else -> {
                     val cacheEntry = cache.fetch(newMetaDataProviderLinks.first()) as PresentValue<Anime>
@@ -74,11 +74,11 @@ internal class DefaultMetaDataMigrationHandler(
                 }
             }
 
-            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + index + 1, totalNumberOfTasks))
+            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
         val ignoreListEntriesWithoutMapping = mutableListOf<IgnoreListEntry>()
-        val ignoreListEntiresMultipleMappings = mutableMapOf<IgnoreListEntry, Set<Link>>()
+        val ignoreListEntriesMultipleMappings = mutableMapOf<IgnoreListEntry, Set<Link>>()
         val ignoreListMappings = mutableMapOf<IgnoreListEntry, Link>()
 
         ignoreList.forEachIndexed { index, ignoreListEntry ->
@@ -88,7 +88,7 @@ internal class DefaultMetaDataMigrationHandler(
                 newMetaDataProviderLinks.isEmpty() -> ignoreListEntriesWithoutMapping.add(ignoreListEntry)
                 newMetaDataProviderLinks.size > 1 -> {
                     val cacheEntries = newMetaDataProviderLinks.map { cache.fetch(it) as PresentValue<Anime>}.map { it.value }.flatMap { it.sources }.map { Link(it) }
-                    ignoreListEntiresMultipleMappings[ignoreListEntry] = cacheEntries.toSet()
+                    ignoreListEntriesMultipleMappings[ignoreListEntry] = cacheEntries.toSet()
                 }
                 else -> {
                     val cacheEntry = cache.fetch(newMetaDataProviderLinks.first()) as PresentValue<Anime>
@@ -96,19 +96,19 @@ internal class DefaultMetaDataMigrationHandler(
                 }
             }
 
-            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + watchList.size + index + 1, totalNumberOfTasks))
+            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + watchList.size + index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
         eventBus.post(
             MetaDataMigrationResultEvent(
                 animeListEntriesWithoutMapping = animeListEntriesWithoutMapping,
-                animeListEntiresMultipleMappings = animeListEntiresMultipleMappings,
+                animeListEntriesMultipleMappings = animeListEntriesMultipleMappings,
                 animeListMappings = animeListMappings,
                 watchListEntriesWithoutMapping = watchListEntriesWithoutMapping,
-                watchListEntiresMultipleMappings = watchListEntiresMultipleMappings,
+                watchListEntriesMultipleMappings = watchListEntriesMultipleMappings,
                 watchListMappings = watchListMappings,
                 ignoreListEntriesWithoutMapping = ignoreListEntriesWithoutMapping,
-                ignoreListEntiresMultipleMappings = ignoreListEntiresMultipleMappings,
+                ignoreListEntriesMultipleMappings = ignoreListEntriesMultipleMappings,
                 ignoreListMappings = ignoreListMappings,
             )
         )

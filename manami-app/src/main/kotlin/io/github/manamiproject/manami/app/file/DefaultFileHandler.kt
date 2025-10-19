@@ -17,7 +17,7 @@ internal class DefaultFileHandler(
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val parser: Parser<ParsedManamiFile> = FileParser(),
     private val fileWriter: FileWriter = DefaultFileWriter(),
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
 ) : FileHandler {
 
     override fun newFile(ignoreUnsavedChanged: Boolean) {
@@ -48,7 +48,7 @@ internal class DefaultFileHandler(
             parsedFile = parsedFile,
             file = file,
         ).execute()
-        eventBus.post(FileOpenedEvent(file.fileName.toString()))
+        eventBus.post(FileOpenedEvent(file.fileName.toString())) // TODO 4.0.0: Migrate
     }
 
     override fun isOpenFileSet(): Boolean = state.openedFile() is CurrentFile
@@ -75,7 +75,7 @@ internal class DefaultFileHandler(
         }
 
         state.setOpenedFile(file)
-        eventBus.post(SavedAsFileEvent(file.fileName.toString()))
+        eventBus.post(SavedAsFileEvent(file.fileName.toString())) // TODO 4.0.0: Migrate
         save()
     }
 

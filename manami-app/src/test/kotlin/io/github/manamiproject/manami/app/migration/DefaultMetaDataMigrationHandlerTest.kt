@@ -125,13 +125,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
             assertThat(catchedEvents).containsExactly(
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -189,13 +189,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = listOf(currentAnimeListEntry),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -264,15 +264,15 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = mapOf(
                         currentAnimeListEntry to Link(kitsuLink)
                     ),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -343,15 +343,15 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = mapOf(
+                    animeListEntriesMultipleMappings = mapOf(
                         currentAnimeListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
                     ),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -406,13 +406,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = listOf(currentWatchListEntry),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -476,15 +476,15 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = mapOf(
                         currentWatchListEntry to Link(kitsuLink)
                     ),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -552,15 +552,15 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = mapOf(
+                    watchListEntriesMultipleMappings = mapOf(
                         currentWatchListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
                     ),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -615,13 +615,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = listOf(currentIgnoreListEntry),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = emptyMap(),
                 )
             )
@@ -687,13 +687,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = emptyMap(),
+                    ignoreListEntriesMultipleMappings = emptyMap(),
                     ignoreListMappings = mapOf(
                         currentIgnoreListEntry to Link(kitsuLink)
                     ),
@@ -763,13 +763,13 @@ internal class DefaultMetaDataMigrationHandlerTest {
                 ),
                 MetaDataMigrationResultEvent(
                     animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntiresMultipleMappings = emptyMap(),
+                    animeListEntriesMultipleMappings = emptyMap(),
                     animeListMappings = emptyMap(),
                     watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntiresMultipleMappings = emptyMap(),
+                    watchListEntriesMultipleMappings = emptyMap(),
                     watchListMappings = emptyMap(),
                     ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntiresMultipleMappings = mapOf(
+                    ignoreListEntriesMultipleMappings = mapOf(
                         currentIgnoreListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
                     ),
                     ignoreListMappings = emptyMap(),

@@ -51,9 +51,12 @@ internal class DefaultInconsistenciesHandler(
     private val inconsistencyResults = mutableListOf<Any>()
 
     init {
-        eventBus.subscribe(this)
+        eventBus.subscribe(this) // TODO 4.0.0: Remove
     }
 
+    /**
+     * TODO 4.0.0: Remove
+     */
     @Suppress("UNUSED_PARAMETER")
     @Subscribe(FileOpenedEvent::class)
     fun subscribe(e: FileOpenedEvent) = inconsistencyResults.clear()
@@ -78,7 +81,7 @@ internal class DefaultInconsistenciesHandler(
                 notifyResults(result)
             }
 
-        eventBus.post(InconsistenciesCheckFinishedEvent)
+        eventBus.post(InconsistenciesCheckFinishedEvent) // TODO 4.0.0: Migrate
     }
 
     private fun notifyResults(result: Any) {
@@ -86,28 +89,28 @@ internal class DefaultInconsistenciesHandler(
             is MetaDataInconsistenciesResult -> {
                 val numberOfEntries = result.watchListResults.size + result.ignoreListResults.size
                 if (numberOfEntries > 0) {
-                    eventBus.post(MetaDataInconsistenciesResultEvent(numberOfEntries))
+                    eventBus.post(MetaDataInconsistenciesResultEvent(numberOfEntries)) // TODO 4.0.0: Migrate
                 }
             }
             is DeadEntriesInconsistenciesResult -> {
                 val numberOfEntries = result.watchListResults.size + result.ignoreListResults.size
                 if (numberOfEntries > 0) {
-                    eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfEntries))
+                    eventBus.post(DeadEntriesInconsistenciesResultEvent(numberOfEntries)) // TODO 4.0.0: Migrate
                 }
             }
             is AnimeListMetaDataInconsistenciesResult -> {
                 result.entries.forEach {
-                    eventBus.post(AnimeListMetaDataInconsistenciesResultEvent(it))
+                    eventBus.post(AnimeListMetaDataInconsistenciesResultEvent(it)) // TODO 4.0.0: Migrate
                 }
             }
             is AnimeListDeadEntriesInconsistenciesResult -> {
                 if (result.entries.isNotEmpty()) {
-                    eventBus.post(AnimeListDeadEntriesInconsistenciesResultEvent(result.entries))
+                    eventBus.post(AnimeListDeadEntriesInconsistenciesResultEvent(result.entries)) // TODO 4.0.0: Migrate
                 }
             }
             is AnimeListEpisodesInconsistenciesResult -> {
                 if (result.entries.isNotEmpty()) {
-                    eventBus.post(AnimeListEpisodesInconsistenciesResultEvent(result.entries))
+                    eventBus.post(AnimeListEpisodesInconsistenciesResultEvent(result.entries)) // TODO 4.0.0: Migrate
                 }
             }
         }

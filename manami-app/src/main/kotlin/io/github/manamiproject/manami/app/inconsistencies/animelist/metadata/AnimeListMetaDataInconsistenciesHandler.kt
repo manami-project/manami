@@ -10,10 +10,9 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.net.URI
-
 
 internal class AnimeListMetaDataInconsistenciesHandler(
     private val state: State = InternalState,
