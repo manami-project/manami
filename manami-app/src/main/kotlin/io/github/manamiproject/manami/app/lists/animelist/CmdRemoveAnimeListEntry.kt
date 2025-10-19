@@ -10,7 +10,7 @@ internal class CmdRemoveAnimeListEntry(
 ): Command {
 
     override fun execute(): Boolean {
-        if (!state.animeListEntrtyExists(animeListEntry)) {
+        if (!state.animeListEntryExists(animeListEntry)) {
             return false
         }
 

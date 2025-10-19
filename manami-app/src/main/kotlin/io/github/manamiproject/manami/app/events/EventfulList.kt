@@ -5,6 +5,10 @@ import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.ADDED
 import io.github.manamiproject.manami.app.lists.ListChangedEvent.EventType.REMOVED
 import java.util.function.Predicate
 
+/**
+ * TODO 4.0.0: Remove
+ */
+@Deprecated("Remove")
 internal class EventfulList<T>(
     private val listType: EventListType,
     private val eventBus: EventBus = SimpleEventBus,

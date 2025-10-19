@@ -9,11 +9,11 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
-import io.github.manamiproject.modb.core.config.FileSuffix
-import io.github.manamiproject.modb.core.extensions.*
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType
+import io.github.manamiproject.modb.core.config.FileSuffix
+import io.github.manamiproject.modb.core.extensions.*
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource

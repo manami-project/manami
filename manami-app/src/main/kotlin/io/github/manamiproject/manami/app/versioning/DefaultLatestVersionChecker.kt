@@ -7,7 +7,7 @@ import io.github.manamiproject.modb.core.logging.LoggerDelegate
 internal class DefaultLatestVersionChecker(
     private val currentVersionProvider: VersionProvider = ResourceBasedVersionProvider,
     private val latestVersionProvider: VersionProvider = GithubVersionProvider(),
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
 ) : LatestVersionChecker {
 
     override fun checkLatestVersion() {
@@ -17,7 +17,7 @@ internal class DefaultLatestVersionChecker(
 
         if (latestVersion.isNewerThan(currentVersion)) {
             log.info { "Found new version [$latestVersion]" }
-            eventBus.post(NewVersionAvailableEvent(latestVersion))
+            eventBus.post(NewVersionAvailableEvent(latestVersion)) // TODO 4.0.0: Migrate
         }
     }
 

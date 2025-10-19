@@ -1,11 +1,10 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.search.SearchType.AND
-import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeStatus
 import io.github.manamiproject.modb.core.anime.Tag
+import io.github.manamiproject.modb.core.config.Hostname
 import java.net.URI
 
 interface SearchHandler {

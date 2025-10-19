@@ -5,5 +5,5 @@ import kotlinx.coroutines.runBlocking
 
 object ResourceBasedVersionProvider: VersionProvider {
 
-    override fun version(): SemanticVersion = SemanticVersion(runBlocking { loadResource("manami.version") })
+    override fun version(): SemanticVersion = SemanticVersion(runBlocking { loadResource("manami.version") }) // TODO 4.0.0: improve the runBlocking
 }

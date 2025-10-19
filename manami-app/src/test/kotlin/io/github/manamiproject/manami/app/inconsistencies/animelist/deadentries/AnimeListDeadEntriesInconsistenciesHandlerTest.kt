@@ -29,7 +29,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             )
 
             val isExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListDeadEnties = true,
+                checkAnimeListDeadEntries = true,
             )
 
             // when
@@ -48,7 +48,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             )
 
             val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListDeadEnties = false,
+                checkAnimeListDeadEntries = false,
             )
 
             // when

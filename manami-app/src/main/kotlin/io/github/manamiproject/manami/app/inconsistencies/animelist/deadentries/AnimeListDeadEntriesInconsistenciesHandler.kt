@@ -9,8 +9,8 @@ import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.net.URI
 
 internal class AnimeListDeadEntriesInconsistenciesHandler(
@@ -18,7 +18,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
     private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
 ) : InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> {
 
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListDeadEnties
+    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListDeadEntries
 
     override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
 

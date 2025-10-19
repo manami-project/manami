@@ -11,7 +11,7 @@ internal object TestState: State {
     override fun setOpenedFile(file: RegularFile) = shouldNotBeInvoked()
     override fun openedFile(): OpenedFile = shouldNotBeInvoked()
     override fun closeFile() = shouldNotBeInvoked()
-    override fun animeListEntrtyExists(anime: AnimeListEntry): Boolean = shouldNotBeInvoked()
+    override fun animeListEntryExists(anime: AnimeListEntry): Boolean = shouldNotBeInvoked()
     override fun animeList(): List<AnimeListEntry> = shouldNotBeInvoked()
     override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) = shouldNotBeInvoked()
     override fun removeAnimeListEntry(entry: AnimeListEntry) = shouldNotBeInvoked()

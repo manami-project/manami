@@ -5,18 +5,18 @@ import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.config.BooleanPropertyDelegate
 import io.github.manamiproject.modb.core.config.ConfigRegistry
 import io.github.manamiproject.modb.core.config.DefaultConfigRegistry
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_FS
+import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.config.Hostname
-import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonLinesInputStreamDeserializer
 import io.github.manamiproject.modb.serde.json.deserializer.Deserializer
 import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
@@ -37,7 +37,7 @@ internal class AnimeCachePopulator(
     private val uri: URI = URI("https://github.com/manami-project/anime-offline-database/releases/download/latest/$fileName"),
     private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
     private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
     private val httpClient: HttpClient = DefaultHttpClient(useCustomRedirectInterceptor = true),
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
@@ -88,9 +88,9 @@ internal class AnimeCachePopulator(
             }
         }
 
-        eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider))
+        eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider)) // TODO 4.0.0: Migrate
 
-        eventBus.post(CachePopulatorFinishedEvent)
+        eventBus.post(CachePopulatorFinishedEvent) // TODO 4.0.0: Migrate
         log.info { "Finished populating cache with anime." }
     }
 
