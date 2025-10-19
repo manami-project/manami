@@ -28,7 +28,7 @@ import java.net.URI
 
 internal class DefaultSearchHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
-    private val eventBus: EventBus = SimpleEventBus,
+    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
     private val state: State = InternalState,
 ) : SearchHandler {
 
@@ -38,20 +38,20 @@ internal class DefaultSearchHandler(
         runInBackground {
             val animeListResults = state.animeList()
                 .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link is Link && it.link.uri.toString() == searchString) }
-            eventBus.post(FileSearchAnimeListResultsEvent(animeListResults))
+            eventBus.post(FileSearchAnimeListResultsEvent(animeListResults)) // TODO 4.0.0: Migrate
 
             val watchListResults = state.watchList()
                 .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
-            eventBus.post(FileSearchWatchListResultsEvent(watchListResults))
+            eventBus.post(FileSearchWatchListResultsEvent(watchListResults)) // TODO 4.0.0: Migrate
 
             val ignoreListResults = state.ignoreList()
                 .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
-            eventBus.post(FileSearchIgnoreListResultsEvent(ignoreListResults))
+            eventBus.post(FileSearchIgnoreListResultsEvent(ignoreListResults)) // TODO 4.0.0: Migrate
         }
     }
 
     override fun findSeason(season: AnimeSeason, metaDataProvider: Hostname) {
-        runInBackground {
+        runInBackground { // TODO 4.0.0: Coroutines
             val entriesInLists: Set<URI> = state.animeList()
                 .map { it.link }
                 .filterIsInstance<Link>()
@@ -63,15 +63,15 @@ internal class DefaultSearchHandler(
                 .filter { it.animeSeason == season }
                 .filterNot { animeSeasonEntry -> entriesInLists.contains(animeSeasonEntry.sources.first()) }
                 .forEach {
-                    eventBus.post(AnimeSeasonEntryFoundEvent(it))
+                    eventBus.post(AnimeSeasonEntryFoundEvent(it)) // TODO 4.0.0: Migrate
                 }
 
-            eventBus.post(AnimeSeasonSearchFinishedEvent)
+            eventBus.post(AnimeSeasonSearchFinishedEvent) // TODO 4.0.0: Migrate
         }
     }
 
     override fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType, status: Set<AnimeStatus>) {
-        runInBackground {
+        runInBackground { // TODO 4.0.0: Coroutines
             val entriesInLists: Set<URI> = state.animeList()
                 .map { it.link }
                 .filterIsInstance<Link>()
@@ -94,22 +94,22 @@ internal class DefaultSearchHandler(
             val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }
 
             filteredByStatus.forEach {
-                eventBus.post(AnimeSearchEntryFoundEvent(it))
+                eventBus.post(AnimeSearchEntryFoundEvent(it)) // TODO 4.0.0: Migrate
             }
 
-            eventBus.post(AnimeSearchFinishedEvent)
+            eventBus.post(AnimeSearchFinishedEvent) // TODO 4.0.0: Migrate
         }
     }
 
     override fun findSimilarAnime(uri: URI) {
-        runInBackground {
+        runInBackground { // // TODO 4.0.0: Coroutines
             if (uri.host !in availableMetaDataProviders()) {
-                eventBus.post(SimilarAnimeSearchFinishedEvent)
+                eventBus.post(SimilarAnimeSearchFinishedEvent) // TODO 4.0.0: Migrate
             }
 
             val origin = when (val cacheEntry = cache.fetch(uri)) {
                 is DeadEntry -> {
-                    eventBus.post(SimilarAnimeSearchFinishedEvent)
+                    eventBus.post(SimilarAnimeSearchFinishedEvent) // TODO 4.0.0: Migrate
                     return@runInBackground
                 }
                 is PresentValue<Anime> -> cacheEntry.value
@@ -132,17 +132,17 @@ internal class DefaultSearchHandler(
             results.removeIf { entriesToRemove.contains(it.second.sources.first()) }
 
             results.sortWith(compareByDescending<Pair<Int, Anime>> { it.first }.thenBy { it.second.title })
-            eventBus.post(SimilarAnimeFoundEvent(results.take(10).map { it.second }))
+            eventBus.post(SimilarAnimeFoundEvent(results.take(10).map { it.second })) // TODO 4.0.0: Migrate
         }
     }
 
     override fun find(uri: URI) {
-        runInBackground {
+        runInBackground { // TODO 4.0.0: Coroutines
             val entry = cache.fetch(uri)
             if (entry is PresentValue) {
-                eventBus.post(AnimeEntryFoundEvent(entry.value))
+                eventBus.post(AnimeEntryFoundEvent(entry.value)) // TODO 4.0.0: Migrate
             }
-            eventBus.post(AnimeEntryFinishedEvent)
+            eventBus.post(AnimeEntryFinishedEvent) // TODO 4.0.0: Migrate
         }
     }
 

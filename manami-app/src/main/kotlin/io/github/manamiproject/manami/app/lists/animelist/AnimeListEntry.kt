@@ -5,8 +5,10 @@ import io.github.manamiproject.manami.app.lists.LinkEntry
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
-import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE_THUMBNAIL
+import io.github.manamiproject.modb.core.anime.AnimeType
+import io.github.manamiproject.modb.core.anime.Episodes
+import io.github.manamiproject.modb.core.anime.Title
 import io.github.manamiproject.modb.core.extensions.directoryExists
 import java.net.URI
 import java.nio.file.Path

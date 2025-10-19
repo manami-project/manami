@@ -1,13 +1,13 @@
 package io.github.manamiproject.manami.app.cache.loader
 
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeRawToAnimeTransformer
+import io.github.manamiproject.modb.core.anime.DefaultAnimeRawToAnimeTransformer
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeRawToAnimeTransformer
-import io.github.manamiproject.modb.core.anime.DefaultAnimeRawToAnimeTransformer
 import kotlinx.coroutines.runBlocking
 import java.net.URI
 
@@ -24,8 +24,8 @@ internal class SimpleCacheLoader(
         log.debug { "Loading anime from [$uri]" }
 
         val id = config.extractAnimeId(uri)
-        val rawContent = runBlocking { downloader.download(id) }
-        return runBlocking { transformer.transform(converter.convert(rawContent)) }
+        val rawContent = runBlocking { downloader.download(id) } // TODO 4.0.0: Coroutines
+        return runBlocking { transformer.transform(converter.convert(rawContent)) } // TODO 4.0.0: Coroutines
     }
 
     private companion object {

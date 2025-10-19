@@ -10,8 +10,8 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
-import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import java.net.URI
 
 internal class MetaDataInconsistencyHandler(

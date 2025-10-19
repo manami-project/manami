@@ -49,12 +49,12 @@ class Manami(
     InconsistenciesHandler by inconsistenciesHandler,
     MetaDataMigrationHandler by metaDataMigrationHandler {
 
-    private var eventMapper = AtomicReference<Event.() -> Unit>()
+    private var eventMapper = AtomicReference<Event.() -> Unit>() // TODO 4.0.0: Remove
 
     init {
         log.info {"Starting manami" }
-        SimpleEventBus.subscribe(this)
-        runInBackground {
+        SimpleEventBus.subscribe(this) // TODO 4.0.0: Remove
+        runInBackground { // TODO 4.0.0: Convert to coroutines
             withContext(ModbDispatchers.LIMITED_CPU) {
                 launch { DefaultLatestVersionChecker().checkLatestVersion() }
                 launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
@@ -78,10 +78,16 @@ class Manami(
         exitProcess(0)
     }
 
+    /**
+     * TODO 4.0.0: Remove
+     */
     fun eventMapping(mapper: Event.() -> Unit = {}) {
         eventMapper.set(mapper)
     }
 
+    /**
+     * TODO 4.0.0: Remove
+     */
     @Subscribe
     fun subscribe(e: Event) = eventMapper.get().invoke(e)
 
@@ -91,8 +97,11 @@ class Manami(
     }
 }
 
-private val backgroundTasks = Executors.newCachedThreadPool()
+private val backgroundTasks = Executors.newCachedThreadPool() // TODO 4.0.0: Remove
 
+/**
+ * TODO 4.0.0: Remove
+ */
 internal fun runInBackground(action: suspend () -> Unit) {
     backgroundTasks.submit {
         runBlocking {

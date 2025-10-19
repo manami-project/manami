@@ -11,7 +11,7 @@ internal class CmdReplaceAnimeListEntry(
 ): Command {
 
     override fun execute(): Boolean {
-        if (!state.animeListEntrtyExists(currentEntry)) {
+        if (!state.animeListEntryExists(currentEntry)) {
             return false
         }
 

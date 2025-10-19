@@ -10,8 +10,8 @@ internal object DefaultCommandHistory : CommandHistory {
 
     override fun push(command: ReversibleCommand) {
         commandHistory.add(command)
-        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
-        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
+        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved())) // TODO 4.0.0: Migrate
+        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible())) // TODO 4.0.0: Migrate
     }
 
     override fun isUndoPossible(): Boolean = commandHistory.hasPrevious()
@@ -20,8 +20,8 @@ internal object DefaultCommandHistory : CommandHistory {
         if (isUndoPossible()) {
             commandHistory.element().undo()
             commandHistory.previous()
-            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
-            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved())) // TODO 4.0.0: Migrate
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible())) // TODO 4.0.0: Migrate
         }
     }
 
@@ -31,8 +31,8 @@ internal object DefaultCommandHistory : CommandHistory {
         if (isRedoPossible()) {
             commandHistory.next()
             commandHistory.element().execute()
-            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
-            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved())) // TODO 4.0.0: Migrate
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible())) // TODO 4.0.0: Migrate
         }
     }
 
@@ -58,15 +58,15 @@ internal object DefaultCommandHistory : CommandHistory {
             }
 
             commandHistory.crop()
-            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
-            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
+            SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved())) // TODO 4.0.0: Migrate
+            SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible())) // TODO 4.0.0: Migrate
         }
     }
 
     override fun clear() {
         commandHistory.clear()
-        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved()))
-        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible()))
+        SimpleEventBus.post(FileSavedStatusChangedEvent(isSaved())) // TODO 4.0.0: Migrate
+        SimpleEventBus.post(UndoRedoStatusEvent(isUndoPossible(), isRedoPossible())) // TODO 4.0.0: Migrate
     }
 }
 
