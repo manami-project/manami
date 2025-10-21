@@ -94,7 +94,13 @@ internal class AnimeCachePopulator(
         log.info { "Finished populating cache with anime." }
     }
 
-    private companion object {
+    companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [AnimeCachePopulator]
+         * @since 4.0.0
+         */
+        val instance: AnimeCachePopulator by lazy { AnimeCachePopulator() }
     }
 }

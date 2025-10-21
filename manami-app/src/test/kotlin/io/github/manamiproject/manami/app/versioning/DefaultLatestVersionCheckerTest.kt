@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.events.Event
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.TestEventBus
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -76,5 +77,22 @@ internal class DefaultLatestVersionCheckerTest {
 
         // then
         assertThat(events).isEmpty()
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultLatestVersionChecker.instance
+
+            // when
+            val result = DefaultLatestVersionChecker.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultLatestVersionChecker::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

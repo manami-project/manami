@@ -279,4 +279,21 @@ internal class DeadEntriesInconsistencyHandlerTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DeadEntriesInconsistencyHandler.instance
+
+            // when
+            val result = DeadEntriesInconsistencyHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DeadEntriesInconsistencyHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

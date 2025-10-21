@@ -68,5 +68,11 @@ internal class MetaDataInconsistencyHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [MetaDataInconsistencyHandler]
+         * @since 4.0.0
+         */
+        val instance: MetaDataInconsistencyHandler by lazy { MetaDataInconsistencyHandler() }
     }
 }

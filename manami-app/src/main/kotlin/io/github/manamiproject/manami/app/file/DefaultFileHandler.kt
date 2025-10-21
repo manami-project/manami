@@ -87,7 +87,13 @@ internal class DefaultFileHandler(
 
     override fun redo() = commandHistory.redo()
 
-    private companion object {
+    companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DefaultFileHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultFileHandler by lazy { DefaultFileHandler() }
     }
 }

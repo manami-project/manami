@@ -54,8 +54,14 @@ internal class FileParser(
         return documentHandler.parsedFile
     }
 
-    private companion object {
+    companion object {
         private val minVersion = SemanticVersion("3.0.0")
+
+        /**
+         * Singleton of [FileParser]
+         * @since 4.0.0
+         */
+        val instance: FileParser by lazy { FileParser() }
     }
 }
 

@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.cache.populator
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
+import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestCacheLoader
@@ -25,6 +26,7 @@ import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 import kotlin.io.path.Path
@@ -325,5 +327,22 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["notify.moe"]).isEqualTo(1)
         assertThat((receivedEvents.first() as NumberOfEntriesPerMetaDataProviderEvent).entries["simkl.com"]).isEqualTo(1)
         assertThat(receivedEvents.last()).isInstanceOf(CachePopulatorFinishedEvent::class.java)
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = AnimeCachePopulator.instance
+
+            // when
+            val result = AnimeCachePopulator.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(AnimeCachePopulator::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

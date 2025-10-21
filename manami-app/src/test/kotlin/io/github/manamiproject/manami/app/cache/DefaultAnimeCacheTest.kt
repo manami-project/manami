@@ -603,7 +603,7 @@ internal class DefaultAnimeCacheTest {
 
             // then
             assertThat(result).isExactlyInstanceOf(DefaultAnimeCache::class.java)
-            assertThat(result===previous).isTrue()
+            assertThat(result === previous).isTrue()
         }
     }
 }

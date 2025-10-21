@@ -770,4 +770,21 @@ internal class DefaultInconsistenciesHandlerTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultInconsistenciesHandler.instance
+
+            // when
+            val result = DefaultInconsistenciesHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultInconsistenciesHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

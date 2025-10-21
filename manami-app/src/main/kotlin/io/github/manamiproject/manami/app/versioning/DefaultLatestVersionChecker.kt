@@ -23,5 +23,11 @@ internal class DefaultLatestVersionChecker(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DefaultLatestVersionChecker]
+         * @since 4.0.0
+         */
+        val instance: DefaultLatestVersionChecker by lazy { DefaultLatestVersionChecker() }
     }
 }

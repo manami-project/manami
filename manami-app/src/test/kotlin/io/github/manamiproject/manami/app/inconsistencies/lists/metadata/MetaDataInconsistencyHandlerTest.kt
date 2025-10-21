@@ -8,10 +8,10 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
-import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -601,6 +601,23 @@ internal class MetaDataInconsistencyHandlerTest {
                     )
                 )
             }
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = MetaDataInconsistencyHandler.instance
+
+            // when
+            val result = MetaDataInconsistencyHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(MetaDataInconsistencyHandler::class.java)
+            assertThat(result === previous).isTrue()
         }
     }
 }

@@ -337,4 +337,21 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = AnimeListEpisodesInconsistenciesHandler.instance
+
+            // when
+            val result = AnimeListEpisodesInconsistenciesHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(AnimeListEpisodesInconsistenciesHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

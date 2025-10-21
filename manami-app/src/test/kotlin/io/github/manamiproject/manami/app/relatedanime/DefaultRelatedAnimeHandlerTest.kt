@@ -16,12 +16,12 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
-import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
-import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.WINTER
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
+import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
@@ -417,6 +417,23 @@ internal class DefaultRelatedAnimeHandlerTest {
                     anime7.sources.first(),
                 )
             }
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultRelatedAnimeHandler.instance
+
+            // when
+            val result = DefaultRelatedAnimeHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultRelatedAnimeHandler::class.java)
+            assertThat(result === previous).isTrue()
         }
     }
 

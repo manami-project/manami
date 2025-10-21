@@ -17,4 +17,12 @@ internal class CmdNewFile(
         state.clear()
         return true
     }
+
+    companion object {
+        /**
+         * Singleton of [CmdNewFile]
+         * @since 4.0.0
+         */
+        val instance: CmdNewFile by lazy { CmdNewFile() }
+    }
 }

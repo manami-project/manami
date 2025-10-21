@@ -20,6 +20,14 @@ internal class GithubVersionProvider(
             SemanticVersion(version)
         }
     }
+
+    companion object {
+        /**
+         * Singleton of [GithubVersionProvider]
+         * @since 4.0.0
+         */
+        val instance: GithubVersionProvider by lazy { GithubVersionProvider() }
+    }
 }
 
 private data class GithubResponse(

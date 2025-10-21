@@ -391,4 +391,21 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
             assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(thumbnail = testAnime.thumbnail))
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = AnimeListMetaDataInconsistenciesHandler.instance
+
+            // when
+            val result = AnimeListMetaDataInconsistenciesHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(AnimeListMetaDataInconsistenciesHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

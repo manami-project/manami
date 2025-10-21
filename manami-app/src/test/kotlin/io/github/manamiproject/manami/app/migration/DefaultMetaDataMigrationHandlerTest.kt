@@ -15,9 +15,9 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import org.assertj.core.api.Assertions.assertThat
@@ -775,6 +775,23 @@ internal class DefaultMetaDataMigrationHandlerTest {
                     ignoreListMappings = emptyMap(),
                 )
             )
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultMetaDataMigrationHandler.instance
+
+            // when
+            val result = DefaultMetaDataMigrationHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultMetaDataMigrationHandler::class.java)
+            assertThat(result === previous).isTrue()
         }
     }
 }

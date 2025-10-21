@@ -145,4 +145,12 @@ internal class DefaultMetaDataMigrationHandler(
             )
         ).execute()
     }
+
+    companion object {
+        /**
+         * Singleton of [DefaultMetaDataMigrationHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultMetaDataMigrationHandler by lazy { DefaultMetaDataMigrationHandler() }
+    }
 }

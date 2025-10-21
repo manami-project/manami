@@ -36,4 +36,12 @@ internal class ManamiVersionHandler : DefaultHandler() {
     override fun endDocument() {
         _version = SemanticVersion(strBuilder.toString())
     }
+
+    companion object {
+        /**
+         * Singleton of [ManamiVersionHandler]
+         * @since 4.0.0
+         */
+        val instance: ManamiVersionHandler by lazy { ManamiVersionHandler() }
+    }
 }

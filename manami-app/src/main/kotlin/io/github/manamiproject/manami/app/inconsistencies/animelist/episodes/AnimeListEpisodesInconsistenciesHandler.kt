@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.inconsistencies.animelist.episodes
 
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.CurrentFile
@@ -58,5 +59,11 @@ internal class AnimeListEpisodesInconsistenciesHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [AnimeListEpisodesInconsistenciesHandler]
+         * @since 4.0.0
+         */
+        val instance: AnimeListEpisodesInconsistenciesHandler by lazy { AnimeListEpisodesInconsistenciesHandler() }
     }
 }

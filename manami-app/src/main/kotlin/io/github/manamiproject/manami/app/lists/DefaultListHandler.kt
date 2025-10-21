@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.lists
 
+import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
@@ -162,5 +163,11 @@ internal class DefaultListHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DefaultListHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultListHandler by lazy { DefaultListHandler() }
     }
 }

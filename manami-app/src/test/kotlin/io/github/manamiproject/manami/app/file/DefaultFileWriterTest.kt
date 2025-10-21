@@ -9,11 +9,12 @@ import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.versioning.TestVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
-import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 import kotlin.io.path.Path
@@ -245,6 +246,23 @@ internal class DefaultFileWriterTest {
                   </ignoreList>
                 </manami>
             """.trimIndent())
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultFileWriter.instance
+
+            // when
+            val result = DefaultFileWriter.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultFileWriter::class.java)
+            assertThat(result === previous).isTrue()
         }
     }
 }

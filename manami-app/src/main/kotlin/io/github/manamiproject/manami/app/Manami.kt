@@ -94,6 +94,12 @@ class Manami(
     companion object {
         private val log by LoggerDelegate()
         private const val DEAD_ENTRIES_BASE_URL = "https://github.com/manami-project/anime-offline-database/releases/download/latest"
+
+        /**
+         * Singleton of [Manami]
+         * @since 4.0.0
+         */
+        val instance: Manami by lazy { Manami() }
     }
 }
 
