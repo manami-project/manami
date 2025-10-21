@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 internal class CmdNewFileTest {
@@ -34,5 +35,22 @@ internal class CmdNewFileTest {
         assertThat(hasCloseFileBeenCalled).isTrue()
         assertThat(hasClearStateBeenCalled).isTrue()
         assertThat(hasClearHistoryBeenCalled).isTrue()
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = CmdNewFile.instance
+
+            // when
+            val result = CmdNewFile.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(CmdNewFile::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

@@ -16,11 +16,11 @@ import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
 import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
 import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
-import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.Duration
 import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
@@ -579,5 +579,22 @@ internal class DefaultListHandlerTest {
 
         // then
         assertThat(resultingEntry).isEqualTo(expectedEntry)
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultListHandler.instance
+
+            // when
+            val result = DefaultListHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultListHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

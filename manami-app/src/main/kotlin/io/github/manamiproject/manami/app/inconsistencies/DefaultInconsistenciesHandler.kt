@@ -155,4 +155,12 @@ internal class DefaultInconsistenciesHandler(
             )
         ).execute()
     }
+
+    companion object {
+        /**
+         * Singleton of [DefaultInconsistenciesHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultInconsistenciesHandler by lazy { DefaultInconsistenciesHandler() }
+    }
 }

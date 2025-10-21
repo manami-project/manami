@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.events.Event
@@ -527,6 +528,23 @@ internal class DefaultFileHandlerTest {
                 assertThat(cmdHasBeenSaved).isTrue()
                 assertThat(receivedEvent!!.fileName).isEqualTo("test.xml")
             }
+        }
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultFileHandler.instance
+
+            // when
+            val result = DefaultFileHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultFileHandler::class.java)
+            assertThat(result === previous).isTrue()
         }
     }
 }

@@ -2357,4 +2357,21 @@ internal class DefaultSearchHandlerTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = DefaultSearchHandler.instance
+
+            // when
+            val result = DefaultSearchHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(DefaultSearchHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

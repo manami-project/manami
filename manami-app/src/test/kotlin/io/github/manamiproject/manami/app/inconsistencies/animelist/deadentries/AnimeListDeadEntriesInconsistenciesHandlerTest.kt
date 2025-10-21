@@ -226,4 +226,21 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
             assertThat(result.entries).containsExactly(deadEntry)
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = AnimeListDeadEntriesInconsistenciesHandler.instance
+
+            // when
+            val result = AnimeListDeadEntriesInconsistenciesHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(AnimeListDeadEntriesInconsistenciesHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
+    }
 }

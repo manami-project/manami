@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.app.file
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.test.testResource
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
@@ -31,5 +32,22 @@ internal class ManamiVersionHandlerTest {
 
         // then
         assertThat(versionHandler.version).isEqualTo(SemanticVersion("3.0.0"))
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = ManamiVersionHandler.instance
+
+            // when
+            val result = ManamiVersionHandler.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(ManamiVersionHandler::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

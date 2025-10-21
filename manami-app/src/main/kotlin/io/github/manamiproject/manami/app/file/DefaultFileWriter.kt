@@ -92,5 +92,11 @@ internal class DefaultFileWriter(
         private const val IDENT_1 = "  "
         private const val IDENT_2 = "    "
         private const val LINEBREAK = "\n"
+
+        /**
+         * Singleton of [DefaultFileWriter]
+         * @since 4.0.0
+         */
+        val instance: DefaultFileWriter by lazy { DefaultFileWriter() }
     }
 }
