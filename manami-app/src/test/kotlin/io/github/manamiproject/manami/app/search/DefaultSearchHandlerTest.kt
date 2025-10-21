@@ -32,16 +32,12 @@ import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonInputSt
 import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
 import io.github.manamiproject.modb.test.tempDirectory
 import io.github.manamiproject.modb.test.testResource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Timeout
-import java.lang.Thread.sleep
 import java.net.URI
 import java.nio.file.Paths
-import java.util.concurrent.TimeUnit
 import kotlin.io.path.createDirectory
 
 internal class DefaultSearchHandlerTest {
@@ -184,21 +180,17 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(3)
-
             assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
                 "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSeasonSearchFinishedEvent::class.java)
         }
 
         @Test
         fun `exclude entries in animelist`() {
             tempDirectory {
-
                 // given
                 val matchingEntry1 = Anime(
                     sources = hashSetOf(
@@ -285,9 +277,8 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
-                    "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
+                    "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 )
             }
         }
@@ -377,9 +368,8 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
-                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
+                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
             )
         }
 
@@ -468,9 +458,8 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents.filterIsInstance<AnimeSeasonEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
-                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA"
+                "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
             )
         }
     }
@@ -703,13 +692,10 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(2)
-
             assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
 
@@ -831,15 +817,12 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(4)
-
             assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
                 "Tate no Yuusha no Nariagari Season 2",
                 "Tenchi Souzou Design-bu Special",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
 
@@ -972,14 +955,11 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(3)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Tate no Yuusha no Nariagari Season 2",
                     "Tenchi Souzou Design-bu Special",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1108,14 +1088,11 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(3)
-
             assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Tate no Yuusha no Nariagari Season 2",
                 "Tenchi Souzou Design-bu Special",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
 
@@ -1243,14 +1220,11 @@ internal class DefaultSearchHandlerTest {
             )
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(3)
-
             assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Tate no Yuusha no Nariagari Season 2",
                 "Tenchi Souzou Design-bu Special",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
         }
 
@@ -1373,16 +1347,13 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(5)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Fruits Basket: The Final",
                     "Tate no Yuusha no Nariagari Season 2",
                     "Tenchi Souzou Design-bu Special",
                     "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1507,13 +1478,10 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(2)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Fruits Basket: The Final",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1638,13 +1606,10 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(2)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Tate no Yuusha no Nariagari Season 2",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1769,13 +1734,10 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(2)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Tenchi Souzou Design-bu Special",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1900,13 +1862,10 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // then
-                sleep(1000)
                 assertThat(receivedEvents).hasSize(2)
-
                 assertThat(receivedEvents.filterIsInstance<AnimeSearchEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                     "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
                 )
-
                 assertThat(receivedEvents.last()).isInstanceOf(AnimeSearchFinishedEvent::class.java)
             }
         }
@@ -1961,13 +1920,10 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.find(URI("https://myanimelist.net/anime/42938"))
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(2)
-
             assertThat(receivedEvents.filterIsInstance<AnimeEntryFoundEvent>().map { it.anime.title }).containsExactlyInAnyOrder(
                 "Fruits Basket: The Final",
             )
-
             assertThat(receivedEvents.last()).isInstanceOf(AnimeEntryFinishedEvent::class.java)
         }
 
@@ -1995,7 +1951,6 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.find(URI("https://myanimelist.net/anime/10001"))
 
             // then
-            sleep(1000)
             assertThat(receivedEvents).hasSize(1)
             assertThat(receivedEvents.first()).isInstanceOf(AnimeEntryFinishedEvent::class.java)
         }
@@ -2005,8 +1960,7 @@ internal class DefaultSearchHandlerTest {
     inner class FindSimilarAnimeTests {
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
-        fun `return with finished event if the host is not a supported meta data provider`() {
+        fun `return with finished event if the host is not a supported metadata provider`() {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
                 override val availableMetaDataProvider: Set<Hostname>
@@ -2030,16 +1984,10 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://example.org/anime/1535"))
 
             // then
-            runBlocking {
-                do {
-                    delay(500)
-                } while (receivedEvents.isEmpty())
-            }
             assertThat(receivedEvents).containsExactly(SimilarAnimeSearchFinishedEvent)
         }
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return with finished event if the uri represents a dead entry`() {
             // given
             val testCache = object : AnimeCache by TestAnimeCache {
@@ -2066,16 +2014,10 @@ internal class DefaultSearchHandlerTest {
             defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/10"))
 
             // then
-            runBlocking {
-                do {
-                    delay(500)
-                } while (receivedEvents.isEmpty())
-            }
             assertThat(receivedEvents).containsExactly(SimilarAnimeSearchFinishedEvent)
         }
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `return 10 anime having the most amount tags which reside in both anime sorted by number of number of matching tags desc`() {
             runBlocking {
                 // given
@@ -2099,7 +2041,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2112,35 +2054,28 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // when
-                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1"))
 
                 // then
-                var receivedEvent: Event?
-
-                do {
-                    delay(500)
-                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
-                } while (receivedEvent == null)
-
+                val receivedEvent: Event? = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 val event = receivedEvent as SimilarAnimeFoundEvent
 
                 assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                    URI("https://myanimelist.net/anime/10620"),
-                    URI("https://myanimelist.net/anime/38003"),
-                    URI("https://myanimelist.net/anime/2904"),
-                    URI("https://myanimelist.net/anime/2025"),
-                    URI("https://myanimelist.net/anime/19"),
-                    URI("https://myanimelist.net/anime/32867"),
-                    URI("https://myanimelist.net/anime/1575"),
-                    URI("https://myanimelist.net/anime/235"),
-                    URI("https://myanimelist.net/anime/31478"),
-                    URI("https://myanimelist.net/anime/4879"),
+                    URI("https://myanimelist.net/anime/100"),
+                    URI("https://myanimelist.net/anime/101"),
+                    URI("https://myanimelist.net/anime/102"),
+                    URI("https://myanimelist.net/anime/103"),
+                    URI("https://myanimelist.net/anime/104"),
+                    URI("https://myanimelist.net/anime/105"),
+                    URI("https://myanimelist.net/anime/106"),
+                    URI("https://myanimelist.net/anime/107"),
+                    URI("https://myanimelist.net/anime/108"),
+                    URI("https://myanimelist.net/anime/109"),
                 )
             }
         }
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from anime list`() {
             runBlocking {
                 // given
@@ -2157,7 +2092,7 @@ internal class DefaultSearchHandlerTest {
                     override fun animeList(): List<AnimeListEntry> = listOf(
                         AnimeListEntry(
                             title = "Mirai Nikki (TV)",
-                            link = Link("https://myanimelist.net/anime/10620"),
+                            link = Link("https://myanimelist.net/anime/106"),
                             episodes = 26,
                             type = TV,
                             location = Paths.get("."),
@@ -2173,8 +2108,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-
-                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2187,35 +2121,29 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // when
-                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1"))
 
                 // then
-                var receivedEvent: Event?
-
-                do {
-                    delay(500)
-                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
-                } while (receivedEvent == null)
-
+                val receivedEvent: Event? = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 val event = receivedEvent as SimilarAnimeFoundEvent
 
                 assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                    URI("https://myanimelist.net/anime/38003"),
-                    URI("https://myanimelist.net/anime/2904"),
-                    URI("https://myanimelist.net/anime/2025"),
-                    URI("https://myanimelist.net/anime/19"),
-                    URI("https://myanimelist.net/anime/32867"),
-                    URI("https://myanimelist.net/anime/1575"),
-                    URI("https://myanimelist.net/anime/235"),
-                    URI("https://myanimelist.net/anime/31478"),
-                    URI("https://myanimelist.net/anime/4879"),
-                    URI("https://myanimelist.net/anime/553"),
+                    URI("https://myanimelist.net/anime/100"),
+                    URI("https://myanimelist.net/anime/101"),
+                    URI("https://myanimelist.net/anime/102"),
+                    URI("https://myanimelist.net/anime/103"),
+                    URI("https://myanimelist.net/anime/104"),
+                    URI("https://myanimelist.net/anime/105"),
+                    // 106 must not be in the result
+                    URI("https://myanimelist.net/anime/107"),
+                    URI("https://myanimelist.net/anime/108"),
+                    URI("https://myanimelist.net/anime/109"),
+                    URI("https://myanimelist.net/anime/110"),
                 )
             }
         }
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from watch list`() {
             runBlocking {
                 // given
@@ -2233,7 +2161,7 @@ internal class DefaultSearchHandlerTest {
                     override fun watchList(): Set<WatchListEntry> = setOf(
                         WatchListEntry(
                             title = "Mirai Nikki (TV)",
-                            link = Link("https://myanimelist.net/anime/10620"),
+                            link = Link("https://myanimelist.net/anime/108"),
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
                         )
                     )
@@ -2246,7 +2174,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2259,35 +2187,29 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // when
-                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1"))
 
                 // then
-                var receivedEvent: Event?
-
-                do {
-                    delay(500)
-                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
-                } while (receivedEvent == null)
-
+                val receivedEvent: Event? = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 val event = receivedEvent as SimilarAnimeFoundEvent
 
                 assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                    URI("https://myanimelist.net/anime/38003"),
-                    URI("https://myanimelist.net/anime/2904"),
-                    URI("https://myanimelist.net/anime/2025"),
-                    URI("https://myanimelist.net/anime/19"),
-                    URI("https://myanimelist.net/anime/32867"),
-                    URI("https://myanimelist.net/anime/1575"),
-                    URI("https://myanimelist.net/anime/235"),
-                    URI("https://myanimelist.net/anime/31478"),
-                    URI("https://myanimelist.net/anime/4879"),
-                    URI("https://myanimelist.net/anime/553"),
+                    URI("https://myanimelist.net/anime/100"),
+                    URI("https://myanimelist.net/anime/101"),
+                    URI("https://myanimelist.net/anime/102"),
+                    URI("https://myanimelist.net/anime/103"),
+                    URI("https://myanimelist.net/anime/104"),
+                    URI("https://myanimelist.net/anime/105"),
+                    URI("https://myanimelist.net/anime/106"),
+                    URI("https://myanimelist.net/anime/107"),
+                    // 108 must not be in the result
+                    URI("https://myanimelist.net/anime/109"),
+                    URI("https://myanimelist.net/anime/110"),
                 )
             }
         }
 
         @Test
-        @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
         fun `result must not contain entries from ignore list`() {
             runBlocking {
                 // given
@@ -2306,7 +2228,7 @@ internal class DefaultSearchHandlerTest {
                     override fun ignoreList(): Set<IgnoreListEntry> = setOf(
                         IgnoreListEntry(
                             title = "Mirai Nikki (TV)",
-                            link = Link("https://myanimelist.net/anime/10620"),
+                            link = Link("https://myanimelist.net/anime/104"),
                             thumbnail = URI("https://cdn.myanimelist.net/images/anime/13/33465.jpg"),
                         )
                     )
@@ -2317,7 +2239,7 @@ internal class DefaultSearchHandlerTest {
                     eventBus = testEventBus,
                 )
 
-                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database-minified.json")).collect {
+                FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance).deserialize(testResource("search_tests/similar_anime_tests/reduced-anime-offline-database.json")).collect {
                     it.sources.forEach { source ->
                         testCache.populate(source, PresentValue(it))
                     }
@@ -2330,29 +2252,24 @@ internal class DefaultSearchHandlerTest {
                 )
 
                 // when
-                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1535"))
+                defaultSearchHandler.findSimilarAnime(URI("https://myanimelist.net/anime/1"))
 
                 // then
-                var receivedEvent: Event?
-
-                do {
-                    delay(500)
-                    receivedEvent = receivedEvents.find { it is SimilarAnimeFoundEvent }
-                } while (receivedEvent == null)
-
+                val receivedEvent: Event? = receivedEvents.find { it is SimilarAnimeFoundEvent }
                 val event = receivedEvent as SimilarAnimeFoundEvent
 
                 assertThat(event.entries.map { it.sources.first() }).containsExactly(
-                    URI("https://myanimelist.net/anime/38003"),
-                    URI("https://myanimelist.net/anime/2904"),
-                    URI("https://myanimelist.net/anime/2025"),
-                    URI("https://myanimelist.net/anime/19"),
-                    URI("https://myanimelist.net/anime/32867"),
-                    URI("https://myanimelist.net/anime/1575"),
-                    URI("https://myanimelist.net/anime/235"),
-                    URI("https://myanimelist.net/anime/31478"),
-                    URI("https://myanimelist.net/anime/4879"),
-                    URI("https://myanimelist.net/anime/553"),
+                    URI("https://myanimelist.net/anime/100"),
+                    URI("https://myanimelist.net/anime/101"),
+                    URI("https://myanimelist.net/anime/102"),
+                    URI("https://myanimelist.net/anime/103"),
+                    // 104 must not be in the result
+                    URI("https://myanimelist.net/anime/105"),
+                    URI("https://myanimelist.net/anime/106"),
+                    URI("https://myanimelist.net/anime/107"),
+                    URI("https://myanimelist.net/anime/108"),
+                    URI("https://myanimelist.net/anime/109"),
+                    URI("https://myanimelist.net/anime/110"),
                 )
             }
         }

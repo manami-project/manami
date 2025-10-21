@@ -1,0 +1,417 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manami-project/anime-offline-database/refs/tags/2025-24/anime-offline-database-minified.schema.json",
+  "license": {
+    "name": "Open Data Commons Open Database License (ODbL) v1.0 + Database Contents License (DbCL) v1.0",
+    "url": "https://github.com/manami-project/anime-offline-database/blob/2025-24/LICENSE"
+  },
+  "repository": "https://github.com/manami-project/anime-offline-database",
+  "scoreRange": {
+    "minInclusive": 1.0,
+    "maxInclusive": 10.0
+  },
+  "lastUpdate": "2025-06-12",
+  "data": [
+    {
+      "sources": [
+        "https://myanimelist.net/anime/1"
+      ],
+      "title": "1",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 8",
+        "tag 9",
+        "tag 10"
+      ]
+    },{
+      "sources": [
+        "https://myanimelist.net/anime/3"
+      ],
+      "title": "3",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 11",
+        "tag 22",
+        "tag 33",
+        "tag 44"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/2"
+      ],
+      "title": "2",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 61",
+        "tag 15",
+        "tag 24",
+        "tag 33"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/109"
+      ],
+      "title": "109",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/108"
+      ],
+      "title": "108",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 112",
+        "tag 15"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/107"
+      ],
+      "title": "107",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 52",
+        "tag 55",
+        "tag 59",
+        "tag 61"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/106"
+      ],
+      "title": "106",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/105"
+      ],
+      "title": "105",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 76",
+        "tag 62"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/104"
+      ],
+      "title": "104",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 15"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/103"
+      ],
+      "title": "103",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 112",
+        "tag 115",
+        "tag 21"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/103"
+      ],
+      "title": "103",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 22"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/102"
+      ],
+      "title": "102",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 8",
+        "tag 11",
+        "tag 15"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/101"
+      ],
+      "title": "101",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 8",
+        "tag 9",
+        "tag 11",
+        "tag 12",
+        "tag 13",
+        "tag 14",
+        "tag 15"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/100"
+      ],
+      "title": "100",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 1",
+        "tag 2",
+        "tag 3",
+        "tag 4",
+        "tag 5",
+        "tag 6",
+        "tag 7",
+        "tag 8",
+        "tag 9",
+        "tag 10"
+      ]
+    },
+    {
+      "sources": [
+        "https://myanimelist.net/anime/110"
+      ],
+      "title": "110",
+      "type": "UNKNOWN",
+      "episodes": 1,
+      "status": "UNKNOWN",
+      "animeSeason": {
+        "season": "UNDEFINED"
+      },
+      "picture": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
+      "synonyms": [],
+      "studios": [],
+      "producers": [],
+      "relatedAnime": [],
+      "tags": [
+        "tag 10",
+        "tag 11",
+        "tag 12"
+      ]
+    }
+  ]
+}

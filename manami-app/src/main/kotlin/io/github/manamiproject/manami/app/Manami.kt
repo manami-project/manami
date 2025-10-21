@@ -22,15 +22,13 @@ import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
-import io.github.manamiproject.modb.core.coroutines.ModbDispatchers
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.net.URI
-import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
 
@@ -54,16 +52,14 @@ class Manami(
     init {
         log.info {"Starting manami" }
         SimpleEventBus.subscribe(this) // TODO 4.0.0: Remove
-        runInBackground { // TODO 4.0.0: Convert to coroutines
-            withContext(ModbDispatchers.LIMITED_CPU) {
-                launch { DefaultLatestVersionChecker().checkLatestVersion() }
-                launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
-                launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
-            }
+        CoroutineScope(IO).launch {
+            launch { DefaultLatestVersionChecker().checkLatestVersion() }
+            launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
+            launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+            launch { DeadEntriesCachePopulator(config = AnilistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anilist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+            launch { DeadEntriesCachePopulator(config = AnimenewsnetworkConfig, url = URI("$DEAD_ENTRIES_BASE_URL/animenewsnetwork-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+            launch { DeadEntriesCachePopulator(config = KitsuConfig, url = URI("$DEAD_ENTRIES_BASE_URL/kitsu-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
+            launch { DeadEntriesCachePopulator(config = MyanimelistConfig, url = URI("$DEAD_ENTRIES_BASE_URL/myanimelist-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }
         }
     }
 
@@ -74,7 +70,6 @@ class Manami(
 
         log.info { "Terminating manami" }
 
-        backgroundTasks.shutdown()
         exitProcess(0)
     }
 
@@ -100,18 +95,5 @@ class Manami(
          * @since 4.0.0
          */
         val instance: Manami by lazy { Manami() }
-    }
-}
-
-private val backgroundTasks = Executors.newCachedThreadPool() // TODO 4.0.0: Remove
-
-/**
- * TODO 4.0.0: Remove
- */
-internal fun runInBackground(action: suspend () -> Unit) {
-    backgroundTasks.submit {
-        runBlocking {
-            action.invoke()
-        }
     }
 }
