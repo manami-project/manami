@@ -60,5 +60,11 @@ internal class DeadEntriesInconsistencyHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DeadEntriesInconsistencyHandler]
+         * @since 4.0.0
+         */
+        val instance: DeadEntriesInconsistencyHandler by lazy { DeadEntriesInconsistencyHandler() }
     }
 }

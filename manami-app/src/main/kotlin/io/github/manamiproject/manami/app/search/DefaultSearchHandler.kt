@@ -160,4 +160,12 @@ internal class DefaultSearchHandler(
             else -> false
         }
     }
+
+    companion object {
+        /**
+         * Singleton of [DefaultSearchHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultSearchHandler by lazy { DefaultSearchHandler() }
+    }
 }

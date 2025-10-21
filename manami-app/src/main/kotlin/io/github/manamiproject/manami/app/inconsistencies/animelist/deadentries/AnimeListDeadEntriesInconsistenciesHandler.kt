@@ -48,5 +48,11 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [AnimeListDeadEntriesInconsistenciesHandler]
+         * @since 4.0.0
+         */
+        val instance: AnimeListDeadEntriesInconsistenciesHandler by lazy { AnimeListDeadEntriesInconsistenciesHandler() }
     }
 }

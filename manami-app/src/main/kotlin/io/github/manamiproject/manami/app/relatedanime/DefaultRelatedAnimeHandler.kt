@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.relatedanime
 
+import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.cache.AnimeCache
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
@@ -64,5 +65,11 @@ internal class DefaultRelatedAnimeHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [DefaultRelatedAnimeHandler]
+         * @since 4.0.0
+         */
+        val instance: DefaultRelatedAnimeHandler by lazy { DefaultRelatedAnimeHandler() }
     }
 }

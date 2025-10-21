@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
@@ -60,5 +61,11 @@ internal class AnimeListMetaDataInconsistenciesHandler(
 
     companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [AnimeListMetaDataInconsistenciesHandler]
+         * @since 4.0.0
+         */
+        val instance: AnimeListMetaDataInconsistenciesHandler by lazy { AnimeListMetaDataInconsistenciesHandler() }
     }
 }

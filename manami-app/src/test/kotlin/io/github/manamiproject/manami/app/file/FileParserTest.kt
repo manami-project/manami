@@ -13,6 +13,7 @@ import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import io.github.manamiproject.modb.test.testResource
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
@@ -250,5 +251,22 @@ internal class FileParserTest {
                 location = Path("some/relative/path/ichigo_100%"),
             ),
         )
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = FileParser.instance
+
+            // when
+            val result = FileParser.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(FileParser::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }

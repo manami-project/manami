@@ -6,6 +6,7 @@ import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.test.loadTestResource
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URL
@@ -89,5 +90,22 @@ internal class GithubVersionProviderTest {
 
         // then
         assertThat(result).hasMessage("Unable to check latest version, because response code wasn't 200.")
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = GithubVersionProvider.instance
+
+            // when
+            val result = GithubVersionProvider.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(GithubVersionProvider::class.java)
+            assertThat(result === previous).isTrue()
+        }
     }
 }
