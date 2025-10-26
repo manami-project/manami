@@ -43,7 +43,7 @@ internal class DefaultInconsistenciesHandler(
     private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : InconsistenciesHandler {
 
-    override fun findInconsistencies(config: InconsistenciesSearchConfig) {
+    override suspend fun findInconsistencies(config: InconsistenciesSearchConfig) {
         eventBus.inconsistenciesState.update { InconsistenciesState(isRunning = true) }
 
         inconsistencyHandlers.filter { it.isExecutable(config) }

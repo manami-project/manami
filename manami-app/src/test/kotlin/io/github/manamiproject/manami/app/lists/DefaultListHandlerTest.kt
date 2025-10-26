@@ -257,7 +257,7 @@ internal class DefaultListHandlerTest {
                 }
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             entry1.sources.first() -> PresentValue(entry1)
                             entry2.sources.first() -> PresentValue(entry2)
@@ -319,7 +319,7 @@ internal class DefaultListHandlerTest {
                 }
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             entry.sources.first() -> PresentValue(entry)
                             deadEntry -> DeadEntry()
@@ -395,7 +395,7 @@ internal class DefaultListHandlerTest {
                 }
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             entry1.sources.first() -> PresentValue(entry1)
                             entry2.sources.first() -> PresentValue(entry2)
@@ -457,7 +457,7 @@ internal class DefaultListHandlerTest {
                 }
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             entry.sources.first() -> PresentValue(entry)
                             deadEntry -> DeadEntry()

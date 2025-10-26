@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.AnimeType.UNKNOWN
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -115,280 +116,292 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
         @Test
         fun `ignore entry if link is empty`() {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        AnimeListEntry(
-                            link = NoLink,
-                            title = "No Link Entry",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                            location = Path("."),
-                        ),
-                    )
+            runBlocking {
+                // given
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            AnimeListEntry(
+                                link = NoLink,
+                                title = "No Link Entry",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                location = Path("."),
+                            ),
+                        )
+                    }
                 }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
+                }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isEmpty()
             }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
-            }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isEmpty()
         }
 
         @Test
         fun `don't include anime if anime list entry and entry from cache are equal`() {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        AnimeListEntry(
-                            link = Link("https://myanimelist.net/anime/5114"),
-                            title = "Fullmetal Alchemist: Brotherhood",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path("."),
-                        ),
-                    )
-                }
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        Anime(
-                            sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                            title = "Fullmetal Alchemist: Brotherhood",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            runBlocking {
+                // given
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            AnimeListEntry(
+                                link = Link("https://myanimelist.net/anime/5114"),
+                                title = "Fullmetal Alchemist: Brotherhood",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                location = Path("."),
+                            ),
                         )
-                    )
+                    }
                 }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            Anime(
+                                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                                title = "Fullmetal Alchemist: Brotherhood",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                            )
+                        )
+                    }
+                }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isEmpty()
             }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isEmpty()
         }
 
         @Test
         fun `include anime if title differs`() {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist Brotherhood (TV)",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path("."),
-            )
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        testAnimeListEntry,
-                    )
+            runBlocking {
+                // given
+                val testAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist Brotherhood (TV)",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    location = Path("."),
+                )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            testAnimeListEntry,
+                        )
+                    }
                 }
-            }
 
-            val testAnime = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        testAnime
-                    )
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            testAnime
+                        )
+                    }
                 }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isNotEmpty()
+
+                val entry = result.entries.first()
+                assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
+                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(title = testAnime.title))
             }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isNotEmpty()
-
-            val entry = result.entries.first()
-            assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
-            assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(title = testAnime.title))
         }
 
         @Test
         fun `include anime if episodes differs`() {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 65,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path("."),
-            )
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        testAnimeListEntry,
-                    )
+            runBlocking {
+                // given
+                val testAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 65,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    location = Path("."),
+                )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            testAnimeListEntry,
+                        )
+                    }
                 }
-            }
 
-            val testAnime = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        testAnime
-                    )
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            testAnime
+                        )
+                    }
                 }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isNotEmpty()
+
+                val entry = result.entries.first()
+                assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
+                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(episodes = testAnime.episodes))
             }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isNotEmpty()
-
-            val entry = result.entries.first()
-            assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
-            assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(episodes = testAnime.episodes))
         }
 
         @Test
         fun `include anime if type differs`() {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = UNKNOWN,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                location = Path("."),
-            )
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        testAnimeListEntry,
-                    )
+            runBlocking {
+                // given
+                val testAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = UNKNOWN,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    location = Path("."),
+                )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            testAnimeListEntry,
+                        )
+                    }
                 }
-            }
 
-            val testAnime = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        testAnime
-                    )
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            testAnime
+                        )
+                    }
                 }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isNotEmpty()
+
+                val entry = result.entries.first()
+                assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
+                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(type = testAnime.type))
             }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isNotEmpty()
-
-            val entry = result.entries.first()
-            assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
-            assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(type = testAnime.type))
         }
 
         @Test
         fun `include anime if thumbnail differs`() {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111t.jpg"),
-                location = Path("."),
-            )
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        testAnimeListEntry,
-                    )
+            runBlocking {
+                // given
+                val testAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111t.jpg"),
+                    location = Path("."),
+                )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            testAnimeListEntry,
+                        )
+                    }
                 }
-            }
 
-            val testAnime = Anime(
-                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                title = "Fullmetal Alchemist: Brotherhood",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        testAnime
-                    )
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            testAnime
+                        )
+                    }
                 }
+
+                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isNotEmpty()
+
+                val entry = result.entries.first()
+                assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
+                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(thumbnail = testAnime.thumbnail))
             }
-
-            val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isNotEmpty()
-
-            val entry = result.entries.first()
-            assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
-            assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(thumbnail = testAnime.thumbnail))
         }
     }
 

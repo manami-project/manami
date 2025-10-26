@@ -8,7 +8,6 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import kotlinx.coroutines.runBlocking
 import java.net.URI
 
 internal class SimpleCacheLoader(
@@ -20,12 +19,12 @@ internal class SimpleCacheLoader(
 
     override fun hostname(): Hostname = config.hostname()
 
-    override fun loadAnime(uri: URI): Anime {
+    override suspend fun loadAnime(uri: URI): Anime {
         log.debug { "Loading anime from [$uri]" }
 
         val id = config.extractAnimeId(uri)
-        val rawContent = runBlocking { downloader.download(id) } // TODO 4.0.0: Coroutines
-        return runBlocking { transformer.transform(converter.convert(rawContent)) } // TODO 4.0.0: Coroutines
+        val rawContent = downloader.download(id)
+        return transformer.transform(converter.convert(rawContent))
     }
 
     private companion object {

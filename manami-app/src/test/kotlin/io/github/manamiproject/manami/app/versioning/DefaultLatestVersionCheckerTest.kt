@@ -29,11 +29,11 @@ internal class DefaultLatestVersionCheckerTest {
             delay(100)
 
             val testCurrentVersionProvider = object: VersionProvider {
-                override fun version(): SemanticVersion = SemanticVersion("3.0.0")
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.0.0")
             }
 
             val testLatestVersionProvider = object: VersionProvider {
-                override fun version(): SemanticVersion = SemanticVersion("3.2.2")
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.2.2")
             }
 
             val versionChecker = DefaultLatestVersionChecker(
@@ -65,11 +65,11 @@ internal class DefaultLatestVersionCheckerTest {
             delay(100)
 
             val testCurrentVersionProvider = object: VersionProvider {
-                override fun version(): SemanticVersion = SemanticVersion("3.2.0")
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.2.0")
             }
 
             val testLatestVersionProvider = object: VersionProvider {
-                override fun version(): SemanticVersion = SemanticVersion(versionString)
+                override suspend fun version(): SemanticVersion = SemanticVersion(versionString)
             }
 
             val versionChecker = DefaultLatestVersionChecker(

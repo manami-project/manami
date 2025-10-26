@@ -219,7 +219,7 @@ internal class DefaultFileWriterTest {
             }
 
             val testVersionProvider = object: VersionProvider by TestVersionProvider {
-                override fun version(): SemanticVersion = SemanticVersion("3.1.0")
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.1.0")
             }
 
             val fileWriter = DefaultFileWriter(

@@ -4,5 +4,5 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 
 interface FileWriter {
 
-    fun writeTo(file: RegularFile)
+    suspend fun writeTo(file: RegularFile)
 }

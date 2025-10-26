@@ -6,7 +6,7 @@ interface InconsistenciesHandler {
 
     fun fixAnimeListEntryMetaDataInconsistencies(diff: AnimeListMetaDataDiff)
 
-    fun findInconsistencies(config: InconsistenciesSearchConfig)
+    suspend fun findInconsistencies(config: InconsistenciesSearchConfig)
 
     fun fixMetaDataInconsistencies()
 

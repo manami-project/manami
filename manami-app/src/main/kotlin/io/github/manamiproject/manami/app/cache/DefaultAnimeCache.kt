@@ -121,7 +121,7 @@ internal class DefaultAnimeCache(
         }
     }
 
-    override fun fetch(key: URI): CacheEntry<Anime> {
+    override suspend fun fetch(key: URI): CacheEntry<Anime> {
         return when(val entry = entries[key]) {
             is PresentValue<Anime> -> removeUnrequestedMetaDataProvider(entry, key)
             is DeadEntry<Anime> -> entry
@@ -149,7 +149,7 @@ internal class DefaultAnimeCache(
         entries.clear()
     }
 
-    private fun loadEntry(uri: URI): CacheEntry<Anime> {
+    private suspend fun loadEntry(uri: URI): CacheEntry<Anime> {
         log.info { "No cache hit for [$uri]" }
 
         val cacheLoader = cacheLoader.find { uri.toString().contains(it.hostname()) }

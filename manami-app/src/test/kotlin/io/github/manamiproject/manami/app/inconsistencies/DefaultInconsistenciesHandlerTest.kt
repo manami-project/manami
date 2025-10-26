@@ -63,7 +63,7 @@ internal class DefaultInconsistenciesHandlerTest {
                         InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
+                        override suspend fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
                             watchListResults = listOf(
                                 MetaDataDiff(
                                     currentEntry = WatchListEntry(
@@ -118,7 +118,7 @@ internal class DefaultInconsistenciesHandlerTest {
                         InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
+                        override suspend fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
                             ignoreListResults = listOf(
                                 MetaDataDiff(
                                     currentEntry = IgnoreListEntry(
@@ -194,124 +194,128 @@ internal class DefaultInconsistenciesHandlerTest {
 
             @Test
             fun `replace current watch list entry with the new instance`() {
-                // given
-                val metaDataDiff = MetaDataDiff(
-                    currentEntry = WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/5114"),
-                        title = "FMB",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                    ),
-                    newEntry = WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/5114"),
-                        title = "Fullmetal Alchemist: Brotherhood",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                    ),
-                )
-                val testMetaDataInconsistencyHandler = object: InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
-                    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
-                    override fun calculateWorkload(): Int = 1
-                    override fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
-                        watchListResults = listOf(metaDataDiff)
+                runBlocking {
+                    // given
+                    val metaDataDiff = MetaDataDiff(
+                        currentEntry = WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/5114"),
+                            title = "FMB",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                        ),
+                        newEntry = WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/5114"),
+                            title = "Fullmetal Alchemist: Brotherhood",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                        ),
                     )
-                }
-
-                val removedEntries = mutableListOf<WatchListEntry>()
-                val addedEntries = mutableListOf<WatchListEntry>()
-                val testState = object: State by TestState {
-                    override fun createSnapshot(): Snapshot = StateSnapshot()
-                    override fun removeWatchListEntry(entry: WatchListEntry) {
-                        removedEntries.add(entry)
+                    val testMetaDataInconsistencyHandler = object: InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
+                        override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
+                        override fun calculateWorkload(): Int = 1
+                        override suspend fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
+                            watchListResults = listOf(metaDataDiff)
+                        )
                     }
-                    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
-                        addedEntries.addAll(anime)
+
+                    val removedEntries = mutableListOf<WatchListEntry>()
+                    val addedEntries = mutableListOf<WatchListEntry>()
+                    val testState = object: State by TestState {
+                        override fun createSnapshot(): Snapshot = StateSnapshot()
+                        override fun removeWatchListEntry(entry: WatchListEntry) {
+                            removedEntries.add(entry)
+                        }
+                        override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
+                            addedEntries.addAll(anime)
+                        }
                     }
+
+                    val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                        override fun push(command: ReversibleCommand) {}
+                    }
+
+                    val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
+                        state = testState,
+                        cache = TestAnimeCache,
+                        commandHistory = testCommandHistory,
+                        inconsistencyHandlers = listOf(testMetaDataInconsistencyHandler),
+                        eventBus = CoroutinesFlowEventBus,
+                    )
+
+                    val config = InconsistenciesSearchConfig(
+                        checkDeadEntries = false,
+                        checkMetaData = true,
+                    )
+                    defaultInconsistenciesHandler.findInconsistencies(config)
+
+                    // when
+                    defaultInconsistenciesHandler.fixMetaDataInconsistencies()
+
+                    // then
+                    assertThat(removedEntries).containsExactly(metaDataDiff.currentEntry)
+                    assertThat(addedEntries).containsExactly(metaDataDiff.newEntry)
                 }
-
-                val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                    override fun push(command: ReversibleCommand) {}
-                }
-
-                val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
-                    state = testState,
-                    cache = TestAnimeCache,
-                    commandHistory = testCommandHistory,
-                    inconsistencyHandlers = listOf(testMetaDataInconsistencyHandler),
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                val config = InconsistenciesSearchConfig(
-                    checkDeadEntries = false,
-                    checkMetaData = true,
-                )
-                defaultInconsistenciesHandler.findInconsistencies(config)
-
-                // when
-                defaultInconsistenciesHandler.fixMetaDataInconsistencies()
-
-                // then
-                assertThat(removedEntries).containsExactly(metaDataDiff.currentEntry)
-                assertThat(addedEntries).containsExactly(metaDataDiff.newEntry)
             }
 
             @Test
             fun `replace current ignore list entry with the new instance`() {
-                // given
-                val metaDataDiff = MetaDataDiff(
-                    currentEntry = IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/28981"),
-                        title = "Ameiro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
-                    ),
-                    newEntry = IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/28981"),
-                        title = "Ame-iro Cocoa",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
-                    ),
-                )
-                val testMetaDataInconsistencyHandler = object: InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
-                    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
-                    override fun calculateWorkload(): Int = 1
-                    override fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
-                        ignoreListResults = listOf(metaDataDiff)
+                runBlocking {
+                    // given
+                    val metaDataDiff = MetaDataDiff(
+                        currentEntry = IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ameiro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        ),
+                        newEntry = IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/28981"),
+                            title = "Ame-iro Cocoa",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                        ),
                     )
-                }
-
-                val removedEntries = mutableListOf<IgnoreListEntry>()
-                val addedEntries = mutableListOf<IgnoreListEntry>()
-                val testState = object: State by TestState {
-                    override fun createSnapshot(): Snapshot = StateSnapshot()
-                    override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
-                        removedEntries.add(entry)
+                    val testMetaDataInconsistencyHandler = object: InconsistencyHandler<MetaDataInconsistenciesResult> by TestMetaDataInconsistencyHandler {
+                        override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
+                        override fun calculateWorkload(): Int = 1
+                        override suspend fun execute(): MetaDataInconsistenciesResult = MetaDataInconsistenciesResult(
+                            ignoreListResults = listOf(metaDataDiff)
+                        )
                     }
-                    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
-                        addedEntries.addAll(anime)
+
+                    val removedEntries = mutableListOf<IgnoreListEntry>()
+                    val addedEntries = mutableListOf<IgnoreListEntry>()
+                    val testState = object: State by TestState {
+                        override fun createSnapshot(): Snapshot = StateSnapshot()
+                        override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
+                            removedEntries.add(entry)
+                        }
+                        override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
+                            addedEntries.addAll(anime)
+                        }
                     }
+
+                    val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                        override fun push(command: ReversibleCommand) {}
+                    }
+
+                    val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
+                        state = testState,
+                        cache = TestAnimeCache,
+                        commandHistory = testCommandHistory,
+                        inconsistencyHandlers = listOf(testMetaDataInconsistencyHandler),
+                        eventBus = CoroutinesFlowEventBus,
+                    )
+
+                    val config = InconsistenciesSearchConfig(
+                        checkDeadEntries = false,
+                        checkMetaData = true,
+                    )
+                    defaultInconsistenciesHandler.findInconsistencies(config)
+
+                    // when
+                    defaultInconsistenciesHandler.fixMetaDataInconsistencies()
+
+                    // then
+                    assertThat(removedEntries).containsExactly(metaDataDiff.currentEntry)
+                    assertThat(addedEntries).containsExactly(metaDataDiff.newEntry)
                 }
-
-                val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                    override fun push(command: ReversibleCommand) {}
-                }
-
-                val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
-                    state = testState,
-                    cache = TestAnimeCache,
-                    commandHistory = testCommandHistory,
-                    inconsistencyHandlers = listOf(testMetaDataInconsistencyHandler),
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                val config = InconsistenciesSearchConfig(
-                    checkDeadEntries = false,
-                    checkMetaData = true,
-                )
-                defaultInconsistenciesHandler.findInconsistencies(config)
-
-                // when
-                defaultInconsistenciesHandler.fixMetaDataInconsistencies()
-
-                // then
-                assertThat(removedEntries).containsExactly(metaDataDiff.currentEntry)
-                assertThat(addedEntries).containsExactly(metaDataDiff.newEntry)
             }
         }
     }
@@ -333,7 +337,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
+                        override suspend fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
                             watchListResults = listOf(
                                 WatchListEntry(
                                     link = Link("https://myanimelist.net/anime/5114"),
@@ -380,7 +384,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
+                        override suspend fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
                             ignoreListResults = listOf(
                                 IgnoreListEntry(
                                     link = Link("https://myanimelist.net/anime/28981"),
@@ -448,100 +452,104 @@ internal class DefaultInconsistenciesHandlerTest {
 
             @Test
             fun `remove entry from watch list`() {
-                // given
-                val watchListEntry = WatchListEntry(
-                    link = Link("https://myanimelist.net/anime/5114"),
-                    title = "Fullmetal Alchemist: Brotherhood",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                )
-                val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
-                    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
-                    override fun calculateWorkload(): Int = 1
-                    override fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
-                        watchListResults = listOf(watchListEntry)
+                runBlocking {
+                    // given
+                    val watchListEntry = WatchListEntry(
+                        link = Link("https://myanimelist.net/anime/5114"),
+                        title = "Fullmetal Alchemist: Brotherhood",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
                     )
-                }
-
-                val removedEntries = mutableListOf<WatchListEntry>()
-                val testState = object: State by TestState {
-                    override fun createSnapshot(): Snapshot = StateSnapshot()
-                    override fun removeWatchListEntry(entry: WatchListEntry) {
-                        removedEntries.add(entry)
+                    val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
+                        override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
+                        override fun calculateWorkload(): Int = 1
+                        override suspend fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
+                            watchListResults = listOf(watchListEntry)
+                        )
                     }
+
+                    val removedEntries = mutableListOf<WatchListEntry>()
+                    val testState = object: State by TestState {
+                        override fun createSnapshot(): Snapshot = StateSnapshot()
+                        override fun removeWatchListEntry(entry: WatchListEntry) {
+                            removedEntries.add(entry)
+                        }
+                    }
+
+                    val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                        override fun push(command: ReversibleCommand) {}
+                    }
+
+                    val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
+                        state = testState,
+                        cache = TestAnimeCache,
+                        commandHistory = testCommandHistory,
+                        inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
+                        eventBus = CoroutinesFlowEventBus,
+                    )
+
+                    val config = InconsistenciesSearchConfig(
+                        checkDeadEntries = true,
+                        checkMetaData = false,
+                    )
+                    defaultInconsistenciesHandler.findInconsistencies(config)
+
+                    // when
+                    defaultInconsistenciesHandler.fixDeadEntryInconsistencies()
+
+                    // then
+                    assertThat(removedEntries).containsExactly(watchListEntry)
                 }
-
-                val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                    override fun push(command: ReversibleCommand) {}
-                }
-
-                val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
-                    state = testState,
-                    cache = TestAnimeCache,
-                    commandHistory = testCommandHistory,
-                    inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                val config = InconsistenciesSearchConfig(
-                    checkDeadEntries = true,
-                    checkMetaData = false,
-                )
-                defaultInconsistenciesHandler.findInconsistencies(config)
-
-                // when
-                defaultInconsistenciesHandler.fixDeadEntryInconsistencies()
-
-                // then
-                assertThat(removedEntries).containsExactly(watchListEntry)
             }
 
             @Test
             fun `remove entry from ignore list`() {
-                // given
-                val ignoreListEntry = IgnoreListEntry(
-                    link = Link("https://myanimelist.net/anime/28981"),
-                    title = "Ame-iro Cocoa",
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
-                )
-                val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
-                    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
-                    override fun calculateWorkload(): Int = 1
-                    override fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
-                        ignoreListResults = listOf(ignoreListEntry)
+                runBlocking {
+                    // given
+                    val ignoreListEntry = IgnoreListEntry(
+                        link = Link("https://myanimelist.net/anime/28981"),
+                        title = "Ame-iro Cocoa",
+                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                     )
-                }
-
-                val removedEntries = mutableListOf<IgnoreListEntry>()
-                val testState = object: State by TestState {
-                    override fun createSnapshot(): Snapshot = StateSnapshot()
-                    override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
-                        removedEntries.add(entry)
+                    val testDeadEntriesInconsistencyHandler = object: InconsistencyHandler<DeadEntriesInconsistenciesResult> by TestDeadEntriesInconsistencyHandler {
+                        override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
+                        override fun calculateWorkload(): Int = 1
+                        override suspend fun execute(): DeadEntriesInconsistenciesResult = DeadEntriesInconsistenciesResult(
+                            ignoreListResults = listOf(ignoreListEntry)
+                        )
                     }
+
+                    val removedEntries = mutableListOf<IgnoreListEntry>()
+                    val testState = object: State by TestState {
+                        override fun createSnapshot(): Snapshot = StateSnapshot()
+                        override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
+                            removedEntries.add(entry)
+                        }
+                    }
+
+                    val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                        override fun push(command: ReversibleCommand) {}
+                    }
+
+                    val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
+                        state = testState,
+                        cache = TestAnimeCache,
+                        commandHistory = testCommandHistory,
+                        inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
+                        eventBus = CoroutinesFlowEventBus,
+                    )
+
+                    val config = InconsistenciesSearchConfig(
+                        checkDeadEntries = true,
+                        checkMetaData = false,
+                    )
+                    defaultInconsistenciesHandler.findInconsistencies(config)
+
+                    // when
+                    defaultInconsistenciesHandler.fixDeadEntryInconsistencies()
+
+                    // then
+                    assertThat(removedEntries).containsExactly(ignoreListEntry)
                 }
-
-                val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                    override fun push(command: ReversibleCommand) {}
-                }
-
-                val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
-                    state = testState,
-                    cache = TestAnimeCache,
-                    commandHistory = testCommandHistory,
-                    inconsistencyHandlers = listOf(testDeadEntriesInconsistencyHandler),
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                val config = InconsistenciesSearchConfig(
-                    checkDeadEntries = true,
-                    checkMetaData = false,
-                )
-                defaultInconsistenciesHandler.findInconsistencies(config)
-
-                // when
-                defaultInconsistenciesHandler.fixDeadEntryInconsistencies()
-
-                // then
-                assertThat(removedEntries).containsExactly(ignoreListEntry)
             }
         }
     }
@@ -663,7 +671,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     val testInconsistencyHandler = object : InconsistencyHandler<AnimeListMetaDataInconsistenciesResult> by TestAnimeListMetaDataInconsistencyHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): AnimeListMetaDataInconsistenciesResult = AnimeListMetaDataInconsistenciesResult(
+                        override suspend fun execute(): AnimeListMetaDataInconsistenciesResult = AnimeListMetaDataInconsistenciesResult(
                             entries = listOf(
                                 AnimeListMetaDataDiff(
                                     currentEntry = currentEntry,
@@ -716,7 +724,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     val testInconsistencyHandler = object : InconsistencyHandler<AnimeListEpisodesInconsistenciesResult> by TestAnimeListEpisodesInconsistenciesHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): AnimeListEpisodesInconsistenciesResult = AnimeListEpisodesInconsistenciesResult(
+                        override suspend fun execute(): AnimeListEpisodesInconsistenciesResult = AnimeListEpisodesInconsistenciesResult(
                             entries = listOf(
                                 EpisodeDiff(
                                     animeListEntry = currentEntry,
@@ -769,7 +777,7 @@ internal class DefaultInconsistenciesHandlerTest {
                     val testInconsistencyHandler = object : InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> by TestAnimeListDeadEntriesInconsistenciesHandler {
                         override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = true
                         override fun calculateWorkload(): Int = 1
-                        override fun execute(): AnimeListDeadEntriesInconsistenciesResult = AnimeListDeadEntriesInconsistenciesResult(
+                        override suspend fun execute(): AnimeListDeadEntriesInconsistenciesResult = AnimeListDeadEntriesInconsistenciesResult(
                             entries = listOf(currentEntry),
                         )
                     }

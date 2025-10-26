@@ -9,6 +9,7 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -114,116 +115,122 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
 
         @Test
         fun `ignore entry if link is empty`() {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        AnimeListEntry(
-                            link = NoLink,
-                            title = "No Link Entry",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                            location = Path("."),
-                        ),
-                    )
+            runBlocking {
+                // given
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            AnimeListEntry(
+                                link = NoLink,
+                                title = "No Link Entry",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                location = Path("."),
+                            ),
+                        )
+                    }
                 }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
+                }
+
+                val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isEmpty()
             }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
-            }
-
-            val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isEmpty()
         }
 
         @Test
         fun `don't include anime if there is an entry returned from the cache`() {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        AnimeListEntry(
-                            link = Link("https://myanimelist.net/anime/5114"),
-                            title = "Fullmetal Alchemist: Brotherhood",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path("."),
-                        ),
-                    )
-                }
-            }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> {
-                    return PresentValue(
-                        Anime(
-                            sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
-                            title = "Fullmetal Alchemist: Brotherhood",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+            runBlocking {
+                // given
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            AnimeListEntry(
+                                link = Link("https://myanimelist.net/anime/5114"),
+                                title = "Fullmetal Alchemist: Brotherhood",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                location = Path("."),
+                            ),
                         )
-                    )
+                    }
                 }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return PresentValue(
+                            Anime(
+                                sources = hashSetOf(URI("https://myanimelist.net/anime/5114")),
+                                title = "Fullmetal Alchemist: Brotherhood",
+                                type = TV,
+                                episodes = 64,
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                            )
+                        )
+                    }
+                }
+
+                val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).isEmpty()
             }
-
-            val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).isEmpty()
         }
 
         @Test
         fun `include anime if nothing is returned from the cache based on the link`() {
-            // given
-            val deadEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/10"),
-                title = "Dead Entry",
-                type = TV,
-                episodes = 64,
-                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                location = Path("."),
-            )
+            runBlocking {
+                // given
+                val deadEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/10"),
+                    title = "Dead Entry",
+                    type = TV,
+                    episodes = 64,
+                    thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                    location = Path("."),
+                )
 
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        deadEntry,
-                    )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            deadEntry,
+                        )
+                    }
                 }
+
+                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
+                }
+
+                val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
+                    state = testState,
+                    cache = testCache,
+                )
+
+                // when
+                val result = inconsistencyHandler.execute()
+
+                // then
+                assertThat(result.entries).containsExactly(deadEntry)
             }
-
-            val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
-            }
-
-            val inconsistencyHandler = AnimeListDeadEntriesInconsistenciesHandler(
-                state = testState,
-                cache = testCache,
-            )
-
-            // when
-            val result = inconsistencyHandler.execute()
-
-            // then
-            assertThat(result.entries).containsExactly(deadEntry)
         }
     }
 

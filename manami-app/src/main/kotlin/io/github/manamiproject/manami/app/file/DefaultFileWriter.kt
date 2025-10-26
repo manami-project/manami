@@ -7,7 +7,6 @@ import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.loadResource
-import kotlinx.coroutines.runBlocking
 import javax.xml.stream.XMLOutputFactory
 import kotlin.io.path.outputStream
 
@@ -18,11 +17,11 @@ internal class DefaultFileWriter(
 
     private val xmlWriterFactory = XMLOutputFactory.newInstance()
 
-    override fun writeTo(file: RegularFile) {
+    override suspend fun writeTo(file: RegularFile) {
         val folder = file.parent
         val dtdFile = "manami_${versionProvider.version()}.dtd"
 
-        runBlocking { loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile)) }
+        loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile))
 
         val xmlWriter = xmlWriterFactory.createXMLStreamWriter(file.outputStream()).apply {
             writeStartDocument("UTF-8", "1.1")

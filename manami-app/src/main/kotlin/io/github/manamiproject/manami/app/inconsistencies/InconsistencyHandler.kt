@@ -6,5 +6,5 @@ internal interface InconsistencyHandler<RESULT> {
 
     fun calculateWorkload(): Int
 
-    fun execute(): RESULT
+    suspend fun execute(): RESULT
 }

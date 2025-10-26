@@ -23,18 +23,16 @@ internal class DeadEntriesInconsistencyHandler(
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkDeadEntries
 
-    override fun execute(): DeadEntriesInconsistenciesResult {
+    override suspend fun execute(): DeadEntriesInconsistenciesResult {
         log.info { "Starting check for dead entries in WatchList and IgnoreList." }
 
         val watchListResults: List<WatchListEntry> = state.watchList()
-            .asSequence()
             .map { watchListEntry -> watchListEntry to cache.fetch(watchListEntry.link.uri) }
             .filter { it.second is DeadEntry }
             .map { it.first }
             .toList()
 
         val ignoreListResults: List<IgnoreListEntry> = state.ignoreList()
-            .asSequence()
             .map { ignoreListEntry -> ignoreListEntry to cache.fetch(ignoreListEntry.link.uri) }
             .filter { it.second is DeadEntry }
             .map { it.first }

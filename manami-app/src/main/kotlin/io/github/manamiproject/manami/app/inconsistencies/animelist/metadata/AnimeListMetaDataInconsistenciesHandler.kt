@@ -23,11 +23,10 @@ internal class AnimeListMetaDataInconsistenciesHandler(
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListMetaData
 
-    override fun execute(): AnimeListMetaDataInconsistenciesResult {
+    override suspend fun execute(): AnimeListMetaDataInconsistenciesResult {
         log.info { "Starting check for meta data inconsistencies in AnimeList." }
 
         val result = state.animeList()
-            .asSequence()
             .filter { it.link is Link }
             .map { it to cache.fetch(it.link.asLink().uri) }
             .filter { it.second is PresentValue }
