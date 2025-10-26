@@ -23,11 +23,10 @@ internal class MetaDataInconsistencyHandler(
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkMetaData
 
-    override fun execute(): MetaDataInconsistenciesResult {
+    override suspend fun execute(): MetaDataInconsistenciesResult {
         log.info { "Starting check for meta data inconsistencies in WatchList and IgnoreList." }
 
         val watchListResults: List<MetaDataDiff<WatchListEntry>> = state.watchList()
-            .asSequence()
             .map { watchListEntry -> watchListEntry to cache.fetch(watchListEntry.link.uri) }
             .filter { it.second is PresentValue<Anime> }
             .map { it.first to (it.second as PresentValue<Anime>).value }
@@ -38,7 +37,6 @@ internal class MetaDataInconsistencyHandler(
             .toList()
 
         val ignoreListResults: List<MetaDataDiff<IgnoreListEntry>> = state.ignoreList()
-            .asSequence()
             .map { ignoreListEntry -> ignoreListEntry to cache.fetch(ignoreListEntry.link.uri) }
             .filter { it.second is PresentValue<Anime> }
             .map { it.first to (it.second as PresentValue<Anime>).value }

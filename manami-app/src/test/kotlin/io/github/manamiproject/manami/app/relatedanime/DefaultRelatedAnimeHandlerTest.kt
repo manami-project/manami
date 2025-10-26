@@ -48,7 +48,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     val testLocation = tempDir.resolve("test1").createDirectory().toAbsolutePath()
 
                     val testCache = object: AnimeCache by TestAnimeCache {
-                        override fun fetch(key: URI): CacheEntry<Anime> {
+                        override suspend fun fetch(key: URI): CacheEntry<Anime> {
                             return when(key) {
                                 URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                                 URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
@@ -114,7 +114,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
 
                     val testCache = object: AnimeCache by TestAnimeCache {
-                        override fun fetch(key: URI): CacheEntry<Anime> {
+                        override suspend fun fetch(key: URI): CacheEntry<Anime> {
                             return when(key) {
                                 URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                                 URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
@@ -178,7 +178,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
 
                     val testCache = object: AnimeCache by TestAnimeCache {
-                        override fun fetch(key: URI): CacheEntry<Anime> {
+                        override suspend fun fetch(key: URI): CacheEntry<Anime> {
                             return when(key) {
                                 URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                                 URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
@@ -243,7 +243,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 delay(100)
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                             URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
@@ -297,7 +297,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 delay(100)
 
                 val testCache = object: AnimeCache by TestAnimeCache {
-                    override fun fetch(key: URI): CacheEntry<Anime> {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
                         return when(key) {
                             URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                             URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
@@ -353,7 +353,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     val testLocation2 = tempDir.resolve("test2").createDirectory().toAbsolutePath()
 
                     val testCache = object: AnimeCache by TestAnimeCache {
-                        override fun fetch(key: URI): CacheEntry<Anime> {
+                        override suspend fun fetch(key: URI): CacheEntry<Anime> {
                             return when(key) {
                                 URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
                                 URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)

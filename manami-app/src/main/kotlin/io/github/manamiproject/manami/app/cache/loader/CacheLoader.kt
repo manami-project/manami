@@ -6,5 +6,5 @@ import java.net.URI
 
 internal interface CacheLoader {
     fun hostname(): Hostname
-    fun loadAnime(uri: URI): Anime
+    suspend fun loadAnime(uri: URI): Anime
 }

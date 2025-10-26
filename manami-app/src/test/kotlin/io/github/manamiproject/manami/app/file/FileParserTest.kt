@@ -109,7 +109,7 @@ internal class FileParserTest {
     fun `correctly parse file`() {
         // given
         val testCache = object: AnimeCache by TestAnimeCache {
-            override fun fetch(key: URI): CacheEntry<Anime> {
+            override suspend fun fetch(key: URI): CacheEntry<Anime> {
                 return when (key) {
                     URI("https://myanimelist.net/anime/37989") -> PresentValue(Anime(
                         title = "Golden Kamuy 2nd Season",
@@ -194,7 +194,7 @@ internal class FileParserTest {
     fun `set status of watchlist entry to UNKNOWN if it is a dead entry`() {
         // given
         val testCache = object: AnimeCache by TestAnimeCache {
-            override fun fetch(key: URI): CacheEntry<Anime> {
+            override suspend fun fetch(key: URI): CacheEntry<Anime> {
                 return when (key) {
                     URI("https://myanimelist.net/anime/37989") -> PresentValue(Anime(
                         title = "Golden Kamuy 2nd Season",

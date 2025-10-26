@@ -63,7 +63,7 @@ internal class DefaultFileHandler(
 
     override fun isUnsaved(): Boolean = commandHistory.isUnsaved()
 
-    override fun save() {
+    override suspend fun save() {
         if (commandHistory.isSaved()) {
             return
         }
@@ -75,7 +75,7 @@ internal class DefaultFileHandler(
         commandHistory.save()
     }
 
-    override fun saveAs(file: RegularFile) {
+    override suspend fun saveAs(file: RegularFile) {
         if (!file.regularFileExists()) {
             file.createFile()
         }

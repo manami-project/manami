@@ -2009,7 +2009,7 @@ internal class DefaultSearchHandlerTest {
                     override val availableMetaDataProvider: Set<Hostname>
                         get() = setOf(MyanimelistConfig.hostname())
 
-                    override fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
                 }
 
                 val defaultSearchHandler = DefaultSearchHandler(

@@ -19,11 +19,10 @@ internal class AnimeListEpisodesInconsistenciesHandler(
 
     override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
 
-    override fun execute(): AnimeListEpisodesInconsistenciesResult {
+    override suspend fun execute(): AnimeListEpisodesInconsistenciesResult {
         log.info { "Starting check for differing episodes in AnimeList." }
 
         val results = state.animeList()
-            .asSequence()
             .filter { it.link is Link }
             .map { it to fetchNumberOfEpisodes(it) }
             .filter { it.first.episodes != it.second }

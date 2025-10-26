@@ -10,8 +10,8 @@ interface FileHandler {
 
     fun isSaved(): Boolean
     fun isUnsaved(): Boolean
-    fun save()
-    fun saveAs(file: RegularFile)
+    suspend fun save()
+    suspend fun saveAs(file: RegularFile)
 
     fun isUndoPossible(): Boolean
     fun undo()

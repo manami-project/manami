@@ -9,6 +9,7 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.test.tempDirectory
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -338,21 +339,23 @@ internal class DefaultFileHandlerTest {
 
         @Test
         fun `don't do anything if state is already saved`() {
-            // given
-            val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                override fun isSaved(): Boolean = true
+            runBlocking {
+                // given
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = true
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = TestState,
+                    commandHistory = testCommandHistory,
+                    parser = TestManamiFileParser,
+                    fileWriter = TestFileWriter,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                // when
+                defaultFileHandler.save()
             }
-
-            val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
-                fileWriter = TestFileWriter,
-                eventBus = CoroutinesFlowEventBus,
-            )
-
-            // when
-            defaultFileHandler.save()
         }
 
         @Test
@@ -403,7 +406,7 @@ internal class DefaultFileHandlerTest {
 
                 var fileHasBeenWritten = false
                 val testFileWriter = object: FileWriter by TestFileWriter {
-                    override fun writeTo(file: RegularFile) {
+                    override suspend fun writeTo(file: RegularFile) {
                         fileHasBeenWritten = true
                     }
                 }
@@ -447,7 +450,7 @@ internal class DefaultFileHandlerTest {
                 }
 
                 val testFileWriter = object: FileWriter by TestFileWriter {
-                    override fun writeTo(file: RegularFile) { }
+                    override suspend fun writeTo(file: RegularFile) { }
                 }
 
                 val defaultFileHandler = DefaultFileHandler(
@@ -489,7 +492,7 @@ internal class DefaultFileHandlerTest {
 
                 var fileHasBeenWritten = false
                 val testFileWriter = object: FileWriter by TestFileWriter {
-                    override fun writeTo(file: RegularFile) {
+                    override suspend fun writeTo(file: RegularFile) {
                         fileHasBeenWritten = true
                     }
                 }

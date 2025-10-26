@@ -20,7 +20,7 @@ import java.time.OffsetDateTime
 
 internal object TestCacheLoader : CacheLoader {
     override fun hostname(): Hostname = shouldNotBeInvoked()
-    override fun loadAnime(uri: URI): Anime = shouldNotBeInvoked()
+    override suspend fun loadAnime(uri: URI): Anime = shouldNotBeInvoked()
 }
 
 internal object MetaDataProviderTestConfig: MetaDataProviderConfig {
@@ -53,7 +53,7 @@ internal object TestAnimeCache: AnimeCache {
         get() = shouldNotBeInvoked()
     override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = shouldNotBeInvoked()
     override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = shouldNotBeInvoked()
-    override fun fetch(key: URI): CacheEntry<Anime> = shouldNotBeInvoked()
+    override suspend fun fetch(key: URI): CacheEntry<Anime> = shouldNotBeInvoked()
     override fun populate(key: URI, value: CacheEntry<Anime>) = shouldNotBeInvoked()
     override fun clear() = shouldNotBeInvoked()
 }

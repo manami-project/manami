@@ -14,6 +14,7 @@ import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.*
+import kotlinx.coroutines.runBlocking
 import org.xml.sax.Attributes
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
@@ -87,10 +88,12 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
     override fun startElement(namespaceUri: String, localName: String, qName: String, attributes: Attributes) {
         strBuilder = StringBuilder()
 
-        when (qName) {
-            "animeListEntry" -> createAnimeEntry(attributes)
-            "watchListEntry" -> createWatchListEntry(attributes)
-            "ignoreListEntry" -> createIgnoreListEntry(attributes)
+        runBlocking {
+            when (qName) {
+                "animeListEntry" -> createAnimeEntry(attributes)
+                "watchListEntry" -> createWatchListEntry(attributes)
+                "ignoreListEntry" -> createIgnoreListEntry(attributes)
+            }
         }
     }
 
@@ -115,7 +118,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
         )
     }
 
-    private fun createWatchListEntry(attributes: Attributes) {
+    private suspend fun createWatchListEntry(attributes: Attributes) {
         val link = attributes.getValue("link").trim().let {
             if (it.eitherNullOrBlank()) {
                 throw IllegalStateException("Link must not be blank")
@@ -166,7 +169,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
             true -> {
                 try {
                     URLDecoder.decode(trimmedLocation, UTF_8) // necessary for locations from manami <= 3.6.1
-                } catch(e: IllegalArgumentException) {
+                } catch(_: IllegalArgumentException) {
                     trimmedLocation
                 }
             }

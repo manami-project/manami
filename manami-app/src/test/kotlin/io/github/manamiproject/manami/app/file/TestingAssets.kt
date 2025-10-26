@@ -10,5 +10,5 @@ internal object TestManamiFileParser: Parser<ParsedManamiFile> {
 }
 
 internal object TestFileWriter: FileWriter {
-    override fun writeTo(file: RegularFile) = shouldNotBeInvoked()
+    override suspend fun writeTo(file: RegularFile) = shouldNotBeInvoked()
 }
