@@ -4,7 +4,6 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
-import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
@@ -24,18 +23,12 @@ internal class AnimeListMetaDataInconsistenciesHandler(
 
     override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListMetaData
 
-    override fun execute(progressUpdate: (Int) -> Unit): AnimeListMetaDataInconsistenciesResult {
+    override fun execute(): AnimeListMetaDataInconsistenciesResult {
         log.info { "Starting check for meta data inconsistencies in AnimeList." }
-
-        var progress = 0
 
         val result = state.animeList()
             .asSequence()
             .filter { it.link is Link }
-            .map {
-                progressUpdate.invoke(++progress)
-                it
-            }
             .map { it to cache.fetch(it.link.asLink().uri) }
             .filter { it.second is PresentValue }
             .map { toAnimeListEntry(currentEntry = it.first, anime = (it.second as PresentValue).value) }

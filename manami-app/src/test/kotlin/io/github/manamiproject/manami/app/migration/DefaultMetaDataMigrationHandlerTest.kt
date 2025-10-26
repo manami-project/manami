@@ -5,9 +5,8 @@ import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.commands.TestCommandHistory
-import io.github.manamiproject.manami.app.events.Event
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.TestEventBus
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.MetaDataProviderMigrationState
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
@@ -20,14 +19,24 @@ import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.nio.file.Paths
+import kotlin.test.AfterTest
 
 internal class DefaultMetaDataMigrationHandlerTest {
+
+    @AfterTest
+    fun afterTest() {
+        CoroutinesFlowEventBus.clear()
+    }
 
     @Nested
     inner class CheckMigrationTests {
@@ -42,14 +51,14 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
                 cache = testCache,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
                 commandHistory = TestCommandHistory,
                 state = TestState,
             )
 
             // when
             val result = assertThrows<IllegalArgumentException> {
-                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                runBlocking { defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname()) }
             }
 
             // then
@@ -66,14 +75,14 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
             val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
                 cache = testCache,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
                 commandHistory = TestCommandHistory,
                 state = TestState,
             )
 
             // when
             val result = assertThrows<IllegalArgumentException> {
-                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                runBlocking { defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname()) }
             }
 
             // then
@@ -82,699 +91,675 @@ internal class DefaultMetaDataMigrationHandlerTest {
 
         @Test
         fun `any AnimeListEntry without a link is being ignored`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
                 }
-            }
 
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-            }
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        AnimeListEntry(
+                            link = NoLink,
+                            title = "Beck",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                            episodes = 26,
+                            type = TV,
+                            location = Paths.get("."),
+                        ),
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
 
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    AnimeListEntry(
-                        link = NoLink,
-                        title = "Beck",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                        episodes = 26,
-                        type = TV,
-                        location = Paths.get("."),
-                    ),
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
 
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
 
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(1)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
+                // then
+                delay(500)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        isRunning = false,
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
                 )
-            )
+            }
         }
 
         @Test
         fun `AnimeListEntry without mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
                 }
-            }
 
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
-            }
-
-            val currentAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                episodes = 26,
-                type = TV,
-                location = Paths.get("."),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    currentAnimeListEntry,
+                val currentAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                    episodes = 26,
+                    type = TV,
+                    location = Paths.get("."),
                 )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
 
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        currentAnimeListEntry,
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
 
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = listOf(currentAnimeListEntry),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
                 )
-            )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = listOf(currentAnimeListEntry),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
+                )
+            }
         }
 
         @Test
         fun `AnimeListEntry having one on one mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val kitsuLink = KitsuConfig.buildAnimeLink("38")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        kitsuLink
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(kitsuLink),
+                        )
+                    )
                 }
-            }
 
-            val kitsuLink = KitsuConfig.buildAnimeLink("38")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    kitsuLink
+                val currentAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                    episodes = 26,
+                    type = TV,
+                    location = Paths.get("."),
                 )
 
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(kitsuLink),
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        currentAnimeListEntry
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = mapOf(
+                            currentAnimeListEntry to Link(kitsuLink)
+                        ),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
                     )
                 )
             }
-
-            val currentAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                episodes = 26,
-                type = TV,
-                location = Paths.get("."),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    currentAnimeListEntry
-                )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = mapOf(
-                        currentAnimeListEntry to Link(kitsuLink)
-                    ),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
 
         @Test
         fun `AnimeListEntry having multiple mappings`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
+                val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        firstKitsuLink,
+                        secondKitsuLink,
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(firstKitsuLink, secondKitsuLink),
+                        ),
+                    )
                 }
+
+                val currentAnimeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                    episodes = 26,
+                    type = TV,
+                    location = Paths.get("."),
+                )
+
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf(
+                        currentAnimeListEntry
+                    )
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = mapOf(
+                            currentAnimeListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
+                        ),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
+                )
             }
-
-            val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
-            val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    firstKitsuLink,
-                    secondKitsuLink,
-                )
-
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
-                    ),
-                )
-            }
-
-            val currentAnimeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                episodes = 26,
-                type = TV,
-                location = Paths.get("."),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf(
-                    currentAnimeListEntry
-                )
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = mapOf(
-                        currentAnimeListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
-                    ),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
 
         @Test
         fun `WatchListEntry without mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
                 }
-            }
 
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
-            }
-
-            val currentWatchListEntry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf()
-                override fun watchList(): Set<WatchListEntry> = setOf(
-                    currentWatchListEntry,
+                val currentWatchListEntry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
 
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf()
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        currentWatchListEntry,
+                    )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
 
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = listOf(currentWatchListEntry),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
                 )
-            )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = listOf(currentWatchListEntry),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
+                )
+            }
         }
 
         @Test
         fun `WatchListEntry having one on one mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val kitsuLink = KitsuConfig.buildAnimeLink("38")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        kitsuLink
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(kitsuLink),
+                        )
+                    )
                 }
-            }
 
-            val kitsuLink = KitsuConfig.buildAnimeLink("38")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    kitsuLink
+                val currentWatchListEntry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
                 )
 
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(kitsuLink),
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = setOf(currentWatchListEntry)
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = mapOf(
+                            currentWatchListEntry to Link(kitsuLink)
+                        ),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
                     )
                 )
             }
-
-            val currentWatchListEntry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = setOf(currentWatchListEntry)
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = mapOf(
-                        currentWatchListEntry to Link(kitsuLink)
-                    ),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
 
         @Test
         fun `WatchListEntry having multiple mappings`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
+                val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        firstKitsuLink,
+                        secondKitsuLink,
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(firstKitsuLink, secondKitsuLink),
+                        ),
+                    )
                 }
+
+                val currentWatchListEntry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
+
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = setOf(
+                        currentWatchListEntry,
+                    )
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = mapOf(
+                            currentWatchListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
+                        ),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
+                )
             }
-
-            val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
-            val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    firstKitsuLink,
-                    secondKitsuLink,
-                )
-
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
-                    ),
-                )
-            }
-
-            val currentWatchListEntry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = setOf(
-                    currentWatchListEntry,
-                )
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = mapOf(
-                        currentWatchListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
-                    ),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
 
         @Test
         fun `IgnoreListEntry without mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
                 }
-            }
 
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = emptySet()
-            }
+                val currentIgnoreListEntry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
 
-            val currentIgnoreListEntry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = listOf()
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        currentIgnoreListEntry,
+                    )
+                }
 
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = listOf()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    currentIgnoreListEntry,
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = listOf(currentIgnoreListEntry),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = emptyMap(),
+                    )
                 )
             }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = listOf(currentIgnoreListEntry),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
 
         @Test
         fun `IgnoreListEntry having one on one mapping`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val kitsuLink = KitsuConfig.buildAnimeLink("38")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        kitsuLink
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(kitsuLink),
+                        ),
+                    )
                 }
+
+                val currentIgnoreListEntry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
+
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        currentIgnoreListEntry,
+                    )
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = emptyMap(),
+                        ignoreListMappings = mapOf(
+                            currentIgnoreListEntry to Link(kitsuLink)
+                        ),
+                    )
+                )
             }
-
-            val kitsuLink = KitsuConfig.buildAnimeLink("38")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    kitsuLink
-                )
-
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(kitsuLink),
-                    ),
-                )
-            }
-
-            val currentIgnoreListEntry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    currentIgnoreListEntry,
-                )
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = emptyMap(),
-                    ignoreListMappings = mapOf(
-                        currentIgnoreListEntry to Link(kitsuLink)
-                    ),
-                )
-            )
         }
 
         @Test
         fun `IgnoreListEntry having multiple mappings`() {
-            // given
-            val catchedEvents = mutableListOf<Event>()
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    catchedEvents.add(event)
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
+                delay(100)
+
+                val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
+                val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+                    override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
+                        firstKitsuLink,
+                        secondKitsuLink,
+                    )
+
+                    override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
+                        Anime(
+                            title = "Beck",
+                            sources = hashSetOf(firstKitsuLink, secondKitsuLink),
+                        ),
+                    )
                 }
+
+                val currentIgnoreListEntry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
+
+                val testState = object: State by TestState {
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(
+                        currentIgnoreListEntry,
+                    )
+                }
+
+                val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                    state = testState,
+                )
+
+                // when
+                defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last()).isEqualTo(
+                    MetaDataProviderMigrationState(
+                        animeListEntriesWithoutMapping = emptyList(),
+                        animeListEntriesMultipleMappings = emptyMap(),
+                        animeListMappings = emptyMap(),
+                        watchListEntriesWithoutMapping = emptyList(),
+                        watchListEntriesMultipleMappings = emptyMap(),
+                        watchListMappings = emptyMap(),
+                        ignoreListEntriesWithoutMapping = emptyList(),
+                        ignoreListEntriesMultipleMappings = mapOf(
+                            currentIgnoreListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
+                        ),
+                        ignoreListMappings = emptyMap(),
+                    )
+                )
             }
-
-            val firstKitsuLink = KitsuConfig.buildAnimeLink("38")
-            val secondKitsuLink = KitsuConfig.buildAnimeLink("99999999")
-
-            val testCache = object: AnimeCache by TestAnimeCache {
-                override val availableMetaDataProvider: Set<Hostname>
-                    get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = setOf(
-                    firstKitsuLink,
-                    secondKitsuLink,
-                )
-
-                override fun fetch(key: URI): CacheEntry<Anime> = PresentValue(
-                    Anime(
-                        title = "Beck",
-                        sources = hashSetOf(firstKitsuLink, secondKitsuLink),
-                    ),
-                )
-            }
-
-            val currentIgnoreListEntry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
-
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = setOf(
-                    currentIgnoreListEntry,
-                )
-            }
-
-            val defaultMetaDataMigrationHandler = DefaultMetaDataMigrationHandler(
-                cache = testCache,
-                eventBus = testEventBus,
-                commandHistory = TestCommandHistory,
-                state = testState,
-            )
-
-            // when
-            defaultMetaDataMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-            // then
-            assertThat(catchedEvents).hasSize(2)
-            assertThat(catchedEvents).containsExactly(
-                MetaDataMigrationProgressEvent(
-                    finishedTasks = 1,
-                    numberOfTasks = 1,
-                ),
-                MetaDataMigrationResultEvent(
-                    animeListEntriesWithoutMapping = emptyList(),
-                    animeListEntriesMultipleMappings = emptyMap(),
-                    animeListMappings = emptyMap(),
-                    watchListEntriesWithoutMapping = emptyList(),
-                    watchListEntriesMultipleMappings = emptyMap(),
-                    watchListMappings = emptyMap(),
-                    ignoreListEntriesWithoutMapping = emptyList(),
-                    ignoreListEntriesMultipleMappings = mapOf(
-                        currentIgnoreListEntry to setOf(Link(firstKitsuLink), Link(secondKitsuLink))
-                    ),
-                    ignoreListMappings = emptyMap(),
-                )
-            )
         }
     }
 

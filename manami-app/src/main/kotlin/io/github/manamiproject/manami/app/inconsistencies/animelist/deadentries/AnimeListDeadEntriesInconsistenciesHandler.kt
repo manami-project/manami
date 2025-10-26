@@ -22,18 +22,12 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
 
     override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
 
-    override fun execute(progressUpdate: (Int) -> Unit): AnimeListDeadEntriesInconsistenciesResult {
+    override fun execute(): AnimeListDeadEntriesInconsistenciesResult {
         log.info { "Starting check for dead entries in AnimeList." }
-
-        var progress = 0
 
         val result = state.animeList()
             .asSequence()
             .filter { it.link is Link }
-            .map {
-                progressUpdate.invoke(++progress)
-                it
-            }
             .map { it to cache.fetch(it.link.asLink().uri) }
             .filter { it.second is DeadEntry }
             .map { it.first }

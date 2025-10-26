@@ -8,7 +8,7 @@ import io.github.manamiproject.modb.core.config.Hostname
 
 interface MetaDataMigrationHandler {
 
-    fun checkMigration(metaDataProviderFrom: Hostname, metaDataProviderTo: Hostname)
+    suspend fun checkMigration(metaDataProviderFrom: Hostname, metaDataProviderTo: Hostname)
 
     fun migrate(
         animeListMappings: Map<AnimeListEntry, Link> = emptyMap(),

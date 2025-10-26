@@ -4,9 +4,8 @@ import io.github.manamiproject.AnimenewsnetworkConfig
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.populator.AnimeCachePopulator
 import io.github.manamiproject.manami.app.cache.populator.DeadEntriesCachePopulator
-import io.github.manamiproject.manami.app.events.Event
-import io.github.manamiproject.manami.app.events.SimpleEventBus
-import io.github.manamiproject.manami.app.events.Subscribe
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.file.DefaultFileHandler
 import io.github.manamiproject.manami.app.file.FileHandler
 import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
@@ -29,7 +28,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.net.URI
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
 
 class Manami(
@@ -39,19 +37,18 @@ class Manami(
     private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
     private val inconsistenciesHandler: InconsistenciesHandler = DefaultInconsistenciesHandler(),
     private val metaDataMigrationHandler: MetaDataMigrationHandler = DefaultMetaDataMigrationHandler(),
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : ManamiApp,
     SearchHandler by searchHandler,
     FileHandler by fileHandler,
     ListHandler by listHandler,
     RelatedAnimeHandler by relatedAnimeHandler,
     InconsistenciesHandler by inconsistenciesHandler,
-    MetaDataMigrationHandler by metaDataMigrationHandler {
-
-    private var eventMapper = AtomicReference<Event.() -> Unit>() // TODO 4.0.0: Remove
+    MetaDataMigrationHandler by metaDataMigrationHandler,
+    EventBus by eventBus {
 
     init {
         log.info {"Starting manami" }
-        SimpleEventBus.subscribe(this) // TODO 4.0.0: Remove
         CoroutineScope(IO).launch {
             launch { DefaultLatestVersionChecker().checkLatestVersion() }
             launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
@@ -72,19 +69,6 @@ class Manami(
 
         exitProcess(0)
     }
-
-    /**
-     * TODO 4.0.0: Remove
-     */
-    fun eventMapping(mapper: Event.() -> Unit = {}) {
-        eventMapper.set(mapper)
-    }
-
-    /**
-     * TODO 4.0.0: Remove
-     */
-    @Subscribe
-    fun subscribe(e: Event) = eventMapper.get().invoke(e)
 
     companion object {
         private val log by LoggerDelegate()

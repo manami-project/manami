@@ -12,11 +12,11 @@ interface ListHandler {
     fun removeAnimeListEntry(entry: AnimeListEntry)
     fun replaceAnimeListEntry(current: AnimeListEntry, replacement: AnimeListEntry)
 
-    fun addWatchListEntry(uris: Collection<URI>)
+    suspend fun addWatchListEntry(uris: Collection<URI>)
     fun watchList(): Set<WatchListEntry>
     fun removeWatchListEntry(entry: WatchListEntry)
 
-    fun addIgnoreListEntry(uris: Collection<URI>)
+    suspend fun addIgnoreListEntry(uris: Collection<URI>)
     fun ignoreList(): Set<IgnoreListEntry>
     fun removeIgnoreListEntry(entry: IgnoreListEntry)
 }

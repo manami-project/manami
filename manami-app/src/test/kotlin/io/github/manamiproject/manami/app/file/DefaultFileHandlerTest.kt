@@ -1,11 +1,8 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.events.Event
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.TestEventBus
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -18,8 +15,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.io.path.Path
 import kotlin.io.path.createFile
+import kotlin.test.AfterTest
 
 internal class DefaultFileHandlerTest {
+
+    @AfterTest
+    fun afterTest() {
+        CoroutinesFlowEventBus.clear()
+    }
 
     @Nested
     inner class NewFileTests {
@@ -36,7 +39,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -68,7 +71,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -94,7 +97,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -129,19 +132,12 @@ internal class DefaultFileHandlerTest {
                 override fun closeFile() { }
             }
 
-            var receivedEvent: FileOpenedEvent? = null
-            val testEventBus = object: EventBus by TestEventBus {
-                override fun post(event: Event) {
-                    receivedEvent = event as FileOpenedEvent
-                }
-            }
-
             val defaultFileHandler = DefaultFileHandler(
                 state = testState,
                 commandHistory = testCommandHistory,
                 parser = testParser,
                 fileWriter = TestFileWriter,
-                eventBus = testEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -149,7 +145,7 @@ internal class DefaultFileHandlerTest {
 
             // then
             assertThat(isCommandExecuted).isTrue()
-            assertThat(receivedEvent!!.fileName).isEqualTo("test.xml")
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("test.xml")
         }
     }
 
@@ -165,7 +161,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -187,7 +183,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -209,7 +205,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -231,7 +227,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -255,7 +251,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -279,7 +275,7 @@ internal class DefaultFileHandlerTest {
             commandHistory = testCommandHistory,
             parser = TestManamiFileParser,
             fileWriter = TestFileWriter,
-            eventBus = TestEventBus,
+            eventBus = CoroutinesFlowEventBus,
         )
 
         // when
@@ -304,7 +300,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = TestCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -326,7 +322,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = TestCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -352,7 +348,7 @@ internal class DefaultFileHandlerTest {
                 commandHistory = testCommandHistory,
                 parser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
-                eventBus = TestEventBus,
+                eventBus = CoroutinesFlowEventBus,
             )
 
             // when
@@ -376,7 +372,7 @@ internal class DefaultFileHandlerTest {
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = TestFileWriter,
-                    eventBus = TestEventBus,
+                    eventBus = CoroutinesFlowEventBus,
                 )
 
                 // when
@@ -417,7 +413,7 @@ internal class DefaultFileHandlerTest {
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
-                    eventBus = TestEventBus,
+                    eventBus = CoroutinesFlowEventBus,
                 )
 
                 // when
@@ -454,19 +450,12 @@ internal class DefaultFileHandlerTest {
                     override fun writeTo(file: RegularFile) { }
                 }
 
-                var receivedEvent: SavedAsFileEvent? = null
-                val testEventBus = object: EventBus by TestEventBus {
-                    override fun post(event: Event) {
-                        receivedEvent = event as SavedAsFileEvent
-                    }
-                }
-
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
-                    eventBus = testEventBus,
+                    eventBus = CoroutinesFlowEventBus,
                 )
 
                 val fileToSave = tempDir.resolve("junit-test.xml")
@@ -476,7 +465,7 @@ internal class DefaultFileHandlerTest {
 
                 // then
                 assertThat(savedFile).isEqualTo(fileToSave)
-                assertThat(receivedEvent!!.fileName).isEqualTo("junit-test.xml")
+                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("junit-test.xml")
             }
         }
 
@@ -505,19 +494,12 @@ internal class DefaultFileHandlerTest {
                     }
                 }
 
-                var receivedEvent: SavedAsFileEvent? = null
-                val testEventBus = object: EventBus by TestEventBus {
-                    override fun post(event: Event) {
-                        receivedEvent = event as SavedAsFileEvent
-                    }
-                }
-
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
                     parser = TestManamiFileParser,
                     fileWriter = testFileWriter,
-                    eventBus = testEventBus,
+                    eventBus = CoroutinesFlowEventBus,
                 )
 
                 // when
@@ -526,7 +508,7 @@ internal class DefaultFileHandlerTest {
                 // then
                 assertThat(fileHasBeenWritten).isTrue()
                 assertThat(cmdHasBeenSaved).isTrue()
-                assertThat(receivedEvent!!.fileName).isEqualTo("test.xml")
+                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("test.xml")
             }
         }
     }

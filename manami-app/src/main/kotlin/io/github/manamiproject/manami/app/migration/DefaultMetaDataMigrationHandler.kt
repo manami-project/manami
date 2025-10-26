@@ -6,8 +6,9 @@ import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.commands.GenericReversibleCommand
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.SimpleEventBus
+import io.github.manamiproject.manami.app.events.MetaDataProviderMigrationState
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -16,28 +17,32 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.config.Hostname
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.yield
 
 internal class DefaultMetaDataMigrationHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
-    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val state: State = InternalState,
 ) : MetaDataMigrationHandler {
 
-    override fun checkMigration(metaDataProviderFrom: Hostname, metaDataProviderTo: Hostname) {
+    override suspend fun checkMigration(metaDataProviderFrom: Hostname, metaDataProviderTo: Hostname) {
         require(cache.availableMetaDataProvider.contains(metaDataProviderFrom)) { "MetaDataProvider [$metaDataProviderFrom] is not supported." }
         require(cache.availableMetaDataProvider.contains(metaDataProviderTo)) { "MetaDataProvider [$metaDataProviderTo] is not supported." }
+
+        eventBus.metaDataProviderMigrationState.update { MetaDataProviderMigrationState(isRunning = true); }
+        yield()
 
         val animeList = state.animeList().filter { it.link is Link }.filter { it.link.asLink().uri.host == metaDataProviderFrom }
         val watchList = state.watchList().filter { it.link.asLink().uri.host == metaDataProviderFrom }
         val ignoreList = state.ignoreList().filter { it.link.asLink().uri.host == metaDataProviderFrom }
-        val totalNumberOfTasks = animeList.size + watchList.size + ignoreList.size
 
         val animeListEntriesWithoutMapping = mutableListOf<AnimeListEntry>()
         val animeListEntriesMultipleMappings = mutableMapOf<AnimeListEntry, Set<Link>>()
         val animeListMappings = mutableMapOf<AnimeListEntry, Link>()
 
-        animeList.forEachIndexed { index, animeListEntry ->
+        animeList.forEach { animeListEntry ->
             val newMetaDataProviderLinks = cache.mapToMetaDataProvider(animeListEntry.link.asLink().uri, metaDataProviderTo)
 
             when {
@@ -51,15 +56,13 @@ internal class DefaultMetaDataMigrationHandler(
                     animeListMappings[animeListEntry] = Link(cacheEntry.value.sources.first())
                 }
             }
-
-            eventBus.post(MetaDataMigrationProgressEvent(index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
         val watchListEntriesWithoutMapping = mutableListOf<WatchListEntry>()
         val watchListEntriesMultipleMappings = mutableMapOf<WatchListEntry, Set<Link>>()
         val watchListMappings = mutableMapOf<WatchListEntry, Link>()
 
-        watchList.forEachIndexed { index, watchListEntry ->
+        watchList.forEach { watchListEntry ->
             val newMetaDataProviderLinks = cache.mapToMetaDataProvider(watchListEntry.link.asLink().uri, metaDataProviderTo)
 
             when {
@@ -73,15 +76,13 @@ internal class DefaultMetaDataMigrationHandler(
                     watchListMappings[watchListEntry] = Link(cacheEntry.value.sources.first())
                 }
             }
-
-            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
         val ignoreListEntriesWithoutMapping = mutableListOf<IgnoreListEntry>()
         val ignoreListEntriesMultipleMappings = mutableMapOf<IgnoreListEntry, Set<Link>>()
         val ignoreListMappings = mutableMapOf<IgnoreListEntry, Link>()
 
-        ignoreList.forEachIndexed { index, ignoreListEntry ->
+        ignoreList.forEach { ignoreListEntry ->
             val newMetaDataProviderLinks = cache.mapToMetaDataProvider(ignoreListEntry.link.asLink().uri, metaDataProviderTo)
 
             when {
@@ -95,12 +96,11 @@ internal class DefaultMetaDataMigrationHandler(
                     ignoreListMappings[ignoreListEntry] = Link(cacheEntry.value.sources.first())
                 }
             }
-
-            eventBus.post(MetaDataMigrationProgressEvent(animeList.size + watchList.size + index + 1, totalNumberOfTasks)) // TODO 4.0.0: Migrate
         }
 
-        eventBus.post(
-            MetaDataMigrationResultEvent(
+        eventBus.metaDataProviderMigrationState.update { current ->
+            current.copy(
+                isRunning = false,
                 animeListEntriesWithoutMapping = animeListEntriesWithoutMapping,
                 animeListEntriesMultipleMappings = animeListEntriesMultipleMappings,
                 animeListMappings = animeListMappings,
@@ -111,7 +111,7 @@ internal class DefaultMetaDataMigrationHandler(
                 ignoreListEntriesMultipleMappings = ignoreListEntriesMultipleMappings,
                 ignoreListMappings = ignoreListMappings,
             )
-        )
+        }
     }
 
     override fun migrate(

@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.inconsistencies.animelist.metadata
 
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 
-internal data class AnimeListMetaDataInconsistenciesResult(
+data class AnimeListMetaDataInconsistenciesResult(
     val entries: List<AnimeListMetaDataDiff> = emptyList(),
 )
 

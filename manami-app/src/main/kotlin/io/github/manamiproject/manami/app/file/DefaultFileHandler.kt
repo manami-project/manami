@@ -2,14 +2,16 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.RegularFile
+import io.github.manamiproject.modb.core.extensions.fileName
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import kotlinx.coroutines.flow.update
 import kotlin.io.path.createFile
 
 internal class DefaultFileHandler(
@@ -17,7 +19,7 @@ internal class DefaultFileHandler(
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val parser: Parser<ParsedManamiFile> = FileParser(),
     private val fileWriter: FileWriter = DefaultFileWriter(),
-    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : FileHandler {
 
     override fun newFile(ignoreUnsavedChanged: Boolean) {
@@ -26,6 +28,8 @@ internal class DefaultFileHandler(
         if (!ignoreUnsavedChanged) {
             check(commandHistory.isSaved()) { "Cannot create a new list, because there are unsaved changes." }
         }
+
+        eventBus.clear()
 
         CmdNewFile(
             state = state,
@@ -48,7 +52,9 @@ internal class DefaultFileHandler(
             parsedFile = parsedFile,
             file = file,
         ).execute()
-        eventBus.post(FileOpenedEvent(file.fileName.toString())) // TODO 4.0.0: Migrate
+
+        eventBus.clear()
+        eventBus.generalAppState.update { current -> current.copy(openedFile = file.fileName()) }
     }
 
     override fun isOpenFileSet(): Boolean = state.openedFile() is CurrentFile
@@ -75,7 +81,7 @@ internal class DefaultFileHandler(
         }
 
         state.setOpenedFile(file)
-        eventBus.post(SavedAsFileEvent(file.fileName.toString())) // TODO 4.0.0: Migrate
+        eventBus.generalAppState.update { current -> current.copy(openedFile = file.fileName()) }
         save()
     }
 

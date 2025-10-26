@@ -3,8 +3,8 @@ package io.github.manamiproject.manami.app.cache.populator
 import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.SimpleEventBus
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.config.BooleanPropertyDelegate
 import io.github.manamiproject.modb.core.config.ConfigRegistry
@@ -22,6 +22,7 @@ import io.github.manamiproject.modb.serde.json.deserializer.Deserializer
 import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
 import io.github.manamiproject.modb.serde.json.deserializer.FromUrlDeserializer
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import java.net.URI
 import java.net.URL
@@ -37,7 +38,7 @@ internal class AnimeCachePopulator(
     private val uri: URI = URI("https://github.com/manami-project/anime-offline-database/releases/download/latest/$fileName"),
     private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
     private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
-    private val eventBus: EventBus = SimpleEventBus, // TODO 4.0.0: Migrate
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
     private val httpClient: HttpClient = DefaultHttpClient(useCustomRedirectInterceptor = true),
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) : CachePopulator<URI, CacheEntry<Anime>> {
@@ -45,10 +46,12 @@ internal class AnimeCachePopulator(
     private val useLocalFiles by BooleanPropertyDelegate(
         namespace = "manami.cache",
         configRegistry = configRegistry,
-        default = true
+        default = true,
     )
 
     override suspend fun populate(cache: Cache<URI, CacheEntry<Anime>>) {
+        eventBus.dashboardState.update { current -> current.copy(isAnimeCachePopulatorRunning = true) }
+
         val animeFlow = if (useLocalFiles) {
             val file = Path(fileName)
 
@@ -88,9 +91,13 @@ internal class AnimeCachePopulator(
             }
         }
 
-        eventBus.post(NumberOfEntriesPerMetaDataProviderEvent(numberOfEntriesPerMetaDataProvider)) // TODO 4.0.0: Migrate
+        eventBus.dashboardState.update { current ->
+            current.copy(
+                entries = numberOfEntriesPerMetaDataProvider,
+                isAnimeCachePopulatorRunning = false,
+            )
+        }
 
-        eventBus.post(CachePopulatorFinishedEvent) // TODO 4.0.0: Migrate
         log.info { "Finished populating cache with anime." }
     }
 

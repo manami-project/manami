@@ -1,5 +1,9 @@
 package io.github.manamiproject.manami.app.state
 
+import io.github.manamiproject.manami.app.events.AnimeListState
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.IgnoreListState
+import io.github.manamiproject.manami.app.events.WatchListState
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -8,6 +12,10 @@ import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
@@ -25,6 +33,7 @@ internal class InternalStateTest {
     fun after() {
         InternalState.closeFile()
         InternalState.clear()
+        CoroutinesFlowEventBus.clear()
     }
 
     @Nested
@@ -98,77 +107,134 @@ internal class InternalStateTest {
 
         @Test
         fun `adds entries without duplicates`() {
-            // given
-            val entry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                episodes = 26,
-                type = TV,
-                location = Path("some/relative/path/beck"),
-            )
+            runBlocking {
+                // given
+                val receivedAnimeListStateEvents = mutableListOf<AnimeListState>()
+                val animeListStateEventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedAnimeListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllAnimeListEntries(
-                setOf(
-                    entry,
-                    entry.copy()
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
+
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
+
+                val entry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
                 )
-            )
 
-            // then
-            assertThat(InternalState.animeList()).containsExactly(entry)
+                // when
+                InternalState.addAllAnimeListEntries(
+                    setOf(
+                        entry,
+                        entry.copy()
+                    )
+                )
+
+                // then
+                delay(100)
+                animeListStateEventCollector.cancelAndJoin()
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedAnimeListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.animeList()).containsExactly(entry)
+            }
         }
 
         @Test
         fun `adding an entry removed it from the watchlist`() {
-            // given
-            val entry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                episodes = 26,
-                type = TV,
-                location = Path("some/relative/path/beck"),
-            )
-            val watchListEntry = WatchListEntry(
-                link = entry.link.asLink(),
-                title = entry.title,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
-            )
+            runBlocking {
+                // given
+                val receivedAnimeListStateEvents = mutableListOf<AnimeListState>()
+                val animeListStateEventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedAnimeListStateEvents.add(event) } }
 
-            InternalState.addAllWatchListEntries(setOf(watchListEntry))
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllAnimeListEntries(setOf(entry))
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
 
-            // then
-            assertThat(InternalState.animeList()).containsExactly(entry)
-            assertThat(InternalState.watchList()).isEmpty()
+                val entry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
+                )
+                val watchListEntry = WatchListEntry(
+                    link = entry.link.asLink(),
+                    title = entry.title,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg")
+                )
+
+                InternalState.addAllWatchListEntries(setOf(watchListEntry))
+
+                // when
+                InternalState.addAllAnimeListEntries(setOf(entry))
+
+                // then
+                delay(100)
+                animeListStateEventCollector.cancelAndJoin()
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedAnimeListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.animeList()).containsExactly(entry)
+                assertThat(InternalState.watchList()).isEmpty()
+            }
         }
 
         @Test
         fun `adding an entry removed it from the ignorelist`() {
-            // given
-            val entry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                episodes = 26,
-                type = TV,
-                location = Path("some/relative/path/beck"),
-            )
-            val ignoreListEntry = IgnoreListEntry(
-                link = entry.link.asLink(),
-                title = entry.title,
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-            )
+            runBlocking {
+                // given
+                val receivedAnimeListStateEvents = mutableListOf<AnimeListState>()
+                val animeListStateEventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedAnimeListStateEvents.add(event) } }
 
-            InternalState.addAllIgnoreListEntries(setOf(ignoreListEntry))
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllAnimeListEntries(setOf(entry))
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
 
-            // then
-            assertThat(InternalState.animeList()).containsExactly(entry)
-            assertThat(InternalState.ignoreList()).isEmpty()
+                val entry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
+                )
+                val ignoreListEntry = IgnoreListEntry(
+                    link = entry.link.asLink(),
+                    title = entry.title,
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
+
+                InternalState.addAllIgnoreListEntries(setOf(ignoreListEntry))
+
+                // when
+                InternalState.addAllAnimeListEntries(setOf(entry))
+
+                // then
+                delay(100)
+                animeListStateEventCollector.cancelAndJoin()
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedAnimeListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.animeList()).containsExactly(entry)
+                assertThat(InternalState.ignoreList()).isEmpty()
+            }
         }
     }
 
@@ -177,42 +243,51 @@ internal class InternalStateTest {
 
         @Test
         fun `removes a specific entry`() {
-            // given
-            val entry1 = AnimeListEntry(
-                title = "H2O: Footprints in the Sand",
-                episodes = 4,
-                type = SPECIAL,
-                location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
-            )
-            val entry2 = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                episodes = 26,
-                type = TV,
-                location = Path("some/relative/path/beck"),
-            )
-            val entry3 = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/12079"),
-                title = "Black★Rock Shooter",
-                episodes = 1,
-                type = SPECIAL,
-                location = Path("some/relative/path/black_rock_shooter"),
-            )
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<AnimeListState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
 
-            InternalState.addAllAnimeListEntries(
-                setOf(
-                    entry1,
-                    entry2,
-                    entry3,
+                val entry1 = AnimeListEntry(
+                    title = "H2O: Footprints in the Sand",
+                    episodes = 4,
+                    type = SPECIAL,
+                    location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
                 )
-            )
+                val entry2 = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
+                )
+                val entry3 = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/12079"),
+                    title = "Black★Rock Shooter",
+                    episodes = 1,
+                    type = SPECIAL,
+                    location = Path("some/relative/path/black_rock_shooter"),
+                )
 
-            // when
-            InternalState.removeAnimeListEntry(entry2)
+                InternalState.addAllAnimeListEntries(
+                    setOf(
+                        entry1,
+                        entry2,
+                        entry3,
+                    )
+                )
 
-            // then
-            assertThat(InternalState.animeList()).containsExactly(entry1, entry3)
+                // when
+                InternalState.removeAnimeListEntry(entry2)
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(2) // initial, update
+                assertThat(InternalState.animeList()).containsExactly(entry1, entry3)
+            }
         }
     }
 
@@ -221,41 +296,69 @@ internal class InternalStateTest {
 
         @Test
         fun `adds entries without duplicates`() {
-            // given
-            val entry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
+            runBlocking {
+                // given
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllWatchListEntries(
-                setOf(
-                    entry,
-                    entry.copy()
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
+
+                val entry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
                 )
-            )
 
-            // then
-            assertThat(InternalState.watchList()).containsExactly(entry)
+                // when
+                InternalState.addAllWatchListEntries(
+                    setOf(
+                        entry,
+                        entry.copy()
+                    )
+                )
+
+                // then
+                delay(100)
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(1) // initial, update
+                assertThat(InternalState.watchList()).containsExactly(entry)
+            }
         }
 
         @Test
         fun `adding an entry to the watchlist will remove it from the ignorelist`() {
-            // given
-            val entry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            InternalState.addAllIgnoreListEntries(setOf(IgnoreListEntry(entry)))
+            runBlocking {
+                // given
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllWatchListEntries(setOf(entry))
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
 
-            // then
-            assertThat(InternalState.watchList()).containsExactly(entry)
-            assertThat(InternalState.ignoreList()).isEmpty()
+                val entry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                InternalState.addAllIgnoreListEntries(setOf(IgnoreListEntry(entry)))
+
+                // when
+                InternalState.addAllWatchListEntries(setOf(entry))
+
+                // then
+                delay(100)
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.watchList()).containsExactly(entry)
+                assertThat(InternalState.ignoreList()).isEmpty()
+            }
         }
     }
 
@@ -264,36 +367,45 @@ internal class InternalStateTest {
 
         @Test
         fun `removes a specific entry`() {
-            // given
-            val entry1 = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val entry2 = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/37989"),
-                title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-            )
-            val entry3 = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/40059"),
-                title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-            )
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<WatchListState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
 
-            InternalState.addAllWatchListEntries(
-                setOf(
-                    entry1,
-                    entry2,
-                    entry3,
+                val entry1 = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
                 )
-            )
+                val entry2 = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/37989"),
+                    title = "Golden Kamuy 2nd Season",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+                )
+                val entry3 = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/40059"),
+                    title = "Golden Kamuy 3rd Season",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                )
 
-            // when
-            InternalState.removeWatchListEntry(entry2)
+                InternalState.addAllWatchListEntries(
+                    setOf(
+                        entry1,
+                        entry2,
+                        entry3,
+                    )
+                )
 
-            // then
-            assertThat(InternalState.watchList()).containsExactly(entry1, entry3)
+                // when
+                InternalState.removeWatchListEntry(entry2)
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(2) // initial, update
+                assertThat(InternalState.watchList()).containsExactly(entry1, entry3)
+            }
         }
     }
 
@@ -302,41 +414,69 @@ internal class InternalStateTest {
 
         @Test
         fun `adds entries without duplicates`() {
-            // given
-            val entry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/28981"),
-                title = "Ame-iro Cocoa",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
-            )
+            runBlocking {
+                // given
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllIgnoreListEntries(
-                setOf(
-                    entry,
-                    entry.copy()
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
+
+                val entry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/28981"),
+                    title = "Ame-iro Cocoa",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
                 )
-            )
 
-            // then
-            assertThat(InternalState.ignoreList()).containsExactly(entry)
+                // when
+                InternalState.addAllIgnoreListEntries(
+                    setOf(
+                        entry,
+                        entry.copy()
+                    )
+                )
+
+                // then
+                delay(100)
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedWatchListStateEvents).hasSize(1) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.ignoreList()).containsExactly(entry)
+            }
         }
 
         @Test
         fun `adding an entry to the ignorelist will remove it from the watchlist`() {
-            // given
-            val entry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            InternalState.addAllWatchListEntries(setOf(WatchListEntry(entry)))
+            runBlocking {
+                // given
+                val receivedWatchListStateEvents = mutableListOf<WatchListState>()
+                val watchListStateEventCollector = launch { CoroutinesFlowEventBus.watchListState.collect { event -> receivedWatchListStateEvents.add(event) } }
 
-            // when
-            InternalState.addAllIgnoreListEntries(setOf(entry))
+                val receivedIgnoreListStateEvents = mutableListOf<IgnoreListState>()
+                val ignoreListStateEventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedIgnoreListStateEvents.add(event) } }
+                delay(100)
 
-            // then
-            assertThat(InternalState.ignoreList()).containsExactly(entry)
-            assertThat(InternalState.watchList()).isEmpty()
+                val entry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
+                InternalState.addAllWatchListEntries(setOf(WatchListEntry(entry)))
+
+                // when
+                InternalState.addAllIgnoreListEntries(setOf(entry))
+
+                // then
+                delay(100)
+                watchListStateEventCollector.cancelAndJoin()
+                ignoreListStateEventCollector.cancelAndJoin()
+                assertThat(receivedWatchListStateEvents).hasSize(2) // initial, update
+                assertThat(receivedIgnoreListStateEvents).hasSize(2) // initial, update
+                assertThat(InternalState.ignoreList()).containsExactly(entry)
+                assertThat(InternalState.watchList()).isEmpty()
+            }
         }
     }
 
@@ -345,36 +485,45 @@ internal class InternalStateTest {
 
         @Test
         fun `removes a specific entry`() {
-            // given
-            val entry1 = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
-            val entry2 = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/37989"),
-                title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
-            )
-            val entry3 = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/40059"),
-                title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
-            )
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf< IgnoreListState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.ignoreListState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
 
-            InternalState.addAllIgnoreListEntries(
-                setOf(
-                    entry1,
-                    entry2,
-                    entry3,
+                val entry1 = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
                 )
-            )
+                val entry2 = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/37989"),
+                    title = "Golden Kamuy 2nd Season",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+                )
+                val entry3 = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/40059"),
+                    title = "Golden Kamuy 3rd Season",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                )
 
-            // when
-            InternalState.removeIgnoreListEntry(entry2)
+                InternalState.addAllIgnoreListEntries(
+                    setOf(
+                        entry1,
+                        entry2,
+                        entry3,
+                    )
+                )
 
-            // then
-            assertThat(InternalState.ignoreList()).containsExactly(entry1, entry3)
+                // when
+                InternalState.removeIgnoreListEntry(entry2)
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(2) // initial, update
+                assertThat(InternalState.ignoreList()).containsExactly(entry1, entry3)
+            }
         }
     }
 
@@ -411,7 +560,6 @@ internal class InternalStateTest {
             val result = InternalState.createSnapshot()
 
             // then
-            InternalState.clear()
             assertThat(result.animeList()).containsExactly(animeListEntry)
             assertThat(result.watchList()).containsExactly(watchListEntry)
             assertThat(result.ignoreList()).containsExactly(ignoreListEntry)
@@ -423,69 +571,78 @@ internal class InternalStateTest {
 
         @Test
         fun `remove whatever is current in state and restore the entries from the given snapshot`() {
-            // given
-            InternalState.addAllAnimeListEntries(
-                setOf(
-                    AnimeListEntry(
-                        title = "H2O: Footprints in the Sand",
-                        episodes = 4,
-                        type = SPECIAL,
-                        location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<AnimeListState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
+
+                InternalState.addAllAnimeListEntries(
+                    setOf(
+                        AnimeListEntry(
+                            title = "H2O: Footprints in the Sand",
+                            episodes = 4,
+                            type = SPECIAL,
+                            location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                        )
                     )
                 )
-            )
-            InternalState.addAllWatchListEntries(
-                setOf(
-                    WatchListEntry(
-                        link = Link("https://myanimelist.net/anime/40059"),
-                        title = "Golden Kamuy 3rd Season",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                InternalState.addAllWatchListEntries(
+                    setOf(
+                        WatchListEntry(
+                            link = Link("https://myanimelist.net/anime/40059"),
+                            title = "Golden Kamuy 3rd Season",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                        )
                     )
                 )
-            )
-            InternalState.addAllIgnoreListEntries(
-                setOf(
-                    IgnoreListEntry(
-                        link = Link("https://myanimelist.net/anime/31139"),
-                        title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                        thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg"),
+                InternalState.addAllIgnoreListEntries(
+                    setOf(
+                        IgnoreListEntry(
+                            link = Link("https://myanimelist.net/anime/31139"),
+                            title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/10/76340t.jpg"),
+                        )
                     )
                 )
-            )
 
-            val animeListEntry = AnimeListEntry(
-                link = Link("https://myanimelist.net/anime/57"),
-                title = "Beck",
-                episodes = 26,
-                type = TV,
-                location = Path("some/relative/path/beck"),
-            )
+                val animeListEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
+                )
 
-            val watchListEntry = WatchListEntry(
-                link = Link("https://myanimelist.net/anime/5114"),
-                title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-            )
+                val watchListEntry = WatchListEntry(
+                    link = Link("https://myanimelist.net/anime/5114"),
+                    title = "Fullmetal Alchemist: Brotherhood",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                )
 
-            val ignoreListEntry = IgnoreListEntry(
-                link = Link("https://myanimelist.net/anime/28981"),
-                title = "Ame-iro Cocoa",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
-            )
+                val ignoreListEntry = IgnoreListEntry(
+                    link = Link("https://myanimelist.net/anime/28981"),
+                    title = "Ame-iro Cocoa",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                )
 
-            val snapshot = StateSnapshot(
-                animeList = listOf(animeListEntry),
-                watchList = setOf(watchListEntry),
-                ignoreList = setOf(ignoreListEntry),
-            )
+                val snapshot = StateSnapshot(
+                    animeList = listOf(animeListEntry),
+                    watchList = setOf(watchListEntry),
+                    ignoreList = setOf(ignoreListEntry),
+                )
 
-            // when
-            InternalState.restore(snapshot)
+                // when
+                InternalState.restore(snapshot)
 
-            // then
-            assertThat(InternalState.animeList()).containsExactly(animeListEntry)
-            assertThat(InternalState.watchList()).containsExactly(watchListEntry)
-            assertThat(InternalState.ignoreList()).containsExactly(ignoreListEntry)
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(2) // initial, update
+                assertThat(InternalState.animeList()).containsExactly(animeListEntry)
+                assertThat(InternalState.watchList()).containsExactly(watchListEntry)
+                assertThat(InternalState.ignoreList()).containsExactly(ignoreListEntry)
+            }
         }
     }
 
