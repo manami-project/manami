@@ -22,7 +22,6 @@ object CoroutinesFlowEventBus: EventBus {
     override val findSimilarAnimeState: MutableStateFlow<FindSimilarAnimeState> = MutableStateFlow(FindSimilarAnimeState())
     override val findAnimeState: MutableStateFlow<FindAnimeState> = MutableStateFlow(FindAnimeState())
 
-    // TODO: tests
     override fun clear() {
         dashboardState.update { DashboardState() }
         generalAppState.update { GeneralAppState() }
