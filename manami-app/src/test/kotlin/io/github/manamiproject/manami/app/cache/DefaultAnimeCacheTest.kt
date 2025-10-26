@@ -1,15 +1,13 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
-import io.github.manamiproject.manami.app.events.EventBus
-import io.github.manamiproject.manami.app.events.TestEventBus
-import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
 import io.github.manamiproject.modb.core.anime.AnimeStatus.UPCOMING
 import io.github.manamiproject.modb.core.anime.AnimeType.*
-import io.github.manamiproject.modb.core.anime.AnimeSeason
-import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
+import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
@@ -503,13 +501,8 @@ internal class DefaultAnimeCacheTest {
         @Test
         fun `returns empty set if there is no mapping`() {
             // given
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun subscribe(subscriber: Any) { }
-            }
-
             val defaultAnimeCache = DefaultAnimeCache(
                 cacheLoader = emptyList(),
-                eventBus = testEventBus,
             )
 
             // when
@@ -522,10 +515,6 @@ internal class DefaultAnimeCacheTest {
         @Test
         fun `successfully returns an entry`() {
             // given
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun subscribe(subscriber: Any) { }
-            }
-
             val testAnime = Anime(
                 sources = hashSetOf(
                     URI("https://anidb.net/anime/15807"),
@@ -540,7 +529,6 @@ internal class DefaultAnimeCacheTest {
 
             val defaultAnimeCache = DefaultAnimeCache(
                 cacheLoader = emptyList(),
-                eventBus = testEventBus,
             )
 
             testAnime.sources.forEach {
@@ -557,10 +545,6 @@ internal class DefaultAnimeCacheTest {
         @Test
         fun `successfully returns an entry having multiple mapping entries`() {
             // given
-            val testEventBus = object : EventBus by TestEventBus {
-                override fun subscribe(subscriber: Any) { }
-            }
-
             val testAnime = Anime(
                 sources = hashSetOf(
                     URI("https://kitsu.app/anime/45724"),
@@ -572,7 +556,6 @@ internal class DefaultAnimeCacheTest {
 
             val defaultAnimeCache = DefaultAnimeCache(
                 cacheLoader = emptyList(),
-                eventBus = testEventBus,
             )
 
             testAnime.sources.forEach {

@@ -45,9 +45,10 @@ internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer>
                     aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(200)
-                        .withBody("""
+                        .withBody(
+                            $$"""
                             {
-                                "${'$'}schema": "https://raw.githubusercontent.com/manami-project/anime-offline-database/refs/tags/2025-10/anime-offline-database-minified.schema.json",
+                                "$schema": "https://raw.githubusercontent.com/manami-project/anime-offline-database/refs/tags/2025-10/anime-offline-database-minified.schema.json",
                                 "license": {
                                   "name": "GNU Affero General Public License v3.0",
                                   "url": "https://github.com/manami-project/anime-offline-database/blob/2025-10/LICENSE"

@@ -31,8 +31,8 @@ internal class DependentCacheLoader(
 
         loadRelations(id)
 
-        val result = runBlocking { animeDownloader.download(id) }
-        val anime = runBlocking { converter.convert(result) }
+        val result = runBlocking { animeDownloader.download(id) } // TODO 4.0.0: Coroutines
+        val anime = runBlocking { converter.convert(result) } // TODO 4.0.0: Coroutines
 
         relationsDir.resolve("$id.${config.fileSuffix()}").deleteIfExists()
 

@@ -2,30 +2,18 @@ package io.github.manamiproject.manami.app.commands.history
 
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
 import io.github.manamiproject.manami.app.commands.TestReversibleCommand
-import io.github.manamiproject.manami.app.events.SimpleEventBus
-import io.github.manamiproject.manami.app.events.Subscribe
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.lang.Thread.sleep
 
 internal class DefaultCommandHistoryTest {
-
-    private var testEventSubscriber = TestEventSubscriber()
-
-    @BeforeEach
-    fun before() {
-        SimpleEventBus.subscribe(testEventSubscriber)
-    }
 
     @AfterEach
     fun afterEach() {
         DefaultCommandHistory.clear()
-        testEventSubscriber.fileSavedEvents.clear()
-        testEventSubscriber.undoRedoStatusEvents.clear()
-        SimpleEventBus.unsubscribe(testEventSubscriber)
+        CoroutinesFlowEventBus.clear()
     }
 
     @Nested
@@ -38,11 +26,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents.first()).isFalse()
-            assertThat(testEventSubscriber.undoRedoStatusEvents.first()).isEqualTo(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -60,16 +46,9 @@ internal class DefaultCommandHistoryTest {
             DefaultCommandHistory.clear()
 
             // then
-            assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
-            assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -92,11 +71,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -124,12 +101,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isTrue()
         }
     }
 
@@ -151,12 +125,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(commandUndone).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isTrue()
         }
     }
 
@@ -186,14 +157,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(commandRedone).isOne()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, false)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -220,11 +186,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
 
         @Test
@@ -242,12 +206,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isTrue()
         }
 
         @Test
@@ -267,14 +228,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -301,11 +257,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isFalse()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
 
         @Test
@@ -323,12 +277,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isTrue()
         }
 
         @Test
@@ -348,14 +299,9 @@ internal class DefaultCommandHistoryTest {
 
             // then
             assertThat(result).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
     }
 
@@ -379,12 +325,9 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isRedoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isUndoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = false, isRedoPossible = true),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isFalse()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isTrue()
         }
 
         @Test
@@ -405,30 +348,9 @@ internal class DefaultCommandHistoryTest {
             assertThat(DefaultCommandHistory.isRedoPossible()).isFalse()
             assertThat(DefaultCommandHistory.isUndoPossible()).isTrue()
             assertThat(DefaultCommandHistory.isSaved()).isTrue()
-            sleep(1000)
-            assertThat(testEventSubscriber.fileSavedEvents).containsExactly(false, false, false, true)
-            assertThat(testEventSubscriber.undoRedoStatusEvents).containsExactly(
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = true),
-                UndoRedoStatusEvent(isUndoPossible = true, isRedoPossible = false),
-            )
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isFileSaved).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isUndoPossible).isTrue()
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.isRedoPossible).isFalse()
         }
-    }
-}
-
-internal class TestEventSubscriber {
-
-    val fileSavedEvents = mutableListOf<Boolean>()
-    val undoRedoStatusEvents = mutableListOf<UndoRedoStatusEvent>()
-
-    @Subscribe(FileSavedStatusChangedEvent::class)
-    fun receive(event: FileSavedStatusChangedEvent) {
-        fileSavedEvents.add(event.isFileSaved)
-    }
-
-    @Subscribe(UndoRedoStatusEvent::class)
-    fun receive(event: UndoRedoStatusEvent) {
-        undoRedoStatusEvents.add(event)
     }
 }

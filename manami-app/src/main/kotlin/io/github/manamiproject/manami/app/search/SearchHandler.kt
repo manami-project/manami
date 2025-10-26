@@ -9,15 +9,15 @@ import java.net.URI
 
 interface SearchHandler {
 
-    fun findInLists(searchString: String)
+    suspend fun findInLists(searchString: String)
 
-    fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
+    suspend fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
 
-    fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND, status: Set<AnimeStatus> = AnimeStatus.entries.toSet())
+    suspend fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND, status: Set<AnimeStatus> = AnimeStatus.entries.toSet())
 
-    fun findSimilarAnime(uri: URI)
+    suspend fun findSimilarAnime(uri: URI)
 
-    fun find(uri: URI)
+    suspend fun findAnime(uri: URI)
 
     fun availableMetaDataProviders(): Set<Hostname>
 

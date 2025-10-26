@@ -1,7 +1,6 @@
 package io.github.manamiproject.manami.app.state
 
-import io.github.manamiproject.manami.app.events.EventListType.*
-import io.github.manamiproject.manami.app.events.EventfulList
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -10,12 +9,14 @@ import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.regularFileExists
+import kotlinx.coroutines.flow.update
+import kotlin.collections.toList
 
-internal object InternalState : State {
+internal object InternalState: State {
 
-    private val animeList: EventfulList<AnimeListEntry> = EventfulList(ANIME_LIST)
-    private val watchList: EventfulList<WatchListEntry> = EventfulList(WATCH_LIST)
-    private val ignoreList: EventfulList<IgnoreListEntry> = EventfulList(IGNORE_LIST)
+    private val animeList: MutableList<AnimeListEntry> = mutableListOf()
+    private val watchList: MutableList<WatchListEntry> = mutableListOf()
+    private val ignoreList: MutableList<IgnoreListEntry> = mutableListOf()
 
     private var openedFile: OpenedFile = NoFile
 
@@ -41,36 +42,49 @@ internal object InternalState : State {
         val uris = anime.map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet()
         watchList.removeIf { uris.contains(it.link.uri) }
         ignoreList.removeIf { uris.contains(it.link.uri) }
+
+        notifyAllEventBus()
     }
 
     override fun removeAnimeListEntry(entry: AnimeListEntry) {
         animeList.remove(entry)
+        CoroutinesFlowEventBus.animeListState.update { current -> current.copy(entries = animeList()) }
     }
 
     override fun watchList(): Set<WatchListEntry> = watchList.toSet()
 
     override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {
         watchList.addAll(anime.distinct())
+        CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
 
         val uris = anime.map { it.link.uri }.toSet()
-        ignoreList.removeIf { uris.contains(it.link.uri) }
+
+        if (ignoreList.removeIf { uris.contains(it.link.uri) }) {
+            CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
+        }
     }
 
     override fun removeWatchListEntry(entry: WatchListEntry) {
         watchList.remove(entry)
+        CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
     }
 
     override fun ignoreList(): Set<IgnoreListEntry> = ignoreList.toSet()
 
     override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {
         ignoreList.addAll(anime.distinct())
+        CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
 
         val uris = anime.map { it.link.uri }.toSet()
-        watchList.removeIf { uris.contains(it.link.uri) }
+
+        if (watchList.removeIf { uris.contains(it.link.uri) }) {
+            CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
+        }
     }
 
     override fun removeIgnoreListEntry(entry: IgnoreListEntry) {
         ignoreList.remove(entry)
+        CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
     }
 
     override fun createSnapshot(): Snapshot = StateSnapshot(
@@ -88,12 +102,21 @@ internal object InternalState : State {
 
         ignoreList.clear()
         ignoreList.addAll(snapshot.ignoreList())
+
+        notifyAllEventBus()
     }
 
     override fun clear() {
         animeList.clear()
         watchList.clear()
         ignoreList.clear()
+        notifyAllEventBus()
+    }
+
+    private fun notifyAllEventBus() {
+        CoroutinesFlowEventBus.animeListState.update { current -> current.copy(entries = animeList()) }
+        CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
+        CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
     }
 }
 
