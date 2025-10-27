@@ -20,7 +20,7 @@ logback-classic = "1.5.20"
 tornadofx = "1.7.20"
 tornadofx-controlsfx = "0.1.1"
 kover = "0.9.3"
-javafx = "23.0.2"
+javafx = "26-ea+13"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
