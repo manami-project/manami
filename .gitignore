@@ -1,4 +1,5 @@
 .kotlin
+**/*.zst
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,gradle,kotlin,windows,intellij,intellij+all,intellij+iml,visualstudiocode
