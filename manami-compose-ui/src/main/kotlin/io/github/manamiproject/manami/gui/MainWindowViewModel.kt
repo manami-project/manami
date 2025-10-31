@@ -3,16 +3,17 @@ package io.github.manamiproject.manami.gui
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.MenuScope
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -52,6 +53,14 @@ internal class MainWindowViewModel(private val app: Manami = Manami.instance) {
             started = Eagerly,
             initialValue = EMPTY
         )
+
+    val windowTitle = combine(isSaved, openedFile) { saved, file ->
+        buildString {
+            append("Manami")
+            if (file.neitherNullNorBlank()) append(" - $file")
+            if (!saved) append("*")
+        }
+    }.stateIn(viewModelScope, Eagerly, "Manami")
 
     fun windowSize(): DpSize {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
