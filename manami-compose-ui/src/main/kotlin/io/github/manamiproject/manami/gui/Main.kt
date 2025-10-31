@@ -1,7 +1,12 @@
 package io.github.manamiproject.manami.gui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.window.MenuBar
@@ -132,12 +137,28 @@ fun main() = application {
                     enabled = false,
                 )
             }
+            Menu("View") {
+                Item(
+                    text = ThemeState.instance.caption,
+                    onClick = { ThemeState.instance.toggle() },
+                    enabled = true,
+                )
+            }
             Menu("Help") {
                 Item(
                     text = "About",
                     onClick = { TODO() },
                     enabled = true,
                 )
+            }
+        }
+        MaterialTheme(colorScheme = ThemeState.instance.currentScheme) {
+            Box( // unable to modify the background of the main window so painting a custom one is necessary
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(ThemeState.instance.currentScheme.background)
+            ) {
+                // TODO 4.0.0 Place composables here
             }
         }
     }

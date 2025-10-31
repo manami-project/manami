@@ -80,6 +80,10 @@ compose.desktop {
             )
             packageName = "manami"
             packageVersion = "4.0.0"
+
+            macOS {
+                jvmArgs += "-Dapple.awt.application.appearance=system"
+            }
         }
     }
 }

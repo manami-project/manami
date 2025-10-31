@@ -114,6 +114,7 @@ internal class MainWindowViewModel(private val app: Manami = Manami.instance) {
     }
 
     fun quit() {
+        //TODO 4.0.0: Check if state is currently saved
         viewModelScope.launch {
             app.quit()
         }
