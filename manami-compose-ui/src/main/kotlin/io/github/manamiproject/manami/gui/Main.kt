@@ -1,40 +1,20 @@
 package io.github.manamiproject.manami.gui
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 
 fun main() = application {
     val viewModel = MainWindowViewModel.instance
     val isSaved by viewModel.isSaved.collectAsState()
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
-    val openedFile by viewModel.openedFile.collectAsState()
-
-    var windowTitle by remember { mutableStateOf("") }
-    LaunchedEffect(isSaved, openedFile) {
-        val titleBuilder = StringBuilder("Manami")
-
-        if (openedFile.neitherNullNorBlank()) {
-            titleBuilder.append(" - $openedFile")
-        }
-
-        if (!isSaved) {
-            titleBuilder.append("*")
-        }
-
-        windowTitle = titleBuilder.toString()
-    }
+    val windowTitle by viewModel.windowTitle.collectAsState()
 
     Window(
         onCloseRequest = { viewModel.quit() },
