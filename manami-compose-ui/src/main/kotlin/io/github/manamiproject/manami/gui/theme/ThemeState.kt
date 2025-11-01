@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.gui
+package io.github.manamiproject.manami.gui.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -7,13 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-private val lightColorScheme = lightColorScheme()
-private val darkColorScheme = darkColorScheme()
-
 internal class ThemeState() {
     private var isLight = true
 
-    private var _currentColorScheme by mutableStateOf(lightColorScheme)
+    private var _currentColorScheme by mutableStateOf(LIGHT_COLOR_SCHEME)
     val currentScheme: ColorScheme
         get() = _currentColorScheme
 
@@ -24,20 +21,22 @@ internal class ThemeState() {
     fun toggle() {
         when (isLight) {
             true -> {
-                _currentColorScheme = darkColorScheme
+                _currentColorScheme = DARK_COLOR_SCHEME
                 _caption = CAPTION_TO_LIGHT_THEME
             }
             false -> {
-                _currentColorScheme = lightColorScheme
+                _currentColorScheme = LIGHT_COLOR_SCHEME
                 _caption = CAPTION_TO_DARK_THEME
             }
         }
         isLight = !isLight
     }
 
-    companion object {
+    internal companion object {
         private const val CAPTION_TO_DARK_THEME = "Change to 'dark' theme"
         private const val CAPTION_TO_LIGHT_THEME = "Change to 'light' theme"
+        private val LIGHT_COLOR_SCHEME = lightColorScheme()
+        private val DARK_COLOR_SCHEME = darkColorScheme()
 
         /**
          * Singleton of [ThemeState]
