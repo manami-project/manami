@@ -88,12 +88,12 @@ internal class DefaultAnimeCache(
     private val entries = ConcurrentHashMap<URI, CacheEntry<Anime>>()
 
     private val _availableMetaDataProvider = mutableSetOf<Hostname>()
-    override val availableMetaDataProvider
-        get() = _availableMetaDataProvider.toSet()
+    override val availableMetaDataProvider: Set<Hostname>
+        get() = _availableMetaDataProvider
 
     private val _availableTags = mutableSetOf<Tag>()
-    override val availableTags
-        get() = _availableTags.toSet()
+    override val availableTags: Set<Tag>
+        get() = _availableTags
 
     override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> {
         return entries.asSequence()
