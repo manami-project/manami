@@ -7,7 +7,7 @@ import java.awt.Dialog.ModalityType.APPLICATION_MODAL
 import java.io.File
 import java.io.FilenameFilter
 
-fun FrameWindowScope.showOpenFileDialog(): RegularFile? {
+internal fun FrameWindowScope.showOpenFileDialog(): RegularFile? {
     val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") }
 
     val files: Array<File> = java.awt.FileDialog(window).apply {
@@ -35,7 +35,7 @@ fun FrameWindowScope.showOpenFileDialog(): RegularFile? {
     }
 }
 
-fun FrameWindowScope.showSaveAsFileDialog(): RegularFile? {
+internal fun FrameWindowScope.showSaveAsFileDialog(): RegularFile? {
     val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") }
 
     val files: Array<File> = java.awt.FileDialog(window).apply {

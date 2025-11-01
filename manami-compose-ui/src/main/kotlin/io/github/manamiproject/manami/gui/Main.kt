@@ -3,7 +3,6 @@ package io.github.manamiproject.manami.gui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,9 +12,12 @@ import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import io.github.manamiproject.manami.gui.tabs.TabBar
+import io.github.manamiproject.manami.gui.theme.ManamiTheme
+import io.github.manamiproject.manami.gui.theme.ThemeState
 
 fun main() = application {
-    val viewModel = MainWindowViewModel.instance
+    val viewModel = MainViewModel.instance
     val isSaved by viewModel.isSaved.collectAsState()
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
@@ -88,53 +90,53 @@ fun main() = application {
                 Item(
                     text = "Anime List",
                     shortcut = KeyShortcut(Key.A, meta = true),
-                    onClick = { TODO() },
-                    enabled = false,
+                    onClick = { viewModel.openAnimeListTab() },
+                    enabled = true,
                 )
                 Item(
                     text = "Watch List",
                     shortcut = KeyShortcut(Key.W, meta = true),
-                    onClick = { TODO() },
-                    enabled = false,
+                    onClick = { viewModel.openWatchListTab() },
+                    enabled = true,
                 )
                 Item(
                     text = "Ignore List",
                     shortcut = KeyShortcut(Key.I, meta = true),
-                    onClick = { TODO() },
-                    enabled = false,
+                    onClick = { viewModel.openIgnoreListTab() },
+                    enabled = true,
                 )
             }
             Menu("Find") {
                 Item(
                     text = "Anime",
                     shortcut = KeyShortcut(Key.One, meta = true),
-                    onClick = { TODO() },
+                    onClick = { viewModel.openFindAnimeTab() },
                     enabled = true, // TODO 4.0.0 bind to cache being populated
                 )
                 Item(
                     text = "Season",
                     shortcut = KeyShortcut(Key.Two, meta = true),
-                    onClick = { TODO() },
+                    onClick = { viewModel.openFindSeasonTab() },
                     enabled = true, // TODO 4.0.0 bind to cache being populated
                 )
                 Item(
                     text = "Similar Anime",
                     shortcut = KeyShortcut(Key.Three, meta = true),
-                    onClick = { TODO() },
+                    onClick = { viewModel.openFindSimilarAnimeTab() },
                     enabled = true, // TODO 4.0.0 bind to cache being populated
                 )
                 Separator()
                 Item(
                     text = "Inconsistencies",
                     shortcut = KeyShortcut(Key.Four, meta = true),
-                    onClick = { TODO() }, // TODO 4.0.0 bind any list containing entries
-                    enabled = false,
+                    onClick = { viewModel.openFindInconsistenciesTab() },
+                    enabled = false, // TODO 4.0.0 bind any list containing entries
                 )
                 Item(
                     text = "Related Anime",
                     shortcut = KeyShortcut(Key.Five, meta = true),
-                    onClick = { TODO() }, // TODO 4.0.0 bind to anime list containing entries
-                    enabled = false,
+                    onClick = { viewModel.openFindRelatedAnimeTab() },
+                    enabled = false, // TODO 4.0.0 bind to anime list containing entries
                 )
             }
             Menu("View") {
@@ -152,13 +154,13 @@ fun main() = application {
                 )
             }
         }
-        MaterialTheme(colorScheme = ThemeState.instance.currentScheme) {
+        ManamiTheme {
             Box( // unable to modify the background of the main window so painting a custom one is necessary
                 modifier = Modifier
                     .fillMaxSize()
                     .background(ThemeState.instance.currentScheme.background)
             ) {
-                // TODO 4.0.0 Place composables here
+                TabBar()
             }
         }
     }

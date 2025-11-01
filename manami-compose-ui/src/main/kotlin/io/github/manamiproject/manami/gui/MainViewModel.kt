@@ -6,6 +6,9 @@ import androidx.compose.ui.window.FrameWindowScope
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
+import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
+import io.github.manamiproject.manami.gui.tabs.Tabs
+import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +22,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.awt.Toolkit
 
-internal class MainWindowViewModel(private val app: Manami = Manami.instance) {
+internal class MainViewModel(
+    private val app: Manami = Manami.instance,
+    private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
+) {
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
     val isSaved: StateFlow<Boolean> = app.generalAppState
@@ -113,6 +119,38 @@ internal class MainWindowViewModel(private val app: Manami = Manami.instance) {
         }
     }
 
+    fun openAnimeListTab() {
+        tabBarViewModel.openOrActivate(ANIME_LIST)
+    }
+
+    fun openWatchListTab() {
+        tabBarViewModel.openOrActivate(WATCH_LIST)
+    }
+
+    fun openIgnoreListTab() {
+        tabBarViewModel.openOrActivate(IGNORE_LIST)
+    }
+
+    fun openFindAnimeTab() {
+        tabBarViewModel.openOrActivate(FIND_ANIME)
+    }
+
+    fun openFindSeasonTab() {
+        tabBarViewModel.openOrActivate(FIND_SEASON)
+    }
+
+    fun openFindInconsistenciesTab() {
+        tabBarViewModel.openOrActivate(FIND_INCONSISTENCIES)
+    }
+
+    fun openFindRelatedAnimeTab() {
+        tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
+    }
+
+    fun openFindSimilarAnimeTab() {
+        tabBarViewModel.openOrActivate(Tabs.FIND_SIMILAR_ANIME)
+    }
+
     fun quit() {
         //TODO 4.0.0: Check if state is currently saved
         viewModelScope.launch {
@@ -120,11 +158,11 @@ internal class MainWindowViewModel(private val app: Manami = Manami.instance) {
         }
     }
 
-    companion object {
+    internal companion object {
         /**
-         * Singleton of [MainWindowViewModel]
+         * Singleton of [MainViewModel]
          * @since 4.0.0
          */
-        val instance: MainWindowViewModel by lazy { MainWindowViewModel() }
+        val instance: MainViewModel by lazy { MainViewModel() }
     }
 }
