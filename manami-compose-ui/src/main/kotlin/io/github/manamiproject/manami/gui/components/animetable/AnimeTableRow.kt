@@ -1,0 +1,173 @@
+package io.github.manamiproject.manami.gui.components.animetable
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.NotInterested
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
+import io.github.manamiproject.manami.app.lists.AnimeEntry
+import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.gui.components.IconButton
+import io.github.manamiproject.manami.gui.theme.ManamiTheme
+import io.github.manamiproject.manami.gui.theme.ThemeState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.jetbrains.skia.Image
+import java.awt.Desktop
+
+@Composable
+internal fun <T: AnimeEntry> AnimeTableRow(
+    config: AnimeTableConfig.() -> Unit = {},
+    anime: T,
+    weights: List<Float> = listOf(1.5f, 10f, 1.5f),
+    viewModel: AnimeTableViewModel<T>,
+) {
+    val animeTableConfig = AnimeTableConfig().apply(config)
+    val backgroundColor = ThemeState.instance.currentScheme.surface
+    val iconSize = 40.dp
+    val padding = 8.dp
+    val onClick: () -> Unit = {
+        if (anime.link is Link) {
+            try {
+                Desktop.getDesktop().browse(anime.link.asLink().uri)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    LaunchedEffect(anime.thumbnail) {
+        try {
+            val bytes = withContext(Dispatchers.IO) {
+                anime.thumbnail.toURL().readBytes()
+            }
+            val skiaImage = Image.makeFromEncoded(bytes)
+            imageBitmap = skiaImage.toComposeImageBitmap()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    ManamiTheme {
+        Row(Modifier.fillMaxSize().background(backgroundColor).height(IntrinsicSize.Min)) {
+            Box(
+                modifier = Modifier
+                    .weight(weights[0])
+                    .padding(padding)
+                    .clickable(onClick = onClick)
+                    .fillMaxHeight(),
+                contentAlignment = Center,
+            ) {
+                imageBitmap?.let {
+                    Image(
+                        painter = BitmapPainter(it),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .weight(weights[1])
+                    .background(backgroundColor)
+                    .fillMaxHeight()
+                    .padding(padding)
+                    .clickable(onClick = onClick),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = anime.title,
+                    style = TextStyle.Default.copy(
+                        color = ThemeState.instance.currentScheme.onSurface,
+                        fontSize = TextUnit(24f, TextUnitType.Sp),
+                    ),
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .weight(weights[2])
+                    .fillMaxHeight()
+                    .padding(padding),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Row {
+                    if (animeTableConfig.withToWatchListButton) {
+                        IconButton(
+                            icon = Icons.AutoMirrored.Filled.PlaylistAdd,
+                            size = iconSize,
+                            description = "Add to watch list",
+                            onClick = { viewModel.addToWatchList(anime) },
+                        )
+                    }
+
+                    if (animeTableConfig.withToIgnoreListButton) {
+                        IconButton(
+                            icon = Icons.Filled.NotInterested,
+                            size = iconSize,
+                            description = "Add to ignore list",
+                            onClick = { viewModel.addToIgnoreList(anime) },
+                        )
+                    }
+
+                    if (animeTableConfig.withEditButton) {
+                        IconButton(
+                            icon = Icons.Filled.Edit,
+                            size = iconSize,
+                            description = "Edit",
+                            onClick = { TODO() },
+                        )
+                    }
+
+                    if (animeTableConfig.withDeleteButton) {
+                        IconButton(
+                            icon = Icons.Filled.Delete,
+                            size = iconSize,
+                            description = "Delete",
+                            onClick = { viewModel.delete(anime) },
+                        )
+                    }
+
+                    if (animeTableConfig.withHideButton) {
+                        IconButton(
+                            icon = Icons.Filled.Clear,
+                            size = iconSize,
+                            description = "Hide",
+                            onClick = { viewModel.hide(anime) },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

@@ -35,20 +35,20 @@ fun main() = application {
                 Item(
                     text = "New",
                     shortcut = KeyShortcut(Key.N, meta = true),
-                    onClick = { viewModel.new() },
+                    onClick = { viewModel.new() }, // TODO 4.0.0: Check save status
                     enabled = true,
                 )
                 Item(
                     text = "Open",
                     shortcut = KeyShortcut(Key.O, meta = true),
-                    onClick = { viewModel.open(mainWindow) },
+                    onClick = { viewModel.open(mainWindow) }, // TODO 4.0.0: Check save status
                     enabled = true,
                 )
                 Separator()
                 Item(
                     text = "Save",
                     shortcut = KeyShortcut(Key.S, meta = true),
-                    onClick = { viewModel.save() },
+                    onClick = { viewModel.save() }, // TODO 4.0.0: Check if you are working on an opened file otherwise delegate to saveAs
                     enabled = !isSaved,
                 )
                 Item(
@@ -61,7 +61,7 @@ fun main() = application {
                 Item(
                     text = "Quit",
                     shortcut = KeyShortcut(Key.Q, meta = true),
-                    onClick = { viewModel.quit() },
+                    onClick = { viewModel.quit() }, // TODO 4.0.0: Check save status
                     enabled = true,
                 )
             }
