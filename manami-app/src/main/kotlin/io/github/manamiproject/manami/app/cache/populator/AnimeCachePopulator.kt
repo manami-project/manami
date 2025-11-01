@@ -32,6 +32,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.io.path.Path
+import kotlin.io.path.deleteExisting
+import kotlin.io.path.deleteIfExists
 
 internal class AnimeCachePopulator(
     private val fileName: String = "anime-offline-database.jsonl.zst",
@@ -71,6 +73,7 @@ internal class AnimeCachePopulator(
 
             if (isDownloadFile) {
                 log.info {"Downloading dataset from [$uri], because a local file doesn't exist." }
+                file.deleteIfExists()
                 httpClient.get(uri.toURL()).bodyAsByteArray().writeToFile(file)
             }
 
