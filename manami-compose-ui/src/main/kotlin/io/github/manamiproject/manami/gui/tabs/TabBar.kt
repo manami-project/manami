@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.gui.tabs
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -8,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.dashboard.Dashboard
 import io.github.manamiproject.manami.gui.find.anime.FindAnime
 import io.github.manamiproject.manami.gui.find.inconsistencies.FindInconsistencies
@@ -40,11 +43,11 @@ internal fun TabBar(
                             ) {
                                 Text(tab.title)
                                 if (tab.isCloseable) {
-                                    //IconButton(
-                                    //    icon = Icons.Filled.Clear,
-                                    //    description = "Close",
-                                    //    onClick = { viewModel.closeTab(tab) },
-                                    //)
+                                    IconButton(
+                                        icon = Icons.Filled.Clear,
+                                        description = "Close",
+                                        onClick = { viewModel.closeTab(tab) },
+                                    )
                                 }
                             }
                         }
