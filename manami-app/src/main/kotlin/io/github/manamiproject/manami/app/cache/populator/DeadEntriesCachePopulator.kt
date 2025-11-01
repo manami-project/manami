@@ -29,6 +29,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.io.path.Path
+import kotlin.io.path.deleteIfExists
 
 internal class DeadEntriesCachePopulator(
     private val config: MetaDataProviderConfig,
@@ -67,6 +68,7 @@ internal class DeadEntriesCachePopulator(
 
             if (isDownloadFile) {
                 log.info { "Downloading dead entries file from [$url], because a local file doesn't exist." }
+                file.deleteIfExists()
                 httpClient.get(url).bodyAsByteArray().writeToFile(file)
             }
 
