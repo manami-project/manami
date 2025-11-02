@@ -45,7 +45,7 @@ interface EventBus {
     /**
      * @since 4.0.0
      */
-    val relatedAnimeState: MutableStateFlow<RelatedAnimeState>
+    val findRelatedAnimeState: MutableStateFlow<RelatedAnimeState>
 
     /**
      * @since 4.0.0

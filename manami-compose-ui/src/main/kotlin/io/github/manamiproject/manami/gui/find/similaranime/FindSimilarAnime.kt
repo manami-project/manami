@@ -1,12 +1,14 @@
 package io.github.manamiproject.manami.gui.find.similaranime
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import io.github.manamiproject.manami.gui.components.animetable.AnimeTable
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 
 @Composable
 internal fun FindSimilarAnime(viewModel: FindSimilarAnimeViewModel = FindSimilarAnimeViewModel.instance) {
     ManamiTheme {
-        Text("FindSimilarAnime")
+        AnimeTable(viewModel = viewModel) {
+            withSortableTitle = false
+        }
     }
 }

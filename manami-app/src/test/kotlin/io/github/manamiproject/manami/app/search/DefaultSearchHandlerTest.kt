@@ -2064,7 +2064,7 @@ internal class DefaultSearchHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3)
-                assertThat(receivedEvents.last().entries.map { it.sources.first() }).containsExactly(
+                assertThat(receivedEvents.last().entries.map { it.link.uri }).containsExactly(
                     URI("https://myanimelist.net/anime/100"),
                     URI("https://myanimelist.net/anime/101"),
                     URI("https://myanimelist.net/anime/102"),
@@ -2124,7 +2124,7 @@ internal class DefaultSearchHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last().entries.map { it.sources.first() }).containsExactly(
+                assertThat(receivedEvents.last().entries.map { it.link.uri }).containsExactly(
                     URI("https://myanimelist.net/anime/100"),
                     URI("https://myanimelist.net/anime/101"),
                     URI("https://myanimelist.net/anime/102"),
@@ -2183,7 +2183,7 @@ internal class DefaultSearchHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last().entries.map { it.sources.first() }).containsExactly(
+                assertThat(receivedEvents.last().entries.map { it.link.uri }).containsExactly(
                     URI("https://myanimelist.net/anime/100"),
                     URI("https://myanimelist.net/anime/101"),
                     URI("https://myanimelist.net/anime/102"),
@@ -2241,7 +2241,7 @@ internal class DefaultSearchHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last().entries.map { it.sources.first() }).containsExactly(
+                assertThat(receivedEvents.last().entries.map { it.link.uri }).containsExactly(
                     URI("https://myanimelist.net/anime/100"),
                     URI("https://myanimelist.net/anime/101"),
                     URI("https://myanimelist.net/anime/102"),
