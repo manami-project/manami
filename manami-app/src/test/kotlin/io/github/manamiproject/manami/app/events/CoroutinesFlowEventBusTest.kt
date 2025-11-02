@@ -37,7 +37,7 @@ internal class CoroutinesFlowEventBusTest {
             CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(isAdditionRunning = true) }
             CoroutinesFlowEventBus.inconsistenciesState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.metaDataProviderMigrationState.update { current -> current.copy(isRunning = true) }
-            CoroutinesFlowEventBus.relatedAnimeState.update { current -> current.copy(isForAnimeListRunning = true) }
+            CoroutinesFlowEventBus.findRelatedAnimeState.update { current -> current.copy(isForAnimeListRunning = true) }
             CoroutinesFlowEventBus.findInListState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findSeasonState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findByTagState.update { current -> current.copy(isRunning = true) }
@@ -55,7 +55,7 @@ internal class CoroutinesFlowEventBusTest {
             assertThat(CoroutinesFlowEventBus.ignoreListState.value).isEqualTo(IgnoreListState())
             assertThat(CoroutinesFlowEventBus.inconsistenciesState.value).isEqualTo(InconsistenciesState())
             assertThat(CoroutinesFlowEventBus.metaDataProviderMigrationState.value).isEqualTo(MetaDataProviderMigrationState())
-            assertThat(CoroutinesFlowEventBus.relatedAnimeState.value).isEqualTo(RelatedAnimeState())
+            assertThat(CoroutinesFlowEventBus.findRelatedAnimeState.value).isEqualTo(RelatedAnimeState())
             assertThat(CoroutinesFlowEventBus.findInListState.value).isEqualTo(FindInListState())
             assertThat(CoroutinesFlowEventBus.findSeasonState.value).isEqualTo(FindSeasonState())
             assertThat(CoroutinesFlowEventBus.findByTagState.value).isEqualTo(FindByTagState())

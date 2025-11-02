@@ -42,7 +42,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 tempDirectory {
                     // given
                     val receivedEvents = mutableListOf<RelatedAnimeState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                    val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testLocation = tempDir.resolve("test1").createDirectory().toAbsolutePath()
@@ -89,7 +89,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forAnimeList.map { anime -> anime.sources.first() }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime3.sources.first(),
@@ -108,7 +108,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 tempDirectory {
                     // given
                     val receivedEvents = mutableListOf<RelatedAnimeState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                    val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
@@ -155,7 +155,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forAnimeList.map { anime -> anime.sources.first() }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime3.sources.first(),
@@ -172,7 +172,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 tempDirectory {
                     // given
                     val receivedEvents = mutableListOf<RelatedAnimeState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                    val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
@@ -219,7 +219,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forAnimeList.map { anime -> anime.sources.first() }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime5.sources.first(),
@@ -239,7 +239,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             runBlocking {
                 // given
                 val receivedEvents = mutableListOf<RelatedAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testCache = object: AnimeCache by TestAnimeCache {
@@ -276,7 +276,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forIgnoreList.map { anime -> anime.sources.first() }
+                val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime3.sources.first(),
@@ -293,7 +293,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             runBlocking {
                 // given
                 val receivedEvents = mutableListOf<RelatedAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testCache = object: AnimeCache by TestAnimeCache {
@@ -330,7 +330,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forIgnoreList.map { anime -> anime.sources.first() }
+                val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
                 assertThat(foundEntries).containsExactlyInAnyOrder(
                     anime1.sources.first(),
                     anime3.sources.first(),
@@ -346,7 +346,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                 tempDirectory {
                     // given
                     val receivedEvents = mutableListOf<RelatedAnimeState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.relatedAnimeState.collect {event -> receivedEvents.add(event) } }
+                    val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testLocation1 = tempDir.resolve("test1").createDirectory().toAbsolutePath()
@@ -401,7 +401,7 @@ internal class DefaultRelatedAnimeHandlerTest {
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.relatedAnimeState.value.forIgnoreList.map { anime -> anime.sources.first() }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime5.sources.first(),

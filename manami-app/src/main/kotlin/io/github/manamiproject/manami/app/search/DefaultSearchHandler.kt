@@ -17,6 +17,7 @@ import kotlinx.coroutines.yield
 import org.apache.commons.lang3.Strings
 import org.apache.commons.text.similarity.LevenshteinDistance
 import java.net.URI
+import kotlin.sequences.map
 
 internal class DefaultSearchHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
@@ -65,6 +66,7 @@ internal class DefaultSearchHandler(
         val entries = cache.allEntries(metaDataProvider)
             .filter { it.animeSeason == season }
             .filterNot { animeSeasonEntry -> entriesInLists.contains(animeSeasonEntry.sources.first()) }
+            .map { SearchResultAnimeEntry(it) }
             .toList()
 
         eventBus.findSeasonState.update { current ->
@@ -98,7 +100,9 @@ internal class DefaultSearchHandler(
             allEntriesNotInAnyList
         }
 
-        val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }.toList()
+        val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }
+            .map { SearchResultAnimeEntry(it) }
+            .toList()
 
         eventBus.findByTagState.update { current ->
             current.copy(
@@ -136,9 +140,12 @@ internal class DefaultSearchHandler(
         val entriesToRemove = animeListEntries.union(watchListEntries).union(ignoreListEntries)
 
         results.removeIf { entriesToRemove.contains(it.second.sources.first()) }
-
         results.sortWith(compareByDescending<Pair<Int, Anime>> { it.first }.thenBy { it.second.title })
-        val top10 = results.take(10).map { it.second }
+
+        val top10 = results.take(10)
+            .map { it.second }
+            .map { SearchResultAnimeEntry(it) }
+
         eventBus.findSimilarAnimeState.update { current ->
             current.copy(
                 isRunning = true,

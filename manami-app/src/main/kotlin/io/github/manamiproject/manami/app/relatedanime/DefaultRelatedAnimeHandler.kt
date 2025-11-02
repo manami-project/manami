@@ -5,6 +5,7 @@ import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.SearchResultAnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler.ListType.*
 import io.github.manamiproject.manami.app.state.InternalState
@@ -35,13 +36,13 @@ internal class DefaultRelatedAnimeHandler(
         if (initialSources.isEmpty()) return
 
         when (listType) {
-            ANIME_LIST -> eventBus.relatedAnimeState.update { current ->
+            ANIME_LIST -> eventBus.findRelatedAnimeState.update { current ->
                 current.copy(
                     isForAnimeListRunning = true,
                     forAnimeList = emptyList(),
                 )
             }
-            IGNORE_LIST -> eventBus.relatedAnimeState.update { current ->
+            IGNORE_LIST -> eventBus.findRelatedAnimeState.update { current ->
                 current.copy(
                     isForIgnoreListRunning = true,
                     forIgnoreList = emptyList(),
@@ -76,16 +77,19 @@ internal class DefaultRelatedAnimeHandler(
         entriesToCheck.removeAll(watchList)
         entriesToCheck.removeAll(ignoreList)
 
-        val result = entriesToCheck.map { cache.fetch(it) }.filterIsInstance<PresentValue<Anime>>().map { it.value }
+        val result = entriesToCheck.map { cache.fetch(it) }
+            .filterIsInstance<PresentValue<Anime>>()
+            .map { it.value }
+            .map { SearchResultAnimeEntry(it) }
 
         when (listType) {
-            ANIME_LIST -> eventBus.relatedAnimeState.update { current ->
+            ANIME_LIST -> eventBus.findRelatedAnimeState.update { current ->
                 current.copy(
                     isForAnimeListRunning = false,
                     forAnimeList = result,
                 )
             }
-            IGNORE_LIST -> eventBus.relatedAnimeState.update { current ->
+            IGNORE_LIST -> eventBus.findRelatedAnimeState.update { current ->
                 current.copy(
                     isForIgnoreListRunning = false,
                     forIgnoreList = result,
