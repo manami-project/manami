@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.NotInterested
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +33,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import io.github.manamiproject.manami.app.cache.DeadEntry
+import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.gui.cache.ImageCache
 import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
@@ -65,17 +67,9 @@ internal fun <T: AnimeEntry> AnimeTableRow(
         }
     }
 
-    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    var imageBitmap by remember { mutableStateOf<ImageBitmap>(ImageCache.instance.fetchDefaultImage()) }
     LaunchedEffect(anime.thumbnail) {
-        try {
-            val bytes = withContext(Dispatchers.IO) {
-                anime.thumbnail.toURL().readBytes()
-            }
-            val skiaImage = Image.makeFromEncoded(bytes)
-            imageBitmap = skiaImage.toComposeImageBitmap()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        imageBitmap = (ImageCache.instance.fetch(anime.thumbnail) as PresentValue).value
     }
 
     ManamiTheme {
