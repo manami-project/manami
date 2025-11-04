@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
@@ -15,6 +12,9 @@ import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import io.github.manamiproject.manami.gui.components.About
+import io.github.manamiproject.manami.gui.components.SafelyQuitDialog
+import io.github.manamiproject.manami.gui.components.UnsavedChangesDialog
 import io.github.manamiproject.manami.gui.tabs.TabBar
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
@@ -25,10 +25,12 @@ fun main() = application {
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
-    var showAbout by remember { mutableStateOf(false) }
+    val showAboutDialog by viewModel.showAboutDialog.collectAsState()
+    val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
+    val showUnsavedChangesDialogState by viewModel.showUnsavedChangesDialogState.collectAsState()
 
     Window(
-        onCloseRequest = { viewModel.quit() },
+        onCloseRequest = { viewModel.showSafelyQuitDialog() },
         title = windowTitle,
         state = WindowState(size = viewModel.windowSize()),
     ) {
@@ -39,20 +41,20 @@ fun main() = application {
                 Item(
                     text = "New",
                     shortcut = KeyShortcut(Key.N, meta = true),
-                    onClick = { viewModel.new() }, // TODO 4.0.0: Check save status
+                    onClick = { viewModel.new(mainWindow) },
                     enabled = true,
                 )
                 Item(
                     text = "Open",
                     shortcut = KeyShortcut(Key.O, meta = true),
-                    onClick = { viewModel.open(mainWindow) }, // TODO 4.0.0: Check save status
+                    onClick = { viewModel.open(mainWindow) },
                     enabled = true,
                 )
                 Separator()
                 Item(
                     text = "Save",
                     shortcut = KeyShortcut(Key.S, meta = true),
-                    onClick = { viewModel.save() }, // TODO 4.0.0: Check if you are working on an opened file otherwise delegate to saveAs
+                    onClick = { viewModel.save(mainWindow) },
                     enabled = !isSaved,
                 )
                 Item(
@@ -65,7 +67,7 @@ fun main() = application {
                 Item(
                     text = "Quit",
                     shortcut = KeyShortcut(Key.Q, meta = true),
-                    onClick = { viewModel.quit() }, // TODO 4.0.0: Check save status
+                    onClick = { viewModel.quit(mainWindow) },
                     enabled = true,
                 )
             }
@@ -153,7 +155,7 @@ fun main() = application {
             Menu("Help") {
                 Item(
                     text = "About",
-                    onClick = { showAbout = true },
+                    onClick = { viewModel.showAboutDialog() },
                     enabled = true,
                 )
             }
@@ -164,11 +166,22 @@ fun main() = application {
                     .fillMaxSize()
                     .background(ThemeState.instance.currentScheme.background)
             ) {
-                if (showAbout) {
-                    About {
-                        showAbout = false
-                    }
+                if (showAboutDialog) {
+                    About { viewModel.closeAboutDialog() }
                 }
+
+                if (showSafelyQuitDialog) {
+                    SafelyQuitDialog { viewModel.closeSafelyQuitDialog() }
+                }
+
+                if (showUnsavedChangesDialogState.showUnsavedChangesDialog) {
+                    UnsavedChangesDialog(
+                        onCloseRequest = showUnsavedChangesDialogState.onCloseRequest,
+                        onYes = showUnsavedChangesDialogState.onYes,
+                        onNo = showUnsavedChangesDialogState.onNo,
+                    )
+                }
+
                 TabBar()
             }
         }
