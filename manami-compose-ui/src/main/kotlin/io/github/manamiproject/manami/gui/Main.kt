@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
@@ -22,6 +25,7 @@ fun main() = application {
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
+    var showAbout by remember { mutableStateOf(false) }
 
     Window(
         onCloseRequest = { viewModel.quit() },
@@ -149,7 +153,7 @@ fun main() = application {
             Menu("Help") {
                 Item(
                     text = "About",
-                    onClick = { TODO() },
+                    onClick = { showAbout = true },
                     enabled = true,
                 )
             }
@@ -160,6 +164,11 @@ fun main() = application {
                     .fillMaxSize()
                     .background(ThemeState.instance.currentScheme.background)
             ) {
+                if (showAbout) {
+                    About {
+                        showAbout = false
+                    }
+                }
                 TabBar()
             }
         }
