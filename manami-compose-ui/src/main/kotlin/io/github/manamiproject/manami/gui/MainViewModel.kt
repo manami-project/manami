@@ -6,21 +6,19 @@ import androidx.compose.ui.window.FrameWindowScope
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
+import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialogState
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
-import io.github.manamiproject.manami.gui.tabs.Tabs
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.awt.Toolkit
+import kotlin.Boolean
 
 internal class MainViewModel(
     private val app: Manami = Manami.instance,
@@ -68,6 +66,15 @@ internal class MainViewModel(
         }
     }.stateIn(viewModelScope, Eagerly, "Manami")
 
+    private val _showAboutDialog = MutableStateFlow(false)
+    val showAboutDialog = _showAboutDialog.asStateFlow()
+
+    private val _showUnsavedChangesDialog = MutableStateFlow(UnsavedChangesDialogState())
+    val showUnsavedChangesDialogState = _showUnsavedChangesDialog.asStateFlow()
+
+    private val _showSafelyQuitDialog = MutableStateFlow(false)
+    val showSafelyQuitDialog = _showSafelyQuitDialog.asStateFlow()
+
     fun windowSize(): DpSize {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val screenWidth = screenSize.width.dp
@@ -75,25 +82,48 @@ internal class MainViewModel(
         return DpSize(screenWidth, screenHeight)
     }
 
-    fun new() {
-        viewModelScope.launch {
-            app.newFile()
-        }
-    }
-
-    fun open(parent: FrameWindowScope) {
-        val file = parent.showOpenFileDialog()
-
-        if (file != null) {
+    fun new(parent: FrameWindowScope, ignoreUnsavedChanges: Boolean = false) {
+        if (isSaved.value || (!isSaved.value && ignoreUnsavedChanges)) {
             viewModelScope.launch {
-                app.open(file)
+                app.newFile(ignoreUnsavedChanges)
+            }
+        } else {
+            _showUnsavedChangesDialog.update {
+                UnsavedChangesDialogState(
+                    showUnsavedChangesDialog = true,
+                    onCloseRequest = { _showUnsavedChangesDialog.update { UnsavedChangesDialogState() } },
+                    onYes = { save(parent) },
+                    onNo = { new(parent, true) },
+                )
             }
         }
     }
 
-    fun save() {
-        viewModelScope.launch {
-            app.save()
+    fun open(parent: FrameWindowScope, ignoreUnsavedChanges: Boolean = false) {
+        if (isSaved.value || (!isSaved.value && ignoreUnsavedChanges)) {
+            val file = parent.showOpenFileDialog()
+
+            if (file != null) {
+                viewModelScope.launch {
+                    app.open(file)
+                }
+            }
+        } else {
+            _showUnsavedChangesDialog.update {
+                UnsavedChangesDialogState(
+                    showUnsavedChangesDialog = true,
+                    onCloseRequest = { _showUnsavedChangesDialog.update { UnsavedChangesDialogState() } },
+                    onYes = { save(parent) },
+                    onNo = { open(parent, true) }
+                )
+            }
+        }
+    }
+
+    fun save(parent: FrameWindowScope) {
+        when (openedFile.value == EMPTY) {
+            true -> saveAs(parent)
+            false -> viewModelScope.launch { app.save() }
         }
     }
 
@@ -148,14 +178,40 @@ internal class MainViewModel(
     }
 
     fun openFindSimilarAnimeTab() {
-        tabBarViewModel.openOrActivate(Tabs.FIND_SIMILAR_ANIME)
+        tabBarViewModel.openOrActivate(FIND_SIMILAR_ANIME)
     }
 
-    fun quit() {
-        //TODO 4.0.0: Check if state is currently saved
-        viewModelScope.launch {
-            app.quit()
+    fun quit(parent: FrameWindowScope, ignoreUnsavedChanges: Boolean = false) {
+        if (isSaved.value || (!isSaved.value && ignoreUnsavedChanges)) {
+            viewModelScope.launch {
+                app.quit(ignoreUnsavedChanges)
+            }
+        } else {
+            _showUnsavedChangesDialog.update {
+                UnsavedChangesDialogState(
+                    showUnsavedChangesDialog = true,
+                    onCloseRequest = { _showUnsavedChangesDialog.update { UnsavedChangesDialogState() } },
+                    onYes = { save(parent) },
+                    onNo = { quit(parent, true) },
+                )
+            }
         }
+    }
+
+    fun showAboutDialog() {
+        _showAboutDialog.update { true }
+    }
+
+    fun closeAboutDialog() {
+        _showAboutDialog.update { false }
+    }
+
+    fun showSafelyQuitDialog() {
+        _showSafelyQuitDialog.update { true }
+    }
+
+    fun closeSafelyQuitDialog() {
+        _showSafelyQuitDialog.update { false }
     }
 
     internal companion object {

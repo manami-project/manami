@@ -60,8 +60,8 @@ class Manami(
         }
     }
 
-    override fun quit(ignoreUnsavedChanged: Boolean) {
-        if (!ignoreUnsavedChanged) {
+    override fun quit(ignoreUnsavedChanges: Boolean) {
+        if (!ignoreUnsavedChanges) {
             check(isSaved()) { "Cannot quit app, because there are unsaved changes." }
         }
 

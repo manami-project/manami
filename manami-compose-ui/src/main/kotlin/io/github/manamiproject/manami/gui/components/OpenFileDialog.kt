@@ -34,31 +34,3 @@ internal fun FrameWindowScope.showOpenFileDialog(): RegularFile? {
         null
     }
 }
-
-internal fun FrameWindowScope.showSaveAsFileDialog(): RegularFile? {
-    val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") }
-
-    val files: Array<File> = java.awt.FileDialog(window).apply {
-        mode = 1
-        isVisible = true
-        isMultipleMode = false
-        title = "Save your anime list as..."
-        filenameFilter = FilenameFilter { _, name ->
-            fileFilter(name)
-        }
-        modalityType = APPLICATION_MODAL
-    }.files
-
-    if (files.isEmpty()) {
-        return null
-    }
-
-    val file = files.first().toPath()
-    val fileName = file.fileName()
-
-    return if (fileFilter(fileName)) {
-        return file
-    } else {
-        null
-    }
-}
