@@ -22,7 +22,7 @@ internal fun <T : AnimeEntry> AnimeTable(
     ManamiTheme {
         LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
             item {
-                HeaderTableRow(
+                AnimeTableHeaderRow(
                     config = config,
                     onSortRequested = { newDirection -> viewModel.sort(newDirection) },
                 )

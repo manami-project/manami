@@ -3,13 +3,7 @@ package io.github.manamiproject.manami.gui.components.animetable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Clear
@@ -17,23 +11,16 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NotInterested
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
@@ -41,16 +28,12 @@ import io.github.manamiproject.manami.gui.cache.ImageCache
 import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jetbrains.skia.Image
 import java.awt.Desktop
 
 @Composable
 internal fun <T: AnimeEntry> AnimeTableRow(
     config: AnimeTableConfig.() -> Unit = {},
     anime: T,
-    weights: List<Float> = listOf(1.5f, 10f, 1.5f),
     viewModel: AnimeTableViewModel<T>,
 ) {
     val animeTableConfig = AnimeTableConfig().apply(config)
@@ -76,7 +59,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
         Row(Modifier.fillMaxSize().background(backgroundColor).height(IntrinsicSize.Min)) {
             Box(
                 modifier = Modifier
-                    .weight(weights[0])
+                    .weight(animeTableConfig.weights[0])
                     .padding(padding)
                     .clickable(onClick = onClick)
                     .fillMaxHeight(),
@@ -92,7 +75,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
 
             Box(
                 modifier = Modifier
-                    .weight(weights[1])
+                    .weight(animeTableConfig.weights[1])
                     .background(backgroundColor)
                     .fillMaxHeight()
                     .padding(padding)
@@ -110,7 +93,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
 
             Box(
                 modifier = Modifier
-                    .weight(weights[2])
+                    .weight(animeTableConfig.weights[2])
                     .fillMaxHeight()
                     .padding(padding),
                 contentAlignment = Alignment.CenterStart,
