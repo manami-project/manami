@@ -7,4 +7,5 @@ internal data class AnimeTableConfig(
     var withDeleteButton: Boolean = false,
     var withSortableTitle: Boolean = true,
     var withEditButton: Boolean = false,
+    val weights: List<Float> = listOf(1.5f, 10f, 1.5f),
 )

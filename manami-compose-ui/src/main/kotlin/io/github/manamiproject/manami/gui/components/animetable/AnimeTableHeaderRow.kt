@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.gui.components.IconButton
-import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.*
+import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
+import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
 
 @Composable
-internal fun HeaderTableRow(
+internal fun AnimeTableHeaderRow(
     config: AnimeTableConfig.() -> Unit = {},
-    weights: List<Float> = listOf(1.5f, 10f, 1.5f),
     onSortRequested: (AnimeTableSortDirection) -> Unit = {},
 ) {
     val animeTableConfig = AnimeTableConfig().apply(config)
@@ -38,7 +38,7 @@ internal fun HeaderTableRow(
         Row(Modifier.fillMaxSize().background(backgroundColor)) {
             Box(
                 modifier = Modifier
-                    .weight(weights[0])
+                    .weight(animeTableConfig.weights[0])
                     .background(backgroundColor)
                     .padding(padding),
                 contentAlignment = Center,
@@ -51,7 +51,7 @@ internal fun HeaderTableRow(
 
             Box(
                 modifier = Modifier
-                    .weight(weights[1])
+                    .weight(animeTableConfig.weights[1])
                     .background(backgroundColor)
                     .padding(padding),
                 contentAlignment = Center
@@ -79,7 +79,7 @@ internal fun HeaderTableRow(
 
             Box(
                 modifier = Modifier
-                    .weight(weights[2])
+                    .weight(animeTableConfig.weights[2])
                     .background(backgroundColor)
                     .padding(padding),
                 contentAlignment = Center
