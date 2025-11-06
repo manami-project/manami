@@ -127,22 +127,16 @@ fun main() = application {
                     onClick = { viewModel.openFindSeasonTab() },
                     enabled = true, // TODO 4.0.0 bind to cache being populated
                 )
-                Item(
-                    text = "Similar Anime",
-                    shortcut = KeyShortcut(Key.Three, meta = true),
-                    onClick = { viewModel.openFindSimilarAnimeTab() },
-                    enabled = true, // TODO 4.0.0 bind to cache being populated
-                )
                 Separator()
                 Item(
                     text = "Inconsistencies",
-                    shortcut = KeyShortcut(Key.Four, meta = true),
+                    shortcut = KeyShortcut(Key.Three, meta = true),
                     onClick = { viewModel.openFindInconsistenciesTab() },
                     enabled = false, // TODO 4.0.0 bind any list containing entries
                 )
                 Item(
                     text = "Related Anime",
-                    shortcut = KeyShortcut(Key.Five, meta = true),
+                    shortcut = KeyShortcut(Key.Four, meta = true),
                     onClick = { viewModel.openFindRelatedAnimeTab() },
                     enabled = false, // TODO 4.0.0 bind to anime list containing entries
                 )
