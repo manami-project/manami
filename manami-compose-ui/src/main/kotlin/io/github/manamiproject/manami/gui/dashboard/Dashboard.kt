@@ -8,13 +8,12 @@ import io.github.manamiproject.manami.gui.theme.ManamiTheme
 
 @Composable
 internal fun Dashboard(viewModel: DashboardViewModel = DashboardViewModel.instance) {
-
     val data = viewModel.metaDataProviderNumberOfAnime.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
 
     ManamiTheme {
         if (isLoading.value) {
-            Text("Initializing")
+            Text("Loading")
         } else {
             SimpleTable(data.value) {
                 keyHeadline = "MetaDataProvider"

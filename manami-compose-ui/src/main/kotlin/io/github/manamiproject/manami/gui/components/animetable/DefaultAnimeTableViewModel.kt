@@ -2,8 +2,11 @@ package io.github.manamiproject.manami.gui.components.animetable
 
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.AnimeEntry
+import io.github.manamiproject.manami.app.lists.LinkEntry
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
+import io.github.manamiproject.modb.core.anime.Anime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -15,10 +18,29 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
     private val sortDirection = MutableStateFlow(ASC)
-    private val hidden = MutableStateFlow<MutableSet<T>>(mutableSetOf())
+    private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
+    private val originId = this::class.qualifiedName.toString()
+
+    override val showAnimeDetails = MutableStateFlow(false)
+    override val isAnimeDetailsRunning: StateFlow<Boolean>
+        get() = app.findAnimeState
+            .map { it.isRunning[originId] ?: false }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = false,
+            )
+    override val animeDetails: StateFlow<Anime?>
+        get() = app.findAnimeState
+            .map { it.entries[originId] }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = null,
+            )
 
     override val entries: StateFlow<List<T>>
-        get() = combine(source, hidden, sortDirection) { sourceList, hiddenList, sortDirection ->
+        get() = combine(source, hiddenEntries, sortDirection) { sourceList, hiddenList, sortDirection ->
             sourceList.toMutableList().apply {
                 removeAll(hiddenList)
                 when (sortDirection) {
@@ -41,8 +63,8 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
     }
 
     override fun hide(anime: T) {
-        if (!hidden.value.contains(anime)) {
-            hidden.update { current -> current.apply { add(anime) } }
+        if (!hiddenEntries.value.contains(anime)) {
+            hiddenEntries.update { current -> current.apply { add(anime) } }
         }
     }
 
@@ -50,5 +72,19 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
         if (sortDirection.value != direction) {
             sortDirection.update { direction }
         }
+    }
+
+    override fun showAnimeDetails(link: LinkEntry) {
+        if (link == NoLink) return
+
+        showAnimeDetails.update { true }
+
+        CoroutineScope(Default).launch {
+            app.findAnime(originId, link.asLink().uri)
+        }
+    }
+
+    override fun hideAnimeDetails() {
+        showAnimeDetails.update { false }
     }
 }

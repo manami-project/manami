@@ -42,7 +42,11 @@ internal class CoroutinesFlowEventBusTest {
             CoroutinesFlowEventBus.findSeasonState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findByTagState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findSimilarAnimeState.update { current -> current.copy(isRunning = true) }
-            CoroutinesFlowEventBus.findAnimeState.update { current -> current.copy(isRunning = true) }
+            CoroutinesFlowEventBus.findAnimeState.update {
+                FindAnimeState(
+                    isRunning = mapOf("unit-test" to true)
+                )
+            }
             
             // when
             CoroutinesFlowEventBus.clear()

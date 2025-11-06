@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
@@ -58,24 +59,20 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     ManamiTheme {
         Row(Modifier.fillMaxSize().background(backgroundColor).height(IntrinsicSize.Min)) {
             Box(
-                modifier = Modifier
-                    .weight(animeTableConfig.weights[0])
+                modifier = Modifier.weight(animeTableConfig.weights[0])
                     .padding(padding)
                     .clickable(onClick = onClick)
                     .fillMaxHeight(),
                 contentAlignment = Center,
             ) {
-                imageBitmap?.let {
-                    Image(
-                        painter = BitmapPainter(it),
-                        contentDescription = null,
-                    )
-                }
+                Image(
+                    painter = BitmapPainter(imageBitmap),
+                    contentDescription = null,
+                )
             }
 
             Box(
-                modifier = Modifier
-                    .weight(animeTableConfig.weights[1])
+                modifier = Modifier.weight(animeTableConfig.weights[1])
                     .background(backgroundColor)
                     .fillMaxHeight()
                     .padding(padding)
@@ -92,13 +89,21 @@ internal fun <T: AnimeEntry> AnimeTableRow(
             }
 
             Box(
-                modifier = Modifier
-                    .weight(animeTableConfig.weights[2])
+                modifier = Modifier.weight(animeTableConfig.weights[2])
                     .fillMaxHeight()
                     .padding(padding),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Row {
+                    if (animeTableConfig.withShowAnimeDetailsButton) {
+                        IconButton(
+                            icon = Icons.AutoMirrored.Filled.List,
+                            size = iconSize,
+                            description = "Show anime details",
+                            onClick = { viewModel.showAnimeDetails(anime.link) },
+                        )
+                    }
+
                     if (animeTableConfig.withToWatchListButton) {
                         IconButton(
                             icon = Icons.AutoMirrored.Filled.PlaylistAdd,

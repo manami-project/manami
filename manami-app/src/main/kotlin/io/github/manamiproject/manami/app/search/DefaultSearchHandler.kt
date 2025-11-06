@@ -154,20 +154,30 @@ internal class DefaultSearchHandler(
         }
     }
 
-    override suspend fun findAnime(uri: URI) {
-        eventBus.findAnimeState.update { FindAnimeState(isRunning = true) }
+    override suspend fun findAnime(origin: String, uri: URI) {
+        eventBus.findAnimeState.update { current ->
+            FindAnimeState(
+                isRunning = current.isRunning.toMutableMap().apply { put(origin, true) },
+                entries = current.entries.toMutableMap().apply { remove(origin) }
+            )
+        }
         yield()
 
         val entry = cache.fetch(uri)
         if (entry is PresentValue) {
             eventBus.findAnimeState.update { current ->
-                current.copy(
-                    isRunning = false,
-                    entry = entry.value,
+                FindAnimeState(
+                    isRunning = current.isRunning.toMutableMap().apply { put(origin, false) },
+                    entries = current.entries.toMutableMap().apply { put(origin, entry.value) }
                 )
             }
         } else {
-            eventBus.findAnimeState.update { FindAnimeState(isRunning = false) }
+            eventBus.findAnimeState.update { current ->
+                FindAnimeState(
+                    isRunning = current.isRunning.toMutableMap().apply { put(origin, false) },
+                    entries = current.entries,
+                )
+            }
         }
     }
 
