@@ -19,7 +19,7 @@ import io.github.manamiproject.manami.gui.theme.ThemeState
 @Composable
 internal fun Tooltip(
     text: String,
-    colorScheme: ColorScheme = ThemeState.instance.currentScheme,
+    colorScheme: ColorScheme = ThemeState.instance.currentScheme.value,
     content: @Composable () -> Unit,
 ) {
     ManamiTheme {

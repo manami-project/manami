@@ -18,10 +18,10 @@ internal fun SimpleTableRow(
     data: Pair<String, Any>,
 ) {
     val simpleTableConfig = SimpleTableConfig().apply(config)
-    val backgroundColor = ThemeState.instance.currentScheme.surface
+    val backgroundColor = ThemeState.instance.currentScheme.value.surface
     val padding = 8.dp
     val textStyle = TextStyle.Default.copy(
-        color = ThemeState.instance.currentScheme.onSurface,
+        color = ThemeState.instance.currentScheme.value.onSurface,
         fontSize = TextUnit(simpleTableConfig.contentFontSize, TextUnitType.Sp),
     )
 
