@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
@@ -28,11 +29,12 @@ fun main() = application {
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
     val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
     val showUnsavedChangesDialogState by viewModel.showUnsavedChangesDialogState.collectAsState()
+    val windowState = remember { WindowState(size = viewModel.windowSize()) }
 
     Window(
         onCloseRequest = { viewModel.showSafelyQuitDialog() },
         title = windowTitle,
-        state = WindowState(size = viewModel.windowSize()),
+        state = windowState,
     ) {
         val mainWindow = this
 
