@@ -18,7 +18,7 @@ internal fun IconButton(
     description: String,
     onClick: () -> Unit,
     size: Dp = 18.dp,
-    colorScheme: ColorScheme = ThemeState.instance.currentScheme,
+    colorScheme: ColorScheme = ThemeState.instance.currentScheme.value,
 ) {
     ManamiTheme {
         Tooltip(text = description) {

@@ -22,9 +22,9 @@ internal fun SimpleTableHeaderRow(
 ) {
     val simpleTableConfig = SimpleTableConfig().apply(config)
     val padding = 8.dp
-    val backgroundColor = ThemeState.instance.currentScheme.primaryContainer
+    val backgroundColor = ThemeState.instance.currentScheme.value.primaryContainer
     val textStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = ThemeState.instance.currentScheme.onPrimaryContainer,
+        color = ThemeState.instance.currentScheme.value.onPrimaryContainer,
         fontWeight = Bold,
         fontSize = TextUnit(simpleTableConfig.contentFontSize, TextUnitType.Sp),
     )

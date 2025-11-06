@@ -7,8 +7,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 internal fun ManamiTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = ThemeState.instance.currentScheme) {
-        CompositionLocalProvider(LocalContentColor provides ThemeState.instance.currentScheme.onBackground) {
+    MaterialTheme(colorScheme = ThemeState.instance.currentScheme.value) {
+        CompositionLocalProvider(LocalContentColor provides ThemeState.instance.currentScheme.value.onBackground) {
             content()
         }
     }

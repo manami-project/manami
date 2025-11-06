@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
@@ -38,7 +37,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     viewModel: AnimeTableViewModel<T>,
 ) {
     val animeTableConfig = AnimeTableConfig().apply(config)
-    val backgroundColor = ThemeState.instance.currentScheme.surface
+    val backgroundColor = ThemeState.instance.currentScheme.value.surface
     val iconSize = 40.dp
     val padding = 8.dp
     val onClick: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
@@ -74,7 +73,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                 Text(
                     text = anime.title,
                     style = TextStyle.Default.copy(
-                        color = ThemeState.instance.currentScheme.onSurface,
+                        color = ThemeState.instance.currentScheme.value.onSurface,
                         fontSize = TextUnit(24f, TextUnitType.Sp),
                     ),
                 )

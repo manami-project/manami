@@ -15,7 +15,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import io.github.manamiproject.manami.gui.components.About
 import io.github.manamiproject.manami.gui.components.SafelyQuitDialog
-import io.github.manamiproject.manami.gui.components.UnsavedChangesDialog
+import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialog
 import io.github.manamiproject.manami.gui.tabs.TabBar
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
@@ -166,7 +166,7 @@ fun main() = application {
             Box( // unable to modify the background of the main window so painting a custom one is necessary
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(ThemeState.instance.currentScheme.background)
+                    .background(ThemeState.instance.currentScheme.value.background)
             ) {
                 if (showAboutDialog) {
                     About { viewModel.closeAboutDialog() }

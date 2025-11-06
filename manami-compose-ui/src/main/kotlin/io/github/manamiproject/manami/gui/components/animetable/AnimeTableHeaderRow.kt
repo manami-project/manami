@@ -28,8 +28,8 @@ internal fun AnimeTableHeaderRow(
 ) {
     val animeTableConfig = AnimeTableConfig().apply(config)
     val padding = 8.dp
-    val backgroundColor = ThemeState.instance.currentScheme.primaryContainer
-    val textColor = ThemeState.instance.currentScheme.onPrimaryContainer
+    val backgroundColor = ThemeState.instance.currentScheme.value.primaryContainer
+    val textColor = ThemeState.instance.currentScheme.value.onPrimaryContainer
     val textStyle = MaterialTheme.typography.bodyMedium.copy(
         color = textColor,
         fontWeight = Bold,
