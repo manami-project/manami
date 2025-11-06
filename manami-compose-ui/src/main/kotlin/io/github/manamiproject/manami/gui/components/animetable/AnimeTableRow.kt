@@ -27,9 +27,9 @@ import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.cache.ImageCache
 import io.github.manamiproject.manami.gui.components.IconButton
+import io.github.manamiproject.manami.gui.extensions.toOnClick
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
-import java.awt.Desktop
 
 @Composable
 internal fun <T: AnimeEntry> AnimeTableRow(
@@ -41,17 +41,9 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     val backgroundColor = ThemeState.instance.currentScheme.surface
     val iconSize = 40.dp
     val padding = 8.dp
-    val onClick: () -> Unit = {
-        if (anime.link is Link) {
-            try {
-                Desktop.getDesktop().browse(anime.link.asLink().uri)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+    val onClick: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
 
-    var imageBitmap by remember { mutableStateOf<ImageBitmap>(ImageCache.instance.fetchDefaultImage()) }
+    var imageBitmap by remember { mutableStateOf(ImageCache.instance.fetchDefaultImage()) }
     LaunchedEffect(anime.thumbnail) {
         imageBitmap = (ImageCache.instance.fetch(anime.thumbnail) as PresentValue).value
     }
