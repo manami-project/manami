@@ -1,4 +1,4 @@
-package io.github.manamiproject.manami.gui.components
+package io.github.manamiproject.manami.gui.components.unsavedchangesdialog
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
