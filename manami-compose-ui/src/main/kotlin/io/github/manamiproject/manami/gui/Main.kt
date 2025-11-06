@@ -150,6 +150,7 @@ fun main() = application {
             Menu("View") {
                 Item(
                     text = ThemeState.instance.caption,
+                    shortcut = KeyShortcut(Key.T, meta = true),
                     onClick = { ThemeState.instance.toggle() },
                     enabled = true,
                 )
