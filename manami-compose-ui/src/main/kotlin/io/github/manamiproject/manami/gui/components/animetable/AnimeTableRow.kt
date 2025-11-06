@@ -37,7 +37,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     viewModel: AnimeTableViewModel<T>,
 ) {
     val animeTableConfig = AnimeTableConfig().apply(config)
-    val backgroundColor = ThemeState.instance.currentScheme.value.surface
+    val backgroundColor = ThemeState.instance.currentScheme.value.background
     val iconSize = 40.dp
     val padding = 8.dp
     val onClick: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
@@ -73,7 +73,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                 Text(
                     text = anime.title,
                     style = TextStyle.Default.copy(
-                        color = ThemeState.instance.currentScheme.value.onSurface,
+                        color = ThemeState.instance.currentScheme.value.onBackground,
                         fontSize = TextUnit(24f, TextUnitType.Sp),
                     ),
                 )
