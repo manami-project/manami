@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.gui.dashboard
 
 import io.github.manamiproject.manami.app.Manami
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -29,6 +30,15 @@ internal class DashboardViewModel(private val app: Manami = Manami.instance) {
                 scope = viewModelScope,
                 started = Eagerly,
                 initialValue = emptyMap(),
+            )
+
+    val newVersion: StateFlow<String>
+        get() = app.dashboardState
+            .map { event -> event.newVersion?.version ?: EMPTY }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = EMPTY,
             )
 
     internal companion object {
