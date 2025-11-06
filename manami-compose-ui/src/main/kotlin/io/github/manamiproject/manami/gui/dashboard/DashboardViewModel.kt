@@ -1,8 +1,6 @@
 package io.github.manamiproject.manami.gui.dashboard
 
 import io.github.manamiproject.manami.app.Manami
-import io.github.manamiproject.manami.app.events.SearchResultAnimeEntry
-import io.github.manamiproject.modb.core.config.Hostname
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -26,7 +24,7 @@ internal class DashboardViewModel(private val app: Manami = Manami.instance) {
 
     val metaDataProviderNumberOfAnime: StateFlow<Map<String, Int>>
         get() = app.dashboardState
-            .map { it.entries }
+            .map { event -> event.entries.toList().sortedByDescending { it.second }.toMap() }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
