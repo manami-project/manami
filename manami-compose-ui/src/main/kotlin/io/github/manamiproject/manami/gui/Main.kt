@@ -25,6 +25,7 @@ fun main() = application {
     val isSaved by viewModel.isSaved.collectAsState()
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
+    val isAnyListContainingEntries by viewModel.isAnyListContainingEntries.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
     val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
@@ -91,7 +92,7 @@ fun main() = application {
                     text = "Meta Data Provider Migration",
                     shortcut = KeyShortcut(Key.M, meta = true),
                     onClick = { TODO() },
-                    enabled = false, // TODO 4.0.0 bind any list containing entries
+                    enabled = isAnyListContainingEntries,
                 )
             }
             Menu("Lists") {
@@ -132,13 +133,13 @@ fun main() = application {
                     text = "Inconsistencies",
                     shortcut = KeyShortcut(Key.Three, meta = true),
                     onClick = { viewModel.openFindInconsistenciesTab() },
-                    enabled = false, // TODO 4.0.0 bind any list containing entries
+                    enabled = isAnyListContainingEntries,
                 )
                 Item(
                     text = "Related Anime",
                     shortcut = KeyShortcut(Key.Four, meta = true),
                     onClick = { viewModel.openFindRelatedAnimeTab() },
-                    enabled = false, // TODO 4.0.0 bind to anime list containing entries
+                    enabled = isAnyListContainingEntries,
                 )
             }
             Menu("View") {

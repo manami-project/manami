@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.launch
 import java.awt.Toolkit
-import kotlin.Boolean
 
 internal class MainViewModel(
     private val app: Manami = Manami.instance,
@@ -57,6 +56,14 @@ internal class MainViewModel(
             started = Eagerly,
             initialValue = EMPTY
         )
+
+    val isAnyListContainingEntries: StateFlow<Boolean> = combine(app.animeListState,app.watchListState,app.ignoreListState) { animeListState, watchListState, ignoreListState ->
+        animeListState.entries.isNotEmpty() || watchListState.entries.isNotEmpty() || ignoreListState.entries.isNotEmpty()
+    }.stateIn(
+        scope = viewModelScope,
+        started = Eagerly,
+        initialValue = false,
+    )
 
     val windowTitle = combine(isSaved, openedFile) { saved, file ->
         buildString {
@@ -175,10 +182,6 @@ internal class MainViewModel(
 
     fun openFindRelatedAnimeTab() {
         tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
-    }
-
-    fun openFindSimilarAnimeTab() {
-        tabBarViewModel.openOrActivate(FIND_SIMILAR_ANIME)
     }
 
     fun quit(parent: FrameWindowScope, ignoreUnsavedChanges: Boolean = false) {
