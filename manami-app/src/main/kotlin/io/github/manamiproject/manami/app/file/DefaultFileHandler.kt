@@ -55,7 +55,7 @@ internal class DefaultFileHandler(
             file = file,
         ).execute()
 
-        eventBus.generalAppState.update { current -> current.copy(openedFile = file.fileName()) }
+        eventBus.generalAppState.update { current -> current.copy(openedFile = file.toAbsolutePath().toString()) }
     }
 
     override fun isOpenFileSet(): Boolean = state.openedFile() is CurrentFile
