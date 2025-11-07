@@ -40,7 +40,8 @@ internal class ThemeState() {
         private const val CAPTION_TO_LIGHT_THEME = "Change to 'light' theme"
         private val LIGHT_COLOR_SCHEME = lightColorScheme()
         private val DARK_COLOR_SCHEME = darkColorScheme(
-            background = Color(42, 42, 48),
+            background = Color(42, 41, 48),
+            surface = Color(60, 50, 75),
         )
 
         /**
