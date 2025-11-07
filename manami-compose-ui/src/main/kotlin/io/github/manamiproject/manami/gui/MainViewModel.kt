@@ -57,6 +57,14 @@ internal class MainViewModel(
             initialValue = EMPTY
         )
 
+    val isCachePopulationRunning: StateFlow<Boolean> = app.dashboardState
+        .map { !it.isAnimeCachePopulatorRunning }
+        .stateIn(
+            scope = viewModelScope,
+            started = Eagerly,
+            initialValue = true
+        )
+
     val isAnyListContainingEntries: StateFlow<Boolean> = combine(app.animeListState,app.watchListState,app.ignoreListState) { animeListState, watchListState, ignoreListState ->
         animeListState.entries.isNotEmpty() || watchListState.entries.isNotEmpty() || ignoreListState.entries.isNotEmpty()
     }.stateIn(
