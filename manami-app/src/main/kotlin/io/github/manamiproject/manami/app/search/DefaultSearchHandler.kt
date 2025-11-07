@@ -155,8 +155,8 @@ internal class DefaultSearchHandler(
     }
 
     override suspend fun findAnimeDetails(uri: URI) {
-        eventBus.findAnimeState.update {
-            FindAnimeState(
+        eventBus.findAnimeDetailsState.update {
+            FindAnimeDetailsState(
                 isRunning = true,
                 entry = null,
             )
@@ -165,15 +165,15 @@ internal class DefaultSearchHandler(
 
         val entry = cache.fetch(uri)
         if (entry is PresentValue) {
-            eventBus.findAnimeState.update {
-                FindAnimeState(
+            eventBus.findAnimeDetailsState.update {
+                FindAnimeDetailsState(
                     isRunning = false,
                     entry = entry.value,
                 )
             }
         } else {
-            eventBus.findAnimeState.update {
-                FindAnimeState(
+            eventBus.findAnimeDetailsState.update {
+                FindAnimeDetailsState(
                     isRunning = false,
                 )
             }

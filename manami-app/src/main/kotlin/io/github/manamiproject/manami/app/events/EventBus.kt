@@ -70,7 +70,7 @@ interface EventBus {
     /**
      * @since 4.0.0
      */
-    val findAnimeState: MutableStateFlow<FindAnimeState>
+    val findAnimeDetailsState: MutableStateFlow<FindAnimeDetailsState>
 
     /**
      * @since 4.0.0

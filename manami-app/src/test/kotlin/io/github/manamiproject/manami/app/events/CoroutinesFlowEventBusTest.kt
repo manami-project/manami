@@ -52,7 +52,7 @@ internal class CoroutinesFlowEventBusTest {
             CoroutinesFlowEventBus.findSeasonState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findByTagState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findSimilarAnimeState.update { current -> current.copy(isRunning = true) }
-            CoroutinesFlowEventBus.findAnimeState.update { current ->  current.copy(isRunning = true) }
+            CoroutinesFlowEventBus.findAnimeDetailsState.update { current ->  current.copy(isRunning = true) }
 
             // when
             CoroutinesFlowEventBus.clear()
@@ -80,7 +80,7 @@ internal class CoroutinesFlowEventBusTest {
             assertThat(CoroutinesFlowEventBus.findSeasonState.value).isEqualTo(FindSeasonState())
             assertThat(CoroutinesFlowEventBus.findByTagState.value).isEqualTo(FindByTagState())
             assertThat(CoroutinesFlowEventBus.findSimilarAnimeState.value).isEqualTo(FindSimilarAnimeState())
-            assertThat(CoroutinesFlowEventBus.findAnimeState.value).isEqualTo(FindAnimeState())
+            assertThat(CoroutinesFlowEventBus.findAnimeDetailsState.value).isEqualTo(FindAnimeDetailsState())
         }
     }
 }

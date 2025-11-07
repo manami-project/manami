@@ -1,12 +1,10 @@
 package io.github.manamiproject.manami.gui.find.animedetails
 
 import io.github.manamiproject.manami.app.Manami
-import io.github.manamiproject.manami.gui.lists.watchlist.WatchListViewModel
 import io.github.manamiproject.modb.core.anime.Anime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -17,7 +15,7 @@ internal class FindAnimeDetailsViewModel(private val app: Manami = Manami.instan
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
     val isAnimeDetailsRunning: StateFlow<Boolean>
-        get() = app.findAnimeState
+        get() = app.findAnimeDetailsState
             .map { it.isRunning }
             .stateIn(
                 scope = viewModelScope,
@@ -26,7 +24,7 @@ internal class FindAnimeDetailsViewModel(private val app: Manami = Manami.instan
             )
 
     val animeDetails: StateFlow<Anime?>
-        get() = app.findAnimeState
+        get() = app.findAnimeDetailsState
             .map { it.entry }
             .stateIn(
                 scope = viewModelScope,
