@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
-import io.github.manamiproject.manami.app.events.FindAnimeState
+import io.github.manamiproject.manami.app.events.FindAnimeDetailsState
 import io.github.manamiproject.manami.app.events.FindByTagState
 import io.github.manamiproject.manami.app.events.FindSeasonState
 import io.github.manamiproject.manami.app.events.FindSimilarAnimeState
@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 import java.nio.file.Paths
-import java.util.UUID
 import kotlin.io.path.createDirectory
 import kotlin.test.AfterTest
 
@@ -1888,8 +1887,8 @@ internal class DefaultSearchHandlerTest {
         fun `successfully find anime`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findAnimeState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindAnimeDetailsState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findAnimeDetailsState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val entry = Anime(
@@ -1940,8 +1939,8 @@ internal class DefaultSearchHandlerTest {
         fun `don't return anime, because URI relates to a dead entry`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findAnimeState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindAnimeDetailsState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findAnimeDetailsState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
