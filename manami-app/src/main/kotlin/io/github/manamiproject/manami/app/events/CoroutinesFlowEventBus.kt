@@ -23,7 +23,6 @@ object CoroutinesFlowEventBus: EventBus {
     override val findAnimeState: MutableStateFlow<FindAnimeState> = MutableStateFlow(FindAnimeState())
 
     override fun clear() {
-        dashboardState.update { DashboardState() }
         generalAppState.update { GeneralAppState() }
         animeListState.update { AnimeListState() }
         watchListState.update { WatchListState() }

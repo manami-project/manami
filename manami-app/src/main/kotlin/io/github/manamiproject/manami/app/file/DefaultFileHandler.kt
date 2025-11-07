@@ -46,6 +46,8 @@ internal class DefaultFileHandler(
 
         val parsedFile = parser.parse(file)
 
+        eventBus.clear()
+
         CmdOpenFile(
             state = state,
             commandHistory = commandHistory,
@@ -53,7 +55,6 @@ internal class DefaultFileHandler(
             file = file,
         ).execute()
 
-        eventBus.clear()
         eventBus.generalAppState.update { current -> current.copy(openedFile = file.fileName()) }
     }
 
