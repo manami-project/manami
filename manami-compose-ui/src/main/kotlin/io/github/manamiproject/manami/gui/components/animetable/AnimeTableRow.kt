@@ -42,9 +42,10 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     val padding = 8.dp
     val onClick: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
 
-    var imageBitmap by remember { mutableStateOf(ImageCache.instance.fetchDefaultImage()) }
-    LaunchedEffect(anime.thumbnail) {
-        imageBitmap = (ImageCache.instance.fetch(anime.thumbnail) as PresentValue).value
+    val defaultBitmap = ImageCache.instance.fetchDefaultImage()
+    val imageBitmap by produceState(initialValue = defaultBitmap, key1 = anime.thumbnail) {
+        val fetched = ImageCache.instance.fetch(anime.thumbnail)
+        value = (fetched as PresentValue).value
     }
 
     ManamiTheme {
@@ -53,12 +54,14 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                 modifier = Modifier.weight(animeTableConfig.weights[0])
                     .padding(padding)
                     .clickable(onClick = onClick)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .size(150.dp),
                 contentAlignment = Center,
             ) {
                 Image(
                     painter = BitmapPainter(imageBitmap),
                     contentDescription = null,
+                    modifier = Modifier.width(150.dp),
                 )
             }
 
