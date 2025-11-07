@@ -60,7 +60,7 @@ internal object InternalState: State {
         val uris = anime.map { it.link.uri }.toSet()
 
         if (ignoreList.removeIf { uris.contains(it.link.uri) }) {
-            CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
+            CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
         }
     }
 
@@ -78,7 +78,7 @@ internal object InternalState: State {
         val uris = anime.map { it.link.uri }.toSet()
 
         if (watchList.removeIf { uris.contains(it.link.uri) }) {
-            CoroutinesFlowEventBus.watchListState.update { current -> current.copy(entries = watchList()) }
+            CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(entries = ignoreList()) }
         }
     }
 
