@@ -8,5 +8,6 @@ internal data class AnimeTableConfig(
     var withSortableTitle: Boolean = true,
     var withEditButton: Boolean = false,
     var withShowAnimeDetailsButton: Boolean = true,
+    var withOpenDirectoryButton: Boolean = false,
     val weights: List<Float> = listOf(1.5f, 10f, 1.5f),
 )

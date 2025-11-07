@@ -87,4 +87,8 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
     override fun hideAnimeDetails() {
         showAnimeDetails.update { false }
     }
+
+    override fun openDirectory(anime: T) {
+        throw UnsupportedOperationException()
+    }
 }

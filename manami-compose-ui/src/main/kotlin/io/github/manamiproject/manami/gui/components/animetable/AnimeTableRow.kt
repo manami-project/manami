@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DriveFileMove
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Clear
@@ -40,7 +41,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
     val backgroundColor = ThemeState.instance.currentScheme.value.background
     val iconSize = 40.dp
     val padding = 8.dp
-    val onClick: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
+    val openLinkAction: () -> Unit = if (anime.link is Link) { anime.link.asLink().uri.toOnClick() } else { {} }
 
     val defaultBitmap = ImageCache.instance.fetchDefaultImage()
     val imageBitmap by produceState(initialValue = defaultBitmap, key1 = anime.thumbnail) {
@@ -53,7 +54,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
             Box(
                 modifier = Modifier.weight(animeTableConfig.weights[0])
                     .padding(padding)
-                    .clickable(onClick = onClick)
+                    .clickable(onClick = openLinkAction)
                     .fillMaxHeight()
                     .size(150.dp),
                 contentAlignment = Center,
@@ -70,7 +71,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                     .background(backgroundColor)
                     .fillMaxHeight()
                     .padding(padding)
-                    .clickable(onClick = onClick),
+                    .clickable(onClick = openLinkAction),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Text(
@@ -89,6 +90,15 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Row {
+                    if (animeTableConfig.withOpenDirectoryButton) {
+                        IconButton(
+                            icon = Icons.AutoMirrored.Filled.DriveFileMove,
+                            size = iconSize,
+                            description = "Open directory",
+                            onClick = { viewModel.openDirectory(anime) },
+                        )
+                    }
+
                     if (animeTableConfig.withShowAnimeDetailsButton) {
                         IconButton(
                             icon = Icons.AutoMirrored.Filled.List,
