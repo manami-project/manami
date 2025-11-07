@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.events
 
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import kotlinx.coroutines.flow.update
 import org.assertj.core.api.Assertions.assertThat
@@ -30,7 +31,15 @@ internal class CoroutinesFlowEventBusTest {
                 type = TV,
                 location = Path("some/relative/path/beck"),
             )
-            CoroutinesFlowEventBus.dashboardState.update { current -> current.copy(isAnimeCachePopulatorRunning = true) }
+            CoroutinesFlowEventBus.dashboardState.update { current -> current.copy(
+                entries = mapOf(
+                    "provider1" to 5,
+                    "provider2" to 3,
+                    "provider3" to 1,
+                ),
+                newVersion = SemanticVersion("1.0.0"),
+                isAnimeCachePopulatorRunning = true,
+            ) }
             CoroutinesFlowEventBus.generalAppState.update { current -> current.copy(openedFile = "test.json") }
             CoroutinesFlowEventBus.animeListState.update { current -> current.copy(entries = listOf(animeListEntry)) }
             CoroutinesFlowEventBus.watchListState.update { current -> current.copy(isAdditionRunning = true) }
@@ -47,12 +56,22 @@ internal class CoroutinesFlowEventBusTest {
                     isRunning = mapOf("unit-test" to true)
                 )
             }
-            
+
             // when
             CoroutinesFlowEventBus.clear()
-            
+
             // then
-            assertThat(CoroutinesFlowEventBus.dashboardState.value).isEqualTo(DashboardState())
+            assertThat(CoroutinesFlowEventBus.dashboardState.value).isEqualTo(
+                DashboardState(
+                    entries = mapOf(
+                        "provider1" to 5,
+                        "provider2" to 3,
+                        "provider3" to 1,
+                    ),
+                    newVersion = SemanticVersion("1.0.0"),
+                    isAnimeCachePopulatorRunning = false,
+                )
+            )
             assertThat(CoroutinesFlowEventBus.generalAppState.value).isEqualTo(GeneralAppState())
             assertThat(CoroutinesFlowEventBus.animeListState.value).isEqualTo(AnimeListState())
             assertThat(CoroutinesFlowEventBus.watchListState.value).isEqualTo(WatchListState())

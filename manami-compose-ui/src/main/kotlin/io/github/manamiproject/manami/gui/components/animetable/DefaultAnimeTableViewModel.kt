@@ -39,6 +39,15 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
                 initialValue = null,
             )
 
+    override val isFileOpeningRunning: StateFlow<Boolean>
+        get() = app.generalAppState
+            .map { it.isOpeningFileRunning }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = false,
+            )
+
     override val entries: StateFlow<List<T>>
         get() = combine(source, hiddenEntries, sortDirection) { sourceList, hiddenList, sortDirection ->
             sourceList.toMutableList().apply {
