@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.dashboard.Dashboard
 import io.github.manamiproject.manami.gui.find.anime.FindAnime
+import io.github.manamiproject.manami.gui.find.animedetails.FindAnimeDetails
 import io.github.manamiproject.manami.gui.find.inconsistencies.FindInconsistencies
 import io.github.manamiproject.manami.gui.find.relatedanime.FindRelatedAnime
 import io.github.manamiproject.manami.gui.find.season.FindSeason
@@ -67,6 +68,7 @@ internal fun TabBar(
                 FIND_INCONSISTENCIES -> FindInconsistencies()
                 FIND_RELATED_ANIME -> FindRelatedAnime()
                 FIND_SIMILAR_ANIME -> FindSimilarAnime()
+                FIND_ANIME_DETAILS -> FindAnimeDetails()
             }
         }
     }

@@ -17,7 +17,7 @@ interface SearchHandler {
 
     suspend fun findSimilarAnime(uri: URI)
 
-    suspend fun findAnime(origin: String, uri: URI)
+    suspend fun findAnimeDetails(uri: URI)
 
     fun availableMetaDataProviders(): Set<Hostname>
 
