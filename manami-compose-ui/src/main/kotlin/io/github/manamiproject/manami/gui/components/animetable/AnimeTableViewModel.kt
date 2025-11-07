@@ -14,6 +14,8 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
     val animeDetails: StateFlow<Anime?>
     val showAnimeDetails: StateFlow<Boolean>
 
+    val isFileOpeningRunning: StateFlow<Boolean>
+
     fun addToWatchList(anime: T)
     fun addToIgnoreList(anime: T)
     fun hide(anime: T)

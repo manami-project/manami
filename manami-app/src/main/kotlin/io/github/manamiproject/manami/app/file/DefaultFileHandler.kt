@@ -12,6 +12,7 @@ import io.github.manamiproject.modb.core.extensions.fileName
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.yield
 import kotlin.io.path.createFile
 
 internal class DefaultFileHandler(
@@ -44,6 +45,8 @@ internal class DefaultFileHandler(
             check(commandHistory.isSaved()) { "Cannot open file, because there are unsaved changes." }
         }
 
+        eventBus.generalAppState.update { current -> current.copy(isOpeningFileRunning = true) }
+
         val parsedFile = parser.parse(file)
 
         eventBus.clear()
@@ -55,7 +58,12 @@ internal class DefaultFileHandler(
             file = file,
         ).execute()
 
-        eventBus.generalAppState.update { current -> current.copy(openedFile = file.toAbsolutePath().toString()) }
+        eventBus.generalAppState.update { current ->
+            current.copy(
+                openedFile = file.toAbsolutePath().toString(),
+                isOpeningFileRunning = false,
+            )
+        }
     }
 
     override fun isOpenFileSet(): Boolean = state.openedFile() is CurrentFile

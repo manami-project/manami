@@ -9,5 +9,6 @@ data class GeneralAppState(
     val isFileSaved: Boolean = true,
     val isUndoPossible: Boolean = false,
     val isRedoPossible: Boolean = false,
+    val isOpeningFileRunning: Boolean = false,
     val openedFile: String = EMPTY,
 )

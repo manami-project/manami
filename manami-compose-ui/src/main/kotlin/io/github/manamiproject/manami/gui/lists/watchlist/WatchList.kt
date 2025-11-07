@@ -22,9 +22,16 @@ internal fun WatchList(viewModel: WatchListViewModel = WatchListViewModel.instan
     val animeDetails = viewModel.animeDetails.collectAsState()
     val showAnimeDetails = viewModel.showAnimeDetails.collectAsState()
     val isAnimeDetailsRunning = viewModel.isAnimeDetailsRunning.collectAsState()
+    val isFileOpeningRunning = viewModel.isFileOpeningRunning.collectAsState()
 
     ManamiTheme {
-        if (!showAnimeDetails.value) {
+        if (isFileOpeningRunning.value) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.align(Alignment.Center)) {
+                    RotatingDotsProgress()
+                }
+            }
+        } else if (!showAnimeDetails.value) {
             AnimeTable(viewModel = viewModel) {
                 withToWatchListButton = false
                 withHideButton = false
