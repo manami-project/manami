@@ -26,6 +26,7 @@ internal fun AnimeList(viewModel: AnimeListViewModel = AnimeListViewModel.instan
     ManamiTheme {
         if (!showAnimeDetails.value) {
             AnimeTable(viewModel = viewModel) {
+                withOpenDirectoryButton = true
                 withToWatchListButton = false
                 withToIgnoreListButton = false
                 withHideButton = false

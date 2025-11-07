@@ -3,6 +3,7 @@ package io.github.manamiproject.manami.gui.lists.animelist
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
+import io.github.manamiproject.manami.gui.extensions.toOnClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -29,6 +30,10 @@ internal class AnimeListViewModel(private val app: Manami = Manami.instance): De
         viewModelScope.launch {
             app.removeAnimeListEntry(anime)
         }
+    }
+
+    override fun openDirectory(anime: AnimeListEntry) {
+        anime.location.toUri().toOnClick().invoke()
     }
 
     internal companion object {
