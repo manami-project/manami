@@ -24,6 +24,7 @@ object CoroutinesFlowEventBus: EventBus {
 
     override fun clear() {
         generalAppState.update { GeneralAppState() }
+        dashboardState.update { current -> current.copy(isAnimeCachePopulatorRunning = false) }
         animeListState.update { AnimeListState() }
         watchListState.update { WatchListState() }
         ignoreListState.update { IgnoreListState() }
