@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.app.events
 
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import kotlinx.coroutines.flow.update
@@ -40,7 +41,7 @@ internal class CoroutinesFlowEventBusTest {
                 newVersion = SemanticVersion("1.0.0"),
                 isAnimeCachePopulatorRunning = true,
             ) }
-            CoroutinesFlowEventBus.generalAppState.update { current -> current.copy(openedFile = "test.json") }
+            CoroutinesFlowEventBus.generalAppState.update { current -> current.copy(openedFile = CurrentFile(Path("test.xml"))) }
             CoroutinesFlowEventBus.animeListState.update { current -> current.copy(entries = listOf(animeListEntry)) }
             CoroutinesFlowEventBus.watchListState.update { current -> current.copy(isAdditionRunning = true) }
             CoroutinesFlowEventBus.ignoreListState.update { current -> current.copy(isAdditionRunning = true) }

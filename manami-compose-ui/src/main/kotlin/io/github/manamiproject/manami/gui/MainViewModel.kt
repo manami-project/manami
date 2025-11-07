@@ -4,6 +4,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import io.github.manamiproject.manami.app.Manami
+import io.github.manamiproject.manami.app.state.CurrentFile
+import io.github.manamiproject.manami.app.state.NoFile
+import io.github.manamiproject.manami.app.state.OpenedFile
 import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
 import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialogState
@@ -49,12 +52,12 @@ internal class MainViewModel(
             initialValue = false
         )
 
-    val openedFile: StateFlow<String> = app.generalAppState
+    val openedFile: StateFlow<OpenedFile> = app.generalAppState
         .map { it.openedFile }
         .stateIn(
             scope = viewModelScope,
             started = Eagerly,
-            initialValue = EMPTY
+            initialValue = NoFile
         )
 
     val isCachePopulationRunning: StateFlow<Boolean> = app.dashboardState
@@ -76,7 +79,7 @@ internal class MainViewModel(
     val windowTitle = combine(isSaved, openedFile) { saved, file ->
         buildString {
             append("Manami")
-            if (file.neitherNullNorBlank()) append(" - $file")
+            if (file is CurrentFile) append(" - ${file.regularFile.toAbsolutePath()}")
             if (!saved) append("*")
         }
     }.stateIn(viewModelScope, Eagerly, "Manami")
@@ -136,7 +139,7 @@ internal class MainViewModel(
     }
 
     fun save(parent: FrameWindowScope) {
-        when (openedFile.value == EMPTY) {
+        when (openedFile.value is NoFile) {
             true -> saveAs(parent)
             false -> viewModelScope.launch { app.save() }
         }

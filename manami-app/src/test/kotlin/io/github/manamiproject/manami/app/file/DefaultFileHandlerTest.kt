@@ -148,7 +148,7 @@ internal class DefaultFileHandlerTest {
 
             // then
             assertThat(isCommandExecuted).isTrue()
-            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(file.toAbsolutePath().toString())
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(CurrentFile(file))
         }
     }
 
@@ -470,7 +470,7 @@ internal class DefaultFileHandlerTest {
 
                 // then
                 assertThat(savedFile).isEqualTo(fileToSave)
-                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("junit-test.xml")
+                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(CurrentFile(fileToSave))
             }
         }
 
@@ -513,7 +513,7 @@ internal class DefaultFileHandlerTest {
                 // then
                 assertThat(fileHasBeenWritten).isTrue()
                 assertThat(cmdHasBeenSaved).isTrue()
-                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("test.xml")
+                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(CurrentFile(file))
             }
         }
     }

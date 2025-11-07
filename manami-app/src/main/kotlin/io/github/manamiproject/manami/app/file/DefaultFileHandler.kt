@@ -8,11 +8,9 @@ import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.RegularFile
-import io.github.manamiproject.modb.core.extensions.fileName
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.yield
 import kotlin.io.path.createFile
 
 internal class DefaultFileHandler(
@@ -51,18 +49,20 @@ internal class DefaultFileHandler(
 
         eventBus.clear()
 
-        CmdOpenFile(
+        val result = CmdOpenFile(
             state = state,
             commandHistory = commandHistory,
             parsedFile = parsedFile,
             file = file,
         ).execute()
 
-        eventBus.generalAppState.update { current ->
-            current.copy(
-                openedFile = file.toAbsolutePath().toString(),
-                isOpeningFileRunning = false,
-            )
+        if (result) {
+            eventBus.generalAppState.update { current ->
+                current.copy(
+                    openedFile = CurrentFile(file),
+                    isOpeningFileRunning = false,
+                )
+            }
         }
     }
 
@@ -90,7 +90,7 @@ internal class DefaultFileHandler(
         }
 
         state.setOpenedFile(file)
-        eventBus.generalAppState.update { current -> current.copy(openedFile = file.fileName()) }
+        eventBus.generalAppState.update { current -> current.copy(openedFile = CurrentFile(file)) }
         save()
     }
 

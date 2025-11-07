@@ -2,6 +2,8 @@ package io.github.manamiproject.manami.gui.lists.animelist
 
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
+import io.github.manamiproject.manami.app.state.CurrentFile
+import io.github.manamiproject.manami.app.state.NoFile
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
 import io.github.manamiproject.manami.gui.extensions.toOnClick
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +35,10 @@ internal class AnimeListViewModel(private val app: Manami = Manami.instance): De
     }
 
     override fun openDirectory(anime: AnimeListEntry) {
-        anime.location.toUri().toOnClick().invoke()
+        when(val openedFile = app.generalAppState.value.openedFile) {
+            NoFile -> anime.location.toUri().toOnClick().invoke()
+            is CurrentFile -> openedFile.regularFile.parent.resolve(anime.location).toUri().toOnClick().invoke()
+        }
     }
 
     internal companion object {
