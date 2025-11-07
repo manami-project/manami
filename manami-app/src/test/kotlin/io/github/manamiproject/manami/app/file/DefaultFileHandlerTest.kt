@@ -141,12 +141,14 @@ internal class DefaultFileHandlerTest {
                 eventBus = CoroutinesFlowEventBus,
             )
 
+            val file = Path(".").resolve("test.xml")
+
             // when
-            defaultFileHandler.open(Path(".").resolve("test.xml"), ignoreUnsavedChanged = true)
+            defaultFileHandler.open(file, ignoreUnsavedChanged = true)
 
             // then
             assertThat(isCommandExecuted).isTrue()
-            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo("test.xml")
+            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(file.toAbsolutePath().toString())
         }
     }
 
