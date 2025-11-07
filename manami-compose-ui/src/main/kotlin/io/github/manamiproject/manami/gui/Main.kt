@@ -26,6 +26,7 @@ fun main() = application {
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
     val isAnyListContainingEntries by viewModel.isAnyListContainingEntries.collectAsState()
+    val isCachePopulationRunning by viewModel.isCachePopulationRunning.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
     val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
@@ -120,13 +121,13 @@ fun main() = application {
                     text = "Anime",
                     shortcut = KeyShortcut(Key.One, meta = true),
                     onClick = { viewModel.openFindAnimeTab() },
-                    enabled = true, // TODO 4.0.0 bind to cache being populated
+                    enabled = isCachePopulationRunning,
                 )
                 Item(
                     text = "Season",
                     shortcut = KeyShortcut(Key.Two, meta = true),
                     onClick = { viewModel.openFindSeasonTab() },
-                    enabled = true, // TODO 4.0.0 bind to cache being populated
+                    enabled = isCachePopulationRunning,
                 )
                 Separator()
                 Item(
