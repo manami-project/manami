@@ -38,7 +38,6 @@ import java.nio.file.Paths
 import java.util.UUID
 import kotlin.io.path.createDirectory
 import kotlin.test.AfterTest
-import kotlin.uuid.Uuid
 
 internal class DefaultSearchHandlerTest {
 
@@ -1925,17 +1924,15 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val id = UUID.randomUUID().toString()
-
                 // when
-                defaultSearchHandler.findAnime(id, URI("https://myanimelist.net/anime/42938"))
+                defaultSearchHandler.findAnimeDetails(URI("https://myanimelist.net/anime/42938"))
 
                 // then
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last().entries).isNotNull()
-                assertThat(receivedEvents.last().entries[id]!!.title).isEqualTo("Fruits Basket: The Final")
+                assertThat(receivedEvents.last().entry).isNotNull()
+                assertThat(receivedEvents.last().entry!!.title).isEqualTo("Fruits Basket: The Final")
             }
         }
 
@@ -1957,16 +1954,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val id = UUID.randomUUID().toString()
-
                 // when
-                defaultSearchHandler.findAnime(id, URI("https://myanimelist.net/anime/10001"))
+                defaultSearchHandler.findAnimeDetails(URI("https://myanimelist.net/anime/10001"))
 
                 // then
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last().entries).isEmpty()
+                assertThat(receivedEvents.last().entry).isNull()
             }
         }
     }

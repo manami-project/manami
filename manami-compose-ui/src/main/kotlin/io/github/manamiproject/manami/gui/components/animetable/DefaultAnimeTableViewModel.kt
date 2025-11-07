@@ -6,7 +6,8 @@ import io.github.manamiproject.manami.app.lists.LinkEntry
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
-import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
+import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_ANIME_DETAILS
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -14,30 +15,14 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.launch
 
-internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val app: Manami = Manami.instance): AnimeTableViewModel<T> {
+internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
+    private val app: Manami = Manami.instance,
+    private val tableViewModel: TabBarViewModel = TabBarViewModel.instance,
+): AnimeTableViewModel<T> {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
     private val sortDirection = MutableStateFlow(ASC)
     private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
-    private val originId = this::class.qualifiedName.toString()
-
-    override val showAnimeDetails = MutableStateFlow(false)
-    override val isAnimeDetailsRunning: StateFlow<Boolean>
-        get() = app.findAnimeState
-            .map { it.isRunning[originId] ?: false }
-            .stateIn(
-                scope = viewModelScope,
-                started = Eagerly,
-                initialValue = false,
-            )
-    override val animeDetails: StateFlow<Anime?>
-        get() = app.findAnimeState
-            .map { it.entries[originId] }
-            .stateIn(
-                scope = viewModelScope,
-                started = Eagerly,
-                initialValue = null,
-            )
 
     override val isFileOpeningRunning: StateFlow<Boolean>
         get() = app.generalAppState
@@ -86,15 +71,11 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(private val ap
     override fun showAnimeDetails(link: LinkEntry) {
         if (link == NoLink) return
 
-        showAnimeDetails.update { true }
-
         CoroutineScope(Default).launch {
-            app.findAnime(originId, link.asLink().uri)
+            app.findAnimeDetails(link.asLink().uri)
         }
-    }
 
-    override fun hideAnimeDetails() {
-        showAnimeDetails.update { false }
+        tableViewModel.openOrActivate(FIND_ANIME_DETAILS)
     }
 
     override fun openDirectory(anime: T) {

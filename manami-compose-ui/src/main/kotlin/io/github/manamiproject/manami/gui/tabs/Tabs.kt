@@ -13,4 +13,5 @@ internal enum class Tabs(
     FIND_RELATED_ANIME(title = "Find Related Anime"),
     FIND_SEASON(title = "Find Season"),
     FIND_SIMILAR_ANIME(title = "Find Similar Anime"),
+    FIND_ANIME_DETAILS(title = "Anime Details"),
 }
