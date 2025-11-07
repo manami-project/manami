@@ -76,6 +76,30 @@ internal class MainViewModel(
         initialValue = false,
     )
 
+    val isAnimeListContainingEntries: StateFlow<Boolean> = app.animeListState
+        .map { it.entries.isNotEmpty() }
+        .stateIn(
+            scope = viewModelScope,
+            started = Eagerly,
+            initialValue = false
+        )
+
+    val isWatchListContainingEntries: StateFlow<Boolean> = app.watchListState
+        .map { it.entries.isNotEmpty() }
+        .stateIn(
+            scope = viewModelScope,
+            started = Eagerly,
+            initialValue = false
+        )
+
+    val isIgnoreListContainingEntries: StateFlow<Boolean> = app.ignoreListState
+        .map { it.entries.isNotEmpty() }
+        .stateIn(
+            scope = viewModelScope,
+            started = Eagerly,
+            initialValue = false
+        )
+
     val windowTitle = combine(isSaved, openedFile) { saved, file ->
         buildString {
             append("Manami")

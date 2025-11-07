@@ -26,6 +26,9 @@ fun main() = application {
     val isUndoPossible by viewModel.isUndoPossible.collectAsState()
     val isRedoPossible by viewModel.isRedoPossible.collectAsState()
     val isAnyListContainingEntries by viewModel.isAnyListContainingEntries.collectAsState()
+    val isAnimeListContainingEntries by viewModel.isAnimeListContainingEntries.collectAsState()
+    val isWatchListContainingEntries by viewModel.isWatchListContainingEntries.collectAsState()
+    val isIgnoreListContainingEntries by viewModel.isIgnoreListContainingEntries.collectAsState()
     val isCachePopulationRunning by viewModel.isCachePopulationRunning.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
@@ -101,19 +104,19 @@ fun main() = application {
                     text = "Anime List",
                     shortcut = KeyShortcut(Key.A, meta = true),
                     onClick = { viewModel.openAnimeListTab() },
-                    enabled = true,
+                    enabled = isAnimeListContainingEntries,
                 )
                 Item(
                     text = "Watch List",
                     shortcut = KeyShortcut(Key.W, meta = true),
                     onClick = { viewModel.openWatchListTab() },
-                    enabled = true,
+                    enabled = isWatchListContainingEntries,
                 )
                 Item(
                     text = "Ignore List",
                     shortcut = KeyShortcut(Key.I, meta = true),
                     onClick = { viewModel.openIgnoreListTab() },
-                    enabled = true,
+                    enabled = isIgnoreListContainingEntries,
                 )
             }
             Menu("Find") {
