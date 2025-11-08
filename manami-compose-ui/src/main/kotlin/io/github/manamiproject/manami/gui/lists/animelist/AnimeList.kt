@@ -25,6 +25,7 @@ internal fun AnimeList(viewModel: AnimeListViewModel = AnimeListViewModel.instan
         } else {
             AnimeTable(viewModel = viewModel) {
                 withOpenDirectoryButton = true
+                withToAnimeListButton = false
                 withToWatchListButton = false
                 withToIgnoreListButton = false
                 withHideButton = false

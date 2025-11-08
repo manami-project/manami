@@ -5,15 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DriveFileMove
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.NotInterested
+import androidx.compose.material.icons.automirrored.filled.ManageSearch
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -92,25 +89,61 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                 Row {
                     if (animeTableConfig.withOpenDirectoryButton) {
                         IconButton(
-                            icon = Icons.AutoMirrored.Filled.DriveFileMove,
+                            icon = Icons.Filled.FolderOpen,
                             size = iconSize,
                             description = "Open directory",
                             onClick = { viewModel.openDirectory(anime) },
                         )
                     }
 
+                    if (animeTableConfig.withEditButton) {
+                        IconButton(
+                            icon = Icons.Filled.Edit,
+                            size = iconSize,
+                            description = "Edit",
+                            onClick = { TODO() },
+                        )
+                    }
+
                     if (animeTableConfig.withShowAnimeDetailsButton) {
                         IconButton(
-                            icon = Icons.AutoMirrored.Filled.List,
+                            icon = Icons.Filled.Info,
                             size = iconSize,
                             description = "Show anime details",
                             onClick = { viewModel.showAnimeDetails(anime.link) },
                         )
                     }
 
+                    if (animeTableConfig.withFindRelatedAnimeButton) {
+                        IconButton(
+                            icon = Icons.Filled.Polyline,
+                            size = iconSize,
+                            description = "Find related anime",
+                            onClick = { TODO() },
+                        )
+                    }
+
+                    if (animeTableConfig.withFindSimilarAnimeButton) {
+                        IconButton(
+                            icon = Icons.AutoMirrored.Filled.ManageSearch,
+                            size = iconSize,
+                            description = "Find similar anime",
+                            onClick = { TODO() },
+                        )
+                    }
+
+                    if (animeTableConfig.withToAnimeListButton) {
+                        IconButton(
+                            icon = Icons.Filled.CheckCircleOutline,
+                            size = iconSize,
+                            description = "Add to anime list",
+                            onClick = { TODO() },
+                        )
+                    }
+
                     if (animeTableConfig.withToWatchListButton) {
                         IconButton(
-                            icon = Icons.AutoMirrored.Filled.PlaylistAdd,
+                            icon = Icons.Filled.Visibility,
                             size = iconSize,
                             description = "Add to watch list",
                             onClick = { viewModel.addToWatchList(anime) },
@@ -126,18 +159,9 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                         )
                     }
 
-                    if (animeTableConfig.withEditButton) {
-                        IconButton(
-                            icon = Icons.Filled.Edit,
-                            size = iconSize,
-                            description = "Edit",
-                            onClick = { TODO() },
-                        )
-                    }
-
                     if (animeTableConfig.withDeleteButton) {
                         IconButton(
-                            icon = Icons.Filled.Delete,
+                            icon = Icons.Filled.DeleteOutline,
                             size = iconSize,
                             description = "Delete",
                             onClick = { viewModel.delete(anime) },

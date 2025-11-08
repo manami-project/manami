@@ -139,12 +139,6 @@ fun main() = application {
                     onClick = { viewModel.openFindInconsistenciesTab() },
                     enabled = isAnyListContainingEntries,
                 )
-                Item(
-                    text = "Related Anime",
-                    shortcut = KeyShortcut(Key.Four, meta = true),
-                    onClick = { viewModel.openFindRelatedAnimeTab() },
-                    enabled = isAnyListContainingEntries,
-                )
             }
             Menu("View") {
                 Item(
