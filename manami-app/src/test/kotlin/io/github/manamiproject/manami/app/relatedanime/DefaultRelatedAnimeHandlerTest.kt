@@ -5,7 +5,7 @@ import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
-import io.github.manamiproject.manami.app.events.RelatedAnimeState
+import io.github.manamiproject.manami.app.events.FindRelatedAnimeState
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
@@ -34,14 +34,14 @@ import kotlin.io.path.createDirectory
 internal class DefaultRelatedAnimeHandlerTest {
 
     @Nested
-    inner class FindRelatedAnimeForAnimeListTests {
+    inner class FindRelatedAnimeTests {
 
         @Test
         fun `find related anime for entries in animelist`() {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<RelatedAnimeState>()
+                    val receivedEvents = mutableListOf<FindRelatedAnimeState>()
                     val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
@@ -83,13 +83,13 @@ internal class DefaultRelatedAnimeHandlerTest {
                     )
 
                     // when
-                    defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
+                    defaultRelatedAnimeHandler.findRelatedAnime(listOf(URI("https://myanimelist.net/anime/35180")))
 
                     // then
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.entries.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime3.sources.first(),
@@ -107,7 +107,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<RelatedAnimeState>()
+                    val receivedEvents = mutableListOf<FindRelatedAnimeState>()
                     val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
@@ -149,13 +149,13 @@ internal class DefaultRelatedAnimeHandlerTest {
                     )
 
                     // when
-                    defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
+                    defaultRelatedAnimeHandler.findRelatedAnime(listOf(URI("https://myanimelist.net/anime/35180")))
 
                     // then
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.entries.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime3.sources.first(),
@@ -171,7 +171,7 @@ internal class DefaultRelatedAnimeHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<RelatedAnimeState>()
+                    val receivedEvents = mutableListOf<FindRelatedAnimeState>()
                     val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
@@ -213,195 +213,13 @@ internal class DefaultRelatedAnimeHandlerTest {
                     )
 
                     // when
-                    defaultRelatedAnimeHandler.findRelatedAnimeForAnimeList()
+                    defaultRelatedAnimeHandler.findRelatedAnime(listOf(URI("https://myanimelist.net/anime/35180")))
 
                     // then
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forAnimeList.map { anime -> anime.link.uri }
-                    assertThat(foundEntries).containsExactlyInAnyOrder(
-                        anime1.sources.first(),
-                        anime5.sources.first(),
-                        anime6.sources.first(),
-                        anime7.sources.first(),
-                    )
-                }
-            }
-        }
-    }
-
-    @Nested
-    inner class FindRelatedAnimeForIgnoreListTests {
-
-        @Test
-        fun `find related anime for entries in ignorelist`() {
-            runBlocking {
-                // given
-                val receivedEvents = mutableListOf<RelatedAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
-                delay(100)
-
-                val testCache = object: AnimeCache by TestAnimeCache {
-                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
-                        return when(key) {
-                            URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
-                            URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
-                            URI("https://myanimelist.net/anime/28789") -> PresentValue(anime3)
-                            URI("https://myanimelist.net/anime/34647") -> PresentValue(anime4)
-                            URI("https://myanimelist.net/anime/38154") -> PresentValue(anime5)
-                            URI("https://myanimelist.net/anime/34611") -> PresentValue(anime6)
-                            URI("https://myanimelist.net/anime/38864") -> PresentValue(anime7)
-                            else -> shouldNotBeInvoked()
-                        }
-                    }
-                }
-
-                val testState = object: State by TestState {
-                    override fun animeList(): List<AnimeListEntry> = emptyList()
-                    override fun watchList(): Set<WatchListEntry> = emptySet()
-                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(IgnoreListEntry(anime2))
-                }
-
-                val defaultRelatedAnimeHandler = DefaultRelatedAnimeHandler(
-                    cache = testCache,
-                    state = testState,
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                // when
-                defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
-
-                // then
-                delay(100)
-                eventCollector.cancelAndJoin()
-                assertThat(receivedEvents).hasSize(3) // initial, start, result
-                val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
-                assertThat(foundEntries).containsExactlyInAnyOrder(
-                    anime1.sources.first(),
-                    anime3.sources.first(),
-                    anime4.sources.first(),
-                    anime5.sources.first(),
-                    anime6.sources.first(),
-                    anime7.sources.first(),
-                )
-            }
-        }
-
-        @Test
-        fun `find related anime for entries in ignorelist and exclude entries in watchlist`() {
-            runBlocking {
-                // given
-                val receivedEvents = mutableListOf<RelatedAnimeState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
-                delay(100)
-
-                val testCache = object: AnimeCache by TestAnimeCache {
-                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
-                        return when(key) {
-                            URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
-                            URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
-                            URI("https://myanimelist.net/anime/28789") -> PresentValue(anime3)
-                            URI("https://myanimelist.net/anime/34647") -> PresentValue(anime4)
-                            URI("https://myanimelist.net/anime/38154") -> PresentValue(anime5)
-                            URI("https://myanimelist.net/anime/34611") -> PresentValue(anime6)
-                            URI("https://myanimelist.net/anime/38864") -> PresentValue(anime7)
-                            else -> shouldNotBeInvoked()
-                        }
-                    }
-                }
-
-                val testState = object: State by TestState {
-                    override fun animeList(): List<AnimeListEntry> = emptyList()
-                    override fun watchList(): Set<WatchListEntry> = setOf(WatchListEntry(anime5), WatchListEntry(anime7))
-                    override fun ignoreList(): Set<IgnoreListEntry> = setOf(IgnoreListEntry(anime2))
-                }
-
-                val defaultRelatedAnimeHandler = DefaultRelatedAnimeHandler(
-                    cache = testCache,
-                    state = testState,
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                // when
-                defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
-
-                // then
-                delay(100)
-                eventCollector.cancelAndJoin()
-                assertThat(receivedEvents).hasSize(3) // initial, start, result
-                val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
-                assertThat(foundEntries).containsExactlyInAnyOrder(
-                    anime1.sources.first(),
-                    anime3.sources.first(),
-                    anime4.sources.first(),
-                    anime6.sources.first(),
-                )
-            }
-        }
-
-        @Test
-        fun `find related anime for entries in ignorelist and exclude entries in animelist`() {
-            runBlocking {
-                tempDirectory {
-                    // given
-                    val receivedEvents = mutableListOf<RelatedAnimeState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> receivedEvents.add(event) } }
-                    delay(100)
-
-                    val testLocation1 = tempDir.resolve("test1").createDirectory().toAbsolutePath()
-                    val testLocation2 = tempDir.resolve("test2").createDirectory().toAbsolutePath()
-
-                    val testCache = object: AnimeCache by TestAnimeCache {
-                        override suspend fun fetch(key: URI): CacheEntry<Anime> {
-                            return when(key) {
-                                URI("https://myanimelist.net/anime/31646") -> PresentValue(anime1)
-                                URI("https://myanimelist.net/anime/35180") -> PresentValue(anime2)
-                                URI("https://myanimelist.net/anime/28789") -> PresentValue(anime3)
-                                URI("https://myanimelist.net/anime/34647") -> PresentValue(anime4)
-                                URI("https://myanimelist.net/anime/38154") -> PresentValue(anime5)
-                                URI("https://myanimelist.net/anime/34611") -> PresentValue(anime6)
-                                URI("https://myanimelist.net/anime/38864") -> PresentValue(anime7)
-                                else -> shouldNotBeInvoked()
-                            }
-                        }
-                    }
-
-                    val testState = object: State by TestState {
-                        override fun animeList(): List<AnimeListEntry> = listOf(
-                            AnimeListEntry(
-                                link = Link("https://myanimelist.net/anime/28789"),
-                                title = "3-gatsu no Lion meets Bump of Chicken",
-                                episodes = 1,
-                                type = SPECIAL,
-                                location = testLocation1,
-                            ),
-                            AnimeListEntry(
-                                link = Link("https://myanimelist.net/anime/34647"),
-                                title = "3-gatsu no Lion Recap",
-                                episodes = 1,
-                                type = SPECIAL,
-                                location = testLocation2,
-                            )
-                        )
-                        override fun watchList(): Set<WatchListEntry> = emptySet()
-                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(IgnoreListEntry(anime2))
-                    }
-
-                    val defaultRelatedAnimeHandler = DefaultRelatedAnimeHandler(
-                        cache = testCache,
-                        state = testState,
-                        eventBus = CoroutinesFlowEventBus,
-                    )
-
-                    // when
-                    defaultRelatedAnimeHandler.findRelatedAnimeForIgnoreList()
-
-                    // then
-                    delay(100)
-                    eventCollector.cancelAndJoin()
-                    assertThat(receivedEvents).hasSize(3) // initial, start, result
-                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.forIgnoreList.map { anime -> anime.link.uri }
+                    val foundEntries = CoroutinesFlowEventBus.findRelatedAnimeState.value.entries.map { anime -> anime.link.uri }
                     assertThat(foundEntries).containsExactlyInAnyOrder(
                         anime1.sources.first(),
                         anime5.sources.first(),

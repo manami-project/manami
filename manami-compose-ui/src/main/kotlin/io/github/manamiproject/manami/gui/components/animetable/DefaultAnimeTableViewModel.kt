@@ -8,6 +8,7 @@ import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDi
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_ANIME_DETAILS
+import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -76,6 +77,16 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         }
 
         tableViewModel.openOrActivate(FIND_ANIME_DETAILS)
+    }
+
+    override fun findRelatedAnime(link: LinkEntry) {
+        if (link == NoLink) return
+
+        CoroutineScope(Default).launch {
+            app.findRelatedAnime(listOf(link.asLink().uri))
+        }
+
+        tableViewModel.openOrActivate(FIND_RELATED_ANIME)
     }
 
     override fun openDirectory(anime: T) {

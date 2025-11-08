@@ -15,9 +15,18 @@ internal class FindRelatedAnimeViewModel(private val app: Manami = Manami.instan
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
+    val isRelatedAnimeSearchRunning: StateFlow<Boolean>
+        get() = app.findRelatedAnimeState
+            .map { it.isRunning }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = false,
+            )
+
     override val source: StateFlow<List<SearchResultAnimeEntry>>
         get() = app.findRelatedAnimeState
-            .map { it.forAnimeList.toList() }
+            .map { it.entries }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,

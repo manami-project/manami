@@ -22,6 +22,7 @@ import io.github.manamiproject.modb.test.WireMockServerCreator
 import io.github.manamiproject.modb.test.loadTestResource
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -29,8 +30,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
+
+    @BeforeTest
+    fun beforeTest() {
+        CoroutinesFlowEventBus.dashboardState.update { DashboardState() }
+    }
 
     @AfterTest
     fun afterTest() {

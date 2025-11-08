@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.DashboardState
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -12,8 +13,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 internal class DefaultLatestVersionCheckerTest {
+
+    @BeforeTest
+    fun beforeTest() {
+        CoroutinesFlowEventBus.dashboardState.update { DashboardState() }
+    }
 
     @AfterTest
     fun afterTest() {

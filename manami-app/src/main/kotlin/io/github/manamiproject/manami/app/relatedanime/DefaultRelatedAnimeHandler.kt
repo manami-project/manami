@@ -5,9 +5,9 @@ import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.FindRelatedAnimeState
 import io.github.manamiproject.manami.app.events.SearchResultAnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler.ListType.*
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.Anime
@@ -22,33 +22,12 @@ internal class DefaultRelatedAnimeHandler(
     private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : RelatedAnimeHandler {
 
-    override suspend fun findRelatedAnimeForAnimeList() {
-        log.info { "Searching related anime for anime list." }
-        findRelatedAnime(ANIME_LIST, state.animeList().map { it.link }.filterIsInstance<Link>().map { it.uri }.toSet())
-    }
-
-    override suspend fun findRelatedAnimeForIgnoreList() {
-        log.info { "Searching related anime for ignore list." }
-        findRelatedAnime(IGNORE_LIST, state.ignoreList().map { it.link.uri }.toSet())
-    }
-
-    private suspend fun findRelatedAnime(listType: ListType, initialSources: Collection<URI>) {
+    override suspend fun findRelatedAnime(initialSources: Collection<URI>) {
         if (initialSources.isEmpty()) return
 
-        when (listType) {
-            ANIME_LIST -> eventBus.findRelatedAnimeState.update { current ->
-                current.copy(
-                    isForAnimeListRunning = true,
-                    forAnimeList = emptyList(),
-                )
-            }
-            IGNORE_LIST -> eventBus.findRelatedAnimeState.update { current ->
-                current.copy(
-                    isForIgnoreListRunning = true,
-                    forIgnoreList = emptyList(),
-                )
-            }
-        }
+        log.info { "Started related anime search for [${initialSources.size}] entries." }
+
+        eventBus.findRelatedAnimeState.update { FindRelatedAnimeState(isRunning = true) }
         yield()
 
         val entriesToCheck = HashSet<URI>()
@@ -63,7 +42,7 @@ internal class DefaultRelatedAnimeHandler(
         val watchList = state.watchList().map { it.link.uri }.toSet()
         val ignoreList = state.ignoreList().map { it.link.uri }.toSet()
 
-        log.info { "Initializing search for [$listType] related anime is done." }
+        log.info { "Initializing related anime search for [${initialSources.size}] entries is done." }
 
         while (entriesToCheck.size != lastSize) {
             lastSize = entriesToCheck.size
@@ -82,21 +61,13 @@ internal class DefaultRelatedAnimeHandler(
             .map { it.value }
             .map { SearchResultAnimeEntry(it) }
 
-        when (listType) {
-            ANIME_LIST -> eventBus.findRelatedAnimeState.update { current ->
-                current.copy(
-                    isForAnimeListRunning = false,
-                    forAnimeList = result,
-                )
-            }
-            IGNORE_LIST -> eventBus.findRelatedAnimeState.update { current ->
-                current.copy(
-                    isForIgnoreListRunning = false,
-                    forIgnoreList = result,
-                )
-            }
+        eventBus.findRelatedAnimeState.update {
+            FindRelatedAnimeState(
+                isRunning = false,
+                entries = result,
+            )
         }
-        log.info { "Finished searching for [$listType] related anime" }
+        log.info { "Finished related anime search for [${initialSources.size}] entries." }
     }
 
     companion object {
@@ -107,10 +78,5 @@ internal class DefaultRelatedAnimeHandler(
          * @since 4.0.0
          */
         val instance: DefaultRelatedAnimeHandler by lazy { DefaultRelatedAnimeHandler() }
-    }
-
-    private enum class ListType {
-        ANIME_LIST,
-        IGNORE_LIST;
     }
 }
