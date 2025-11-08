@@ -23,9 +23,7 @@ internal fun FindRelatedAnime(viewModel: FindRelatedAnimeViewModel = FindRelated
                 }
             }
         } else {
-            AnimeTable(viewModel = viewModel) {
-                withSortableTitle = false
-            }
+            AnimeTable(viewModel = viewModel)
         }
     }
 }
