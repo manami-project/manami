@@ -1,12 +1,18 @@
 package io.github.manamiproject.manami.gui.lists.ignorelist
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Polyline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.components.RotatingDotsProgress
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTable
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
@@ -23,6 +29,18 @@ internal fun IgnoreList(viewModel: IgnoreListViewModel = IgnoreListViewModel.ins
                 }
             }
         } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    icon = Icons.Filled.Polyline,
+                    size = 40.dp,
+                    description = "Find related anime",
+                    onClick = { viewModel.findRelatedAnime() },
+                )
+            }
             AnimeTable(viewModel = viewModel) {
                 withToAnimeListButton = false
                 withToWatchListButton = false

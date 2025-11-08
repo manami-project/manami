@@ -3,6 +3,8 @@ package io.github.manamiproject.manami.gui.lists.ignorelist
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
+import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
+import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -12,7 +14,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class IgnoreListViewModel(private val app: Manami = Manami.instance): DefaultAnimeTableViewModel<IgnoreListEntry>()  {
+internal class IgnoreListViewModel(
+    private val app: Manami = Manami.instance,
+    private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
+): DefaultAnimeTableViewModel<IgnoreListEntry>()  {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
@@ -29,6 +34,14 @@ internal class IgnoreListViewModel(private val app: Manami = Manami.instance): D
         viewModelScope.launch {
             app.removeIgnoreListEntry(anime)
         }
+    }
+
+    fun findRelatedAnime() {
+        viewModelScope.launch {
+            app.findRelatedAnime(app.ignoreList().map { it.link.uri })
+        }
+
+        tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
     }
 
     internal companion object {

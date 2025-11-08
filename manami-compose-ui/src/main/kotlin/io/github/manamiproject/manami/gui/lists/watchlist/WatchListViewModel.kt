@@ -3,6 +3,8 @@ package io.github.manamiproject.manami.gui.lists.watchlist
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
+import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
+import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -12,7 +14,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-internal class WatchListViewModel(private val app: Manami = Manami.instance): DefaultAnimeTableViewModel<WatchListEntry>() {
+internal class WatchListViewModel(
+    private val app: Manami = Manami.instance,
+    private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
+): DefaultAnimeTableViewModel<WatchListEntry>() {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
@@ -29,6 +34,14 @@ internal class WatchListViewModel(private val app: Manami = Manami.instance): De
         viewModelScope.launch {
             app.removeWatchListEntry(anime)
         }
+    }
+
+    fun findRelatedAnime() {
+        viewModelScope.launch {
+            app.findRelatedAnime(app.watchList().map { it.link.uri })
+        }
+
+        tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
     }
 
     internal companion object {
