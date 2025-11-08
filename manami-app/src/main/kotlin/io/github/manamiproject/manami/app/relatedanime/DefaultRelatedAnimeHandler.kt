@@ -59,6 +59,7 @@ internal class DefaultRelatedAnimeHandler(
         val result = entriesToCheck.map { cache.fetch(it) }
             .filterIsInstance<PresentValue<Anime>>()
             .map { it.value }
+            .sortedBy { it.animeSeason.year }
             .map { SearchResultAnimeEntry(it) }
 
         eventBus.findRelatedAnimeState.update {

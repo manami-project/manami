@@ -15,6 +15,15 @@ internal class FindSimilarAnimeViewModel(private val app: Manami = Manami.instan
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
 
+    val isSimilarAnimeSearchRunning: StateFlow<Boolean>
+        get() = app.findSimilarAnimeState
+            .map { it.isRunning }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = false,
+            )
+
     override val source: StateFlow<List<SearchResultAnimeEntry>>
         get() = app.findSimilarAnimeState
             .map { it.entries.toList() }

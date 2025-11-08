@@ -115,15 +115,15 @@ internal class DefaultSearchHandler(
     override suspend fun findSimilarAnime(uri: URI) {
         if (uri.host !in availableMetaDataProviders()) return
 
+        eventBus.findSimilarAnimeState.update { FindSimilarAnimeState(isRunning = true) }
+        yield()
+
         val origin = when (val cacheEntry = cache.fetch(uri)) {
             is DeadEntry -> {
                 return
             }
             is PresentValue<Anime> -> cacheEntry.value
         }
-
-        eventBus.findSimilarAnimeState.update { FindSimilarAnimeState(isRunning = true) }
-        yield()
 
         val results = mutableListOf<Pair<Int, Anime>>()
 
@@ -148,7 +148,7 @@ internal class DefaultSearchHandler(
 
         eventBus.findSimilarAnimeState.update { current ->
             current.copy(
-                isRunning = true,
+                isRunning = false,
                 entries = top10,
             )
         }
