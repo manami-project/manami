@@ -12,8 +12,6 @@ import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
 import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialogState
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
-import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -213,10 +211,6 @@ internal class MainViewModel(
 
     fun openFindInconsistenciesTab() {
         tabBarViewModel.openOrActivate(FIND_INCONSISTENCIES)
-    }
-
-    fun openFindRelatedAnimeTab() {
-        tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
     }
 
     fun quit(parent: FrameWindowScope, ignoreUnsavedChanges: Boolean = false) {

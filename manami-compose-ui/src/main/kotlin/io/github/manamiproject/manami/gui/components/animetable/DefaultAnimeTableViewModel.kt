@@ -7,8 +7,7 @@ import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
-import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_ANIME_DETAILS
-import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
+import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +23,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
     private val sortDirection = MutableStateFlow(ASC)
     private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
+    private var isSortable = true
 
     override val isFileOpeningRunning: StateFlow<Boolean>
         get() = app.generalAppState
@@ -38,9 +38,11 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         get() = combine(source, hiddenEntries, sortDirection) { sourceList, hiddenList, sortDirection ->
             sourceList.toMutableList().apply {
                 removeAll(hiddenList)
-                when (sortDirection) {
-                    ASC -> sortBy { it.title }
-                    DESC -> sortByDescending { it.title }
+                if (isSortable) {
+                    when (sortDirection) {
+                        ASC -> sortBy { it.title }
+                        DESC -> sortByDescending { it.title }
+                    }
                 }
             }
         }.stateIn(viewModelScope, Eagerly, emptyList())
@@ -87,6 +89,20 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         }
 
         tableViewModel.openOrActivate(FIND_RELATED_ANIME)
+    }
+
+    override fun findSimilarAnime(link: LinkEntry) {
+        if (link == NoLink) return
+
+        CoroutineScope(Default).launch {
+            app.findSimilarAnime(link.asLink().uri)
+        }
+
+        tableViewModel.openOrActivate(FIND_SIMILAR_ANIME)
+    }
+
+    override fun isSortable(value: Boolean) {
+        isSortable = value
     }
 
     override fun openDirectory(anime: T) {

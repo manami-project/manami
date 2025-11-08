@@ -24,6 +24,8 @@ internal fun <T : AnimeEntry> AnimeTable(
 ) {
     val listState = rememberLazyListState()
     val entries by viewModel.entries.collectAsState()
+    val animeTableConfig = AnimeTableConfig().apply { config() }
+    viewModel.isSortable(animeTableConfig.withSortableTitle)
 
     ManamiTheme {
         Box(modifier = Modifier.fillMaxSize()) {

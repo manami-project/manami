@@ -10,6 +10,7 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
     val entries: StateFlow<List<T>>
     val isFileOpeningRunning: StateFlow<Boolean>
 
+    fun isSortable(value: Boolean)
     fun addToWatchList(anime: T)
     fun addToIgnoreList(anime: T)
     fun hide(anime: T)
@@ -17,5 +18,6 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
     fun sort(direction: AnimeTableSortDirection)
     fun showAnimeDetails(link: LinkEntry)
     fun findRelatedAnime(link: LinkEntry)
+    fun findSimilarAnime(link: LinkEntry)
     fun openDirectory(anime: T)
 }

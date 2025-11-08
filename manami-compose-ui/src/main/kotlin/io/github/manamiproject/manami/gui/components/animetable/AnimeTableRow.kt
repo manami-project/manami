@@ -45,6 +45,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
         val fetched = ImageCache.instance.fetch(anime.thumbnail)
         value = (fetched as PresentValue).value
     }
+    val imageSize = 200.dp
 
     ManamiTheme {
         Row(Modifier.fillMaxSize().background(backgroundColor).height(IntrinsicSize.Min)) {
@@ -53,13 +54,13 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                     .padding(padding)
                     .clickable(onClick = openLinkAction)
                     .fillMaxHeight()
-                    .size(150.dp),
+                    .size(imageSize),
                 contentAlignment = Center,
             ) {
                 Image(
                     painter = BitmapPainter(imageBitmap),
                     contentDescription = null,
-                    modifier = Modifier.width(150.dp),
+                    modifier = Modifier.width(imageSize),
                 )
             }
 
@@ -128,7 +129,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                             icon = Icons.AutoMirrored.Filled.ManageSearch,
                             size = iconSize,
                             description = "Find similar anime",
-                            onClick = { TODO() },
+                            onClick = { viewModel.findSimilarAnime(anime.link) },
                         )
                     }
 
