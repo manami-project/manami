@@ -15,7 +15,7 @@ data class IgnoreListEntry(
     constructor(anime: Anime): this(
         link = Link(anime.sources.first()),
         title = anime.title,
-        thumbnail = anime.thumbnail,
+        thumbnail = anime.picture,
     )
 
     constructor(animeEntry: AnimeEntry): this(
