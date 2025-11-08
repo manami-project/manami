@@ -7,9 +7,10 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 /**
  * @since 4.0.0
  */
-data class FindInListState (
+data class FindByTitleState (
     val isRunning: Boolean = false,
     val animeListResults: Collection<AnimeListEntry> = emptyList(),
     val watchListResults: Collection<WatchListEntry> = emptyList(),
     val ignoreListResults: Collection<IgnoreListEntry> = emptyList(),
+    val unlistedResults: Collection<SearchResultAnimeEntry> = emptyList(),
 )

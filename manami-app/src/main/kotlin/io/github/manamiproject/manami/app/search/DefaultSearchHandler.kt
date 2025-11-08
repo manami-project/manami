@@ -27,27 +27,42 @@ internal class DefaultSearchHandler(
 
     private val levenshteinDistance = LevenshteinDistance(2)
 
-    override suspend fun findInLists(searchString: String) {
-        eventBus.findInListState.update { FindInListState(isRunning = true) }
+    override suspend fun findByTitle(metaDataProvider: Hostname, searchString: String) {
+        eventBus.findByTitleState.update { FindByTitleState(isRunning = true) }
         yield()
 
         val animeListResults = state.animeList()
             .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link is Link && it.link.uri.toString() == searchString) }
 
-        eventBus.findInListState.update { current -> current.copy(animeListResults = animeListResults) }
+        eventBus.findByTitleState.update { current -> current.copy(animeListResults = animeListResults) }
 
         val watchListResults = state.watchList()
             .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
 
-        eventBus.findInListState.update { current -> current.copy(watchListResults = watchListResults) }
+        eventBus.findByTitleState.update { current -> current.copy(watchListResults = watchListResults) }
 
         val ignoreListResults = state.ignoreList()
             .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
 
-        eventBus.findInListState.update { current ->
+        eventBus.findByTitleState.update { current -> current.copy(ignoreListResults = ignoreListResults) }
+
+        val entriesInLists: Set<URI> = state.animeList()
+            .map { it.link }
+            .filterIsInstance<Link>()
+            .map { it.uri }
+            .union(state.watchList().map { it.link.uri })
+            .union(state.ignoreList().map { it.link.uri })
+
+        val unlistedResults = cache.allEntries(metaDataProvider)
+            .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
+            .filter { isEntryMatchingSearchString(it.title, searchString) || it.sources.first().toString() == searchString }
+            .map { SearchResultAnimeEntry(it) }
+            .toList()
+
+        eventBus.findByTitleState.update { current ->
             current.copy(
                 isRunning = false,
-                ignoreListResults = ignoreListResults,
+                unlistedResults = unlistedResults,
             )
         }
     }

@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     private val app: Manami = Manami.instance,
-    private val tableViewModel: TabBarViewModel = TabBarViewModel.instance,
+    private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
 ): AnimeTableViewModel<T> {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
@@ -78,7 +78,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
             app.findAnimeDetails(link.asLink().uri)
         }
 
-        tableViewModel.openOrActivate(FIND_ANIME_DETAILS)
+        tabBarViewModel.openOrActivate(FIND_ANIME_DETAILS)
     }
 
     override fun findRelatedAnime(link: LinkEntry) {
@@ -88,7 +88,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
             app.findRelatedAnime(listOf(link.asLink().uri))
         }
 
-        tableViewModel.openOrActivate(FIND_RELATED_ANIME)
+        tabBarViewModel.openOrActivate(FIND_RELATED_ANIME)
     }
 
     override fun findSimilarAnime(link: LinkEntry) {
@@ -98,7 +98,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
             app.findSimilarAnime(link.asLink().uri)
         }
 
-        tableViewModel.openOrActivate(FIND_SIMILAR_ANIME)
+        tabBarViewModel.openOrActivate(FIND_SIMILAR_ANIME)
     }
 
     override fun isSortable(value: Boolean) {

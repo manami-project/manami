@@ -9,7 +9,7 @@ import java.net.URI
 
 interface SearchHandler {
 
-    suspend fun findInLists(searchString: String)
+    suspend fun findByTitle(metaDataProvider: Hostname, searchString: String)
 
     suspend fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
 

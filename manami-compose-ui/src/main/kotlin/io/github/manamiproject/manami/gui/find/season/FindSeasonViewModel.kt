@@ -30,6 +30,15 @@ internal class FindSeasonViewModel(private val app: Manami = Manami.instance): D
                 initialValue = false,
             )
 
+    val metaDataProviders: StateFlow<List<Hostname>>
+        get() = app.dashboardState
+            .map { event -> event.entries.toList().sortedByDescending { it.second }.map { it.first } }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = emptyList(),
+            )
+
     override val source: StateFlow<List<SearchResultAnimeEntry>>
         get() = app.findSeasonState
             .map { it.entries.toList() }
@@ -44,8 +53,6 @@ internal class FindSeasonViewModel(private val app: Manami = Manami.instance): D
     fun yearRange(): List<Year> = (YEAR_OF_THE_FIRST_ANIME..LocalDate.now().year + 5).toList().reversed()
 
     fun currentYear(): Year = LocalDate.now().year
-
-    fun metaDataProviders(): List<Hostname> = app.dashboardState.value.entries.toList().sortedByDescending { it.second }.map { it.first }
 
     fun seasons() = listOf("Spring", "Summer", "Fall", "Winter")
 

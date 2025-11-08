@@ -20,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,9 +39,15 @@ import io.github.manamiproject.manami.gui.theme.ManamiTheme
 internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.instance) {
     val isSeasonSearchRunning = viewModel.isSeasonSearchRunning.collectAsState()
 
+    val metaDataProviders = viewModel.metaDataProviders.collectAsState()
     var metaDataProviderSelectExpanded by remember { mutableStateOf(false) }
-    val metaDataProviderOptions = viewModel.metaDataProviders()
-    val metaDataProviderSelectState = rememberTextFieldState(viewModel.metaDataProviders().first())
+    val metaDataProviderSelectState = rememberTextFieldState()
+
+    LaunchedEffect(metaDataProviders.value) {
+        if (metaDataProviders.value.isNotEmpty()) {
+            metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(metaDataProviders.value.first())
+        }
+    }
 
     var seasonSelectExpanded by remember { mutableStateOf(false) }
     val seasonOptions = viewModel.seasons()
@@ -73,7 +80,7 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                 )
                 ExposedDropdownMenu(expanded = metaDataProviderSelectExpanded, onDismissRequest = { metaDataProviderSelectExpanded = false }) {
-                    metaDataProviderOptions.forEach { option ->
+                    metaDataProviders.value.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                             onClick = {
@@ -103,9 +110,9 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                 ExposedDropdownMenu(expanded = seasonSelectExpanded, onDismissRequest = { seasonSelectExpanded = false }) {
                     seasonOptions.forEach { option ->
                         DropdownMenuItem(
-                            text = { Text(option.toString(), style = MaterialTheme.typography.bodyLarge) },
+                            text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                             onClick = {
-                                seasonSelectState.setTextAndPlaceCursorAtEnd(option.toString())
+                                seasonSelectState.setTextAndPlaceCursorAtEnd(option)
                                 seasonSelectExpanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,

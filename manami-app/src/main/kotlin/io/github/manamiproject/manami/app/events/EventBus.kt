@@ -50,7 +50,7 @@ interface EventBus {
     /**
      * @since 4.0.0
      */
-    val findInListState: MutableStateFlow<FindInListState>
+    val findByTitleState: MutableStateFlow<FindByTitleState>
 
     /**
      * @since 4.0.0
