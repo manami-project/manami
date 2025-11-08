@@ -119,7 +119,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                             icon = Icons.Filled.Polyline,
                             size = iconSize,
                             description = "Find related anime",
-                            onClick = { TODO() },
+                            onClick = { viewModel.findRelatedAnime(anime.link) },
                         )
                     }
 

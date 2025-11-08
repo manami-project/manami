@@ -15,7 +15,7 @@ object CoroutinesFlowEventBus: EventBus {
     override val ignoreListState: MutableStateFlow<IgnoreListState> = MutableStateFlow(IgnoreListState())
     override val inconsistenciesState: MutableStateFlow<InconsistenciesState> = MutableStateFlow(InconsistenciesState())
     override val metaDataProviderMigrationState: MutableStateFlow<MetaDataProviderMigrationState> = MutableStateFlow(MetaDataProviderMigrationState())
-    override val findRelatedAnimeState: MutableStateFlow<RelatedAnimeState> = MutableStateFlow(RelatedAnimeState())
+    override val findRelatedAnimeState: MutableStateFlow<FindRelatedAnimeState> = MutableStateFlow(FindRelatedAnimeState())
     override val findInListState: MutableStateFlow<FindInListState> = MutableStateFlow(FindInListState())
     override val findSeasonState: MutableStateFlow<FindSeasonState> = MutableStateFlow(FindSeasonState())
     override val findByTagState: MutableStateFlow<FindByTagState> = MutableStateFlow(FindByTagState())
@@ -30,7 +30,7 @@ object CoroutinesFlowEventBus: EventBus {
         ignoreListState.update { IgnoreListState() }
         inconsistenciesState.update { InconsistenciesState() }
         metaDataProviderMigrationState.update { MetaDataProviderMigrationState() }
-        findRelatedAnimeState.update { RelatedAnimeState() }
+        findRelatedAnimeState.update { FindRelatedAnimeState() }
         findInListState.update { FindInListState() }
         findSeasonState.update { FindSeasonState() }
         findByTagState.update { FindByTagState() }

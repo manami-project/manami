@@ -16,5 +16,6 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
     fun delete(anime: T)
     fun sort(direction: AnimeTableSortDirection)
     fun showAnimeDetails(link: LinkEntry)
+    fun findRelatedAnime(link: LinkEntry)
     fun openDirectory(anime: T)
 }
