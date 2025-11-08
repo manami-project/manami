@@ -46,6 +46,10 @@ internal class DefaultSearchHandler(
 
         eventBus.findByTitleState.update { current -> current.copy(ignoreListResults = ignoreListResults) }
 
+        if (searchString.startsWith("https://$metaDataProvider")) {
+            cache.fetch(URI("https://myanimelist.net/anime/62907"))
+        }
+
         val entriesInLists: Set<URI> = state.animeList()
             .map { it.link }
             .filterIsInstance<Link>()
