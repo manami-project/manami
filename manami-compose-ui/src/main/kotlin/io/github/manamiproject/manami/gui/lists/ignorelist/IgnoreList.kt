@@ -24,8 +24,10 @@ internal fun IgnoreList(viewModel: IgnoreListViewModel = IgnoreListViewModel.ins
             }
         } else {
             AnimeTable(viewModel = viewModel) {
+                withToAnimeListButton = false
                 withToWatchListButton = false
                 withToIgnoreListButton = false
+                withFindSimilarAnimeButton = false
                 withHideButton = false
                 withDeleteButton = true
             }
