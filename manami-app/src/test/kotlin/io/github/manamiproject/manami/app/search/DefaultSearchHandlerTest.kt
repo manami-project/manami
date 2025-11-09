@@ -4,6 +4,7 @@ import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.FindAnimeDetailsState
 import io.github.manamiproject.manami.app.events.FindByTagState
+import io.github.manamiproject.manami.app.events.FindByTitleState
 import io.github.manamiproject.manami.app.events.FindSeasonState
 import io.github.manamiproject.manami.app.events.FindSimilarAnimeState
 import io.github.manamiproject.manami.app.lists.Link
@@ -33,8 +34,11 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.net.URI
 import java.nio.file.Paths
+import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.test.AfterTest
 
@@ -2254,6 +2258,1952 @@ internal class DefaultSearchHandlerTest {
                     URI("https://myanimelist.net/anime/109"),
                     URI("https://myanimelist.net/anime/110"),
                 )
+            }
+        }
+    }
+
+    @Nested
+    inner class FindByTitleTests {
+
+        @Test
+        fun `don't do anything if the metaDataProvider is not supported`() {
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<FindByTitleState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
+
+                val testCache = object : AnimeCache by TestAnimeCache {
+                    override val availableMetaDataProvider: Set<Hostname>
+                        get() = setOf(MyanimelistConfig.hostname())
+                }
+
+                val defaultSearchHandler = DefaultSearchHandler(
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    state = TestState,
+                )
+
+                // when
+                defaultSearchHandler.findByTitle("example.org", "test")
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(1) // initial
+            }
+        }
+
+        @Nested
+        inner class AnimeListTests {
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `AnimeList - exact match - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `AnimeList - search value is contained in the title - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "someTESThere",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "someTESThere",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - match with levenshtein distance of 1`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "t3st")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - match with levenshtein distance of 2`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "taste")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - match with levenshtein distance of 3 or more`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "73s7")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - levenshtein distance does not apply to contains logic`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "taste of lemon",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - doesn't return anything for not matching anything`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "different")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - returns multiple matching entries`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching1 = AnimeListEntry(
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val matching2 = AnimeListEntry(
+                        title = "another test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching1, matching2, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "test",
+                        "another test",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `AnimeList - title doesn't match anything, but the source`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = AnimeListEntry(
+                        link = Link("https://example.org/anime/255"),
+                        title = "test",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+                    val notMatching = AnimeListEntry(
+                        link = Link("https://example.org/anime/324"),
+                        title = "other",
+                        episodes = 1,
+                        type = MOVIE,
+                        location = Path("."),
+                    )
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = listOf(matching, notMatching)
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "https://example.org/anime/255")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, animelist, end
+                    assertThat(receivedEvents.last().animeListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+        }
+
+        @Nested
+        inner class WatchListTests {
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `WatchList - exact match - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `WatchList - search value is contained in the title - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - match with levenshtein distance of 1`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "t3st")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - match with levenshtein distance of 2`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "taste")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - match with levenshtein distance of 3 or more`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "73s7")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - levenshtein distance does not apply to contains logic`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "taste of lemon",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - doesn't return anything for not matching anything`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "different")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - returns multiple matching entries`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching1 = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val matching2 = WatchListEntry(Anime(
+                        title = "another test",
+                        sources = hashSetOf(URI("https://example.org/anime/901"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching1, matching2, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                        "another test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `WatchList - title doesn't match anything, but the source`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = WatchListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = WatchListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = setOf(matching, notMatching)
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "https://example.org/anime/255")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, watchlist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+        }
+
+        @Nested
+        inner class IgnoreListTests {
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `IgnoreList - exact match - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `IgnoreList - search value is contained in the title - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - match with levenshtein distance of 1`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "t3st")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - match with levenshtein distance of 2`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "taste")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - match with levenshtein distance of 3 or more`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "73s7")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - levenshtein distance does not apply to contains logic`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "taste of lemon",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - doesn't return anything for not matching anything`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "different")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - returns multiple matching entries`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching1 = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val matching2 = IgnoreListEntry(Anime(
+                        title = "another test",
+                        sources = hashSetOf(URI("https://example.org/anime/901"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching1, matching2, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                        "another test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `IgnoreList - title doesn't match anything, but the source`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf()
+                    }
+
+                    val matching = IgnoreListEntry(Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    ))
+                    val notMatching = IgnoreListEntry(Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    ))
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = setOf(matching, notMatching)
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "https://example.org/anime/255")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(4) // initial, start, ignorelist, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+        }
+
+        @Nested
+        inner class UnlistedTests {
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `Unlisted - exact match - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = ["test", "TEST", "tEsT"])
+            fun `Unlisted - search value is contained in the title - not case sensitive`(value: String) {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", value)
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
+            }
+
+            @Test
+            fun `Unlisted - match with levenshtein distance of 1`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "t3st")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
+            }
+
+            @Test
+            fun `Unlisted - match with levenshtein distance of 2`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "taste")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
+            }
+
+            @Test
+            fun `Unlisted - match with levenshtein distance of 3 or more`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "73s7")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `Unlisted - levenshtein distance does not apply to contains logic`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "taste of lemon",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `Unlisted - doesn't return anything for not matching anything`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "different")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults).isEmpty()
+                }
+            }
+
+            @Test
+            fun `Unlisted - returns multiple matching entries`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching1 = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val matching2 = Anime(
+                        title = "another test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching1, matching2, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "test")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                        "another test",
+                    )
+                }
+            }
+
+            @Test
+            fun `Unlisted - title doesn't match anything, but the source if it doesn't exist in cache, it will be loaded externally`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                        override suspend fun fetch(key: URI): CacheEntry<Anime> = PresentValue(matching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "https://example.org/anime/255")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
             }
         }
     }

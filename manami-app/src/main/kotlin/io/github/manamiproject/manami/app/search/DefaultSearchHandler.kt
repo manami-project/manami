@@ -28,6 +28,8 @@ internal class DefaultSearchHandler(
     private val levenshteinDistance = LevenshteinDistance(2)
 
     override suspend fun findByTitle(metaDataProvider: Hostname, searchString: String) {
+        if (!cache.availableMetaDataProvider.contains(metaDataProvider)) return
+
         eventBus.findByTitleState.update { FindByTitleState(isRunning = true) }
         yield()
 
@@ -35,18 +37,25 @@ internal class DefaultSearchHandler(
             .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link is Link && it.link.uri.toString() == searchString) }
 
         eventBus.findByTitleState.update { current -> current.copy(animeListResults = animeListResults) }
+        yield()
 
         val watchListResults = state.watchList()
             .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
 
         eventBus.findByTitleState.update { current -> current.copy(watchListResults = watchListResults) }
+        yield()
 
         val ignoreListResults = state.ignoreList()
             .filter { isEntryMatchingSearchString(it.title, searchString) || it.link.uri.toString() == searchString }
 
         eventBus.findByTitleState.update { current -> current.copy(ignoreListResults = ignoreListResults) }
+        yield()
 
-        if (searchString.startsWith("https://$metaDataProvider")) {
+        if (searchString.startsWith("https://$metaDataProvider")
+            && animeListResults.map { it.link }.filterIsInstance<Link>().none { it.uri.toString() == searchString }
+            && watchListResults.map { it.link }.none { it.uri.toString() == searchString }
+            && ignoreListResults.map { it.link }.none { it.uri.toString() == searchString }
+        ) {
             cache.fetch(URI("https://myanimelist.net/anime/62907"))
         }
 
