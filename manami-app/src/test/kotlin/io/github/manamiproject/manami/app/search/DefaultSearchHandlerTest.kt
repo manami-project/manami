@@ -1881,7 +1881,7 @@ internal class DefaultSearchHandlerTest {
     }
 
     @Nested
-    inner class FindAnimeTests {
+    inner class FindAnimeDetailsTests {
 
         @Test
         fun `successfully find anime`() {
@@ -2024,7 +2024,7 @@ internal class DefaultSearchHandlerTest {
                 // then
                 delay(100)
                 eventCollector.cancelAndJoin()
-                assertThat(receivedEvents).hasSize(1) // initial
+                assertThat(receivedEvents).hasSize(3) // initial, start, finished
             }
         }
 

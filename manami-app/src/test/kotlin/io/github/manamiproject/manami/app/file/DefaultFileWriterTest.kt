@@ -50,22 +50,22 @@ internal class DefaultFileWriterTest {
             val watchListEntry1 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/5114"),
                 title = "Fullmetal Alchemist: Brotherhood",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
             )
             val watchListEntry2 = WatchListEntry(
                 link = Link("https://myanimelist.net/anime/1535"),
                 title = "Death Note",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453t.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
             )
             val ignoreListEntry1 = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/37989"),
                 title = "Golden Kamuy 2nd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
             )
             val ignoreListEntry2 = IgnoreListEntry(
                 link = Link("https://myanimelist.net/anime/40059"),
                 title = "Golden Kamuy 3rd Season",
-                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"),
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1763/108108.jpg"),
             )
 
             val testState = object: State by TestState {
@@ -87,16 +87,16 @@ internal class DefaultFileWriterTest {
                 <manami version="3.0.0">
                   <animeList>
                     <animeListEntry link="https://myanimelist.net/anime/11235" title="Amagami SS+ Plus" thumbnail="https://cdn.myanimelist.net/images/anime/13/33359.jpg" type="TV" episodes="13" location="some/relative/path/amagami_ss+_plus"/>
-                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
+                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
                     <animeListEntry link="https://myanimelist.net/anime/248" title="Ichigo 100%" thumbnail="https://cdn.myanimelist.net/images/anime/5/20036.jpg" type="TV" episodes="12" location="some/relative/path/ichigo_100%"/>
                   </animeList>
                   <watchList>
-                    <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453t.jpg"/>
-                    <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"/>
+                    <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453.jpg"/>
+                    <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541.jpg"/>
                   </watchList>
                   <ignoreList>
-                    <ignoreListEntry link="https://myanimelist.net/anime/37989" title="Golden Kamuy 2nd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"/>
-                    <ignoreListEntry link="https://myanimelist.net/anime/40059" title="Golden Kamuy 3rd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1763/108108t.jpg"/>
+                    <ignoreListEntry link="https://myanimelist.net/anime/37989" title="Golden Kamuy 2nd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1180/95018.jpg"/>
+                    <ignoreListEntry link="https://myanimelist.net/anime/40059" title="Golden Kamuy 3rd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1763/108108.jpg"/>
                   </ignoreList>
                 </manami>
             """.trimIndent())

@@ -204,7 +204,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             WatchListEntry(
                                 link = Link("https://myanimelist.net/anime/31646"),
                                 title = "3-gatsu no Lion",
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                             )
                         )
                         override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -220,7 +220,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 type = TV,
                                 episodes = 22,
                                 status = FINISHED,
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                picture = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                                 animeSeason = AnimeSeason(
                                     season = FALL,
                                     year = 2016,
@@ -259,7 +259,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             WatchListEntry(
                                 link = Link("https://myanimelist.net/anime/31646"),
                                 title = "sangatsu no Lion",
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                             )
                         )
                         override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -275,7 +275,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 type = TV,
                                 episodes = 22,
                                 status = FINISHED,
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                                 animeSeason = AnimeSeason(
                                     season = FALL,
                                     year = 2016,
@@ -306,14 +306,14 @@ internal class MetaDataInconsistencyHandlerTest {
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/31646"),
                             title = "sangatsu no Lion",
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                         )
                     )
                     assertThat(entry.newEntry).isEqualTo(
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/31646"),
                             title = "3-gatsu no Lion",
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                         )
                     )
                     assertThat(result.ignoreListResults).isEmpty()
@@ -329,7 +329,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             WatchListEntry(
                                 link = Link("https://myanimelist.net/anime/31646"),
                                 title = "3-gatsu no Lion",
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                             )
                         )
                         override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
@@ -345,7 +345,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                 type = TV,
                                 episodes = 22,
                                 status = FINISHED,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/6/82898.jpg"),
                                 animeSeason = AnimeSeason(
                                     season = FALL,
                                     year = 2016,
@@ -376,14 +376,14 @@ internal class MetaDataInconsistencyHandlerTest {
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/31646"),
                             title = "3-gatsu no Lion",
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                         )
                     )
                     assertThat(entry.newEntry).isEqualTo(
                         WatchListEntry(
                             link = Link("https://myanimelist.net/anime/31646"),
                             title = "3-gatsu no Lion",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898t.jpg"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/6/82898.jpg"),
                         )
                     )
                     assertThat(result.ignoreListResults).isEmpty()
@@ -477,7 +477,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             IgnoreListEntry(
                                 link = Link("https://myanimelist.net/anime/28981"),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                             )
                         )
                         override fun watchList(): Set<WatchListEntry> = emptySet()
@@ -490,7 +490,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                     URI("https://myanimelist.net/anime/28981"),
                                 ),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                             )
                         )
                     }
@@ -518,7 +518,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             IgnoreListEntry(
                                 link = Link("https://myanimelist.net/anime/28981"),
                                 title = "Ameiro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                             )
                         )
                         override fun watchList(): Set<WatchListEntry> = emptySet()
@@ -531,7 +531,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                     URI("https://myanimelist.net/anime/28981"),
                                 ),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                             )
                         )
                     }
@@ -553,14 +553,14 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ameiro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                         )
                     )
                     assertThat(entry.newEntry).isEqualTo(
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                         )
                     )
                 }
@@ -575,7 +575,7 @@ internal class MetaDataInconsistencyHandlerTest {
                             IgnoreListEntry(
                                 link = Link("https://myanimelist.net/anime/28981"),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                             )
                         )
                         override fun watchList(): Set<WatchListEntry> = emptySet()
@@ -588,7 +588,7 @@ internal class MetaDataInconsistencyHandlerTest {
                                     URI("https://myanimelist.net/anime/28981"),
                                 ),
                                 title = "Ame-iro Cocoa",
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                             )
                         )
                     }
@@ -610,14 +610,14 @@ internal class MetaDataInconsistencyHandlerTest {
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                            thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"),
                         )
                     )
                     assertThat(entry.newEntry).isEqualTo(
                         IgnoreListEntry(
                             link = Link("https://myanimelist.net/anime/28981"),
                             title = "Ame-iro Cocoa",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg"),
+                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg"),
                         )
                     )
                 }
