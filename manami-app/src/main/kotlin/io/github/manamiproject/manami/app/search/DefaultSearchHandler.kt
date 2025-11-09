@@ -139,6 +139,7 @@ internal class DefaultSearchHandler(
 
         val origin = when (val cacheEntry = cache.fetch(uri)) {
             is DeadEntry -> {
+                eventBus.findSimilarAnimeState.update { FindSimilarAnimeState(isRunning = false) }
                 return
             }
             is PresentValue<Anime> -> cacheEntry.value

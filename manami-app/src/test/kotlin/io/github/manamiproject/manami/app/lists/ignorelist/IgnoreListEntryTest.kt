@@ -108,7 +108,7 @@ internal class IgnoreListEntryTest {
         // then
         assertThat(result.title).isEqualTo(anime.title)
         assertThat(result.link.uri).isEqualTo(anime.sources.first())
-        assertThat(result.thumbnail).isEqualTo(anime.thumbnail)
+        assertThat(result.thumbnail).isEqualTo(anime.picture)
     }
 
     @Test
@@ -117,7 +117,7 @@ internal class IgnoreListEntryTest {
         val watchListEntry = WatchListEntry(
             link = Link("https://myanimelist.net/anime/28981"),
             title = "Ame-iro Cocoa",
-            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714t.jpg")
+            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1957/111714.jpg")
         )
 
         // when
