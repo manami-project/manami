@@ -5,6 +5,9 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
+import io.github.manamiproject.modb.core.anime.AnimeStatus
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +27,17 @@ internal class WatchListViewModel(
     override val source: StateFlow<List<WatchListEntry>>
         get() = app.watchListState
                 .map { it.entries.toList() }
+                .map { list ->
+                    list.map { entry ->
+                        val statusPrefix = when(entry.status) {
+                            FINISHED -> EMPTY
+                            ONGOING -> "🍿 "
+                            UPCOMING -> "📆 "
+                            UNKNOWN -> "❔ "
+                        }
+                        entry.copy(title = "$statusPrefix ${entry.title}")
+                    }
+                }
                 .stateIn(
                     scope = viewModelScope,
                     started = Eagerly,
