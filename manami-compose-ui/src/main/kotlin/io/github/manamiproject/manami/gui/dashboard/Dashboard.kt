@@ -109,7 +109,7 @@ internal fun Dashboard(viewModel: DashboardViewModel = DashboardViewModel.instan
                     state = searchState,
                     readOnly = false,
                     lineLimits = TextFieldLineLimits.SingleLine,
-                    label = { Text("Title") },
+                    label = { Text("Title or link") },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     modifier = Modifier.width(600.dp).padding(0.dp, 0.dp, 5.dp, 0.dp),
                 )
