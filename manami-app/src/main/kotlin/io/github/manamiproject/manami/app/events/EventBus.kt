@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.events
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * @since 4.0.0
@@ -71,6 +72,11 @@ interface EventBus {
      * @since 4.0.0
      */
     val findAnimeDetailsState: MutableStateFlow<FindAnimeDetailsState>
+
+    /**
+     * @since 4.0.0
+     */
+    val animeListModificationState: MutableStateFlow<AnimeListModificationState>
 
     /**
      * @since 4.0.0

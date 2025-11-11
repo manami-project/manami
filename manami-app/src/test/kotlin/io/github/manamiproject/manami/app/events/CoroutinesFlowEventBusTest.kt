@@ -53,6 +53,7 @@ internal class CoroutinesFlowEventBusTest {
             CoroutinesFlowEventBus.findByTagState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findSimilarAnimeState.update { current -> current.copy(isRunning = true) }
             CoroutinesFlowEventBus.findAnimeDetailsState.update { current ->  current.copy(isRunning = true) }
+            CoroutinesFlowEventBus.animeListModificationState.update { current ->  current.copy(isAddAnimeEntryDataRunning = true) }
 
             // when
             CoroutinesFlowEventBus.clear()
@@ -81,6 +82,7 @@ internal class CoroutinesFlowEventBusTest {
             assertThat(CoroutinesFlowEventBus.findByTagState.value).isEqualTo(FindByTagState())
             assertThat(CoroutinesFlowEventBus.findSimilarAnimeState.value).isEqualTo(FindSimilarAnimeState())
             assertThat(CoroutinesFlowEventBus.findAnimeDetailsState.value).isEqualTo(FindAnimeDetailsState())
+            assertThat(CoroutinesFlowEventBus.animeListModificationState.value).isEqualTo(AnimeListModificationState())
         }
     }
 }

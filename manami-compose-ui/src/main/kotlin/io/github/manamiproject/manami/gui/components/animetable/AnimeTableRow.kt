@@ -138,7 +138,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                             icon = Icons.Filled.CheckCircleOutline,
                             size = iconSize,
                             description = "Add to anime list",
-                            onClick = { TODO() },
+                            onClick = { viewModel.addToAnimeList(anime) },
                         )
                     }
 

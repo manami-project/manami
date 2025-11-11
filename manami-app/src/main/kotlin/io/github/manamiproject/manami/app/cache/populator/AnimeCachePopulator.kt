@@ -32,7 +32,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.io.path.Path
-import kotlin.io.path.deleteExisting
 import kotlin.io.path.deleteIfExists
 
 internal class AnimeCachePopulator(

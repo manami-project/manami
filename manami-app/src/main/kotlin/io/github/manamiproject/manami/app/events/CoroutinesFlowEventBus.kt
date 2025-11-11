@@ -21,6 +21,7 @@ object CoroutinesFlowEventBus: EventBus {
     override val findByTagState: MutableStateFlow<FindByTagState> = MutableStateFlow(FindByTagState())
     override val findSimilarAnimeState: MutableStateFlow<FindSimilarAnimeState> = MutableStateFlow(FindSimilarAnimeState())
     override val findAnimeDetailsState: MutableStateFlow<FindAnimeDetailsState> = MutableStateFlow(FindAnimeDetailsState())
+    override val animeListModificationState: MutableStateFlow<AnimeListModificationState> = MutableStateFlow(AnimeListModificationState())
 
     override fun clear() {
         generalAppState.update { GeneralAppState() }
@@ -36,5 +37,6 @@ object CoroutinesFlowEventBus: EventBus {
         findByTagState.update { FindByTagState() }
         findSimilarAnimeState.update { FindSimilarAnimeState() }
         findAnimeDetailsState.update { FindAnimeDetailsState() }
+        animeListModificationState.update { AnimeListModificationState() }
     }
 }

@@ -4,10 +4,7 @@ import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.commands.ReversibleCommand
 import io.github.manamiproject.manami.app.commands.TestCommandHistory
 import io.github.manamiproject.manami.app.commands.history.CommandHistory
-import io.github.manamiproject.manami.app.events.AnimeListState
-import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
-import io.github.manamiproject.manami.app.events.IgnoreListState
-import io.github.manamiproject.manami.app.events.WatchListState
+import io.github.manamiproject.manami.app.events.*
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -16,8 +13,8 @@ import io.github.manamiproject.manami.app.state.snapshot.Snapshot
 import io.github.manamiproject.manami.app.state.snapshot.StateSnapshot
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeSeason
-import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
-import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SPRING
+import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.Duration
@@ -166,8 +163,11 @@ internal class DefaultListHandlerTest {
         fun `add anime list entries and fire command containing the progress`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<AnimeListState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedEvents.add(event) } }
+                val receivedAnimeListStateEvents = mutableListOf<AnimeListState>()
+                val animeListStateEventsEventCollector = launch { CoroutinesFlowEventBus.animeListState.collect { event -> receivedAnimeListStateEvents.add(event) } }
+
+                val receivedAnimeListModificationStateEvents = mutableListOf<AnimeListModificationState>()
+                val animeListModificationStateEventCollector = launch { CoroutinesFlowEventBus.animeListModificationState.collect { event -> receivedAnimeListModificationStateEvents.add(event) } }
                 delay(100)
 
                 val entry = AnimeListEntry(
@@ -206,9 +206,139 @@ internal class DefaultListHandlerTest {
 
                 // then
                 delay(100)
-                eventCollector.cancelAndJoin()
-                assertThat(receivedEvents).hasSize(1) // initial
+                animeListStateEventsEventCollector.cancelAndJoin()
+                animeListModificationStateEventCollector.cancelAndJoin()
+
+                assertThat(receivedAnimeListStateEvents).hasSize(1) // initial
                 assertThat(savedEntries).containsExactly(entry)
+
+                assertThat(receivedAnimeListModificationStateEvents).hasSize(1) // initial
+                assertThat(receivedAnimeListModificationStateEvents.last().addAnimeEntryData).isNull()
+            }
+        }
+    }
+
+    @Nested
+    inner class FindAnimeDetailsForAddingAnEntryTests {
+
+        @Test
+        fun `successfully find anime`() {
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<AnimeListModificationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.animeListModificationState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
+
+                val entry = Anime(
+                    sources = hashSetOf(
+                        URI("https://anidb.net/anime/15738"),
+                        URI("https://anilist.co/anime/124194"),
+                        URI("https://anime-planet.com/anime/fruits-basket-the-final"),
+                        URI("https://kitsu.app/anime/43578"),
+                        URI("https://myanimelist.net/anime/42938"),
+                        URI("https://notify.moe/anime/YiySZ9OMg"),
+                    ),
+                    title = "Fruits Basket: The Final",
+                    type = TV,
+                    episodes = 1,
+                    status = UPCOMING,
+                    animeSeason = AnimeSeason(
+                        season = SPRING,
+                        year = 2021,
+                    ),
+                    tags = hashSetOf("my-tag-1", "my-tag-2"),
+                )
+
+                val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                    entry.sources.forEach {
+                        populate(it, PresentValue(entry))
+                    }
+                }
+
+                val defaultSearchHandler = DefaultListHandler(
+                    state = TestState,
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                )
+
+                // when
+                defaultSearchHandler.findAnimeDetailsForAddingAnEntry(URI("https://myanimelist.net/anime/42938"))
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last().addAnimeEntryData).isNotNull()
+                assertThat(receivedEvents.last().addAnimeEntryData!!.title).isEqualTo("Fruits Basket: The Final")
+                assertThat(receivedEvents.last().addAnimeEntryData!!.title).isEqualTo("Fruits Basket: The Final")
+            }
+        }
+
+        @Test
+        fun `don't return anime, because URI relates to a dead entry`() {
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<AnimeListModificationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.animeListModificationState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
+
+                val testCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                    populate(URI("https://myanimelist.net/anime/10001"), DeadEntry())
+                }
+
+                val defaultSearchHandler = DefaultListHandler(
+                    state = TestState,
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                )
+
+                // when
+                defaultSearchHandler.findAnimeDetailsForAddingAnEntry(URI("https://myanimelist.net/anime/10001"))
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(3) // initial, start, result
+                assertThat(receivedEvents.last().addAnimeEntryData).isNull()
+            }
+        }
+    }
+
+    @Nested
+    inner class FindAnimeListEntryForEditingAnEntryTests {
+
+        @Test
+        fun `correctly updates state` () {
+            runBlocking {
+                // given
+                val receivedEvents = mutableListOf<AnimeListModificationState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.animeListModificationState.collect { event -> receivedEvents.add(event) } }
+                delay(100)
+
+                val animeEntry = AnimeListEntry(
+                    title = "H2O: Footprints in the Sand",
+                    episodes = 4,
+                    type = SPECIAL,
+                    location = Path("some/relative/path/h2o_-_footprints_in_the_sand_special"),
+                )
+
+                val defaultSearchHandler = DefaultListHandler(
+                    state = TestState,
+                    cache = TestAnimeCache,
+                    eventBus = CoroutinesFlowEventBus,
+                    commandHistory = TestCommandHistory,
+                )
+
+                // when
+                defaultSearchHandler.prepareAnimeListEntryForEditingAnEntry(animeEntry)
+
+                // then
+                delay(100)
+                eventCollector.cancelAndJoin()
+                assertThat(receivedEvents).hasSize(2) // initial, setting entry
+                assertThat(receivedEvents.last().editAnimeEntryData).isEqualTo(animeEntry)
             }
         }
     }
