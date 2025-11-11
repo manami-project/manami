@@ -13,7 +13,9 @@ import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
-import io.github.manamiproject.manami.app.lists.ignorelist.*
+import io.github.manamiproject.manami.app.lists.ignorelist.CmdAddIgnoreListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.CmdRemoveIgnoreListEntry
+import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdAddWatchListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.CmdRemoveWatchListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -32,14 +34,18 @@ internal class DefaultListHandler(
 ): ListHandler {
 
     override fun addAnimeListEntry(entry: AnimeListEntry) {
-        GenericReversibleCommand(
+        if (GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdAddAnimeListEntry(
                 state = state,
                 animeListEntry = entry,
             )
-        ).execute()
+        ).execute()) {
+            eventBus.animeListModificationState.update { current ->
+                current.copy(addAnimeEntryData = null)
+            }
+        }
     }
 
     override fun animeList(): List<AnimeListEntry> = state.animeList()
@@ -65,6 +71,35 @@ internal class DefaultListHandler(
                 replacementEntry = replacement,
             )
         ).execute()
+    }
+
+    override suspend fun findAnimeDetailsForAddingAnEntry(uri: URI) {
+        eventBus.animeListModificationState.update { current ->
+            current.copy(isAddAnimeEntryDataRunning = true)
+        }
+        yield()
+
+        val entry = cache.fetch(uri)
+        if (entry is PresentValue) {
+            eventBus.animeListModificationState.update { current ->
+                current.copy(
+                    isAddAnimeEntryDataRunning = false,
+                    addAnimeEntryData = entry.value,
+                )
+            }
+        } else {
+            eventBus.animeListModificationState.update { current ->
+                current.copy(isAddAnimeEntryDataRunning = false)
+            }
+        }
+    }
+
+    override fun prepareAnimeListEntryForEditingAnEntry(entry: AnimeListEntry) {
+        eventBus.animeListModificationState.update { current ->
+            current.copy(
+                editAnimeEntryData = entry,
+            )
+        }
     }
 
     override suspend fun addWatchListEntry(uris: Collection<URI>) {

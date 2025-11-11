@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.app.lists.LinkEntry
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
+import io.github.manamiproject.manami.gui.lists.animelist.AddAnimeToAnimeListFormViewModel
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     private val app: Manami = Manami.instance,
     private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
+    private val addAnimeToAnimeListFormViewModel: AddAnimeToAnimeListFormViewModel = AddAnimeToAnimeListFormViewModel.instance,
 ): AnimeTableViewModel<T> {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
@@ -46,6 +48,20 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
                 }
             }
         }.stateIn(viewModelScope, Eagerly, emptyList())
+
+    override fun addToAnimeList(anime: T) {
+        viewModelScope.launch {
+            tabBarViewModel.openOrActivate(ADD_ANIME_TO_ANIME_LIST_FORM)
+            addAnimeToAnimeListFormViewModel.fetchAnimeDetails(anime.link)
+        }
+    }
+
+    override fun editAnimeListEntry(anime: T) {
+        viewModelScope.launch {
+            tabBarViewModel.openOrActivate(EDIT_ANIME_LIST_ENTRY_FORM)
+            addAnimeToAnimeListFormViewModel.fetchAnimeDetails(anime.link)
+        }
+    }
 
     override fun addToWatchList(anime: T) {
         viewModelScope.launch {

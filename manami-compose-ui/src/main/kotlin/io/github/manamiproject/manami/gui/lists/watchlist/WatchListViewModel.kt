@@ -5,7 +5,6 @@ import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_RELATED_ANIME
-import io.github.manamiproject.modb.core.anime.AnimeStatus
 import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import kotlinx.coroutines.CoroutineScope

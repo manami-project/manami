@@ -15,4 +15,5 @@ internal enum class Tabs(
     FIND_SIMILAR_ANIME(title = "Find Similar Anime"),
     FIND_ANIME_DETAILS(title = "Anime Details"),
     FIND_BY_TITLE(title = "Find By Title"),
+    ADD_ANIME_TO_ANIME_LIST_FORM(title = "Add Anime To Anime List"),
 }
