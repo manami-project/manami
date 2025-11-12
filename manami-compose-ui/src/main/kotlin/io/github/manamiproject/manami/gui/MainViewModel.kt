@@ -145,7 +145,7 @@ internal class MainViewModel(
 
             if (file != null) {
                 viewModelScope.launch {
-                    app.open(file)
+                    app.open(file, ignoreUnsavedChanges)
                 }
             }
         } else {
