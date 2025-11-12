@@ -97,7 +97,7 @@ internal class DefaultListHandler(
     override fun prepareAnimeListEntryForEditingAnEntry(entry: AnimeListEntry) {
         eventBus.animeListModificationState.update { current ->
             current.copy(
-                editAnimeEntryData = entry,
+                editAnimeListEntryData = entry,
             )
         }
     }

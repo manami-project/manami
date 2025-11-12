@@ -338,7 +338,7 @@ internal class DefaultListHandlerTest {
                 delay(100)
                 eventCollector.cancelAndJoin()
                 assertThat(receivedEvents).hasSize(2) // initial, setting entry
-                assertThat(receivedEvents.last().editAnimeEntryData).isEqualTo(animeEntry)
+                assertThat(receivedEvents.last().editAnimeListEntryData).isEqualTo(animeEntry)
             }
         }
     }
