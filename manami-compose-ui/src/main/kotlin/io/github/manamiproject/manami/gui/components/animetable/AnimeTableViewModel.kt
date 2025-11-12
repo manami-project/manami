@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.gui.components.animetable
 
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.LinkEntry
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import kotlinx.coroutines.flow.StateFlow
 
 internal interface AnimeTableViewModel<T: AnimeEntry> {
@@ -12,6 +13,7 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
 
     fun isSortable(value: Boolean)
     fun addToAnimeList(anime: T)
+    fun editAnimeListEntry(anime: AnimeListEntry)
     fun addToWatchList(anime: T)
     fun addToIgnoreList(anime: T)
     fun hide(anime: T)

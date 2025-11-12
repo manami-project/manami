@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.cache.ImageCache
 import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.extensions.toOnClick
@@ -102,7 +103,7 @@ internal fun <T: AnimeEntry> AnimeTableRow(
                             icon = Icons.Filled.Edit,
                             size = iconSize,
                             description = "Edit",
-                            onClick = { TODO() },
+                            onClick = { viewModel.editAnimeListEntry(anime as AnimeListEntry) },
                         )
                     }
 

@@ -6,5 +6,5 @@ import io.github.manamiproject.modb.core.anime.Anime
 data class AnimeListModificationState(
     val isAddAnimeEntryDataRunning: Boolean = false,
     val addAnimeEntryData: Anime? = null,
-    val editAnimeEntryData: AnimeListEntry? = null,
+    val editAnimeListEntryData: AnimeListEntry? = null,
 )

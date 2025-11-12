@@ -4,9 +4,11 @@ import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.LinkEntry
 import io.github.manamiproject.manami.app.lists.NoLink
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.ASC
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTableSortDirection.DESC
 import io.github.manamiproject.manami.gui.lists.animelist.AddAnimeToAnimeListFormViewModel
+import io.github.manamiproject.manami.gui.lists.animelist.EditAnimeListEntryFormViewModel
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     private val app: Manami = Manami.instance,
     private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
     private val addAnimeToAnimeListFormViewModel: AddAnimeToAnimeListFormViewModel = AddAnimeToAnimeListFormViewModel.instance,
+    private val editAnimeListEntryFormViewModel: EditAnimeListEntryFormViewModel = EditAnimeListEntryFormViewModel.instance,
 ): AnimeTableViewModel<T> {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
@@ -56,10 +59,10 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         }
     }
 
-    override fun editAnimeListEntry(anime: T) {
+    override fun editAnimeListEntry(anime: AnimeListEntry) {
         viewModelScope.launch {
             tabBarViewModel.openOrActivate(EDIT_ANIME_LIST_ENTRY_FORM)
-            addAnimeToAnimeListFormViewModel.fetchAnimeDetails(anime.link)
+            editAnimeListEntryFormViewModel.editEntry(anime)
         }
     }
 
