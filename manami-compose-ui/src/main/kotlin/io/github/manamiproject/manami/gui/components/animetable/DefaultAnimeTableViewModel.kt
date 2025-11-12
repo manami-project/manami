@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui.components.animetable
 
+import androidx.compose.foundation.lazy.LazyListState
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.LinkEntry
@@ -26,9 +27,15 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
 ): AnimeTableViewModel<T> {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
+
     private val sortDirection = MutableStateFlow(ASC)
-    private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
     private var isSortable = true
+
+    private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
+
+    private var lastIndex = 0
+    private var lastOffset = 0
+    override val listState = LazyListState()
 
     override val isFileOpeningRunning: StateFlow<Boolean>
         get() = app.generalAppState
@@ -126,5 +133,14 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
 
     override fun openDirectory(anime: T) {
         throw UnsupportedOperationException()
+    }
+
+    override fun saveScrollPosition() {
+        lastIndex = listState.firstVisibleItemIndex
+        lastOffset = listState.firstVisibleItemScrollOffset
+    }
+
+    override suspend fun restoreScrollPosition() {
+        listState.scrollToItem(lastIndex, lastOffset)
     }
 }
