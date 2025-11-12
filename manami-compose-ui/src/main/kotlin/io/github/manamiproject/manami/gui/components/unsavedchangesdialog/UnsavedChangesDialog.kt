@@ -19,7 +19,7 @@ internal fun UnsavedChangesDialog(
     DialogWindow(
         onCloseRequest = onCloseRequest,
         title = "Unsaved changes",
-        state = rememberDialogState(width = 400.dp, height = 150.dp),
+        state = rememberDialogState(width = 400.dp, height = 200.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
             Text("""
