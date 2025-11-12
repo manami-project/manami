@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,15 +24,24 @@ internal fun <T : AnimeEntry> AnimeTable(
     viewModel: AnimeTableViewModel<T>,
     config: AnimeTableConfig.() -> Unit = {},
 ) {
-    val listState = rememberLazyListState()
     val entries by viewModel.entries.collectAsState()
     val animeTableConfig = AnimeTableConfig().apply { config() }
     viewModel.isSortable(animeTableConfig.withSortableTitle)
 
+    LaunchedEffect(entries) {
+        viewModel.restoreScrollPosition()
+    }
+
+    DisposableEffect(viewModel) {
+        onDispose {
+            viewModel.saveScrollPosition()
+        }
+    }
+
     ManamiTheme {
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
-                state = listState,
+                state = viewModel.listState,
                 modifier = Modifier.fillMaxSize().padding(16.dp),
             ) {
                 item {
@@ -48,7 +59,7 @@ internal fun <T : AnimeEntry> AnimeTable(
                 }
             }
             VerticalScrollbar(
-                adapter = rememberScrollbarAdapter(listState),
+                adapter = rememberScrollbarAdapter(viewModel.listState),
                 modifier = Modifier.align(Alignment.CenterEnd),
             )
         }
