@@ -22,6 +22,7 @@ import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -209,11 +210,89 @@ internal class DefaultListHandlerTest {
                 animeListStateEventsEventCollector.cancelAndJoin()
                 animeListModificationStateEventCollector.cancelAndJoin()
 
-                assertThat(receivedAnimeListStateEvents).hasSize(1) // initial
+                assertThat(receivedAnimeListStateEvents).hasSize(1) // initial (InternallyState which is mocked, would normally fire the update)
                 assertThat(savedEntries).containsExactly(entry)
 
                 assertThat(receivedAnimeListModificationStateEvents).hasSize(1) // initial
                 assertThat(receivedAnimeListModificationStateEvents.last().addAnimeEntryData).isNull()
+            }
+        }
+
+        @Test
+        fun `removes the entry from any search states upon adding it to animeList`() {
+            runBlocking {
+                // given
+                val testSearchListEntry = SearchResultAnimeEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                )
+
+                CoroutinesFlowEventBus.findRelatedAnimeState.update { FindRelatedAnimeState(entries = listOf(testSearchListEntry)) }
+                val findRelatedAnimeStateEvents = mutableListOf<FindRelatedAnimeState>()
+                val findRelatedAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> findRelatedAnimeStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTitleState.update { FindByTitleState(unlistedResults = listOf(testSearchListEntry)) }
+                val findByTitleStateEvents = mutableListOf<FindByTitleState>()
+                val findByTitleStateEventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> findByTitleStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSeasonState.update { FindSeasonState(entries = listOf(testSearchListEntry)) }
+                val findSeasonStateEvents = mutableListOf<FindSeasonState>()
+                val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
+                val findByTagStateEvents = mutableListOf<FindByTagState>()
+                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
+                val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
+                val findSimilarAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findSimilarAnimeState.collect { event -> findSimilarAnimeStateEvents.add(event) } }
+                delay(100)
+
+                val entry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/57"),
+                    title = "Beck",
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
+                    episodes = 26,
+                    type = TV,
+                    location = Path("some/relative/path/beck"),
+                )
+
+                val state = object: State by TestState {
+                    override fun openedFile(): OpenedFile = NoFile
+                    override fun animeListEntryExists(anime: AnimeListEntry): Boolean = false
+                    override fun createSnapshot(): Snapshot = TestSnapshot
+                    override fun animeList(): List<AnimeListEntry> = emptyList()
+                    override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) {}
+                }
+
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun push(command: ReversibleCommand) { }
+                }
+
+                val defaultListHandler = DefaultListHandler(
+                    state = state,
+                    commandHistory = testCommandHistory,
+                    cache = TestAnimeCache,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                // when
+                defaultListHandler.addAnimeListEntry(entry)
+
+                // then
+                delay(100)
+                findRelatedAnimeStateEventCollector.cancelAndJoin()
+                findByTitleStateEventCollector.cancelAndJoin()
+                findSeasonStateEventCollector.cancelAndJoin()
+                findByTagStateEventCollector.cancelAndJoin()
+                findSimilarAnimeStateEventCollector.cancelAndJoin()
+
+                assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
             }
         }
     }
@@ -479,6 +558,94 @@ internal class DefaultListHandlerTest {
                 assertThat(receivedEvents).hasSize(3) // initial, start, stop
             }
         }
+
+        @Test
+        fun `removes the entry from any search states upon adding it to watchList`() {
+            runBlocking {
+                // given
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                    title = "Golden Kamuy 2nd Season",
+                    type = TV,
+                    episodes = 12,
+                    status = FINISHED,
+                    animeSeason = AnimeSeason(),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+                    duration = Duration(23, MINUTES),
+                )
+
+                val testSearchListEntry = SearchResultAnimeEntry(testAnime)
+
+                CoroutinesFlowEventBus.findRelatedAnimeState.update { FindRelatedAnimeState(entries = listOf(testSearchListEntry)) }
+                val findRelatedAnimeStateEvents = mutableListOf<FindRelatedAnimeState>()
+                val findRelatedAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> findRelatedAnimeStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTitleState.update { FindByTitleState(unlistedResults = listOf(testSearchListEntry)) }
+                val findByTitleStateEvents = mutableListOf<FindByTitleState>()
+                val findByTitleStateEventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> findByTitleStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSeasonState.update { FindSeasonState(entries = listOf(testSearchListEntry)) }
+                val findSeasonStateEvents = mutableListOf<FindSeasonState>()
+                val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
+                val findByTagStateEvents = mutableListOf<FindByTagState>()
+                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
+                val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
+                val findSimilarAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findSimilarAnimeState.collect { event -> findSimilarAnimeStateEvents.add(event) } }
+                delay(100)
+
+                val state = object: State by TestState {
+                    override fun openedFile(): OpenedFile = NoFile
+                    override fun animeListEntryExists(anime: AnimeListEntry): Boolean = false
+                    override fun createSnapshot(): Snapshot = TestSnapshot
+                    override fun watchList(): Set<WatchListEntry> = emptySet()
+                    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) {}
+                }
+
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun push(command: ReversibleCommand) { }
+                }
+
+                val testWatchListEntry = WatchListEntry(testAnime)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return when(key) {
+                            testWatchListEntry.link.uri -> PresentValue(testAnime)
+                            else -> shouldNotBeInvoked()
+                        }
+                    }
+                }
+
+                val defaultListHandler = DefaultListHandler(
+                    state = state,
+                    commandHistory = testCommandHistory,
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                // when
+                defaultListHandler.addWatchListEntry(setOf(testWatchListEntry.link.uri))
+
+                // then
+                delay(100)
+                findRelatedAnimeStateEventCollector.cancelAndJoin()
+                findByTitleStateEventCollector.cancelAndJoin()
+                findSeasonStateEventCollector.cancelAndJoin()
+                findByTagStateEventCollector.cancelAndJoin()
+                findSimilarAnimeStateEventCollector.cancelAndJoin()
+
+                assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
+            }
+        }
     }
 
     @Nested
@@ -615,6 +782,94 @@ internal class DefaultListHandlerTest {
                 eventCollector.cancelAndJoin()
                 assertThat(savedEntries).containsExactlyInAnyOrder(IgnoreListEntry(entry))
                 assertThat(receivedEvents).hasSize(3) // initial, start, stop
+            }
+        }
+
+        @Test
+        fun `removes the entry from any search states upon adding it to ignoreList`() {
+            runBlocking {
+                // given
+                val testAnime = Anime(
+                    sources = hashSetOf(URI("https://myanimelist.net/anime/37989")),
+                    title = "Golden Kamuy 2nd Season",
+                    type = TV,
+                    episodes = 12,
+                    status = FINISHED,
+                    animeSeason = AnimeSeason(),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1180/95018.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1180/95018t.jpg"),
+                    duration = Duration(23, MINUTES),
+                )
+
+                val testSearchListEntry = SearchResultAnimeEntry(testAnime)
+
+                CoroutinesFlowEventBus.findRelatedAnimeState.update { FindRelatedAnimeState(entries = listOf(testSearchListEntry)) }
+                val findRelatedAnimeStateEvents = mutableListOf<FindRelatedAnimeState>()
+                val findRelatedAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findRelatedAnimeState.collect { event -> findRelatedAnimeStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTitleState.update { FindByTitleState(unlistedResults = listOf(testSearchListEntry)) }
+                val findByTitleStateEvents = mutableListOf<FindByTitleState>()
+                val findByTitleStateEventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> findByTitleStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSeasonState.update { FindSeasonState(entries = listOf(testSearchListEntry)) }
+                val findSeasonStateEvents = mutableListOf<FindSeasonState>()
+                val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
+                val findByTagStateEvents = mutableListOf<FindByTagState>()
+                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+
+                CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
+                val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
+                val findSimilarAnimeStateEventCollector = launch { CoroutinesFlowEventBus.findSimilarAnimeState.collect { event -> findSimilarAnimeStateEvents.add(event) } }
+                delay(100)
+
+                val state = object: State by TestState {
+                    override fun openedFile(): OpenedFile = NoFile
+                    override fun animeListEntryExists(anime: AnimeListEntry): Boolean = false
+                    override fun createSnapshot(): Snapshot = TestSnapshot
+                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) {}
+                }
+
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun push(command: ReversibleCommand) { }
+                }
+
+                val testIgnoreListEntry = IgnoreListEntry(testAnime)
+
+                val testCache = object: AnimeCache by TestAnimeCache {
+                    override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                        return when(key) {
+                            testIgnoreListEntry.link.uri -> PresentValue(testAnime)
+                            else -> shouldNotBeInvoked()
+                        }
+                    }
+                }
+
+                val defaultListHandler = DefaultListHandler(
+                    state = state,
+                    commandHistory = testCommandHistory,
+                    cache = testCache,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                // when
+                defaultListHandler.addIgnoreListEntry(setOf(testIgnoreListEntry.link.uri))
+
+                // then
+                delay(100)
+                findRelatedAnimeStateEventCollector.cancelAndJoin()
+                findByTitleStateEventCollector.cancelAndJoin()
+                findSeasonStateEventCollector.cancelAndJoin()
+                findByTagStateEventCollector.cancelAndJoin()
+                findSimilarAnimeStateEventCollector.cancelAndJoin()
+
+                assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
             }
         }
     }

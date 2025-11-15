@@ -9,6 +9,7 @@ import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
+import io.github.manamiproject.manami.app.events.FindByTitleState
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
@@ -45,6 +46,11 @@ internal class DefaultListHandler(
             eventBus.animeListModificationState.update { current ->
                 current.copy(addAnimeEntryData = null)
             }
+            eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
+            eventBus.findByTitleState.update { FindByTitleState() }
+            eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
+            eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
+            eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
         }
     }
 
@@ -112,14 +118,20 @@ internal class DefaultListHandler(
                     log.warn { "Unable to retrieve anime for [$uri]" }
                 }
                 is PresentValue -> {
-                    GenericReversibleCommand(
+                    if (GenericReversibleCommand(
                         state = state,
                         commandHistory = commandHistory,
                         command = CmdAddWatchListEntry(
                             state = state,
                             watchListEntry = WatchListEntry(anime.value),
                         )
-                    ).execute()
+                    ).execute()) {
+                        eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTitleState.update { FindByTitleState() }
+                        eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                    }
                 }
             }
         }
@@ -150,14 +162,20 @@ internal class DefaultListHandler(
                     log.warn { "Unable to retrieve anime for [$uri]" }
                 }
                 is PresentValue -> {
-                    GenericReversibleCommand(
+                    if (GenericReversibleCommand(
                         state = state,
                         commandHistory = commandHistory,
                         command = CmdAddIgnoreListEntry(
                             state = state,
                             ignoreListEntry = IgnoreListEntry(anime.value),
                         )
-                    ).execute()
+                    ).execute()) {
+                        eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTitleState.update { FindByTitleState() }
+                        eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                    }
                 }
             }
         }
