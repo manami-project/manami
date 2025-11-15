@@ -23,7 +23,7 @@ internal class FindSeasonViewModel(private val app: Manami = Manami.instance): D
 
     val isSeasonSearchRunning: StateFlow<Boolean>
         get() = app.findSeasonState
-            .map { it.isRunning }
+            .map { it.isRunning.also { isRunning -> if (isRunning) clearHiddenEntries() } }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,

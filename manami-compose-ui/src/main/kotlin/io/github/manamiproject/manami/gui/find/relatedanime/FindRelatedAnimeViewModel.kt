@@ -17,7 +17,7 @@ internal class FindRelatedAnimeViewModel(private val app: Manami = Manami.instan
 
     val isRelatedAnimeSearchRunning: StateFlow<Boolean>
         get() = app.findRelatedAnimeState
-            .map { it.isRunning }
+            .map { it.isRunning.also { isRunning -> if (isRunning) clearHiddenEntries() } }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,

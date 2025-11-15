@@ -25,6 +25,7 @@ internal interface AnimeTableViewModel<T: AnimeEntry> {
     fun findRelatedAnime(link: LinkEntry)
     fun findSimilarAnime(link: LinkEntry)
     fun openDirectory(anime: T)
+    fun clearHiddenEntries()
 
     fun saveScrollPosition()
     suspend fun restoreScrollPosition()

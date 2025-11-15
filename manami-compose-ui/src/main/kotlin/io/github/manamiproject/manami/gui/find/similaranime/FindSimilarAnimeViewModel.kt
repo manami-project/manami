@@ -17,7 +17,7 @@ internal class FindSimilarAnimeViewModel(private val app: Manami = Manami.instan
 
     val isSimilarAnimeSearchRunning: StateFlow<Boolean>
         get() = app.findSimilarAnimeState
-            .map { it.isRunning }
+            .map { it.isRunning.also { isRunning -> if (isRunning) clearHiddenEntries() } }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
