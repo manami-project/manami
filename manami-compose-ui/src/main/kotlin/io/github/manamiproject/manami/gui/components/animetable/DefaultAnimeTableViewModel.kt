@@ -95,6 +95,10 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         }
     }
 
+    override fun clearHiddenEntries() {
+        hiddenEntries.update { emptySet() }
+    }
+
     override fun sort(direction: AnimeTableSortDirection) {
         if (sortDirection.value != direction) {
             sortDirection.update { direction }
