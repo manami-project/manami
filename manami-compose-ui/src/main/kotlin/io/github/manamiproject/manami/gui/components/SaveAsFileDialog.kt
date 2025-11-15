@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FilenameFilter
 
 internal fun FrameWindowScope.showSaveAsFileDialog(): RegularFile? {
-    val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") }
+    val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".json") }
 
     val files: Array<File> = java.awt.FileDialog(window).apply {
         mode = 1

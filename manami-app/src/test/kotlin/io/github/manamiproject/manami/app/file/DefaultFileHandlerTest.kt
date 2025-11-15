@@ -8,6 +8,7 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.modb.core.extensions.RegularFile
+import io.github.manamiproject.modb.test.exceptionExpected
 import io.github.manamiproject.modb.test.tempDirectory
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -38,7 +39,7 @@ internal class DefaultFileHandlerTest {
             val defaultFileHandler = DefaultFileHandler(
                 state = TestState,
                 commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+                xmlParser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
                 eventBus = CoroutinesFlowEventBus,
             )
@@ -70,7 +71,7 @@ internal class DefaultFileHandlerTest {
             val defaultFileHandler = DefaultFileHandler(
                 state = testState,
                 commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
+                xmlParser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
                 eventBus = CoroutinesFlowEventBus,
             )
@@ -88,40 +89,173 @@ internal class DefaultFileHandlerTest {
 
         @Test
         fun `throws exception if ignoreUnsavedChanges is false and state is unsaved`() {
-            // given
-            val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                override fun isSaved(): Boolean = false
+            runBlocking {
+                // given
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = TestState,
+                    commandHistory = testCommandHistory,
+                    xmlParser = TestManamiFileParser,
+                    jsonParser = TestManamiFileParser,
+                    fileWriter = TestFileWriter,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                // when
+                val result = assertThrows<IllegalStateException> {
+                    defaultFileHandler.open(Path(".").resolve("test.xml"))
+                }
+
+                // then
+                assertThat(result).hasMessage("Cannot open file, because there are unsaved changes.")
             }
-
-            val defaultFileHandler = DefaultFileHandler(
-                state = TestState,
-                commandHistory = testCommandHistory,
-                parser = TestManamiFileParser,
-                fileWriter = TestFileWriter,
-                eventBus = CoroutinesFlowEventBus,
-            )
-
-            // when
-            val result = assertThrows<IllegalStateException> {
-                defaultFileHandler.open(Path(".").resolve("test.xml"))
-            }
-
-            // then
-            assertThat(result).hasMessage("Cannot open file, because there are unsaved changes.")
         }
 
         @Test
-        fun `creates a new list if ignoreUnsavedChanges is true and state is unsaved`() {
-            // given
-            var isCommandExecuted = false
+        fun `opens a file if ignoreUnsavedChanges is true and state is unsaved`() {
+            runBlocking {
+                // given
+                var isCommandExecuted = false
 
-            val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                override fun isSaved(): Boolean = false
-                override fun clear() { isCommandExecuted = true }
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = false
+                    override fun clear() { isCommandExecuted = true }
+                }
+
+                val testParser = object: Parser<ManamiFile> by TestManamiFileParser {
+                    override suspend fun parse(file: RegularFile): ManamiFile = ManamiFile()
+                }
+
+                val testState = object: State by TestState{
+                    override fun clear() { }
+                    override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
+                    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
+                    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
+                    override fun setOpenedFile(file: RegularFile) { isCommandExecuted = true }
+                    override fun closeFile() { }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    xmlParser = testParser,
+                    jsonParser = TestManamiFileParser,
+                    fileWriter = TestFileWriter,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                val file = Path(".").resolve("test.xml")
+
+                // when
+                defaultFileHandler.open(file, ignoreUnsavedChanged = true)
+
+                // then
+                assertThat(isCommandExecuted).isTrue()
+                assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(CurrentFile(file))
             }
+        }
 
-            val testParser = object: Parser<ParsedManamiFile> by TestManamiFileParser {
-                override fun parse(file: RegularFile): ParsedManamiFile = ParsedManamiFile()
+        @Test
+        fun `uses XmlFileParser for xml files`() {
+            runBlocking {
+                // given
+                var isXmlParserUsed = false
+
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = true
+                    override fun clear() { }
+                }
+
+                val testParser = object: Parser<ManamiFile> by TestManamiFileParser {
+                    override suspend fun parse(file: RegularFile): ManamiFile {
+                        isXmlParserUsed = true
+                        return ManamiFile()
+                    }
+                }
+
+                val testState = object: State by TestState{
+                    override fun clear() { }
+                    override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
+                    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
+                    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
+                    override fun setOpenedFile(file: RegularFile) { }
+                    override fun closeFile() { }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    xmlParser = testParser,
+                    jsonParser = TestManamiFileParser,
+                    fileWriter = TestFileWriter,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                val file = Path(".").resolve("test.xml")
+
+                // when
+                defaultFileHandler.open(file)
+
+                // then
+                assertThat(isXmlParserUsed).isTrue()
+            }
+        }
+
+        @Test
+        fun `uses JsonFileParser for xml files`() {
+            runBlocking {
+                // given
+                var isJsonParserUsed = false
+
+                val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                    override fun isSaved(): Boolean = true
+                    override fun clear() { }
+                }
+
+                val testParser = object: Parser<ManamiFile> by TestManamiFileParser {
+                    override suspend fun parse(file: RegularFile): ManamiFile {
+                        isJsonParserUsed = true
+                        return ManamiFile()
+                    }
+                }
+
+                val testState = object: State by TestState{
+                    override fun clear() { }
+                    override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
+                    override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
+                    override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
+                    override fun setOpenedFile(file: RegularFile) { }
+                    override fun closeFile() { }
+                }
+
+                val defaultFileHandler = DefaultFileHandler(
+                    state = testState,
+                    commandHistory = testCommandHistory,
+                    xmlParser = TestManamiFileParser,
+                    jsonParser = testParser,
+                    fileWriter = TestFileWriter,
+                    eventBus = CoroutinesFlowEventBus,
+                )
+
+                val file = Path(".").resolve("test.json")
+
+                // when
+                defaultFileHandler.open(file)
+
+                // then
+                assertThat(isJsonParserUsed).isTrue()
+            }
+        }
+
+        @Test
+        fun `throws exception for unknown file type`() {
+            // given
+            val testCommandHistory = object: CommandHistory by TestCommandHistory {
+                override fun isSaved(): Boolean = true
+                override fun clear() { }
             }
 
             val testState = object: State by TestState{
@@ -129,26 +263,28 @@ internal class DefaultFileHandlerTest {
                 override fun addAllAnimeListEntries(anime: Collection<AnimeListEntry>) { }
                 override fun addAllWatchListEntries(anime: Collection<WatchListEntry>) { }
                 override fun addAllIgnoreListEntries(anime: Collection<IgnoreListEntry>) { }
-                override fun setOpenedFile(file: RegularFile) { isCommandExecuted = true }
+                override fun setOpenedFile(file: RegularFile) { }
                 override fun closeFile() { }
             }
 
             val defaultFileHandler = DefaultFileHandler(
                 state = testState,
                 commandHistory = testCommandHistory,
-                parser = testParser,
+                xmlParser = TestManamiFileParser,
+                jsonParser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
                 eventBus = CoroutinesFlowEventBus,
             )
 
-            val file = Path(".").resolve("test.xml")
+            val file = Path(".").resolve("test.csv")
 
             // when
-            defaultFileHandler.open(file, ignoreUnsavedChanged = true)
+            val result = exceptionExpected<IllegalStateException> {
+                defaultFileHandler.open(file)
+            }
 
             // then
-            assertThat(isCommandExecuted).isTrue()
-            assertThat(CoroutinesFlowEventBus.generalAppState.value.openedFile).isEqualTo(CurrentFile(file))
+            assertThat(result).hasMessage("Cannot parse [csv] format.")
         }
     }
 
@@ -162,7 +298,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -184,7 +320,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -206,7 +342,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -228,7 +364,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -252,7 +388,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -276,7 +412,7 @@ internal class DefaultFileHandlerTest {
         val defaultFileHandler = DefaultFileHandler(
             state = TestState,
             commandHistory = testCommandHistory,
-            parser = TestManamiFileParser,
+            xmlParser = TestManamiFileParser,
             fileWriter = TestFileWriter,
             eventBus = CoroutinesFlowEventBus,
         )
@@ -301,7 +437,7 @@ internal class DefaultFileHandlerTest {
             val defaultFileHandler = DefaultFileHandler(
                 state = testState,
                 commandHistory = TestCommandHistory,
-                parser = TestManamiFileParser,
+                xmlParser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
                 eventBus = CoroutinesFlowEventBus,
             )
@@ -323,7 +459,7 @@ internal class DefaultFileHandlerTest {
             val defaultFileHandler = DefaultFileHandler(
                 state = testState,
                 commandHistory = TestCommandHistory,
-                parser = TestManamiFileParser,
+                xmlParser = TestManamiFileParser,
                 fileWriter = TestFileWriter,
                 eventBus = CoroutinesFlowEventBus,
             )
@@ -340,27 +476,6 @@ internal class DefaultFileHandlerTest {
     inner class SaveTests {
 
         @Test
-        fun `don't do anything if state is already saved`() {
-            runBlocking {
-                // given
-                val testCommandHistory = object: CommandHistory by TestCommandHistory {
-                    override fun isSaved(): Boolean = true
-                }
-
-                val defaultFileHandler = DefaultFileHandler(
-                    state = TestState,
-                    commandHistory = testCommandHistory,
-                    parser = TestManamiFileParser,
-                    fileWriter = TestFileWriter,
-                    eventBus = CoroutinesFlowEventBus,
-                )
-
-                // when
-                defaultFileHandler.save()
-            }
-        }
-
-        @Test
         fun `throws exception if openedFile is not set`() {
             tempDirectory {
                 // given
@@ -375,7 +490,7 @@ internal class DefaultFileHandlerTest {
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
-                    parser = TestManamiFileParser,
+                    xmlParser = TestManamiFileParser,
                     fileWriter = TestFileWriter,
                     eventBus = CoroutinesFlowEventBus,
                 )
@@ -416,7 +531,7 @@ internal class DefaultFileHandlerTest {
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
-                    parser = TestManamiFileParser,
+                    xmlParser = TestManamiFileParser,
                     fileWriter = testFileWriter,
                     eventBus = CoroutinesFlowEventBus,
                 )
@@ -458,7 +573,7 @@ internal class DefaultFileHandlerTest {
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
-                    parser = TestManamiFileParser,
+                    xmlParser = TestManamiFileParser,
                     fileWriter = testFileWriter,
                     eventBus = CoroutinesFlowEventBus,
                 )
@@ -502,7 +617,7 @@ internal class DefaultFileHandlerTest {
                 val defaultFileHandler = DefaultFileHandler(
                     state = testState,
                     commandHistory = testCommandHistory,
-                    parser = TestManamiFileParser,
+                    xmlParser = TestManamiFileParser,
                     fileWriter = testFileWriter,
                     eventBus = CoroutinesFlowEventBus,
                 )

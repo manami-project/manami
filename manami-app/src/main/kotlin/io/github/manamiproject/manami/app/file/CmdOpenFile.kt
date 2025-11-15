@@ -13,7 +13,7 @@ internal class CmdOpenFile(
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val file: RegularFile,
-    private val parsedFile: ParsedManamiFile,
+    private val parsedFile: ManamiFile,
     private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : Command {
 

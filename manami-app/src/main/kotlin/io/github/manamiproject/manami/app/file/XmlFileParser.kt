@@ -27,9 +27,10 @@ import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 import kotlin.text.Charsets.UTF_8
 
-internal class FileParser(
+@Deprecated("Will be removed in 4.1.0")
+internal class XmlFileParser(
     cache: AnimeCache = DefaultAnimeCache.instance,
-) : Parser<ParsedManamiFile> {
+) : Parser<ManamiFile> {
 
     private val saxParser = SAXParserFactory.newInstance().apply { isValidating = true }.newSAXParser()
     private val versionHandler = ManamiVersionHandler()
@@ -37,7 +38,7 @@ internal class FileParser(
 
     override fun handlesSuffix(): FileSuffix = "xml"
 
-    override fun parse(file: RegularFile): ParsedManamiFile {
+    override suspend fun parse(file: RegularFile): ManamiFile {
         require(file.regularFileExists()) { "Given path [${file.toAbsolutePath()}] is either not a file or doesn't exist." }
         require(file.fileSuffix() == handlesSuffix()) { "Parser doesn't support given file suffix." }
 
@@ -59,10 +60,10 @@ internal class FileParser(
         private val minVersion = SemanticVersion("3.0.0")
 
         /**
-         * Singleton of [FileParser]
+         * Singleton of [XmlFileParser]
          * @since 4.0.0
          */
-        val instance: FileParser by lazy { FileParser() }
+        val instance: XmlFileParser by lazy { XmlFileParser() }
     }
 }
 
@@ -73,7 +74,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
     private val watchListEntries = mutableSetOf<WatchListEntry>()
     private val ignoreListEntries = mutableSetOf<IgnoreListEntry>()
 
-    private var _parsedFile = ParsedManamiFile()
+    private var _parsedFile = ManamiFile()
     val parsedFile
         get() = _parsedFile
 
@@ -180,7 +181,7 @@ private class ManamiFileHandler(private val cache: AnimeCache) : DefaultHandler(
     }
 
     override fun endDocument() {
-        _parsedFile = ParsedManamiFile(
+        _parsedFile = ManamiFile(
             animeListEntries = animeListEntries,
             watchListEntries = watchListEntries,
             ignoreListEntries = ignoreListEntries,

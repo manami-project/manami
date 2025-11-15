@@ -1,96 +1,42 @@
 package io.github.manamiproject.manami.app.file
 
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.writeToFile
-import io.github.manamiproject.modb.core.loadResource
-import javax.xml.stream.XMLOutputFactory
-import kotlin.io.path.outputStream
+import io.github.manamiproject.modb.core.json.Json
+import io.github.manamiproject.modb.core.json.Json.SerializationOptions.DEACTIVATE_PRETTY_PRINT
+import io.github.manamiproject.modb.core.json.Json.SerializationOptions.DEACTIVATE_SERIALIZE_NULL
 
 internal class DefaultFileWriter(
     private val state: State = InternalState,
     private val versionProvider: VersionProvider = ResourceBasedVersionProvider,
 ) : FileWriter {
 
-    private val xmlWriterFactory = XMLOutputFactory.newInstance()
-
     override suspend fun writeTo(file: RegularFile) {
-        val folder = file.parent
-        val dtdFile = "manami_${versionProvider.version()}.dtd"
+        val manamiFile = SerializableManamiFile(
+            version = versionProvider.version().toString(),
+            animeListEntries = state.animeList().map {
+                SerializableAnimeListEntry(
+                    link = if (it.link is NoLink) null else it.link.toString(),
+                    title = it.title,
+                    thumbnail = it.thumbnail.toString(),
+                    episodes = it.episodes.toString(),
+                    type = it.type.toString(),
+                    location = it.location.toString(),
+                )
+            }.sortedWith(compareBy({ it.title.lowercase() }, {it.type}, { it.episodes })),
+            watchListEntries = state.watchList().map { it.link.uri.toString() }.sorted(),
+            ignoreListEntries = state.ignoreList().map { it.link.uri.toString() }.sorted(),
+        )
 
-        loadResource("config/animelist.dtd").writeToFile(folder.resolve(dtdFile))
-
-        val xmlWriter = xmlWriterFactory.createXMLStreamWriter(file.outputStream()).apply {
-            writeStartDocument("UTF-8", "1.1")
-            writeCharacters(LINEBREAK)
-            writeDTD("<!DOCTYPE manami SYSTEM \"$dtdFile\">")
-            writeCharacters(LINEBREAK)
-            writeStartElement("manami")
-            writeAttribute("version", versionProvider.version().toString())
-            writeCharacters(LINEBREAK)
-            writeCharacters(IDENT_1)
-            writeStartElement("animeList")
-            writeCharacters(LINEBREAK)
-        }
-
-        state.animeList().sortedWith(compareBy({ it.title.lowercase() }, {it.type}, { it.episodes })).forEach { animeListEntry ->
-            xmlWriter.writeCharacters(IDENT_2)
-            xmlWriter.writeEmptyElement("animeListEntry")
-            xmlWriter.writeAttribute("link", animeListEntry.link.toString())
-            xmlWriter.writeAttribute("title", animeListEntry.title)
-            xmlWriter.writeAttribute("thumbnail", animeListEntry.thumbnail.toString())
-            xmlWriter.writeAttribute("type", animeListEntry.type.toString())
-            xmlWriter.writeAttribute("episodes", animeListEntry.episodes.toString())
-            xmlWriter.writeAttribute("location", animeListEntry.location.toString())
-            xmlWriter.writeCharacters(LINEBREAK)
-        }
-
-        xmlWriter.writeCharacters(IDENT_1)
-        xmlWriter.writeEndElement()
-        xmlWriter.writeCharacters(LINEBREAK)
-        xmlWriter.writeCharacters(IDENT_1)
-        xmlWriter.writeStartElement("watchList")
-        xmlWriter.writeCharacters(LINEBREAK)
-
-        state.watchList().sortedBy { it.title }.forEach { watchListEntry ->
-            xmlWriter.writeCharacters(IDENT_2)
-            xmlWriter.writeEmptyElement("watchListEntry")
-            xmlWriter.writeAttribute("link", watchListEntry.link.toString())
-            xmlWriter.writeAttribute("title", watchListEntry.title)
-            xmlWriter.writeAttribute("thumbnail", watchListEntry.thumbnail.toString())
-            xmlWriter.writeCharacters(LINEBREAK)
-        }
-
-        xmlWriter.writeCharacters(IDENT_1)
-        xmlWriter.writeEndElement()
-        xmlWriter.writeCharacters(LINEBREAK)
-        xmlWriter.writeCharacters(IDENT_1)
-        xmlWriter.writeStartElement("ignoreList")
-        xmlWriter.writeCharacters(LINEBREAK)
-
-        state.ignoreList().sortedBy { it.title }.forEach { ignoreListEntry ->
-            xmlWriter.writeCharacters(IDENT_2)
-            xmlWriter.writeEmptyElement("ignoreListEntry")
-            xmlWriter.writeAttribute("link", ignoreListEntry.link.toString())
-            xmlWriter.writeAttribute("title", ignoreListEntry.title)
-            xmlWriter.writeAttribute("thumbnail", ignoreListEntry.thumbnail.toString())
-            xmlWriter.writeCharacters(LINEBREAK)
-        }
-
-        xmlWriter.writeCharacters(IDENT_1)
-        xmlWriter.writeEndElement()
-        xmlWriter.writeCharacters(LINEBREAK)
-        xmlWriter.writeEndElement()
-        xmlWriter.writeEndDocument()
+        Json.toJson(manamiFile, DEACTIVATE_PRETTY_PRINT, DEACTIVATE_SERIALIZE_NULL).writeToFile(file, true)
     }
     
     companion object {
-        private const val IDENT_1 = "  "
-        private const val IDENT_2 = "    "
-        private const val LINEBREAK = "\n"
 
         /**
          * Singleton of [DefaultFileWriter]

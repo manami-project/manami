@@ -77,28 +77,12 @@ internal class DefaultFileWriterTest {
             val fileWriter = DefaultFileWriter(state = testState)
 
             // when
-            fileWriter.writeTo(tempDir.resolve("test.xml"))
+            fileWriter.writeTo(tempDir.resolve("test.json"))
 
             // then
-            val content = tempDir.resolve("test.xml").readFile()
+            val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                <?xml version="1.1" encoding="UTF-8"?>
-                <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
-                <manami version="3.0.0">
-                  <animeList>
-                    <animeListEntry link="https://myanimelist.net/anime/11235" title="Amagami SS+ Plus" thumbnail="https://cdn.myanimelist.net/images/anime/13/33359.jpg" type="TV" episodes="13" location="some/relative/path/amagami_ss+_plus"/>
-                    <animeListEntry link="" title="H2O: Footprints in the Sand" thumbnail="https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png" type="SPECIAL" episodes="4" location="some/relative/path/h2o_-_footprints_in_the_sand_special"/>
-                    <animeListEntry link="https://myanimelist.net/anime/248" title="Ichigo 100%" thumbnail="https://cdn.myanimelist.net/images/anime/5/20036.jpg" type="TV" episodes="12" location="some/relative/path/ichigo_100%"/>
-                  </animeList>
-                  <watchList>
-                    <watchListEntry link="https://myanimelist.net/anime/1535" title="Death Note" thumbnail="https://cdn.myanimelist.net/images/anime/9/9453.jpg"/>
-                    <watchListEntry link="https://myanimelist.net/anime/5114" title="Fullmetal Alchemist: Brotherhood" thumbnail="https://cdn.myanimelist.net/images/anime/1223/96541.jpg"/>
-                  </watchList>
-                  <ignoreList>
-                    <ignoreListEntry link="https://myanimelist.net/anime/37989" title="Golden Kamuy 2nd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1180/95018.jpg"/>
-                    <ignoreListEntry link="https://myanimelist.net/anime/40059" title="Golden Kamuy 3rd Season" thumbnail="https://cdn.myanimelist.net/images/anime/1763/108108.jpg"/>
-                  </ignoreList>
-                </manami>
+                  {"version":"3.0.0","animeListEntries":[{"link":"https://myanimelist.net/anime/11235","title":"Amagami SS+ Plus","thumbnail":"https://cdn.myanimelist.net/images/anime/13/33359.jpg","episodes":"13","type":"TV","location":"some/relative/path/amagami_ss+_plus"},{"title":"H2O: Footprints in the Sand","thumbnail":"https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png","episodes":"4","type":"SPECIAL","location":"some/relative/path/h2o_-_footprints_in_the_sand_special"},{"link":"https://myanimelist.net/anime/248","title":"Ichigo 100%","thumbnail":"https://cdn.myanimelist.net/images/anime/5/20036.jpg","episodes":"12","type":"TV","location":"some/relative/path/ichigo_100%"}],"watchListEntries":["https://myanimelist.net/anime/1535","https://myanimelist.net/anime/5114"],"ignoreListEntries":["https://myanimelist.net/anime/37989","https://myanimelist.net/anime/40059"]}
             """.trimIndent())
         }
     }
@@ -116,95 +100,13 @@ internal class DefaultFileWriterTest {
             val fileWriter = DefaultFileWriter(state = testState)
 
             // when
-            fileWriter.writeTo(tempDir.resolve("test.xml"))
+            fileWriter.writeTo(tempDir.resolve("test.json"))
 
             // then
-            val content = tempDir.resolve("test.xml").readFile()
+            val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                <?xml version="1.1" encoding="UTF-8"?>
-                <!DOCTYPE manami SYSTEM "manami_3.0.0.dtd">
-                <manami version="3.0.0">
-                  <animeList>
-                  </animeList>
-                  <watchList>
-                  </watchList>
-                  <ignoreList>
-                  </ignoreList>
-                </manami>
+                {"version":"3.0.0","animeListEntries":[],"watchListEntries":[],"ignoreListEntries":[]}
             """.trimIndent())
-        }
-    }
-
-    @Test
-    fun `writes dtd file along with the actual file`() {
-        tempDirectory {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val fileWriter = DefaultFileWriter(state = testState)
-
-            // when
-            fileWriter.writeTo(tempDir.resolve("test.xml"))
-
-            // then
-            assertThat(tempDir.resolve("manami_3.0.0.dtd")).exists()
-        }
-    }
-
-    @Test
-    fun `dtd content for version greater than or equal to 3 0 0`() {
-        tempDirectory {
-            // given
-            val testState = object: State by TestState {
-                override fun animeList(): List<AnimeListEntry> = emptyList()
-                override fun watchList(): Set<WatchListEntry> = emptySet()
-                override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-            }
-
-            val fileWriter = DefaultFileWriter(state = testState)
-
-            // when
-            fileWriter.writeTo(tempDir.resolve("test.xml"))
-
-            // then
-            assertThat(tempDir.resolve("manami_3.0.0.dtd").readFile()).isEqualTo(
-                """
-                    <?xml version="1.0" encoding="UTF-8"?>
-                    <!ELEMENT manami (animeList, watchList, ignoreList)>
-                    <!ATTLIST manami version CDATA #REQUIRED>
-        
-                    <!ELEMENT animeList (animeListEntry*)>
-                    <!ELEMENT animeListEntry EMPTY>
-                    <!ATTLIST animeListEntry episodes CDATA #REQUIRED
-                        link CDATA #IMPLIED
-                        title CDATA #REQUIRED
-                        thumbnail CDATA #REQUIRED
-                        type CDATA #REQUIRED
-                        episodes CDATA #REQUIRED
-                        location CDATA #REQUIRED
-                    >
-        
-                    <!ELEMENT watchList (watchListEntry*)>
-                    <!ELEMENT watchListEntry EMPTY>
-                    <!ATTLIST watchListEntry episodes CDATA #REQUIRED
-                        link CDATA #REQUIRED
-                        title CDATA #REQUIRED
-                        thumbnail CDATA #REQUIRED
-                    >
-        
-                    <!ELEMENT ignoreList (ignoreListEntry*)>
-                    <!ELEMENT ignoreListEntry EMPTY>
-                    <!ATTLIST ignoreListEntry episodes CDATA #REQUIRED
-                        link CDATA #REQUIRED
-                        title CDATA #REQUIRED
-                        thumbnail CDATA #REQUIRED
-                    >
-                """.trimIndent()
-            )
         }
     }
 
@@ -228,23 +130,12 @@ internal class DefaultFileWriterTest {
             )
 
             // when
-            fileWriter.writeTo(tempDir.resolve("test.xml"))
+            fileWriter.writeTo(tempDir.resolve("test.json"))
 
             // then
-            assertThat(tempDir.resolve("manami_3.1.0.dtd")).exists()
-
-            val content = tempDir.resolve("test.xml").readFile()
+            val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                <?xml version="1.1" encoding="UTF-8"?>
-                <!DOCTYPE manami SYSTEM "manami_3.1.0.dtd">
-                <manami version="3.1.0">
-                  <animeList>
-                  </animeList>
-                  <watchList>
-                  </watchList>
-                  <ignoreList>
-                  </ignoreList>
-                </manami>
+                {"version":"3.1.0","animeListEntries":[],"watchListEntries":[],"ignoreListEntries":[]}
             """.trimIndent())
         }
     }

@@ -4,8 +4,8 @@ import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 
-internal object TestManamiFileParser: Parser<ParsedManamiFile> {
-    override fun parse(file: RegularFile): ParsedManamiFile = shouldNotBeInvoked()
+internal object TestManamiFileParser: Parser<ManamiFile> {
+    override suspend fun parse(file: RegularFile): ManamiFile = shouldNotBeInvoked()
     override fun handlesSuffix(): FileSuffix = shouldNotBeInvoked()
 }
 

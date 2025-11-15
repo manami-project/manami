@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FilenameFilter
 
 internal fun FrameWindowScope.showOpenFileDialog(): RegularFile? {
-    val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") }
+    val fileFilter: (String) -> Boolean = { fileName -> fileName.endsWith(".xml") || fileName.endsWith(".json") } // TODO: remove xml in 4.1.0
 
     val files: Array<File> = java.awt.FileDialog(window).apply {
         mode = 0
