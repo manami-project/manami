@@ -164,7 +164,9 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                 }
             }
         } else {
-            AnimeTable(viewModel = viewModel)
+            AnimeTable(viewModel = viewModel) {
+                weights = listOf(1.5f, 10f, 2f)
+            }
         }
     }
 }
