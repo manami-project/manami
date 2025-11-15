@@ -43,7 +43,7 @@ internal class CmdOpenFileTest {
 
         val notExistingTestFile = Path(".").resolve("test.xml")
 
-        val parsedFile = ParsedManamiFile(
+        val parsedFile = ManamiFile(
             animeListEntries = setOf(
                 AnimeListEntry(
                     link = Link("https://myanimelist.net/anime/57"),

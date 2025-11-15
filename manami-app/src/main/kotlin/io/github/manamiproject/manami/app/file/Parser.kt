@@ -5,7 +5,7 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 
 internal interface Parser<T> {
 
-    fun parse(file: RegularFile): T
+    suspend fun parse(file: RegularFile): T
 
     /**
      * @return The supported file suffix without a dot. **Example** _xml_

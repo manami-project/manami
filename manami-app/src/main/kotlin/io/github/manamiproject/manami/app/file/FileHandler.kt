@@ -5,7 +5,7 @@ import io.github.manamiproject.modb.core.extensions.RegularFile
 interface FileHandler {
 
     fun newFile(ignoreUnsavedChanged: Boolean = false)
-    fun open(file: RegularFile, ignoreUnsavedChanged: Boolean = false)
+    suspend fun open(file: RegularFile, ignoreUnsavedChanged: Boolean = false)
     fun isOpenFileSet(): Boolean
 
     fun isSaved(): Boolean
