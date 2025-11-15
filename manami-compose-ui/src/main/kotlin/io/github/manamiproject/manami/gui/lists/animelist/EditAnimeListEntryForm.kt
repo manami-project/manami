@@ -12,11 +12,11 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.app.lists.NoLink
+import io.github.manamiproject.manami.gui.components.showOpenDirectoryDialog
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE
 import io.github.manamiproject.modb.core.anime.AnimeType
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import javax.swing.JFileChooser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,12 +123,9 @@ internal fun EditAnimeListEntryForm(editAnimeListEntryFormViewModel: EditAnimeLi
                 )
                 Button(
                     onClick = {
-                        val chooser = JFileChooser().apply {
-                            fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-                        }
-                        val result = chooser.showOpenDialog(null)
-                        if (result == JFileChooser.APPROVE_OPTION) {
-                            location = chooser.selectedFile.absolutePath
+                        val result = showOpenDirectoryDialog()
+                        if (result != null) {
+                            location = result.toAbsolutePath().toString()
                         }
                     },
                 ) {
