@@ -60,6 +60,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         }.stateIn(viewModelScope, Eagerly, emptyList())
 
     override fun addToAnimeList(anime: T) {
+        saveScrollPosition()
         viewModelScope.launch {
             tabBarViewModel.openOrActivate(ADD_ANIME_TO_ANIME_LIST_FORM)
             addAnimeToAnimeListFormViewModel.fetchAnimeDetails(anime.link)
@@ -74,18 +75,21 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     }
 
     override fun addToWatchList(anime: T) {
+        saveScrollPosition()
         viewModelScope.launch {
             app.addWatchListEntry(setOf(anime.link.asLink().uri))
         }
     }
 
     override fun addToIgnoreList(anime: T) {
+        saveScrollPosition()
         viewModelScope.launch {
             app.addIgnoreListEntry(setOf(anime.link.asLink().uri))
         }
     }
 
     override fun hide(anime: T) {
+        saveScrollPosition()
         if (!hiddenEntries.value.contains(anime)) {
             hiddenEntries.update { current -> current + anime }
         }
