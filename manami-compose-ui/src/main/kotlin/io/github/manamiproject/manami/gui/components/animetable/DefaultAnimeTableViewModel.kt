@@ -31,7 +31,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
     private val sortDirection = MutableStateFlow(ASC)
     private var isSortable = true
 
-    private val hiddenEntries = MutableStateFlow<MutableSet<T>>(mutableSetOf())
+    private val hiddenEntries = MutableStateFlow<Set<T>>(emptySet())
 
     private var lastIndex = 0
     private var lastOffset = 0
@@ -87,7 +87,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
 
     override fun hide(anime: T) {
         if (!hiddenEntries.value.contains(anime)) {
-            hiddenEntries.update { current -> current.apply { add(anime) } }
+            hiddenEntries.update { current -> current + anime }
         }
     }
 
