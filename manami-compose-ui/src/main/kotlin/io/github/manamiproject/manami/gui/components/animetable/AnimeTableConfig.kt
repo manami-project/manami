@@ -12,5 +12,5 @@ internal data class AnimeTableConfig(
     var withHideButton: Boolean = true,
     var withDeleteButton: Boolean = false,
     var withSortableTitle: Boolean = true,
-    var weights: List<Float> = listOf(1.5f, 10f, 1.5f),
+    var weights: List<Float> = listOf(1.5f, 10f, 2f),
 )
