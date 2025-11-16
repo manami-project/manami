@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.
 import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesHandler
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesHandler
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdReplaceAnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -46,16 +47,20 @@ internal class DefaultInconsistenciesHandler(
         }
     }
 
-    override fun fixAnimeListEntryMetaDataInconsistencies(diff: AnimeListMetaDataDiff) {
-        if (diff.currentEntry == diff.replacementEntry) return
+    override fun setForEdit(diff: AnimeListMetaDataDiff) {
+        eventBus.fixAnimeListInconsistencyModificationState.update { diff }
+    }
+
+    override fun fixAnimeListEntryMetaDataInconsistencies(currentEntry: AnimeListEntry, replacementEntry: AnimeListEntry) {
+        if (currentEntry == replacementEntry) return
 
         GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdReplaceAnimeListEntry(
                 state = state,
-                currentEntry = diff.currentEntry,
-                replacementEntry = diff.replacementEntry,
+                currentEntry = currentEntry,
+                replacementEntry = replacementEntry,
             )
         ).execute()
     }

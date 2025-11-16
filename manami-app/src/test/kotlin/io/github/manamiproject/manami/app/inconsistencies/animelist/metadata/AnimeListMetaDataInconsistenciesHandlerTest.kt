@@ -80,7 +80,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                                 title = "Fullmetal Alchemist: Brotherhood",
                                 type = TV,
                                 episodes = 64,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                                 location = Path("."),
                             ),
                         )
@@ -95,7 +95,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                                 title = "Fullmetal Alchemist: Brotherhood",
                                 type = TV,
                                 episodes = 64,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                             )
                         )
                     }
@@ -130,7 +130,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                                 title = "Fullmetal Alchemist: Brotherhood",
                                 type = TV,
                                 episodes = 64,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                                 location = Path("."),
                             ),
                         )
@@ -145,7 +145,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                                 title = "Fullmetal Alchemist: Brotherhood",
                                 type = TV,
                                 episodes = 64,
-                                thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                                picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                             )
                         )
                     }
@@ -176,7 +176,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist Brotherhood (TV)",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                     location = Path("."),
                 )
                 val testState = object: State by TestState {
@@ -192,7 +192,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                 )
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override suspend fun fetch(key: URI): CacheEntry<Anime> {
@@ -228,7 +228,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 65,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                     location = Path("."),
                 )
                 val testState = object: State by TestState {
@@ -244,7 +244,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                 )
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override suspend fun fetch(key: URI): CacheEntry<Anime> {
@@ -280,7 +280,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = UNKNOWN,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                     location = Path("."),
                 )
                 val testState = object: State by TestState {
@@ -296,7 +296,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                 )
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override suspend fun fetch(key: URI): CacheEntry<Anime> {
@@ -332,7 +332,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111t.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/000/1111.jpg"),
                     location = Path("."),
                 )
                 val testState = object: State by TestState {
@@ -348,7 +348,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                 )
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override suspend fun fetch(key: URI): CacheEntry<Anime> {
@@ -371,7 +371,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
                 val entry = result.first()
                 assertThat(entry.currentEntry).isEqualTo(testAnimeListEntry)
-                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(thumbnail = testAnime.thumbnail))
+                assertThat(entry.replacementEntry).isEqualTo(testAnimeListEntry.copy(thumbnail = testAnime.picture))
             }
         }
 
@@ -388,7 +388,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist Brotherhood (TV)",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                     location = Path("."),
                 )
                 val testState = object: State by TestState {
@@ -404,7 +404,7 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
                     title = "Fullmetal Alchemist: Brotherhood",
                     type = TV,
                     episodes = 64,
-                    thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
+                    picture = URI("https://cdn.myanimelist.net/images/anime/1223/96541.jpg"),
                 )
                 val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
                     override suspend fun fetch(key: URI): CacheEntry<Anime> {

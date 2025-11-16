@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.app.events
 
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -22,6 +23,7 @@ object CoroutinesFlowEventBus: EventBus {
     override val findSimilarAnimeState: MutableStateFlow<FindSimilarAnimeState> = MutableStateFlow(FindSimilarAnimeState())
     override val findAnimeDetailsState: MutableStateFlow<FindAnimeDetailsState> = MutableStateFlow(FindAnimeDetailsState())
     override val animeListModificationState: MutableStateFlow<AnimeListModificationState> = MutableStateFlow(AnimeListModificationState())
+    override val fixAnimeListInconsistencyModificationState: MutableStateFlow<AnimeListMetaDataDiff?> = MutableStateFlow(null)
 
     override fun clear() {
         generalAppState.update { GeneralAppState() }
@@ -38,5 +40,6 @@ object CoroutinesFlowEventBus: EventBus {
         findSimilarAnimeState.update { FindSimilarAnimeState() }
         findAnimeDetailsState.update { FindAnimeDetailsState() }
         animeListModificationState.update { AnimeListModificationState() }
+        fixAnimeListInconsistencyModificationState.update { null }
     }
 }

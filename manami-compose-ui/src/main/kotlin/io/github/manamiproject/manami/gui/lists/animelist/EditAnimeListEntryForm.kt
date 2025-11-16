@@ -20,8 +20,8 @@ import io.github.manamiproject.modb.core.extensions.EMPTY
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun EditAnimeListEntryForm(editAnimeListEntryFormViewModel: EditAnimeListEntryFormViewModel = EditAnimeListEntryFormViewModel.instance) {
-    val animeListEntry = editAnimeListEntryFormViewModel.animeListEntry.collectAsState()
+internal fun EditAnimeListEntryForm(viewModel: EditAnimeListEntryFormViewModel = EditAnimeListEntryFormViewModel.instance) {
+    val animeListEntry = viewModel.animeListEntry.collectAsState()
 
     var link by remember { mutableStateOf(EMPTY) }
     var title by remember { mutableStateOf(EMPTY) }
@@ -135,7 +135,7 @@ internal fun EditAnimeListEntryForm(editAnimeListEntryFormViewModel: EditAnimeLi
 
             Button(
                 onClick = {
-                    editAnimeListEntryFormViewModel.update(
+                    viewModel.update(
                         link,
                         title,
                         episodes,

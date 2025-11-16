@@ -50,11 +50,6 @@ internal class DefaultInconsistenciesHandlerTest {
                 )
                 val replacementEntry = currentEntry.copy()
 
-                val animeListMetaDataDiff = AnimeListMetaDataDiff(
-                    currentEntry = currentEntry,
-                    replacementEntry = replacementEntry,
-                )
-
                 val defaultInconsistenciesHandler = DefaultInconsistenciesHandler(
                     state = TestState,
                     commandHistory = TestCommandHistory,
@@ -63,7 +58,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 )
 
                 // when
-                defaultInconsistenciesHandler.fixAnimeListEntryMetaDataInconsistencies(animeListMetaDataDiff)
+                defaultInconsistenciesHandler.fixAnimeListEntryMetaDataInconsistencies(currentEntry, replacementEntry)
             }
         }
 
@@ -80,11 +75,6 @@ internal class DefaultInconsistenciesHandlerTest {
                 )
                 val replacementEntry = currentEntry.copy(
                     location = Path("./test"),
-                )
-
-                val animeListMetaDataDiff = AnimeListMetaDataDiff(
-                    currentEntry = currentEntry,
-                    replacementEntry = replacementEntry,
                 )
 
                 val removedEntries = mutableListOf<AnimeListEntry>()
@@ -113,7 +103,7 @@ internal class DefaultInconsistenciesHandlerTest {
                 )
 
                 // when
-                defaultInconsistenciesHandler.fixAnimeListEntryMetaDataInconsistencies(animeListMetaDataDiff)
+                defaultInconsistenciesHandler.fixAnimeListEntryMetaDataInconsistencies(currentEntry, replacementEntry)
 
                 // then
                 assertThat(removedEntries).hasSize(1)

@@ -139,9 +139,7 @@ internal abstract class DefaultAnimeTableViewModel<T: AnimeEntry>(
         isSortable = value
     }
 
-    override fun openDirectory(anime: T) {
-        throw UnsupportedOperationException()
-    }
+    override fun openDirectory(anime: T): Unit = throw UnsupportedOperationException()
 
     override fun saveScrollPosition() {
         lastIndex = listState.firstVisibleItemIndex

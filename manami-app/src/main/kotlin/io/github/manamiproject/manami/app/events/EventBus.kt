@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.events
 
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 /**
  * @since 4.0.0
@@ -77,6 +77,11 @@ interface EventBus {
      * @since 4.0.0
      */
     val animeListModificationState: MutableStateFlow<AnimeListModificationState>
+
+    /**
+     * @since 4.0.0
+     */
+    val fixAnimeListInconsistencyModificationState: MutableStateFlow<AnimeListMetaDataDiff?>
 
     /**
      * @since 4.0.0

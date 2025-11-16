@@ -16,6 +16,7 @@ import io.github.manamiproject.manami.gui.find.anime.FindAnime
 import io.github.manamiproject.manami.gui.find.animedetails.FindAnimeDetails
 import io.github.manamiproject.manami.gui.find.bytitle.FindByTitle
 import io.github.manamiproject.manami.gui.find.inconsistencies.FindInconsistencies
+import io.github.manamiproject.manami.gui.find.inconsistencies.FixAnimeListEntryInconsistenciesForm
 import io.github.manamiproject.manami.gui.find.relatedanime.FindRelatedAnime
 import io.github.manamiproject.manami.gui.find.season.FindSeason
 import io.github.manamiproject.manami.gui.find.similaranime.FindSimilarAnime
@@ -75,6 +76,7 @@ internal fun TabBar(
                 FIND_BY_TITLE -> FindByTitle()
                 ADD_ANIME_TO_ANIME_LIST_FORM -> AddAnimeToAnimeListForm()
                 EDIT_ANIME_LIST_ENTRY_FORM -> EditAnimeListEntryForm()
+                FIX_ANIME_LIST_ENTRY_INCONSISTENCIES_FORM -> FixAnimeListEntryInconsistenciesForm()
             }
         }
     }

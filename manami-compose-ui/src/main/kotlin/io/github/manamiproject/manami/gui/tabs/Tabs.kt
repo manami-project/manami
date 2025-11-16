@@ -17,4 +17,5 @@ internal enum class Tabs(
     FIND_BY_TITLE(title = "Find By Title"),
     ADD_ANIME_TO_ANIME_LIST_FORM(title = "Add Anime To Anime List"),
     EDIT_ANIME_LIST_ENTRY_FORM(title = "Edit Anime List Entry"),
+    FIX_ANIME_LIST_ENTRY_INCONSISTENCIES_FORM(title = "Fix Inconsistency"),
 }

@@ -48,7 +48,7 @@ internal class AnimeListMetaDataInconsistenciesHandler(
     private fun toAnimeListEntry(currentEntry: AnimeListEntry, anime: Anime): Pair<AnimeListEntry, AnimeListEntry> {
         return currentEntry to currentEntry.copy(
             title = anime.title,
-            thumbnail = anime.thumbnail,
+            thumbnail = anime.picture,
             episodes = anime.episodes,
             type = anime.type,
         )

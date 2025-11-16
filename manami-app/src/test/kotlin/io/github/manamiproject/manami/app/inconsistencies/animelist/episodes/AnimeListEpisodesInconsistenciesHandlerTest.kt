@@ -305,6 +305,40 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         }
 
         @Test
+        fun `return 0 number of files if directory doesn't exist`() {
+            tempDirectory {
+                // given
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
+
+                val testState = object : State by TestState {
+                    override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
+                    override fun animeList(): List<AnimeListEntry> {
+                        return listOf(
+                            AnimeListEntry(
+                                link = Link("https://myanimelist.net/anime/6864"),
+                                title = "xxxHOLiC Rou",
+                                type = OVA,
+                                episodes = 2,
+                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                location = Path("non-existent"),
+                            ),
+                        )
+                    }
+                }
+
+                val handler = AnimeListEpisodesInconsistenciesHandler(
+                    state = testState,
+                )
+
+                // when
+                val result = handler.execute()
+
+                // then
+                assertThat(result).hasSize(1)
+            }
+        }
+
+        @Test
         fun `update state for any findings`() {
             runBlocking { 
                 tempDirectory {
