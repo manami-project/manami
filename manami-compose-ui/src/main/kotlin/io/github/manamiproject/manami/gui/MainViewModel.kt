@@ -58,7 +58,7 @@ internal class MainViewModel(
             initialValue = NoFile
         )
 
-    val isCachePopulationRunning: StateFlow<Boolean> = app.dashboardState
+    val isCachePopulationDone: StateFlow<Boolean> = app.dashboardState
         .map { !it.isAnimeCachePopulatorRunning }
         .stateIn(
             scope = viewModelScope,

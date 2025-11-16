@@ -29,7 +29,7 @@ fun main() = application {
     val isAnimeListContainingEntries by viewModel.isAnimeListContainingEntries.collectAsState()
     val isWatchListContainingEntries by viewModel.isWatchListContainingEntries.collectAsState()
     val isIgnoreListContainingEntries by viewModel.isIgnoreListContainingEntries.collectAsState()
-    val isCachePopulationRunning by viewModel.isCachePopulationRunning.collectAsState()
+    val isCachePopulationDone by viewModel.isCachePopulationDone.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
     val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
@@ -55,7 +55,7 @@ fun main() = application {
                     text = "Open",
                     shortcut = KeyShortcut(Key.O, meta = true),
                     onClick = { viewModel.open(mainWindow) },
-                    enabled = true,
+                    enabled = isCachePopulationDone,
                 )
                 Separator()
                 Item(
@@ -124,13 +124,13 @@ fun main() = application {
                     text = "Anime",
                     shortcut = KeyShortcut(Key.One, meta = true),
                     onClick = { viewModel.openFindAnimeTab() },
-                    enabled = isCachePopulationRunning,
+                    enabled = isCachePopulationDone,
                 )
                 Item(
                     text = "Season",
                     shortcut = KeyShortcut(Key.Two, meta = true),
                     onClick = { viewModel.openFindSeasonTab() },
-                    enabled = isCachePopulationRunning,
+                    enabled = isCachePopulationDone,
                 )
                 Separator()
                 Item(
