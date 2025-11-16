@@ -1,10 +1,6 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
-internal interface InconsistencyHandler<RESULT> {
-
-    fun isExecutable(config: InconsistenciesSearchConfig): Boolean
-
-    fun calculateWorkload(): Int
+internal interface InconsistencyHandler<out RESULT> {
 
     suspend fun execute(): RESULT
 }

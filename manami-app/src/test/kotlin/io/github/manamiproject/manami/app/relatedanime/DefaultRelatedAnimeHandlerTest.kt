@@ -30,8 +30,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.net.URI
 import kotlin.io.path.createDirectory
+import kotlin.test.AfterTest
 
 internal class DefaultRelatedAnimeHandlerTest {
+
+    @AfterTest
+    fun afterTest() {
+        CoroutinesFlowEventBus.clear()
+    }
 
     @Nested
     inner class FindRelatedAnimeTests {

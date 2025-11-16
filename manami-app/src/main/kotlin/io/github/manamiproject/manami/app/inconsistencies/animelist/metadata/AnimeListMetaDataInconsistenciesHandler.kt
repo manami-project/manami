@@ -4,7 +4,8 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
-import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
@@ -12,18 +13,16 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import kotlinx.coroutines.flow.update
 import java.net.URI
 
 internal class AnimeListMetaDataInconsistenciesHandler(
     private val state: State = InternalState,
     private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
-): InconsistencyHandler<AnimeListMetaDataInconsistenciesResult> {
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
+): InconsistencyHandler<List<AnimeListMetaDataDiff>> {
 
-    override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
-
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListMetaData
-
-    override suspend fun execute(): AnimeListMetaDataInconsistenciesResult {
+    override suspend fun execute(): List<AnimeListMetaDataDiff> {
         log.info { "Starting check for meta data inconsistencies in AnimeList." }
 
         val result = state.animeList()
@@ -37,9 +36,13 @@ internal class AnimeListMetaDataInconsistenciesHandler(
 
         log.info { "Finished check for meta data inconsistencies in AnimeList." }
 
-        return AnimeListMetaDataInconsistenciesResult(
-            entries = result,
-        )
+        eventBus.inconsistenciesState.update { current ->
+            current.copy(
+                animeListMetaDataInconsistencies = result,
+            )
+        }
+
+        return result
     }
 
     private fun toAnimeListEntry(currentEntry: AnimeListEntry, anime: Anime): Pair<AnimeListEntry, AnimeListEntry> {

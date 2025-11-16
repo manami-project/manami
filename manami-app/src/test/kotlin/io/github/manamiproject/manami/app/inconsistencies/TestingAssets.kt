@@ -1,44 +1,22 @@
 package io.github.manamiproject.manami.app.inconsistencies
 
-import io.github.manamiproject.manami.app.inconsistencies.animelist.deadentries.AnimeListDeadEntriesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.AnimeListEpisodesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.lists.deadentries.DeadEntriesInconsistenciesResult
-import io.github.manamiproject.manami.app.inconsistencies.lists.metadata.MetaDataInconsistenciesResult
+import io.github.manamiproject.manami.app.inconsistencies.animelist.episodes.EpisodeDiff
+import io.github.manamiproject.manami.app.inconsistencies.animelist.metadata.AnimeListMetaDataDiff
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 
-internal object TestInconsistencyHandler: InconsistencyHandler<String> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): String = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
+internal object TestInconsistencyHandler: InconsistencyHandler<Unit> {
+    override suspend fun execute(): Unit = shouldNotBeInvoked()
 }
 
-internal object TestMetaDataInconsistencyHandler: InconsistencyHandler<MetaDataInconsistenciesResult> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): MetaDataInconsistenciesResult = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
+internal object TestAnimeListMetaDataInconsistencyHandler: InconsistencyHandler<List<AnimeListMetaDataDiff>> {
+    override suspend fun execute(): List<AnimeListMetaDataDiff> = shouldNotBeInvoked()
 }
 
-internal object TestDeadEntriesInconsistencyHandler: InconsistencyHandler<DeadEntriesInconsistenciesResult> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): DeadEntriesInconsistenciesResult = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
+internal object TestAnimeListEpisodesInconsistenciesHandler: InconsistencyHandler<List<EpisodeDiff>> {
+    override suspend fun execute(): List<EpisodeDiff> = shouldNotBeInvoked()
 }
 
-internal object TestAnimeListMetaDataInconsistencyHandler: InconsistencyHandler<AnimeListMetaDataInconsistenciesResult> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): AnimeListMetaDataInconsistenciesResult = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
-}
-
-internal object TestAnimeListEpisodesInconsistenciesHandler: InconsistencyHandler<AnimeListEpisodesInconsistenciesResult> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): AnimeListEpisodesInconsistenciesResult = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
-}
-
-internal object TestAnimeListDeadEntriesInconsistenciesHandler: InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> {
-    override fun calculateWorkload(): Int = shouldNotBeInvoked()
-    override suspend fun execute(): AnimeListDeadEntriesInconsistenciesResult = shouldNotBeInvoked()
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = shouldNotBeInvoked()
+internal object TestAnimeListDeadEntriesInconsistenciesHandler: InconsistencyHandler<List<AnimeListEntry>> {
+    override suspend fun execute(): List<AnimeListEntry> = shouldNotBeInvoked()
 }

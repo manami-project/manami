@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.inconsistencies.animelist.episodes
 
-import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
@@ -9,17 +10,15 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.regularFileExists
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import kotlinx.coroutines.flow.update
 import kotlin.io.path.listDirectoryEntries
 
 internal class AnimeListEpisodesInconsistenciesHandler(
     private val state: State = InternalState,
-) : InconsistencyHandler<AnimeListEpisodesInconsistenciesResult> {
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
+) : InconsistencyHandler<List<EpisodeDiff>> {
 
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListEpisodes
-
-    override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
-
-    override suspend fun execute(): AnimeListEpisodesInconsistenciesResult {
+    override suspend fun execute(): List<EpisodeDiff> {
         log.info { "Starting check for differing episodes in AnimeList." }
 
         val results = state.animeList()
@@ -34,9 +33,13 @@ internal class AnimeListEpisodesInconsistenciesHandler(
             }
             .toList()
 
+        eventBus.inconsistenciesState.update { current ->
+            current.copy(animeListEpisodesInconsistencies = results)
+        }
+
         log.info { "Finished check for differing episodes in AnimeList." }
 
-        return AnimeListEpisodesInconsistenciesResult(entries = results)
+        return results
     }
 
     private fun fetchNumberOfEpisodes(entry: AnimeListEntry): Int {

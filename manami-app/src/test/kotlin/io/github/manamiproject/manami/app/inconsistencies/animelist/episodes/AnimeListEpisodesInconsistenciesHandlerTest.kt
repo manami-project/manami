@@ -1,6 +1,7 @@
 package io.github.manamiproject.manami.app.inconsistencies.animelist.episodes
 
-import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.InconsistenciesState
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
@@ -11,6 +12,10 @@ import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.AnimeType.OVA
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -18,96 +23,13 @@ import java.net.URI
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
+import kotlin.test.AfterTest
 
 internal class AnimeListEpisodesInconsistenciesHandlerTest {
 
-    @Nested
-    inner class IsExecutableTests {
-
-        @Test
-        fun `is executable if the config explicitly activates the option`() {
-            // given
-            val inconsistencyHandler = AnimeListEpisodesInconsistenciesHandler(
-                state = TestState,
-            )
-
-            val isExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListEpisodes = true
-            )
-
-            // when
-            val result = inconsistencyHandler.isExecutable(isExecutableConfig)
-
-            // then
-            assertThat(result).isTrue()
-        }
-
-        @Test
-        fun `is not executable if the config doesn't explicitly activates the option`() {
-            // given
-            val inconsistencyHandler = AnimeListEpisodesInconsistenciesHandler(
-                state = TestState,
-            )
-
-            val isNotExecutableConfig = InconsistenciesSearchConfig(
-                checkAnimeListEpisodes = false
-            )
-
-            // when
-            val result = inconsistencyHandler.isExecutable(isNotExecutableConfig)
-
-            // then
-            assertThat(result).isFalse()
-        }
-    }
-
-    @Nested
-    inner class CalculateWorkloadTests {
-
-        @Test
-        fun `workload is computed by the number of anime list entries having a link`() {
-            // given
-            val testState = object : State by TestState {
-                override fun animeList(): List<AnimeListEntry> {
-                    return listOf(
-                        AnimeListEntry(
-                            link = Link("https://myanimelist.net/anime/5114"),
-                            title = "Fullmetal Alchemist: Brotherhood",
-                            type = TV,
-                            episodes = 64,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1223/96541t.jpg"),
-                            location = Path("."),
-                        ),
-                        AnimeListEntry(
-                            link = NoLink,
-                            title = "Ame-iro Cocoa: Rainy Color e Youkoso!",
-                            type = TV,
-                            episodes = 12,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1065/111717t.jpg"),
-                            location = Path("."),
-                        ),
-                        AnimeListEntry(
-                            link = Link("https://myanimelist.net/anime/37747"),
-                            title = "Ame-iro Cocoa: Side G",
-                            type = TV,
-                            episodes = 12,
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/1394/111379t.jpg"),
-                            location = Path("."),
-                        )
-                    )
-                }
-            }
-
-            val inconsistencyHandler = AnimeListEpisodesInconsistenciesHandler(
-                state = testState,
-            )
-
-            // when
-            val result = inconsistencyHandler.calculateWorkload()
-
-            // then
-            assertThat(result).isEqualTo(2)
-        }
+    @AfterTest
+    fun afterTest() {
+        CoroutinesFlowEventBus.clear()
     }
 
     @Nested
@@ -117,7 +39,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `exclude entries without link`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
 
                 val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
                 val testState = object : State by TestState {
@@ -144,7 +66,52 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).isEmpty()
+                assertThat(result).isEmpty()
+            }
+        }
+
+        @Test
+        fun `don't update state if there is nothing to report`() {
+            runBlocking {
+                tempDirectory {
+                    // given
+                    val receivedEvents = mutableListOf<InconsistenciesState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.inconsistenciesState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testOpenedFile = tempDir.resolve("test-file.json").createFile()
+
+                    val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
+                    val testState = object : State by TestState {
+                        override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
+                        override fun animeList(): List<AnimeListEntry> {
+                            return listOf(
+                                AnimeListEntry(
+                                    link = NoLink,
+                                    title = "No Link Entry",
+                                    type = TV,
+                                    episodes = 12,
+                                    thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                    location = testLocation,
+                                ),
+                            )
+                        }
+                    }
+
+                    val handler = AnimeListEpisodesInconsistenciesHandler(
+                        state = testState,
+                    )
+
+                    // when
+                    val result = handler.execute()
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(1) // initial
+
+                    assertThat(result).isEmpty()
+                }
             }
         }
 
@@ -152,7 +119,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `exclude entries having the same amount of files as expected number of episodes`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
                 val dir = tempDir.resolve("test").createDirectory()
                 dir.resolve("episode1.txt").createFile()
                 dir.resolve("episode2.txt").createFile()
@@ -181,7 +148,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).isEmpty()
+                assertThat(result).isEmpty()
             }
         }
 
@@ -189,7 +156,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `ignore files starting with a dot (hidden files)`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
                 val dir = tempDir.resolve("test").createDirectory()
                 dir.resolve("episode1.txt").createFile()
                 dir.resolve("episode2.txt").createFile()
@@ -219,7 +186,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).isEmpty()
+                assertThat(result).isEmpty()
             }
         }
 
@@ -227,7 +194,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `ignore additional directories`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
                 val dir = tempDir.resolve("test").createDirectory()
                 dir.resolve("episode1.txt").createFile()
                 dir.resolve("episode2.txt").createFile()
@@ -259,7 +226,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).isEmpty()
+                assertThat(result).isEmpty()
             }
         }
 
@@ -267,7 +234,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `include entries if number of files and number of episodes differ - too many files`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
                 val dir = tempDir.resolve("test").createDirectory()
                 dir.resolve("episode1.txt").createFile()
                 dir.resolve("episode2.txt").createFile()
@@ -297,7 +264,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).hasSize(1)
+                assertThat(result).hasSize(1)
             }
         }
 
@@ -305,7 +272,7 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
         fun `include entries if number of files and number of episodes differ - not enough files`() {
             tempDirectory {
                 // given
-                val testOpenedFile = tempDir.resolve("testfile.xml").createFile()
+                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
                 val dir = tempDir.resolve("test").createDirectory()
                 dir.resolve("episode1.txt").createFile()
 
@@ -333,7 +300,55 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
                 val result = handler.execute()
 
                 // then
-                assertThat(result.entries).hasSize(1)
+                assertThat(result).hasSize(1)
+            }
+        }
+
+        @Test
+        fun `update state for any findings`() {
+            runBlocking { 
+                tempDirectory {
+                    // given
+                    val receivedEvents = mutableListOf<InconsistenciesState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.inconsistenciesState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val testOpenedFile = tempDir.resolve("test-file.json").createFile()
+                    val dir = tempDir.resolve("test").createDirectory()
+                    dir.resolve("episode1.txt").createFile()
+                    dir.resolve("episode2.txt").createFile()
+                    dir.resolve("episode3.txt").createFile()
+    
+                    val testState = object : State by TestState {
+                        override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
+                        override fun animeList(): List<AnimeListEntry> {
+                            return listOf(
+                                AnimeListEntry(
+                                    link = Link("https://myanimelist.net/anime/6864"),
+                                    title = "xxxHOLiC Rou",
+                                    type = OVA,
+                                    episodes = 2,
+                                    thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                                    location = Path("test"),
+                                ),
+                            )
+                        }
+                    }
+    
+                    val handler = AnimeListEpisodesInconsistenciesHandler(
+                        state = testState,
+                    )
+    
+                    // when
+                    val result = handler.execute()
+    
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(2) // initial, update
+
+                    assertThat(result).hasSize(1)
+                }
             }
         }
     }

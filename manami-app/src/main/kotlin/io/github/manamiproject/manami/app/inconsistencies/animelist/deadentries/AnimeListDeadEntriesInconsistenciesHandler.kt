@@ -4,25 +4,25 @@ import io.github.manamiproject.manami.app.cache.Cache
 import io.github.manamiproject.manami.app.cache.CacheEntry
 import io.github.manamiproject.manami.app.cache.DeadEntry
 import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
-import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesSearchConfig
+import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
+import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import kotlinx.coroutines.flow.update
 import java.net.URI
 
 internal class AnimeListDeadEntriesInconsistenciesHandler(
     private val state: State = InternalState,
     private val cache: Cache<URI, CacheEntry<Anime>> = DefaultAnimeCache.instance,
-) : InconsistencyHandler<AnimeListDeadEntriesInconsistenciesResult> {
+    private val eventBus: EventBus = CoroutinesFlowEventBus,
+) : InconsistencyHandler<List<AnimeListEntry>> {
 
-    override fun isExecutable(config: InconsistenciesSearchConfig): Boolean = config.checkAnimeListDeadEntries
-
-    override fun calculateWorkload(): Int = state.animeList().count { it.link is Link }
-
-    override suspend fun execute(): AnimeListDeadEntriesInconsistenciesResult {
+    override suspend fun execute(): List<AnimeListEntry> {
         log.info { "Starting check for dead entries in AnimeList." }
 
         val result = state.animeList()
@@ -32,11 +32,13 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
             .map { it.first }
             .toList()
 
+        eventBus.inconsistenciesState.update { current ->
+            current.copy(animeListDeadEntriesInconsistencies = result)
+        }
+
         log.info { "Finished check for dead entries in AnimeList." }
 
-        return AnimeListDeadEntriesInconsistenciesResult(
-            entries = result,
-        )
+        return result
     }
 
     companion object {
