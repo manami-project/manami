@@ -119,13 +119,12 @@ internal class DefaultSearchHandler(
         val allEntriesNotInAnyList = cache.allEntries(metaDataProvider)
             .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
 
-        val entriesWithMatchingTags = if (tags.isNotEmpty()) {
-            when(searchType) {
-                OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> tags.contains(tag) } }
-                AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(tags) }
-            }
-        } else {
-            allEntriesNotInAnyList
+        val entriesWithMatchingTags = when(tags.isNotEmpty()) {
+            true -> when(searchType) {
+                        OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> tags.contains(tag) } }
+                        AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(tags) }
+                    }
+            false -> allEntriesNotInAnyList
         }
 
         val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }
