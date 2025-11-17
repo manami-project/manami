@@ -6,8 +6,8 @@ import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.*
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.search.SearchType.AND
-import io.github.manamiproject.manami.app.search.SearchType.OR
+import io.github.manamiproject.manami.app.search.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.SearchConjunction.OR
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.*
@@ -105,7 +105,7 @@ internal class DefaultSearchHandler(
         }
     }
 
-    override suspend fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType, status: Set<AnimeStatus>) {
+    override suspend fun findByMetaData(config: SearchConfig) {
         eventBus.findByTagState.update { FindByTagState(isRunning = true) }
         yield()
 
@@ -116,18 +116,18 @@ internal class DefaultSearchHandler(
             .union(state.watchList().map { it.link.uri })
             .union(state.ignoreList().map { it.link.uri })
 
-        val allEntriesNotInAnyList = cache.allEntries(metaDataProvider)
+        val allEntriesNotInAnyList = cache.allEntries(config.metaDataProvider)
             .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
 
-        val entriesWithMatchingTags = when(tags.isNotEmpty()) {
-            true -> when(searchType) {
-                        OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> tags.contains(tag) } }
-                        AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(tags) }
+        val entriesWithMatchingTags = when(config.tags.isNotEmpty()) {
+            true -> when(config.tagConjunction) {
+                        OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> config.tags.contains(tag) } }
+                        AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(config.tags) }
                     }
             false -> allEntriesNotInAnyList
         }
 
-        val filteredByStatus = entriesWithMatchingTags.filter { it.status in status }
+        val filteredByStatus = entriesWithMatchingTags.filter { it.status in config.status }
             .map { SearchResultAnimeEntry(it) }
             .toList()
 

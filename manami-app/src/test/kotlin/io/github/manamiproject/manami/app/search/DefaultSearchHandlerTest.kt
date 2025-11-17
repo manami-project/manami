@@ -11,8 +11,8 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.search.SearchType.AND
-import io.github.manamiproject.manami.app.search.SearchType.OR
+import io.github.manamiproject.manami.app.search.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.SearchConjunction.OR
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.Anime
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.net.URI
@@ -695,12 +695,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                // when
-                defaultSearchHandler.findByTag(
-                    tags = setOf("my-tag-1", "my-tag-2"),
+                val searchConfig = SearchConfig(
                     metaDataProvider = "myanimelist.net",
-                    searchType = AND,
+                    tags = setOf("my-tag-1", "my-tag-2"),
+                    tagConjunction = AND,
                 )
+
+                // when
+                defaultSearchHandler.findByMetaData(searchConfig)
 
                 // then
                 delay(100)
@@ -820,12 +822,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                // when
-                defaultSearchHandler.findByTag(
-                    tags = setOf("my-tag-1", "my-tag-2"),
+                val searchConfig = SearchConfig(
                     metaDataProvider = "myanimelist.net",
-                    searchType = OR,
+                    tags = setOf("my-tag-1", "my-tag-2"),
+                    tagConjunction = OR,
                 )
+
+                // when
+                defaultSearchHandler.findByMetaData(searchConfig)
 
                 // then
                 delay(100)
@@ -958,12 +962,14 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = setOf("my-tag-1", "my-tag-2"),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
+                        tags = setOf("my-tag-1", "my-tag-2"),
+                        tagConjunction = OR,
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)
@@ -1091,12 +1097,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                // when
-                defaultSearchHandler.findByTag(
-                    tags = setOf("my-tag-1", "my-tag-2"),
+                val searchConfig = SearchConfig(
                     metaDataProvider = "myanimelist.net",
-                    searchType = OR,
+                    tags = setOf("my-tag-1", "my-tag-2"),
+                    tagConjunction = OR,
                 )
+
+                // when
+                defaultSearchHandler.findByMetaData(searchConfig)
 
                 // then
                 delay(100)
@@ -1223,12 +1231,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                // when
-                defaultSearchHandler.findByTag(
-                    tags = setOf("my-tag-1", "my-tag-2"),
+                val searchConfig = SearchConfig(
                     metaDataProvider = "myanimelist.net",
-                    searchType = OR,
+                    tags = setOf("my-tag-1", "my-tag-2"),
+                    tagConjunction = OR,
                 )
+
+                // when
+                defaultSearchHandler.findByMetaData(searchConfig)
 
                 // then
                 delay(100)
@@ -1350,12 +1360,14 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = emptySet(),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
+                        tags = emptySet(),
+                        tagConjunction = OR,
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)
@@ -1480,13 +1492,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = emptySet(),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
                         status = setOf(FINISHED)
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)
@@ -1608,13 +1620,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = emptySet(),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
                         status = setOf(ONGOING)
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)
@@ -1736,13 +1748,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = emptySet(),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
                         status = setOf(UPCOMING)
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)
@@ -1864,13 +1876,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    // when
-                    defaultSearchHandler.findByTag(
-                        tags = emptySet(),
+                    val searchConfig = SearchConfig(
                         metaDataProvider = "myanimelist.net",
-                        searchType = OR,
                         status = setOf(UNKNOWN)
                     )
+
+                    // when
+                    defaultSearchHandler.findByMetaData(searchConfig)
 
                     // then
                     delay(100)

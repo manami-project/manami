@@ -1,8 +1,6 @@
 package io.github.manamiproject.manami.app.search
 
-import io.github.manamiproject.manami.app.search.SearchType.AND
 import io.github.manamiproject.modb.core.anime.AnimeSeason
-import io.github.manamiproject.modb.core.anime.AnimeStatus
 import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.config.Hostname
 import java.net.URI
@@ -13,7 +11,7 @@ interface SearchHandler {
 
     suspend fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
 
-    suspend fun findByTag(tags: Set<Tag>, metaDataProvider: Hostname, searchType: SearchType = AND, status: Set<AnimeStatus> = AnimeStatus.entries.toSet())
+    suspend fun findByMetaData(config: SearchConfig)
 
     suspend fun findSimilarAnime(uri: URI)
 
