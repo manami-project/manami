@@ -2,7 +2,7 @@ package io.github.manamiproject.manami.app.versioning
 
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 
 internal class ResourceBasedVersionProviderTest {
 

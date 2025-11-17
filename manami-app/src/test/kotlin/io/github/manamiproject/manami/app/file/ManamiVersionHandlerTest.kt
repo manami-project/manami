@@ -4,7 +4,7 @@ import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.modb.test.testResource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import org.xml.sax.EntityResolver
 import org.xml.sax.InputSource
 import javax.xml.parsers.SAXParserFactory

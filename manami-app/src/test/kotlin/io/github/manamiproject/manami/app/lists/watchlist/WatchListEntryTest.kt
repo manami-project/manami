@@ -8,7 +8,7 @@ import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
 import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.net.URI
 
 internal class WatchListEntryTest {

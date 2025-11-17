@@ -15,7 +15,7 @@ import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
 
