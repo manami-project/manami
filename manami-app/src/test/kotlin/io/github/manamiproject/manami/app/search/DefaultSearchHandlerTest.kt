@@ -3,7 +3,7 @@ package io.github.manamiproject.manami.app.search
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.FindAnimeDetailsState
-import io.github.manamiproject.manami.app.events.FindByTagState
+import io.github.manamiproject.manami.app.events.FindByCriteriaState
 import io.github.manamiproject.manami.app.events.FindByTitleState
 import io.github.manamiproject.manami.app.events.FindSeasonState
 import io.github.manamiproject.manami.app.events.FindSimilarAnimeState
@@ -608,14 +608,14 @@ internal class DefaultSearchHandlerTest {
     }
 
     @Nested
-    inner class FindByTagsTests {
+    inner class FindByCriteriaTests {
 
         @Test
         fun `find all entries that contain all tags`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindByTagState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindByCriteriaState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testState = object: State by TestState {
@@ -695,14 +695,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val searchConfig = SearchConfig(
+                val findByCriteriaConfig = FindByCriteriaConfig(
                     metaDataProvider = "myanimelist.net",
                     tags = setOf("my-tag-1", "my-tag-2"),
                     tagConjunction = AND,
                 )
 
                 // when
-                defaultSearchHandler.findByMetaData(searchConfig)
+                defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                 // then
                 delay(100)
@@ -718,8 +718,8 @@ internal class DefaultSearchHandlerTest {
         fun `find all entries that contain at least one of the given tags`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindByTagState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindByCriteriaState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testState = object: State by TestState {
@@ -822,14 +822,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val searchConfig = SearchConfig(
+                val findByCriteriaConfig = FindByCriteriaConfig(
                     metaDataProvider = "myanimelist.net",
                     tags = setOf("my-tag-1", "my-tag-2"),
                     tagConjunction = OR,
                 )
 
                 // when
-                defaultSearchHandler.findByMetaData(searchConfig)
+                defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                 // then
                 delay(100)
@@ -848,8 +848,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
@@ -962,14 +962,14 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         tags = setOf("my-tag-1", "my-tag-2"),
                         tagConjunction = OR,
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)
@@ -987,8 +987,8 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in watchlist`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindByTagState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindByCriteriaState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testState = object: State by TestState {
@@ -1097,14 +1097,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val searchConfig = SearchConfig(
+                val findByCriteriaConfig = FindByCriteriaConfig(
                     metaDataProvider = "myanimelist.net",
                     tags = setOf("my-tag-1", "my-tag-2"),
                     tagConjunction = OR,
                 )
 
                 // when
-                defaultSearchHandler.findByMetaData(searchConfig)
+                defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                 // then
                 delay(100)
@@ -1121,8 +1121,8 @@ internal class DefaultSearchHandlerTest {
         fun `exclude entries in ignorelist`() {
             runBlocking {
                 // given
-                val receivedEvents = mutableListOf<FindByTagState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                val receivedEvents = mutableListOf<FindByCriteriaState>()
+                val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                 delay(100)
 
                 val testState = object: State by TestState {
@@ -1231,14 +1231,14 @@ internal class DefaultSearchHandlerTest {
                     eventBus = CoroutinesFlowEventBus,
                 )
 
-                val searchConfig = SearchConfig(
+                val findByCriteriaConfig = FindByCriteriaConfig(
                     metaDataProvider = "myanimelist.net",
                     tags = setOf("my-tag-1", "my-tag-2"),
                     tagConjunction = OR,
                 )
 
                 // when
-                defaultSearchHandler.findByMetaData(searchConfig)
+                defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                 // then
                 delay(100)
@@ -1256,8 +1256,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testState = object: State by TestState {
@@ -1360,14 +1360,14 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         tags = emptySet(),
                         tagConjunction = OR,
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)
@@ -1388,8 +1388,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testState = object: State by TestState {
@@ -1492,13 +1492,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         status = setOf(FINISHED)
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)
@@ -1516,8 +1516,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testState = object: State by TestState {
@@ -1620,13 +1620,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         status = setOf(ONGOING)
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)
@@ -1644,8 +1644,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testState = object: State by TestState {
@@ -1748,13 +1748,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         status = setOf(UPCOMING)
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)
@@ -1772,8 +1772,8 @@ internal class DefaultSearchHandlerTest {
             runBlocking {
                 tempDirectory {
                     // given
-                    val receivedEvents = mutableListOf<FindByTagState>()
-                    val eventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> receivedEvents.add(event) } }
+                    val receivedEvents = mutableListOf<FindByCriteriaState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> receivedEvents.add(event) } }
                     delay(100)
 
                     val testState = object: State by TestState {
@@ -1876,13 +1876,13 @@ internal class DefaultSearchHandlerTest {
                         eventBus = CoroutinesFlowEventBus,
                     )
 
-                    val searchConfig = SearchConfig(
+                    val findByCriteriaConfig = FindByCriteriaConfig(
                         metaDataProvider = "myanimelist.net",
                         status = setOf(UNKNOWN)
                     )
 
                     // when
-                    defaultSearchHandler.findByMetaData(searchConfig)
+                    defaultSearchHandler.findByCriteria(findByCriteriaConfig)
 
                     // then
                     delay(100)

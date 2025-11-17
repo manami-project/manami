@@ -4,9 +4,9 @@ import io.github.manamiproject.manami.app.search.SearchConjunction.AND
 import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.config.Hostname
 
-data class SearchConfig(
+data class FindByCriteriaConfig(
     val metaDataProvider: Hostname,
-    val type: Set<Tag> = emptySet(),
+    val type: Set<AnimeType> = emptySet(),
     val typeConjunction: SearchConjunction = AND,
     val episodes: IntRange = -1..-1,
     val durationInSeconds: IntRange = -1..-1,

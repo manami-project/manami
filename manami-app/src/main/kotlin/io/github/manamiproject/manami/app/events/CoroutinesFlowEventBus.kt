@@ -19,7 +19,7 @@ object CoroutinesFlowEventBus: EventBus {
     override val findRelatedAnimeState: MutableStateFlow<FindRelatedAnimeState> = MutableStateFlow(FindRelatedAnimeState())
     override val findByTitleState: MutableStateFlow<FindByTitleState> = MutableStateFlow(FindByTitleState())
     override val findSeasonState: MutableStateFlow<FindSeasonState> = MutableStateFlow(FindSeasonState())
-    override val findByTagState: MutableStateFlow<FindByTagState> = MutableStateFlow(FindByTagState())
+    override val findByCriertiaState: MutableStateFlow<FindByCriteriaState> = MutableStateFlow(FindByCriteriaState())
     override val findSimilarAnimeState: MutableStateFlow<FindSimilarAnimeState> = MutableStateFlow(FindSimilarAnimeState())
     override val findAnimeDetailsState: MutableStateFlow<FindAnimeDetailsState> = MutableStateFlow(FindAnimeDetailsState())
     override val animeListModificationState: MutableStateFlow<AnimeListModificationState> = MutableStateFlow(AnimeListModificationState())
@@ -36,7 +36,7 @@ object CoroutinesFlowEventBus: EventBus {
         findRelatedAnimeState.update { FindRelatedAnimeState() }
         findByTitleState.update { FindByTitleState() }
         findSeasonState.update { FindSeasonState() }
-        findByTagState.update { FindByTagState() }
+        findByCriertiaState.update { FindByCriteriaState() }
         findSimilarAnimeState.update { FindSimilarAnimeState() }
         findAnimeDetailsState.update { FindAnimeDetailsState() }
         animeListModificationState.update { AnimeListModificationState() }

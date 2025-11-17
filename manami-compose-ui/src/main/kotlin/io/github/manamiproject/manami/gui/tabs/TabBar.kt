@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.dashboard.Dashboard
-import io.github.manamiproject.manami.gui.find.anime.FindAnime
+import io.github.manamiproject.manami.gui.find.bycriteria.FindByCriteria
 import io.github.manamiproject.manami.gui.find.animedetails.FindAnimeDetails
 import io.github.manamiproject.manami.gui.find.bytitle.FindByTitle
 import io.github.manamiproject.manami.gui.find.inconsistencies.FindInconsistencies
@@ -67,7 +67,7 @@ internal fun TabBar(
                 ANIME_LIST -> AnimeList()
                 WATCH_LIST -> WatchList()
                 IGNORE_LIST -> IgnoreList()
-                FIND_ANIME -> FindAnime()
+                FIND_ANIME -> FindByCriteria()
                 FIND_SEASON -> FindSeason()
                 FIND_INCONSISTENCIES -> FindInconsistencies()
                 FIND_RELATED_ANIME -> FindRelatedAnime()

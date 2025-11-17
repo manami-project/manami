@@ -11,7 +11,7 @@ interface SearchHandler {
 
     suspend fun findSeason(season: AnimeSeason, metaDataProvider: Hostname)
 
-    suspend fun findByMetaData(config: SearchConfig)
+    suspend fun findByCriteria(config: FindByCriteriaConfig)
 
     suspend fun findSimilarAnime(uri: URI)
 

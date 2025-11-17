@@ -240,9 +240,9 @@ internal class DefaultListHandlerTest {
                 val findSeasonStateEvents = mutableListOf<FindSeasonState>()
                 val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
 
-                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
-                val findByTagStateEvents = mutableListOf<FindByTagState>()
-                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+                CoroutinesFlowEventBus.findByCriertiaState.update { FindByCriteriaState(entries = listOf(testSearchListEntry)) }
+                val findByCriteriaStateEvents = mutableListOf<FindByCriteriaState>()
+                val findByCriteriaStateEventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> findByCriteriaStateEvents.add(event) } }
 
                 CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
                 val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
@@ -285,13 +285,13 @@ internal class DefaultListHandlerTest {
                 findRelatedAnimeStateEventCollector.cancelAndJoin()
                 findByTitleStateEventCollector.cancelAndJoin()
                 findSeasonStateEventCollector.cancelAndJoin()
-                findByTagStateEventCollector.cancelAndJoin()
+                findByCriteriaStateEventCollector.cancelAndJoin()
                 findSimilarAnimeStateEventCollector.cancelAndJoin()
 
                 assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
-                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByCriteriaStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
             }
         }
@@ -589,9 +589,9 @@ internal class DefaultListHandlerTest {
                 val findSeasonStateEvents = mutableListOf<FindSeasonState>()
                 val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
 
-                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
-                val findByTagStateEvents = mutableListOf<FindByTagState>()
-                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+                CoroutinesFlowEventBus.findByCriertiaState.update { FindByCriteriaState(entries = listOf(testSearchListEntry)) }
+                val findByCriteriaStateEvents = mutableListOf<FindByCriteriaState>()
+                val findByCriteriaStateEventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> findByCriteriaStateEvents.add(event) } }
 
                 CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
                 val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
@@ -636,13 +636,13 @@ internal class DefaultListHandlerTest {
                 findRelatedAnimeStateEventCollector.cancelAndJoin()
                 findByTitleStateEventCollector.cancelAndJoin()
                 findSeasonStateEventCollector.cancelAndJoin()
-                findByTagStateEventCollector.cancelAndJoin()
+                findByCriteriaStateEventCollector.cancelAndJoin()
                 findSimilarAnimeStateEventCollector.cancelAndJoin()
 
                 assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
-                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByCriteriaStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
             }
         }
@@ -815,9 +815,9 @@ internal class DefaultListHandlerTest {
                 val findSeasonStateEvents = mutableListOf<FindSeasonState>()
                 val findSeasonStateEventCollector = launch { CoroutinesFlowEventBus.findSeasonState.collect { event -> findSeasonStateEvents.add(event) } }
 
-                CoroutinesFlowEventBus.findByTagState.update { FindByTagState(entries = listOf(testSearchListEntry)) }
-                val findByTagStateEvents = mutableListOf<FindByTagState>()
-                val findByTagStateEventCollector = launch { CoroutinesFlowEventBus.findByTagState.collect { event -> findByTagStateEvents.add(event) } }
+                CoroutinesFlowEventBus.findByCriertiaState.update { FindByCriteriaState(entries = listOf(testSearchListEntry)) }
+                val findByCriteriaStateEvents = mutableListOf<FindByCriteriaState>()
+                val findByCriteriaStateEventCollector = launch { CoroutinesFlowEventBus.findByCriertiaState.collect { event -> findByCriteriaStateEvents.add(event) } }
 
                 CoroutinesFlowEventBus.findSimilarAnimeState.update { FindSimilarAnimeState(entries = listOf(testSearchListEntry)) }
                 val findSimilarAnimeStateEvents = mutableListOf<FindSimilarAnimeState>()
@@ -862,13 +862,13 @@ internal class DefaultListHandlerTest {
                 findRelatedAnimeStateEventCollector.cancelAndJoin()
                 findByTitleStateEventCollector.cancelAndJoin()
                 findSeasonStateEventCollector.cancelAndJoin()
-                findByTagStateEventCollector.cancelAndJoin()
+                findByCriteriaStateEventCollector.cancelAndJoin()
                 findSimilarAnimeStateEventCollector.cancelAndJoin()
 
                 assertThat(findRelatedAnimeStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findByTitleStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSeasonStateEvents).hasSize(2) // initial (including entry), update
-                assertThat(findByTagStateEvents).hasSize(2) // initial (including entry), update
+                assertThat(findByCriteriaStateEvents).hasSize(2) // initial (including entry), update
                 assertThat(findSimilarAnimeStateEvents).hasSize(2) // initial (including entry), update
             }
         }

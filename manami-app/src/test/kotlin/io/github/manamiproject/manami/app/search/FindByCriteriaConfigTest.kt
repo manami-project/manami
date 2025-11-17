@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
-internal class SearchConfigTest {
+internal class FindByCriteriaConfigTest {
 
     @Nested
     inner class ConstructorTests {
@@ -14,7 +14,7 @@ internal class SearchConfigTest {
         fun `throws exception if min year is before the year of the first anime`() {
             // when
             val result = exceptionExpected<IllegalArgumentException> {
-                SearchConfig(
+                FindByCriteriaConfig(
                     metaDataProvider = "myanimelist.net",
                     year = 1900..2025,
                 )

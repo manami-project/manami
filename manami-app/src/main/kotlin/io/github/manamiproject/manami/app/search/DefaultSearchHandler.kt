@@ -105,8 +105,8 @@ internal class DefaultSearchHandler(
         }
     }
 
-    override suspend fun findByMetaData(config: SearchConfig) {
-        eventBus.findByTagState.update { FindByTagState(isRunning = true) }
+    override suspend fun findByCriteria(config: FindByCriteriaConfig) {
+        eventBus.findByCriertiaState.update { FindByCriteriaState(isRunning = true) }
         yield()
 
         val entriesInLists: Set<URI> = state.animeList()
@@ -131,7 +131,7 @@ internal class DefaultSearchHandler(
             .map { SearchResultAnimeEntry(it) }
             .toList()
 
-        eventBus.findByTagState.update { current ->
+        eventBus.findByCriertiaState.update { current ->
             current.copy(
                 isRunning = false,
                 entries = filteredByStatus,

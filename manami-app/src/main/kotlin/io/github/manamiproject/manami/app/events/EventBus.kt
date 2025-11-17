@@ -61,7 +61,7 @@ interface EventBus {
     /**
      * @since 4.0.0
      */
-    val findByTagState: MutableStateFlow<FindByTagState>
+    val findByCriertiaState: MutableStateFlow<FindByCriteriaState>
 
     /**
      * @since 4.0.0

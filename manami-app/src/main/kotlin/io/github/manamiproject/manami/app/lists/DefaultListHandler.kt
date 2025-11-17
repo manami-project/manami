@@ -49,7 +49,7 @@ internal class DefaultListHandler(
             eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
             eventBus.findByTitleState.update { FindByTitleState() }
             eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
-            eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
+            eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
             eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
         }
     }
@@ -129,7 +129,7 @@ internal class DefaultListHandler(
                         eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findByTitleState.update { FindByTitleState() }
                         eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
-                        eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                     }
                 }
@@ -173,7 +173,7 @@ internal class DefaultListHandler(
                         eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findByTitleState.update { FindByTitleState() }
                         eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
-                        eventBus.findByTagState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                     }
                 }
