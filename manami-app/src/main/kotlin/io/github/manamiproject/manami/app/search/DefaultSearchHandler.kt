@@ -6,8 +6,7 @@ import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.*
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.search.SearchConjunction.AND
-import io.github.manamiproject.manami.app.search.SearchConjunction.OR
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.*
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.*
@@ -109,6 +108,7 @@ internal class DefaultSearchHandler(
         eventBus.findByCriertiaState.update { FindByCriteriaState(isRunning = true) }
         yield()
 
+        // to be excluded from the search result
         val entriesInLists: Set<URI> = state.animeList()
             .map { it.link }
             .filterIsInstance<Link>()
@@ -116,25 +116,100 @@ internal class DefaultSearchHandler(
             .union(state.watchList().map { it.link.uri })
             .union(state.ignoreList().map { it.link.uri })
 
-        val allEntriesNotInAnyList = cache.allEntries(config.metaDataProvider)
-            .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
-
-        val entriesWithMatchingTags = when(config.tags.isNotEmpty()) {
-            true -> when(config.tagConjunction) {
-                        OR -> allEntriesNotInAnyList.filter { anime -> anime.tags.any { tag -> config.tags.contains(tag) } }
-                        AND -> allEntriesNotInAnyList.filter { anime -> anime.tags.containsAll(config.tags) }
+        // this is what we start with
+        val result = cache.allEntries(config.metaDataProvider) // STEP 01 All entries of the selected metadata provider
+            .filterNot { anime -> // STEP 02 Remove every anime which is already in one of the three lists
+                entriesInLists.contains(anime.sources.first())
+            }
+            .filter { anime -> // STEP 03 type
+                when(config.types.isNotEmpty()) {
+                    true -> config.types.contains(anime.type)
+                    false -> true
+                }
+            }
+            .filter { anime -> // Step 04 status
+                when(config.status.isNotEmpty()) {
+                    true -> config.status.contains(anime.status)
+                    false -> true
+                }
+            }
+            .filter { anime -> // Step 05 season
+                when(config.seasons.isNotEmpty()) {
+                    true -> config.seasons.contains(anime.animeSeason.season)
+                    false -> true
+                }
+            }
+            .filter { anime -> // Step 06 episodes min
+                when {
+                    config.episodes.first < 0 -> true
+                    else -> config.episodes.first <= anime.episodes
+                }
+            }
+            .filter { anime -> // Step 07 episodes max
+                when {
+                    config.episodes.last < 0 -> true
+                    else -> config.episodes.last >= anime.episodes
+                }
+            }
+            .filter { anime -> // Step 08 duration min
+                when {
+                    config.durationInSeconds.first < 0 -> true
+                    else -> config.durationInSeconds.first <= anime.duration.duration
+                }
+            }
+            .filter { anime -> // Step 09 duration max
+                when {
+                    config.durationInSeconds.last < 0 -> true
+                    else -> config.durationInSeconds.last >= anime.duration.duration
+                }
+            }
+            .filter { anime -> // Step 10 year min
+                when {
+                    config.year.first < YEAR_OF_THE_FIRST_ANIME -> true
+                    else -> config.year.first <= anime.animeSeason.year
+                }
+            }
+            .filter { anime -> // Step 11 year max
+                when {
+                    config.year.last < YEAR_OF_THE_FIRST_ANIME -> true
+                    else -> config.year.last >= anime.animeSeason.year
+                }
+            }
+            .filter { anime -> // Step 12 studios
+                when(config.studios.isNotEmpty()) {
+                    true -> when(config.studiosConjunction) {
+                        OR -> anime.studios.any { studio -> config.studios.contains(studio) }
+                        AND -> anime.studios.containsAll(config.studios)
                     }
-            false -> allEntriesNotInAnyList
-        }
-
-        val filteredByStatus = entriesWithMatchingTags.filter { it.status in config.status }
-            .map { SearchResultAnimeEntry(it) }
+                    false -> true
+                }
+            }
+            .filter { anime -> // Step 13 producers
+                when(config.producers.isNotEmpty()) {
+                    true -> when(config.producersConjunction) {
+                        OR -> anime.producers.any { producer -> config.producers.contains(producer) }
+                        AND -> anime.producers.containsAll(config.producers)
+                    }
+                    false -> true
+                }
+            }
+            .filter { anime -> // Step 14 tags
+                when(config.tags.isNotEmpty()) {
+                    true -> when(config.tagsConjunction) {
+                        OR -> anime.tags.any { tag -> config.tags.contains(tag) }
+                        AND -> anime.tags.containsAll(config.tags)
+                    }
+                    false -> true
+                }
+            }
+            .map { anime -> SearchResultAnimeEntry(anime) }
             .toList()
+
 
         eventBus.findByCriertiaState.update { current ->
             current.copy(
                 isRunning = false,
-                entries = filteredByStatus,
+                entries = result,
             )
         }
     }

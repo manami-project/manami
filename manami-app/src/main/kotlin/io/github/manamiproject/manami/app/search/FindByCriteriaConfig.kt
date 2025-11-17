@@ -1,26 +1,33 @@
 package io.github.manamiproject.manami.app.search
 
-import io.github.manamiproject.manami.app.search.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
 import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.config.Hostname
 
 data class FindByCriteriaConfig(
     val metaDataProvider: Hostname,
-    val type: Set<AnimeType> = emptySet(),
-    val typeConjunction: SearchConjunction = AND,
+    val types: Set<AnimeType> = emptySet(),
     val episodes: IntRange = -1..-1,
     val durationInSeconds: IntRange = -1..-1,
     val year: IntRange = YEAR_OF_THE_FIRST_ANIME..-1,
-    val status: Set<AnimeStatus> = AnimeStatus.entries.toSet(),
-    val statusConjunction: SearchConjunction = AND,
-    val studio: Set<Studio> = emptySet(),
-    val studioConjunction: SearchConjunction = AND,
+    val seasons: Set<AnimeSeason.Season> = emptySet(),
+    val status: Set<AnimeStatus> = emptySet(),
+    val studios: Set<Studio> = emptySet(),
+    val studiosConjunction: SearchConjunction = AND,
     val producers: Set<Producer> = emptySet(),
-    val producerConjunction: SearchConjunction = AND,
+    val producersConjunction: SearchConjunction = AND,
     val tags: Set<Tag> = emptySet(),
-    val tagConjunction: SearchConjunction = AND,
+    val tagsConjunction: SearchConjunction = AND,
 ) {
-    init {
-        require(year.first >= YEAR_OF_THE_FIRST_ANIME) { "Invalid year range. Minimum cannot be before the year of the first anime [${YEAR_OF_THE_FIRST_ANIME}]" }
+
+    enum class SearchConjunction {
+        OR,
+        AND;
+
+        companion object {
+            fun of(value: String): SearchConjunction {
+                return entries.find { it.toString().equals(value, ignoreCase = true) } ?: throw IllegalArgumentException("No value for [$value]")
+            }
+        }
     }
 }

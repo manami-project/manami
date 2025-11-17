@@ -1,27 +1,49 @@
 package io.github.manamiproject.manami.app.search
 
-import io.github.manamiproject.modb.test.exceptionExpected
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.OR
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class FindByCriteriaConfigTest {
 
     @Nested
-    inner class ConstructorTests {
+    inner class SearchConjunctionTests {
 
-        @Test
-        fun `throws exception if min year is before the year of the first anime`() {
+        @ParameterizedTest
+        @ValueSource(strings = ["and", "AND", "AnD"])
+        fun `return AND`(value: String) {
             // when
-            val result = exceptionExpected<IllegalArgumentException> {
-                FindByCriteriaConfig(
-                    metaDataProvider = "myanimelist.net",
-                    year = 1900..2025,
-                )
+            val result = FindByCriteriaConfig.SearchConjunction.of(value)
+
+            // then
+            assertThat(result).isEqualTo(AND)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["or", "OR", "oR"])
+        fun `return OR`(value: String) {
+            // when
+            val result = FindByCriteriaConfig.SearchConjunction.of(value)
+
+            // then
+            assertThat(result).isEqualTo(OR)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = [EMPTY, "   ", "example"])
+        fun `throws exception if given string doesn't match any enum value`(value: String) {
+            // when
+            val result = assertThrows<IllegalArgumentException> {
+                FindByCriteriaConfig.SearchConjunction.of(value)
             }
 
             // then
-            assertThat(result).hasMessage("Invalid year range. Minimum cannot be before the year of the first anime [1907]")
+            assertThat(result).hasMessage("No value for [$value]")
         }
     }
 }
