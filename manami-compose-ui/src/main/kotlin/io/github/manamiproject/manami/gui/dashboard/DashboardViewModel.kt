@@ -59,14 +59,6 @@ internal class DashboardViewModel(
 
         }.stateIn(viewModelScope, Eagerly, emptyMap<String, String>())
 
-            /*app.dashboardState
-            .map { event -> event.entries.toList()
-            .stateIn(
-                scope = viewModelScope,
-                started = Eagerly,
-                initialValue = emptyMap(),
-            )*/
-
     val metaDataProviders: StateFlow<List<Hostname>>
         get() = app.dashboardState
             .map { event -> event.entries.toList().sortedByDescending { it.second }.map { it.first } }
