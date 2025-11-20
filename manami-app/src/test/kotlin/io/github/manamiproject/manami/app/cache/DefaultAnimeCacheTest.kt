@@ -306,7 +306,7 @@ internal class DefaultAnimeCacheTest {
                     "slice of life",
                     "student government",
                     "tsundere",
-                )
+                ),
             )
 
             val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
@@ -335,6 +335,130 @@ internal class DefaultAnimeCacheTest {
                 "slice of life",
                 "student government",
                 "tsundere",
+            )
+        }
+    }
+
+    @Nested
+    inner class AvailableStudiosTests {
+
+        @Test
+        fun `return the values from the AnimeCache`() {
+            // given
+            val entry = Anime(
+                sources = hashSetOf(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.app/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                type = OVA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+                tags = hashSetOf(
+                    "based on a manga",
+                    "comedy",
+                    "ensemble cast",
+                    "food",
+                    "high school",
+                    "psychological",
+                    "romance",
+                    "romantic comedy",
+                    "school",
+                    "school clubs",
+                    "school life",
+                    "seinen",
+                    "slice of life",
+                    "student government",
+                    "tsundere",
+                ),
+                studios = hashSetOf(
+                    "A-1 Pictures",
+                )
+            )
+
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            // when
+            val result = defaultAnimeCache.availableStudios
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder(
+                "A-1 Pictures",
+            )
+        }
+    }
+
+    @Nested
+    inner class AvailableProducersTests {
+
+        @Test
+        fun `return the values from the AnimeCache`() {
+            // given
+            val entry = Anime(
+                sources = hashSetOf(
+                    URI("https://anidb.net/anime/15807"),
+                    URI("https://anilist.co/anime/125368"),
+                    URI("https://anime-planet.com/anime/kaguya-sama-love-is-war-ova"),
+                    URI("https://kitsu.app/anime/43731"),
+                    URI("https://myanimelist.net/anime/43609"),
+                    URI("https://notify.moe/anime/_RdVrLpGR"),
+                ),
+                title = "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen OVA",
+                type = OVA,
+                episodes = 1,
+                status = UPCOMING,
+                animeSeason = AnimeSeason(
+                    season = SPRING,
+                    year = 2021,
+                ),
+                tags = hashSetOf(
+                    "based on a manga",
+                    "comedy",
+                    "ensemble cast",
+                    "food",
+                    "high school",
+                    "psychological",
+                    "romance",
+                    "romantic comedy",
+                    "school",
+                    "school clubs",
+                    "school life",
+                    "seinen",
+                    "slice of life",
+                    "student government",
+                    "tsundere",
+                ),
+                producers = hashSetOf(
+                    "Aniplex",
+                    "Shueisha",
+                )
+            )
+
+            val defaultAnimeCache = DefaultAnimeCache(cacheLoader = listOf(TestCacheLoader)).apply {
+                entry.sources.forEach {
+                    populate(it, PresentValue(entry))
+                }
+            }
+
+            // when
+            val result = defaultAnimeCache.availableProducers
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder(
+                "Aniplex",
+                "Shueisha",
             )
         }
     }

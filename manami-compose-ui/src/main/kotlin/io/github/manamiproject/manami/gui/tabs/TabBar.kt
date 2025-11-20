@@ -14,6 +14,7 @@ import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.dashboard.Dashboard
 import io.github.manamiproject.manami.gui.find.bycriteria.FindByCriteria
 import io.github.manamiproject.manami.gui.find.animedetails.FindAnimeDetails
+import io.github.manamiproject.manami.gui.find.bycriteria.SearchResults
 import io.github.manamiproject.manami.gui.find.bytitle.FindByTitle
 import io.github.manamiproject.manami.gui.find.inconsistencies.FindInconsistencies
 import io.github.manamiproject.manami.gui.find.inconsistencies.FixAnimeListEntryInconsistenciesForm
@@ -77,6 +78,7 @@ internal fun TabBar(
                 ADD_ANIME_TO_ANIME_LIST_FORM -> AddAnimeToAnimeListForm()
                 EDIT_ANIME_LIST_ENTRY_FORM -> EditAnimeListEntryForm()
                 FIX_ANIME_LIST_ENTRY_INCONSISTENCIES_FORM -> FixAnimeListEntryInconsistenciesForm()
+                SEARCH_RESULTS -> SearchResults()
             }
         }
     }

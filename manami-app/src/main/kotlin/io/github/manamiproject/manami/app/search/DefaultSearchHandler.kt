@@ -6,6 +6,7 @@ import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
 import io.github.manamiproject.manami.app.cache.PresentValue
 import io.github.manamiproject.manami.app.events.*
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.ScoreType.*
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.*
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -175,7 +176,29 @@ internal class DefaultSearchHandler(
                     else -> config.year.last >= anime.animeSeason.year
                 }
             }
-            .filter { anime -> // Step 12 studios
+            .filter { anime -> // Step 12 score min
+                when {
+                    config.score.first < 0 -> true
+                    anime.score is NoScore -> false
+                    else -> when(config.scoreType) {
+                        ARITHMETIC_GEOMETRIC_MEAN -> config.score.first <= (anime.score as ScoreValue).arithmeticGeometricMean
+                        ARITHMETIC_MEAN -> config.score.first <= (anime.score as ScoreValue).arithmeticMean
+                        MEDIAN -> config.score.first <= (anime.score as ScoreValue).median
+                    }
+                }
+            }
+            .filter { anime -> // Step 13 score max
+                when {
+                    config.score.last < 0 -> true
+                    anime.score is NoScore -> false
+                    else -> when(config.scoreType) {
+                        ARITHMETIC_GEOMETRIC_MEAN -> config.score.last >= (anime.score as ScoreValue).arithmeticGeometricMean
+                        ARITHMETIC_MEAN -> config.score.last >= (anime.score as ScoreValue).arithmeticMean
+                        MEDIAN -> config.score.last >= (anime.score as ScoreValue).median
+                    }
+                }
+            }
+            .filter { anime -> // Step 14 studios
                 when(config.studios.isNotEmpty()) {
                     true -> when(config.studiosConjunction) {
                         OR -> anime.studios.any { studio -> config.studios.contains(studio) }
@@ -184,7 +207,7 @@ internal class DefaultSearchHandler(
                     false -> true
                 }
             }
-            .filter { anime -> // Step 13 producers
+            .filter { anime -> // Step 15 producers
                 when(config.producers.isNotEmpty()) {
                     true -> when(config.producersConjunction) {
                         OR -> anime.producers.any { producer -> config.producers.contains(producer) }
@@ -193,7 +216,7 @@ internal class DefaultSearchHandler(
                     false -> true
                 }
             }
-            .filter { anime -> // Step 14 tags
+            .filter { anime -> // Step 16 tags
                 when(config.tags.isNotEmpty()) {
                     true -> when(config.tagsConjunction) {
                         OR -> anime.tags.any { tag -> config.tags.contains(tag) }
@@ -286,6 +309,10 @@ internal class DefaultSearchHandler(
     override fun availableMetaDataProviders(): Set<Hostname> = cache.availableMetaDataProvider
 
     override fun availableTags(): Set<Tag> = cache.availableTags
+
+    override fun availableStudios(): Set<Studio> = cache.availableStudios
+
+    override fun availableProducers(): Set<Producer> = cache.availableProducers
 
     private fun isEntryMatchingSearchString(title: Title, searchString: String): Boolean {
         val levenshteinDistance = levenshteinDistance.apply(title.lowercase(), searchString.lowercase())

@@ -1,6 +1,8 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.Producer
+import io.github.manamiproject.modb.core.anime.Studio
 import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.config.Hostname
 import java.net.URI
@@ -20,4 +22,8 @@ interface SearchHandler {
     fun availableMetaDataProviders(): Set<Hostname>
 
     fun availableTags(): Set<Tag>
+
+    fun availableStudios(): Set<Studio>
+
+    fun availableProducers(): Set<Producer>
 }

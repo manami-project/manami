@@ -20,6 +20,8 @@ import io.github.manamiproject.modb.anisearch.AnisearchConfig
 import io.github.manamiproject.modb.anisearch.AnisearchDownloader
 import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.Producer
+import io.github.manamiproject.modb.core.anime.Studio
 import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
@@ -95,6 +97,14 @@ internal class DefaultAnimeCache(
     override val availableTags: Set<Tag>
         get() = _availableTags
 
+    private val _availableStudios = mutableSetOf<Studio>()
+    override val availableStudios: Set<Studio>
+        get() = _availableStudios
+
+    private val _availableProducers = mutableSetOf<Producer>()
+    override val availableProducers: Set<Producer>
+        get() = _availableProducers
+
     override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> {
         return entries.asSequence()
             .filter { it.key.host == metaDataProvider }
@@ -136,6 +146,8 @@ internal class DefaultAnimeCache(
 
         if (value is PresentValue) {
             _availableTags.addAll(value.value.tags)
+            _availableStudios.addAll(value.value.studios)
+            _availableProducers.addAll(value.value.producers)
         }
 
         when {

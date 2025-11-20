@@ -11,6 +11,8 @@ data class FindByCriteriaConfig(
     val durationInSeconds: IntRange = -1..-1,
     val year: IntRange = YEAR_OF_THE_FIRST_ANIME..-1,
     val seasons: Set<AnimeSeason.Season> = emptySet(),
+    val score: IntRange = -1..-1,
+    val scoreType: ScoreType = ScoreType.ARITHMETIC_MEAN,
     val status: Set<AnimeStatus> = emptySet(),
     val studios: Set<Studio> = emptySet(),
     val studiosConjunction: SearchConjunction = AND,
@@ -27,6 +29,18 @@ data class FindByCriteriaConfig(
         companion object {
             fun of(value: String): SearchConjunction {
                 return entries.find { it.toString().equals(value, ignoreCase = true) } ?: throw IllegalArgumentException("No value for [$value]")
+            }
+        }
+    }
+
+    enum class ScoreType(val viewName: String) {
+        ARITHMETIC_GEOMETRIC_MEAN("arithmetic-geometric-mean"),
+        ARITHMETIC_MEAN("arithmetic-mean"),
+        MEDIAN("median");
+
+        companion object {
+            fun of(value: String): ScoreType {
+                return ScoreType.entries.find { it.toString().equals(value, ignoreCase = true) || it.viewName.equals(value, ignoreCase = true) } ?: throw IllegalArgumentException("No value for [$value]")
             }
         }
     }

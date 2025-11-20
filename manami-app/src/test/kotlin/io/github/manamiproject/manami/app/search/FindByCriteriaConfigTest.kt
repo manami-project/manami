@@ -1,7 +1,7 @@
 package io.github.manamiproject.manami.app.search
 
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.OR
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.ScoreType.*
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.*
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -40,6 +40,70 @@ internal class FindByCriteriaConfigTest {
             // when
             val result = assertThrows<IllegalArgumentException> {
                 FindByCriteriaConfig.SearchConjunction.of(value)
+            }
+
+            // then
+            assertThat(result).hasMessage("No value for [$value]")
+        }
+    }
+
+    @Nested
+    inner class ScoreTypeTests {
+
+        @ParameterizedTest
+        @ValueSource(strings = [
+            "arithmetic_geometric_mean",
+            "ARITHMETIC_GEOMETRIC_MEAN",
+            "aRiThMeTiC_gEoMeTrIc_MeAn",
+            "arithmetic-geometric-mean",
+            "ARITHMETIC-GEOMETRIC-MEAN",
+            "aRiThMeTiC-gEoMeTrIc-MeAn",
+        ])
+        fun `return ARITHMETIC_GEOMETRIC_MEAN`(value: String) {
+            // when
+            val result = FindByCriteriaConfig.ScoreType.of(value)
+
+            // then
+            assertThat(result).isEqualTo(ARITHMETIC_GEOMETRIC_MEAN)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = [
+            "arithmetic_mean",
+            "ARITHMETIC_MEAN",
+            "aRiThMeTiC_MeAn",
+            "arithmetic-mean",
+            "ARITHMETIC-MEAN",
+            "aRiThMeTiC-MeAn",
+        ])
+        fun `return ARITHMETIC_MEAN`(value: String) {
+            // when
+            val result = FindByCriteriaConfig.ScoreType.of(value)
+
+            // then
+            assertThat(result).isEqualTo(ARITHMETIC_MEAN)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = [
+            "median",
+            "MEDIAN",
+            "mEdIaN",
+        ])
+        fun `return MEDIAN`(value: String) {
+            // when
+            val result = FindByCriteriaConfig.ScoreType.of(value)
+
+            // then
+            assertThat(result).isEqualTo(MEDIAN)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = [EMPTY, "   ", "example"])
+        fun `throws exception if given string doesn't match any enum value`(value: String) {
+            // when
+            val result = assertThrows<IllegalArgumentException> {
+                FindByCriteriaConfig.ScoreType.of(value)
             }
 
             // then

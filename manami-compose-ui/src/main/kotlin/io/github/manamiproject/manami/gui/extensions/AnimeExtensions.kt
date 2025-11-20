@@ -11,7 +11,7 @@ fun Anime.toMap(): Map<String, String> {
         is NoScore -> "-"
         is ScoreValue -> {
             val scoreValue = score as ScoreValue
-            "AM: ${scoreValue.arithmeticMean} | AGM: ${scoreValue.arithmeticGeometricMean} | Mdn: ${scoreValue.median}"
+            "AGM: ${scoreValue.arithmeticGeometricMean} | AM: ${scoreValue.arithmeticMean} | Mdn: ${scoreValue.median} | Scale: 1 - 10"
         }
     }
 

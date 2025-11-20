@@ -9,6 +9,8 @@ import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.httpclient.RequestBody
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeRaw
+import io.github.manamiproject.modb.core.anime.Producer
+import io.github.manamiproject.modb.core.anime.Studio
 import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.httpclient.RetryCase
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
@@ -50,6 +52,10 @@ internal object TestAnimeCache: AnimeCache {
     override val availableMetaDataProvider: Set<Hostname>
         get() = shouldNotBeInvoked()
     override val availableTags: Set<Tag>
+        get() = shouldNotBeInvoked()
+    override val availableStudios: Set<Studio>
+        get() = shouldNotBeInvoked()
+    override val availableProducers: Set<Producer>
         get() = shouldNotBeInvoked()
     override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = shouldNotBeInvoked()
     override fun mapToMetaDataProvider(uri: URI, metaDataProvider: Hostname): Set<URI> = shouldNotBeInvoked()
