@@ -5598,11 +5598,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5651,11 +5651,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5702,11 +5702,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5753,11 +5753,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5804,11 +5804,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5853,11 +5853,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "taste of lemon",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5902,11 +5902,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -5951,15 +5951,15 @@ internal class DefaultSearchHandlerTest {
 
                     val matching1 = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val matching2 = WatchListEntry(Anime(
                         title = "another test",
-                        sources = hashSetOf(URI("https://example.org/anime/901"))
+                        sources = hashSetOf(URI("https://example.org/anime/901")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6007,11 +6007,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = WatchListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = WatchListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6064,11 +6064,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6117,11 +6117,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6168,11 +6168,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6219,11 +6219,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6270,11 +6270,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6319,11 +6319,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "taste of lemon",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6368,11 +6368,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6417,15 +6417,15 @@ internal class DefaultSearchHandlerTest {
 
                     val matching1 = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val matching2 = IgnoreListEntry(Anime(
                         title = "another test",
-                        sources = hashSetOf(URI("https://example.org/anime/901"))
+                        sources = hashSetOf(URI("https://example.org/anime/901")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6473,11 +6473,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = IgnoreListEntry(Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     ))
                     val notMatching = IgnoreListEntry(Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     ))
 
                     val testState = object: State by TestState {
@@ -6523,11 +6523,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6576,11 +6576,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6628,11 +6628,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6680,11 +6680,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6732,11 +6732,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6782,11 +6782,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "taste of lemon",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6832,11 +6832,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6882,15 +6882,15 @@ internal class DefaultSearchHandlerTest {
 
                     val matching1 = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val matching2 = Anime(
                         title = "another test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6939,11 +6939,11 @@ internal class DefaultSearchHandlerTest {
 
                     val matching = Anime(
                         title = "test",
-                        sources = hashSetOf(URI("https://example.org/anime/255"))
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
                     )
                     val notMatching = Anime(
                         title = "other",
-                        sources = hashSetOf(URI("https://example.org/anime/324"))
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
                     )
 
                     val testCache = object : AnimeCache by TestAnimeCache {
@@ -6973,6 +6973,59 @@ internal class DefaultSearchHandlerTest {
                     delay(100)
                     eventCollector.cancelAndJoin()
                     assertThat(receivedEvents).hasSize(3) // initial, start, unlisted + end
+                    assertThat(receivedEvents.last().animeListResults).isEmpty()
+                    assertThat(receivedEvents.last().watchListResults).isEmpty()
+                    assertThat(receivedEvents.last().ignoreListResults).isEmpty()
+                    assertThat(receivedEvents.last().unlistedResults.map { it.title }).containsExactly(
+                        "test",
+                    )
+                }
+            }
+
+            @Test
+            fun `Unlisted - doesn't match the title, but a synonym`() {
+                runBlocking {
+                    // given
+                    val receivedEvents = mutableListOf<FindByTitleState>()
+                    val eventCollector = launch { CoroutinesFlowEventBus.findByTitleState.collect { event -> receivedEvents.add(event) } }
+                    delay(100)
+
+                    val matching = Anime(
+                        title = "test",
+                        sources = hashSetOf(URI("https://example.org/anime/255")),
+                        synonyms = hashSetOf("alternative title"),
+                    )
+                    val notMatching = Anime(
+                        title = "other",
+                        sources = hashSetOf(URI("https://example.org/anime/324")),
+                    )
+
+                    val testCache = object : AnimeCache by TestAnimeCache {
+                        override val availableMetaDataProvider: Set<Hostname>
+                            get() = setOf("example.org")
+
+                        override fun allEntries(metaDataProvider: Hostname): Sequence<Anime> = sequenceOf(matching, notMatching)
+                    }
+
+                    val testState = object: State by TestState {
+                        override fun animeList(): List<AnimeListEntry> = emptyList()
+                        override fun watchList(): Set<WatchListEntry> = emptySet()
+                        override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
+                    }
+
+                    val defaultSearchHandler = DefaultSearchHandler(
+                        cache = testCache,
+                        eventBus = CoroutinesFlowEventBus,
+                        state = testState,
+                    )
+
+                    // when
+                    defaultSearchHandler.findByTitle("example.org", "alternative title")
+
+                    // then
+                    delay(100)
+                    eventCollector.cancelAndJoin()
+                    assertThat(receivedEvents).hasSize(3) // initial, start, end
                     assertThat(receivedEvents.last().animeListResults).isEmpty()
                     assertThat(receivedEvents.last().watchListResults).isEmpty()
                     assertThat(receivedEvents.last().ignoreListResults).isEmpty()

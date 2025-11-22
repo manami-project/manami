@@ -68,7 +68,7 @@ internal class DefaultSearchHandler(
 
         val unlistedResults = cache.allEntries(metaDataProvider)
             .filterNot { anime -> entriesInLists.contains(anime.sources.first()) }
-            .filter { isEntryMatchingSearchString(it.title, searchString) || it.sources.first().toString() == searchString }
+            .filter { isEntryMatchingSearchString(it.title, searchString) || it.sources.first().toString() == searchString || it.synonyms.any { synonym -> isEntryMatchingSearchString(synonym, searchString) } }
             .map { SearchResultAnimeEntry(it) }
             .toList()
 
