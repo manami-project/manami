@@ -32,7 +32,11 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
 
     val numberOfAnimeListResults: StateFlow<Int>
         get() = app.findByTitleState
-            .map { it.animeListResults.size }
+            .map { event ->
+                event.animeListResults.size.also {
+                    if (it > 0) _isShowAnimeListResults = true
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
@@ -41,7 +45,11 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
 
     val numberOfWatchListResults: StateFlow<Int>
         get() = app.findByTitleState
-            .map { it.watchListResults.size }
+            .map { event ->
+                event.watchListResults.size.also {
+                    if (!_isShowAnimeListResults && it > 0) _isShowWatchListResults = true
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
@@ -50,7 +58,11 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
 
     val numberOfIgnoreListResults: StateFlow<Int>
         get() = app.findByTitleState
-            .map { it.ignoreListResults.size }
+            .map { event ->
+                event.ignoreListResults.size.also {
+                    if (!_isShowAnimeListResults && !_isShowWatchListResults && it > 0) _isShowIgnoreListResults = true
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
@@ -59,7 +71,11 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
 
     val numberOfUnlistedResults: StateFlow<Int>
         get() = app.findByTitleState
-            .map { it.unlistedResults.size }
+            .map { event ->
+                event.unlistedResults.size.also {
+                    if (!_isShowAnimeListResults && !_isShowWatchListResults && !_isShowIgnoreListResults && it > 0) _isShowUnlistResults = true
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
