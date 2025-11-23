@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -33,6 +33,7 @@ import io.github.manamiproject.manami.gui.components.IconButton
 import io.github.manamiproject.manami.gui.components.RotatingDotsProgress
 import io.github.manamiproject.manami.gui.components.animetable.AnimeTable
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,21 +42,28 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
 
     val metaDataProviders = viewModel.metaDataProviders.collectAsState()
     var metaDataProviderSelectExpanded by remember { mutableStateOf(false) }
-    val metaDataProviderSelectState = rememberTextFieldState()
+    val metaDataProviderSelectState = remember {
+        TextFieldState(viewModel.metaDataProviderText)
+    }
 
     LaunchedEffect(metaDataProviders.value) {
-        if (metaDataProviders.value.isNotEmpty()) {
+        if (metaDataProviders.value.isNotEmpty() && viewModel.metaDataProviderText.eitherNullOrBlank()) {
             metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(metaDataProviders.value.first())
+            viewModel.metaDataProviderText = metaDataProviders.value.first()
         }
     }
 
     var seasonSelectExpanded by remember { mutableStateOf(false) }
     val seasonOptions = viewModel.seasons()
-    val seasonSelectState = rememberTextFieldState(viewModel.currentSeason())
+    val seasonSelectState = remember {
+        TextFieldState(viewModel.seasonSelectedText)
+    }
 
     var yearSelectExpanded by remember { mutableStateOf(false) }
     val yearOptions = viewModel.yearRange()
-    val yearSelectState = rememberTextFieldState(viewModel.currentYear().toString())
+    val yearSelectState = remember {
+        TextFieldState(viewModel.yearSelectedText.toString())
+    }
 
     val padding = 5.dp
 
@@ -85,6 +93,7 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                             text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                             onClick = {
                                 metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(option)
+                                viewModel.metaDataProviderText = option
                                 metaDataProviderSelectExpanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -113,6 +122,7 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                             text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                             onClick = {
                                 seasonSelectState.setTextAndPlaceCursorAtEnd(option)
+                                viewModel.seasonSelectedText = option
                                 seasonSelectExpanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -141,6 +151,7 @@ internal fun FindSeason(viewModel: FindSeasonViewModel = FindSeasonViewModel.ins
                             text = { Text(option.toString(), style = MaterialTheme.typography.bodyLarge) },
                             onClick = {
                                 yearSelectState.setTextAndPlaceCursorAtEnd(option.toString())
+                                viewModel.yearSelectedText = option
                                 yearSelectExpanded = false
                             },
                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,

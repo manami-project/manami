@@ -1,5 +1,8 @@
 package io.github.manamiproject.manami.gui.find.season
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.events.SearchResultAnimeEntry
 import io.github.manamiproject.manami.gui.components.animetable.DefaultAnimeTableViewModel
@@ -7,6 +10,7 @@ import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.YEAR_OF_THE_FIRST_ANIME
 import io.github.manamiproject.modb.core.anime.Year
 import io.github.manamiproject.modb.core.config.Hostname
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.SupervisorJob
@@ -48,11 +52,13 @@ internal class FindSeasonViewModel(private val app: Manami = Manami.instance): D
                 initialValue = emptyList(),
             )
 
+    var metaDataProviderText by mutableStateOf(EMPTY)
+    var seasonSelectedText by mutableStateOf(currentSeason())
+    var yearSelectedText by mutableStateOf(LocalDate.now().year)
+
     override fun delete(anime: SearchResultAnimeEntry) = throw UnsupportedOperationException()
 
     fun yearRange(): List<Year> = (YEAR_OF_THE_FIRST_ANIME..LocalDate.now().year + 5).toList().reversed()
-
-    fun currentYear(): Year = LocalDate.now().year
 
     fun seasons() = listOf("Spring", "Summer", "Fall", "Winter")
 

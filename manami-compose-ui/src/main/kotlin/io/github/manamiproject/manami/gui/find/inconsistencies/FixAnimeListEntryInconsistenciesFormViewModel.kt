@@ -5,8 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
-import io.github.manamiproject.manami.gui.find.inconsistencies.FixSelection.*
-import io.github.manamiproject.modb.core.anime.AnimeType
+import io.github.manamiproject.manami.gui.find.inconsistencies.FixSelection.CURRENT
 import io.github.manamiproject.modb.core.anime.Title
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import kotlinx.coroutines.CoroutineScope
