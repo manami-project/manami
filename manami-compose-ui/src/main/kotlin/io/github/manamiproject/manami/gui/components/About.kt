@@ -33,7 +33,7 @@ internal fun About(onCloseRequest: () -> Unit) {
             Box( // unable to modify the background of the main window so painting a custom one is necessary
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(ThemeState.instance.currentScheme.value.background)
+                    .background(ThemeState.instance.currentScheme.value.background),
             ) {
                 Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
                     Text(

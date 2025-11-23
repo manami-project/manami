@@ -120,7 +120,7 @@ internal fun Dashboard(viewModel: DashboardViewModel = DashboardViewModel.instan
                     onClick = { viewModel.findByTitle(metaDataProviderSelectState.text.toString(), searchState.text.toString()) },
                 )
             }
-            SimpleTable(data.value) {
+            SimpleTable(data = data.value) {
                 keyHeadline = "MetaDataProvider"
                 valueHeadline = "Number of anime"
             }

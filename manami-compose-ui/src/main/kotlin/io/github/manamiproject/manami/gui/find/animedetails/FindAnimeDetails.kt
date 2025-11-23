@@ -23,6 +23,6 @@ internal fun FindAnimeDetails(viewModel: FindAnimeDetailsViewModel = FindAnimeDe
             }
         }
     } else {
-        SimpleTable(animeDetails.value?.toMap() ?: emptyMap())
+        SimpleTable(data = animeDetails.value?.toMap() ?: emptyMap())
     }
 }
