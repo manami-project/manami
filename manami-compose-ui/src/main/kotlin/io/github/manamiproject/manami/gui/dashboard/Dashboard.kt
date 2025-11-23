@@ -2,6 +2,7 @@ package io.github.manamiproject.manami.gui.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import io.github.manamiproject.manami.gui.components.simpletable.SimpleTable
 import io.github.manamiproject.manami.gui.extensions.toOnClick
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import java.net.URI
 
@@ -43,11 +45,14 @@ internal fun Dashboard(viewModel: DashboardViewModel = DashboardViewModel.instan
 
     var metaDataProviderSelectExpanded by remember { mutableStateOf(false) }
     val metaDataProviders = viewModel.metaDataProviders.collectAsState()
-    val metaDataProviderSelectState = rememberTextFieldState()
+    val metaDataProviderSelectState = remember {
+        TextFieldState(viewModel.metaDataProviderText)
+    }
 
     LaunchedEffect(metaDataProviders.value) {
-        if (metaDataProviders.value.isNotEmpty()) {
+        if (metaDataProviders.value.isNotEmpty() && viewModel.metaDataProviderText.eitherNullOrBlank()) {
             metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(metaDataProviders.value.first())
+            viewModel.metaDataProviderText = metaDataProviders.value.first()
         }
     }
 
@@ -98,6 +103,7 @@ internal fun Dashboard(viewModel: DashboardViewModel = DashboardViewModel.instan
                                 text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                                 onClick = {
                                     metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(option)
+                                    viewModel.metaDataProviderText = option
                                     metaDataProviderSelectExpanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,

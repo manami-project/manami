@@ -1,5 +1,8 @@
 package io.github.manamiproject.manami.gui.dashboard
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
@@ -76,6 +79,8 @@ internal class DashboardViewModel(
                 started = Eagerly,
                 initialValue = EMPTY,
             )
+
+    var metaDataProviderText by mutableStateOf(EMPTY)
 
     fun findByTitle(metaDataProvider: Hostname, title: Title) {
         if (title.eitherNullOrBlank()) return
