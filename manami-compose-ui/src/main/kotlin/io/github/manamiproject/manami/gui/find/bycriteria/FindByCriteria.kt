@@ -14,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
@@ -38,48 +37,70 @@ internal fun FindByCriteria(viewModel: FindByCriteriaViewModel = FindByCriteriaV
     }
 
     val allTypes = AnimeType.entries.map { it.toString() }
-    val selectedTypes = remember { mutableStateListOf<String>() }
+    val selectedTypes = remember { viewModel.selectedTypes }
 
     val allStatus = AnimeStatus.entries.map { it.toString().capitalize() }
-    val selectedStatus = remember { mutableStateListOf<String>() }
+    val selectedStatus = remember { viewModel.selectedStatus }
 
     val allSeasons = AnimeSeason.Season.entries.map { it.toString().capitalize() }
-    val selectedSeasons = remember { mutableStateListOf<String>() }
+    val selectedSeasons = remember { viewModel.selectedSeasons }
 
-    val selectedMinEpisodes = remember { mutableStateOf(EMPTY) }
-    val selectedMaxEpisodes = remember { mutableStateOf(EMPTY) }
+    val selectedMinEpisodes = remember { viewModel.selectedMinEpisodes }
+    val selectedMaxEpisodes = remember { viewModel.selectedMaxEpisodes }
 
-    val selectedMinYear = remember { mutableStateOf(EMPTY) }
-    val selectedMaxYear = remember { mutableStateOf(EMPTY) }
+    val selectedMinYear = remember { viewModel.selectedMinYear }
+    val selectedMaxYear = remember { viewModel.selectedMaxYear }
 
-    val selectedMinDuration = remember { mutableStateOf(EMPTY) }
-    val selectedMaxDuration = remember { mutableStateOf(EMPTY) }
+    val selectedMinDuration = remember { viewModel.selectedMinDuration }
+    val selectedMaxDuration = remember { viewModel.selectedMaxDuration }
     var durationUnitSelectExpanded by remember { mutableStateOf(false) }
     val durationUnits = Duration.TimeUnit.entries.map { it.toString().capitalize() }
-    val durationUnitSelectState = rememberTextFieldState(initialText = durationUnits.first())
+    val durationUnitSelectState = remember {
+        TextFieldState(viewModel.durationUnitSelectText)
+    }
 
-    val selectedMinScore = remember { mutableStateOf(EMPTY) }
-    val selectedMaxScore = remember { mutableStateOf(EMPTY) }
+    val selectedMinScore = remember { viewModel.selectedMinScore }
+    val selectedMaxScore = remember { viewModel.selectedMaxScore }
     var scoreTypeSelectExpanded by remember { mutableStateOf(false) }
     val scoreTypes = FindByCriteriaConfig.ScoreType.entries.map { it.viewName }
-    val scoreTypeSelectState = rememberTextFieldState(initialText = scoreTypes.first())
+    val scoreTypeSelectState = remember {
+        TextFieldState(viewModel.scoreTypeSelectText)
+    }
 
     val allStudios = viewModel.availableStudios
-    val selectedStudios = remember { mutableStateListOf<Studio>() }
-    val selectedSearchConjunctionStudios = remember { mutableStateOf(AND) }
+    val selectedStudios = remember { viewModel.selectedStudios }
+    val selectedSearchConjunctionStudios = remember { viewModel.selectedSearchConjunctionStudios }
 
     val allProducers = viewModel.availableProducers
-    val selectedProducers = remember { mutableStateListOf<Producer>() }
-    val selectedSearchConjunctionProducers = remember { mutableStateOf(AND) }
+    val selectedProducers = remember { viewModel.selectedProducers }
+    val selectedSearchConjunctionProducers = remember { viewModel.selectedSearchConjunctionProducers }
 
     val allTags = viewModel.availableTags
-    val selectedTags = remember { mutableStateListOf<Tag>() }
-    val selectedSearchConjunctionTags = remember { mutableStateOf(AND) }
+    val selectedTags = remember { viewModel.selectedTags }
+    val selectedSearchConjunctionTags = remember { viewModel.selectedSearchConjunctionTags }
 
     LaunchedEffect(metaDataProviders.value) {
         if (metaDataProviders.value.isNotEmpty() && viewModel.metaDataProviderText.eitherNullOrBlank()) {
             metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(metaDataProviders.value.first())
             viewModel.metaDataProviderText = metaDataProviders.value.first()
+        }
+    }
+
+    LaunchedEffect(viewModel.metaDataProviderText) {
+        if (metaDataProviderSelectState.text.toString() != viewModel.metaDataProviderText) {
+            metaDataProviderSelectState.setTextAndPlaceCursorAtEnd(viewModel.metaDataProviderText)
+        }
+    }
+
+    LaunchedEffect(viewModel.durationUnitSelectText) {
+        if (durationUnitSelectState.text.toString() != viewModel.durationUnitSelectText) {
+            durationUnitSelectState.setTextAndPlaceCursorAtEnd(viewModel.durationUnitSelectText)
+        }
+    }
+
+    LaunchedEffect(viewModel.scoreTypeSelectText) {
+        if (scoreTypeSelectState.text.toString() != viewModel.scoreTypeSelectText) {
+            scoreTypeSelectState.setTextAndPlaceCursorAtEnd(viewModel.scoreTypeSelectText)
         }
     }
 
@@ -203,6 +224,7 @@ internal fun FindByCriteria(viewModel: FindByCriteriaViewModel = FindByCriteriaV
                                         text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                                         onClick = {
                                             durationUnitSelectState.setTextAndPlaceCursorAtEnd(option)
+                                            viewModel.durationUnitSelectText = option
                                             durationUnitSelectExpanded = false
                                         },
                                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -266,6 +288,7 @@ internal fun FindByCriteria(viewModel: FindByCriteriaViewModel = FindByCriteriaV
                                         text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
                                         onClick = {
                                             scoreTypeSelectState.setTextAndPlaceCursorAtEnd(option)
+                                            viewModel.scoreTypeSelectText = option
                                             scoreTypeSelectExpanded = false
                                         },
                                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -293,31 +316,39 @@ internal fun FindByCriteria(viewModel: FindByCriteriaViewModel = FindByCriteriaV
 
                 Spacer(Modifier.height(16.dp))
 
-                Button(
-                    onClick = { viewModel.search(
-                        metaDataProvider = metaDataProviderSelectState.text.toString(),
-                        types = selectedTypes.toSet(),
-                        status = selectedStatus.toSet(),
-                        seasons = selectedSeasons.toSet(),
-                        episodesMin = selectedMaxEpisodes.value,
-                        episodesMax = selectedMaxEpisodes.value,
-                        yearMin = selectedMinYear.value,
-                        yearMax = selectedMaxYear.value,
-                        durationMin = selectedMinDuration.value,
-                        durationMax = selectedMaxDuration.value,
-                        durationUnit = durationUnitSelectState.text.toString(),
-                        scoreMin = selectedMinScore.value,
-                        scoreMax = selectedMaxScore.value,
-                        scoreType = scoreTypeSelectState.text.toString(),
-                        studios = selectedStudios.toSet(),
-                        studiosConjunction = selectedSearchConjunctionStudios.value,
-                        producers = selectedProducers.toSet(),
-                        producersConjunction = selectedSearchConjunctionProducers.value,
-                        tags = selectedTags.toSet(),
-                        tagsConjunction = selectedSearchConjunctionTags.value,
-                    )},
-                ) {
-                    Text("Search")
+                Row {
+                    Button(
+                        modifier = Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp,),
+                        onClick = { viewModel.reset() },
+                    ) {
+                        Text("Reset")
+                    }
+                    Button(
+                        onClick = { viewModel.search(
+                            metaDataProvider = metaDataProviderSelectState.text.toString(),
+                            types = selectedTypes.toSet(),
+                            status = selectedStatus.toSet(),
+                            seasons = selectedSeasons.toSet(),
+                            episodesMin = selectedMaxEpisodes.value,
+                            episodesMax = selectedMaxEpisodes.value,
+                            yearMin = selectedMinYear.value,
+                            yearMax = selectedMaxYear.value,
+                            durationMin = selectedMinDuration.value,
+                            durationMax = selectedMaxDuration.value,
+                            durationUnit = durationUnitSelectState.text.toString(),
+                            scoreMin = selectedMinScore.value,
+                            scoreMax = selectedMaxScore.value,
+                            scoreType = scoreTypeSelectState.text.toString(),
+                            studios = selectedStudios.toSet(),
+                            studiosConjunction = selectedSearchConjunctionStudios.value,
+                            producers = selectedProducers.toSet(),
+                            producersConjunction = selectedSearchConjunctionProducers.value,
+                            tags = selectedTags.toSet(),
+                            tagsConjunction = selectedSearchConjunctionTags.value,
+                        )},
+                    ) {
+                        Text("Search")
+                    }
                 }
             }
 

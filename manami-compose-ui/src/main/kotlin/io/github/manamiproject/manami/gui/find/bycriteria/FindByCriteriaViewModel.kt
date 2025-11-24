@@ -1,10 +1,13 @@
 package io.github.manamiproject.manami.gui.find.bycriteria
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
+import io.github.manamiproject.manami.gui.extensions.capitalize
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.SEARCH_RESULTS
 import io.github.manamiproject.modb.core.anime.*
@@ -32,22 +35,44 @@ internal class FindByCriteriaViewModel(
     val scrollOffset: Int
         get() = _scrollOffset
 
+    private var firstValueMetaDataProviders = EMPTY
     val metaDataProviders: StateFlow<List<Hostname>>
         get() = app.dashboardState
-            .map { event -> event.entries.toList().sortedByDescending { it.second }.map { it.first } }
+            .map { event ->
+                val entries = event.entries.toList().sortedByDescending { it.second }.map { it.first }
+                firstValueMetaDataProviders = entries.first()
+                entries
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
                 initialValue = emptyList(),
             )
 
-    var metaDataProviderText by mutableStateOf(EMPTY)
-
     val availableTags: List<Tag> = app.availableTags().toList().sorted()
+    val availableStudios: List<Studio> = app.availableStudios().toList().sorted()
+    val availableProducers: List<Producer> = app.availableProducers().toList().sorted()
 
-    val availableStudios: List<Tag> = app.availableStudios().toList().sorted()
-
-    val availableProducers: List<Tag> = app.availableProducers().toList().sorted()
+    var metaDataProviderText by mutableStateOf(EMPTY)
+    val selectedTypes = mutableStateListOf<String>()
+    val selectedStatus = mutableStateListOf<String>()
+    val selectedSeasons = mutableStateListOf<String>()
+    val selectedMinEpisodes = mutableStateOf(EMPTY)
+    val selectedMaxEpisodes = mutableStateOf(EMPTY)
+    val selectedMinYear = mutableStateOf(EMPTY)
+    val selectedMaxYear = mutableStateOf(EMPTY)
+    val selectedMinDuration = mutableStateOf(EMPTY)
+    val selectedMaxDuration = mutableStateOf(EMPTY)
+    var durationUnitSelectText by mutableStateOf(Duration.TimeUnit.entries.first().toString().capitalize())
+    val selectedMinScore = mutableStateOf(EMPTY)
+    val selectedMaxScore = mutableStateOf(EMPTY)
+    var scoreTypeSelectText by mutableStateOf(FindByCriteriaConfig.ScoreType.entries.map { it.viewName }.first())
+    val selectedStudios = mutableStateListOf<Studio>()
+    val selectedSearchConjunctionStudios = mutableStateOf(AND)
+    val selectedProducers = mutableStateListOf<Producer>()
+    val selectedSearchConjunctionProducers = mutableStateOf(AND)
+    val selectedTags = mutableStateListOf<Tag>()
+    val selectedSearchConjunctionTags = mutableStateOf(AND)
 
     fun saveScrollPosition(offset: Int) {
         _scrollOffset = offset
@@ -121,6 +146,29 @@ internal class FindByCriteriaViewModel(
             app.findByCriteria(config)
             tabBarViewModel.openOrActivate(SEARCH_RESULTS)
         }
+    }
+
+    fun reset() {
+        metaDataProviderText = firstValueMetaDataProviders
+        selectedTypes.clear()
+        selectedStatus.clear()
+        selectedSeasons.clear()
+        selectedMinEpisodes.value = EMPTY
+        selectedMaxEpisodes.value = EMPTY
+        selectedMinYear.value = EMPTY
+        selectedMaxYear.value = EMPTY
+        selectedMinDuration.value = EMPTY
+        selectedMaxDuration.value = EMPTY
+        durationUnitSelectText = Duration.TimeUnit.entries.first().toString().capitalize()
+        selectedMinScore.value = EMPTY
+        selectedMaxScore.value = EMPTY
+        scoreTypeSelectText = FindByCriteriaConfig.ScoreType.entries.map { it.viewName }.first()
+        selectedStudios.clear()
+        selectedSearchConjunctionStudios.value = AND
+        selectedProducers.clear()
+        selectedSearchConjunctionProducers.value = AND
+        selectedTags.clear()
+        selectedSearchConjunctionTags.value = AND
     }
 
     internal companion object {
