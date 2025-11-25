@@ -12,8 +12,8 @@ import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistencies
 import io.github.manamiproject.manami.app.inconsistencies.InconsistenciesHandler
 import io.github.manamiproject.manami.app.lists.DefaultListHandler
 import io.github.manamiproject.manami.app.lists.ListHandler
-import io.github.manamiproject.manami.app.migration.DefaultMetaDataMigrationHandler
-import io.github.manamiproject.manami.app.migration.MetaDataMigrationHandler
+import io.github.manamiproject.manami.app.migration.DefaultMetaDataProviderMigrationHandler
+import io.github.manamiproject.manami.app.migration.MetaDataProviderMigrationHandler
 import io.github.manamiproject.manami.app.relatedanime.DefaultRelatedAnimeHandler
 import io.github.manamiproject.manami.app.relatedanime.RelatedAnimeHandler
 import io.github.manamiproject.manami.app.search.DefaultSearchHandler
@@ -36,7 +36,7 @@ class Manami(
     private val listHandler: ListHandler = DefaultListHandler(),
     private val relatedAnimeHandler: RelatedAnimeHandler = DefaultRelatedAnimeHandler(),
     private val inconsistenciesHandler: InconsistenciesHandler = DefaultInconsistenciesHandler(),
-    private val metaDataMigrationHandler: MetaDataMigrationHandler = DefaultMetaDataMigrationHandler(),
+    private val metaDataProviderMigrationHandler: MetaDataProviderMigrationHandler = DefaultMetaDataProviderMigrationHandler(),
     private val eventBus: EventBus = CoroutinesFlowEventBus,
 ) : ManamiApp,
     SearchHandler by searchHandler,
@@ -44,7 +44,7 @@ class Manami(
     ListHandler by listHandler,
     RelatedAnimeHandler by relatedAnimeHandler,
     InconsistenciesHandler by inconsistenciesHandler,
-    MetaDataMigrationHandler by metaDataMigrationHandler,
+    MetaDataProviderMigrationHandler by metaDataProviderMigrationHandler,
     EventBus by eventBus {
 
     init {

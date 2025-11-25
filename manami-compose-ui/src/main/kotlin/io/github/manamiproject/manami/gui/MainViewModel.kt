@@ -11,6 +11,7 @@ import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
 import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialogState
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
+import io.github.manamiproject.manami.gui.tabs.Tabs
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
@@ -187,6 +188,10 @@ internal class MainViewModel(
         viewModelScope.launch {
             app.redo()
         }
+    }
+
+    fun openMigrationTab() {
+        tabBarViewModel.openOrActivate(MIGRATION)
     }
 
     fun openAnimeListTab() {

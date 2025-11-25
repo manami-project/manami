@@ -17,37 +17,22 @@ internal class CmdMigrateEntries(
 
     override fun execute(): Boolean {
         if (animeListMappings.isNotEmpty()) {
-            state.addAllAnimeListEntries(
-                animeListMappings.map {
-                    it.key.copy(link = it.value)
-                }
-            )
-
             animeListMappings.forEach {
+                state.addAllAnimeListEntries(listOf(it.key.copy(link = it.value)))
                 state.removeAnimeListEntry(it.key)
             }
         }
 
         if (watchListMappings.isNotEmpty()) {
-            state.addAllWatchListEntries(
-                watchListMappings.map {
-                    it.key.copy(link = it.value)
-                }
-            )
-
             watchListMappings.forEach {
+                state.addAllWatchListEntries(listOf( it.key.copy(link = it.value)))
                 state.removeWatchListEntry(it.key)
             }
         }
 
         if (ignoreListMappings.isNotEmpty()) {
-            state.addAllIgnoreListEntries(
-                ignoreListMappings.map {
-                    it.key.copy(link = it.value)
-                }
-            )
-
             ignoreListMappings.forEach {
+                state.addAllIgnoreListEntries(listOf(it.key.copy(link = it.value)))
                 state.removeIgnoreListEntry(it.key)
             }
         }

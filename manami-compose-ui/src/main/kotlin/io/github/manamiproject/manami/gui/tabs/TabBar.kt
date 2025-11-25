@@ -26,6 +26,7 @@ import io.github.manamiproject.manami.gui.lists.animelist.AnimeList
 import io.github.manamiproject.manami.gui.lists.animelist.EditAnimeListEntryForm
 import io.github.manamiproject.manami.gui.lists.ignorelist.IgnoreList
 import io.github.manamiproject.manami.gui.lists.watchlist.WatchList
+import io.github.manamiproject.manami.gui.migration.Migration
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 
@@ -79,6 +80,7 @@ internal fun TabBar(
                 EDIT_ANIME_LIST_ENTRY_FORM -> EditAnimeListEntryForm()
                 FIX_ANIME_LIST_ENTRY_INCONSISTENCIES_FORM -> FixAnimeListEntryInconsistenciesForm()
                 SEARCH_RESULTS -> SearchResults()
+                MIGRATION -> Migration()
             }
         }
     }

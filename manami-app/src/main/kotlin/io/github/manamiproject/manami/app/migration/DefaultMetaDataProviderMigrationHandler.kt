@@ -17,17 +17,20 @@ import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.config.Hostname
+import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.yield
 
-internal class DefaultMetaDataMigrationHandler(
+internal class DefaultMetaDataProviderMigrationHandler(
     private val cache: AnimeCache = DefaultAnimeCache.instance,
     private val eventBus: EventBus = CoroutinesFlowEventBus,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
     private val state: State = InternalState,
-) : MetaDataMigrationHandler {
+) : MetaDataProviderMigrationHandler {
 
     override suspend fun checkMigration(metaDataProviderFrom: Hostname, metaDataProviderTo: Hostname) {
+        log.info { "Checking meta data provider migration from [$metaDataProviderFrom] to [$metaDataProviderTo]" }
+
         require(cache.availableMetaDataProvider.contains(metaDataProviderFrom)) { "MetaDataProvider [$metaDataProviderFrom] is not supported." }
         require(cache.availableMetaDataProvider.contains(metaDataProviderTo)) { "MetaDataProvider [$metaDataProviderTo] is not supported." }
 
@@ -112,45 +115,86 @@ internal class DefaultMetaDataMigrationHandler(
                 ignoreListMappings = ignoreListMappings,
             )
         }
+
+        log.info { "Finished check for meta data provider migration from [$metaDataProviderFrom] to [$metaDataProviderTo]" }
     }
 
-    override fun migrate(
+    override suspend fun migrate(
         animeListMappings: Map<AnimeListEntry, Link>,
         watchListMappings: Map<WatchListEntry, Link>,
         ignoreListMappings: Map<IgnoreListEntry, Link>,
     ) {
+        log.info { "Starting meta data provider migration." }
+
+        eventBus.metaDataProviderMigrationState.update { current -> current.copy(isRunning = true) }
+        yield()
+
         GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdMigrateEntries(
+                state = state,
                 animeListMappings = animeListMappings,
                 watchListMappings = watchListMappings,
                 ignoreListMappings = ignoreListMappings,
             )
         ).execute()
+
+        eventBus.metaDataProviderMigrationState.update { current ->
+            current.copy(
+                isRunning = false,
+                animeListMappings = emptyMap(),
+                animeListEntriesMultipleMappings = emptyMap(),
+                watchListMappings = emptyMap(),
+                watchListEntriesMultipleMappings = emptyMap(),
+                ignoreListMappings = emptyMap(),
+                ignoreListEntriesMultipleMappings = emptyMap(),
+            )
+        }
+
+        log.info { "Finished meta data provider migration." }
     }
 
-    override fun removeUnmapped(
+    override suspend fun removeUnmapped(
         animeListEntriesWithoutMapping: Collection<AnimeListEntry>,
         watchListEntriesWithoutMapping: Collection<WatchListEntry>,
         ignoreListEntriesWithoutMapping: Collection<IgnoreListEntry>,
     ) {
+        log.info { "Starting removal of unmapped entries." }
+
+        eventBus.metaDataProviderMigrationState.update { current -> current.copy(isRunning = true) }
+        yield()
+
         GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdRemoveUnmappedMigrationEntries(
+                state = state,
                 animeListEntriesWithoutMapping = animeListEntriesWithoutMapping,
                 watchListEntriesWithoutMapping = watchListEntriesWithoutMapping,
                 ignoreListEntriesWithoutMapping = ignoreListEntriesWithoutMapping,
             )
         ).execute()
+
+        eventBus.metaDataProviderMigrationState.update { current ->
+            current.copy(
+                isRunning = false,
+                animeListEntriesWithoutMapping = emptyList(),
+                watchListEntriesWithoutMapping = emptyList(),
+                ignoreListEntriesWithoutMapping = emptyList(),
+            )
+        }
+
+        log.info { "Finished meta data provider migration." }
     }
 
     companion object {
+        private val log by LoggerDelegate()
+
         /**
-         * Singleton of [DefaultMetaDataMigrationHandler]
+         * Singleton of [DefaultMetaDataProviderMigrationHandler]
          * @since 4.0.0
          */
-        val instance: DefaultMetaDataMigrationHandler by lazy { DefaultMetaDataMigrationHandler() }
+        val instance: DefaultMetaDataProviderMigrationHandler by lazy { DefaultMetaDataProviderMigrationHandler() }
     }
 }

@@ -19,4 +19,5 @@ internal enum class Tabs(
     EDIT_ANIME_LIST_ENTRY_FORM(title = "Edit Anime List Entry"),
     FIX_ANIME_LIST_ENTRY_INCONSISTENCIES_FORM(title = "Fix Inconsistency"),
     SEARCH_RESULTS(title = "Search Results"),
+    MIGRATION(title = "MetaDataProvider Migration"),
 }

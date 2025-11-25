@@ -95,7 +95,7 @@ fun main() = application {
                 Item(
                     text = "Meta Data Provider Migration",
                     shortcut = KeyShortcut(Key.M, meta = true),
-                    onClick = { TODO() },
+                    onClick = { viewModel.openMigrationTab() },
                     enabled = isAnyListContainingEntries,
                 )
             }
