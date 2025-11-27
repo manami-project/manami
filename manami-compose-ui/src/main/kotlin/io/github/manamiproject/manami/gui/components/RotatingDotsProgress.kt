@@ -1,11 +1,6 @@
 package io.github.manamiproject.manami.gui.components
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -13,9 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.manamiproject.manami.gui.theme.ThemeState
 
 @Composable
 fun RotatingDotsProgress(size: Dp = 64.dp, alpha: Float = 1.0f) {
@@ -42,7 +37,7 @@ fun RotatingDotsProgress(size: Dp = 64.dp, alpha: Float = 1.0f) {
             val y = cy + (radius * kotlin.math.sin(angleRad)).toFloat()
 
             drawCircle(
-                color = Color(0xFF1976D2),
+                color = ThemeState.instance.currentScheme.value.primary,
                 radius = dotRadius,
                 center = Offset(x, y),
                 alpha = 1f - i * 0.25f
