@@ -49,7 +49,8 @@ internal fun <T : AnimeEntry> AnimeTable(
                         onSortRequested = { newDirection -> viewModel.sort(newDirection) },
                     )
                 }
-                items(items = entries, key = { it.link }) { entry ->
+                // TODO 4.1.0 Change key back to `items(items = entries, key = { it.link }) { entry ->`
+                items(items = entries, key = { "${it.link}-${it.title}" }) { entry ->
                     AnimeTableRow(
                         config = config,
                         anime = entry,

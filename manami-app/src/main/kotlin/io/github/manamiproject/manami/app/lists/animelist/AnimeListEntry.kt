@@ -15,7 +15,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 
 data class AnimeListEntry(
-    override val link: LinkEntry = NoLink,
+    override val link: LinkEntry = NoLink, // TODO: 4.1.0: AnimeListEntries must must have a valid link. Change LinkEntry to Link
     override val title: Title,
     override val thumbnail: URI = NO_PICTURE,
     val episodes: Episodes,

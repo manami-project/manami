@@ -8,6 +8,7 @@ import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.inconsistencies.InconsistencyHandler
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
@@ -25,12 +26,19 @@ internal class AnimeListDeadEntriesInconsistenciesHandler(
     override suspend fun execute(): List<AnimeListEntry> {
         log.info { "Starting check for dead entries in AnimeList." }
 
-        val result = state.animeList()
+        val deadEntries = state.animeList()
             .filter { it.link is Link }
             .map { it to cache.fetch(it.link.asLink().uri) }
             .filter { it.second is DeadEntry }
             .map { it.first }
-            .toList()
+            .toSet()
+
+        // TODO 4.1.0 Remove as soon as AnimeListEntry uses Link instead of LinkEntry
+        val entriesWithoutLink = state.animeList()
+            .filter { it.link is NoLink }
+            .toSet()
+
+        val result = deadEntries.union(entriesWithoutLink).toList()
 
         eventBus.inconsistenciesState.update { current ->
             current.copy(animeListDeadEntriesInconsistencies = result)

@@ -65,6 +65,7 @@ internal class EditAnimeListEntryFormViewModel(
         val checkedUri = try {
             val uri = URI(link)
             uri.toURL()
+            if (uri.host !in app.dashboardState.value.entries.keys) throw IllegalArgumentException()
             uri
         } catch (_: Exception) {
             return

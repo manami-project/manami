@@ -61,14 +61,15 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
                     value = link,
                     onValueChange = { link = it },
                     label = { Text("Link to meta data provider") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
                 )
 
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
                     label = { Text("Title") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 OutlinedTextField(
@@ -79,7 +80,7 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
                         }
                     },
                     label = { Text("Episodes") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 ExposedDropdownMenuBox(
