@@ -8,7 +8,6 @@ import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.extensions.RegularFile
 import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.json.Json
-import io.github.manamiproject.modb.core.json.Json.SerializationOptions.DEACTIVATE_PRETTY_PRINT
 import io.github.manamiproject.modb.core.json.Json.SerializationOptions.DEACTIVATE_SERIALIZE_NULL
 
 internal class DefaultFileWriter(
@@ -33,7 +32,7 @@ internal class DefaultFileWriter(
             ignoreListEntries = state.ignoreList().map { it.link.uri.toString() }.sorted(),
         )
 
-        Json.toJson(manamiFile, DEACTIVATE_PRETTY_PRINT, DEACTIVATE_SERIALIZE_NULL).writeToFile(file, true)
+        Json.toJson(manamiFile, DEACTIVATE_SERIALIZE_NULL).writeToFile(file, true)
     }
     
     companion object {
