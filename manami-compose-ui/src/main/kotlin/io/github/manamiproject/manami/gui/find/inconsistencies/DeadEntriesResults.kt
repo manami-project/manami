@@ -17,7 +17,7 @@ internal fun DeadEntryResults(viewModel: DeadEntryResultsViewModel = DeadEntryRe
             withToWatchListButton = false
             withToIgnoreListButton = false
             withHideButton = true
-            withDeleteButton = false
+            withDeleteButton = true
             withSortableTitle = false
         }
     }

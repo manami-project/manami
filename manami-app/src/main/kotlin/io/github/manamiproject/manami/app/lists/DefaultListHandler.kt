@@ -10,6 +10,7 @@ import io.github.manamiproject.manami.app.commands.history.DefaultCommandHistory
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.EventBus
 import io.github.manamiproject.manami.app.events.FindByTitleState
+import io.github.manamiproject.manami.app.inconsistencies.DefaultInconsistenciesHandler
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdAddAnimeListEntry
 import io.github.manamiproject.manami.app.lists.animelist.CmdRemoveAnimeListEntry
@@ -57,14 +58,16 @@ internal class DefaultListHandler(
     override fun animeList(): List<AnimeListEntry> = state.animeList()
 
     override fun removeAnimeListEntry(entry: AnimeListEntry) {
-        GenericReversibleCommand(
+        if (GenericReversibleCommand(
             state = state,
             commandHistory = commandHistory,
             command = CmdRemoveAnimeListEntry(
                 state = state,
                 animeListEntry = entry,
             )
-        ).execute()
+        ).execute()) {
+            eventBus.inconsistenciesState.update { current -> current.copy(animeListDeadEntriesInconsistencies = current.animeListDeadEntriesInconsistencies.filterNot { it == entry }) }
+        }
     }
 
     override fun replaceAnimeListEntry(current: AnimeListEntry, replacement: AnimeListEntry) {

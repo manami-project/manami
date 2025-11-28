@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 internal class DeadEntryResultsViewModel(private val app: Manami = Manami.instance): DefaultAnimeTableViewModel<AnimeListEntry>()  {
 
@@ -27,7 +28,11 @@ internal class DeadEntryResultsViewModel(private val app: Manami = Manami.instan
                 initialValue = emptyList(),
             )
 
-    override fun delete(anime: AnimeListEntry) = throw UnsupportedOperationException()
+    override fun delete(anime: AnimeListEntry) {
+        viewModelScope.launch {
+            app.removeAnimeListEntry(anime)
+        }
+    }
 
     override fun openDirectory(anime: AnimeListEntry) {
         when(val openedFile = app.generalAppState.value.openedFile) {
