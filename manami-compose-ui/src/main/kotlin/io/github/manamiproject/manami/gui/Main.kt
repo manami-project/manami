@@ -7,14 +7,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
-import androidx.compose.ui.window.MenuBar
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowState
-import androidx.compose.ui.window.application
+import androidx.compose.ui.window.*
 import io.github.manamiproject.manami.gui.components.About
-import io.github.manamiproject.manami.gui.components.SafelyQuitDialog
 import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialog
 import io.github.manamiproject.manami.gui.tabs.TabBar
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
@@ -32,16 +29,19 @@ fun main() = application {
     val isCachePopulationDone by viewModel.isCachePopulationDone.collectAsState()
     val windowTitle by viewModel.windowTitle.collectAsState()
     val showAboutDialog by viewModel.showAboutDialog.collectAsState()
-    val showSafelyQuitDialog by viewModel.showSafelyQuitDialog.collectAsState()
     val showUnsavedChangesDialogState by viewModel.showUnsavedChangesDialogState.collectAsState()
     val windowState = remember { WindowState(size = viewModel.windowSize()) }
 
     Window(
-        onCloseRequest = { viewModel.showSafelyQuitDialog() },
+        onCloseRequest = { viewModel.quit(object: FrameWindowScope{
+            override val window: ComposeWindow
+                get() = viewModel.mainWindow
+        }) },
         title = windowTitle,
         state = windowState,
     ) {
         val mainWindow = this
+        viewModel.mainWindow = mainWindow.window
 
         MenuBar {
             Menu("File") {
@@ -164,10 +164,6 @@ fun main() = application {
             ) {
                 if (showAboutDialog) {
                     About { viewModel.closeAboutDialog() }
-                }
-
-                if (showSafelyQuitDialog) {
-                    SafelyQuitDialog { viewModel.closeSafelyQuitDialog() }
                 }
 
                 if (showUnsavedChangesDialogState.showUnsavedChangesDialog) {

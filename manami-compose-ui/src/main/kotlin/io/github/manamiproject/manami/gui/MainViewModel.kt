@@ -1,5 +1,6 @@
 package io.github.manamiproject.manami.gui
 
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
@@ -11,7 +12,6 @@ import io.github.manamiproject.manami.gui.components.showOpenFileDialog
 import io.github.manamiproject.manami.gui.components.showSaveAsFileDialog
 import io.github.manamiproject.manami.gui.components.unsavedchangesdialog.UnsavedChangesDialogState
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
-import io.github.manamiproject.manami.gui.tabs.Tabs
 import io.github.manamiproject.manami.gui.tabs.Tabs.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
@@ -26,6 +26,8 @@ internal class MainViewModel(
     private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
 ) {
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
+
+    lateinit var mainWindow: ComposeWindow
 
     val isSaved: StateFlow<Boolean> = app.generalAppState
         .map { it.isFileSaved }
@@ -112,9 +114,6 @@ internal class MainViewModel(
 
     private val _showUnsavedChangesDialog = MutableStateFlow(UnsavedChangesDialogState())
     val showUnsavedChangesDialogState = _showUnsavedChangesDialog.asStateFlow()
-
-    private val _showSafelyQuitDialog = MutableStateFlow(false)
-    val showSafelyQuitDialog = _showSafelyQuitDialog.asStateFlow()
 
     fun windowSize(): DpSize {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
@@ -228,7 +227,11 @@ internal class MainViewModel(
                 UnsavedChangesDialogState(
                     showUnsavedChangesDialog = true,
                     onCloseRequest = { _showUnsavedChangesDialog.update { UnsavedChangesDialogState() } },
-                    onYes = { save(parent) },
+                    onYes = {
+                        save(parent)
+                        while (!app.generalAppState.value.isFileSaved) {}
+                        quit(parent, true)
+                    },
                     onNo = { quit(parent, true) },
                 )
             }
@@ -241,14 +244,6 @@ internal class MainViewModel(
 
     fun closeAboutDialog() {
         _showAboutDialog.update { false }
-    }
-
-    fun showSafelyQuitDialog() {
-        _showSafelyQuitDialog.update { true }
-    }
-
-    fun closeSafelyQuitDialog() {
-        _showSafelyQuitDialog.update { false }
     }
 
     internal companion object {
