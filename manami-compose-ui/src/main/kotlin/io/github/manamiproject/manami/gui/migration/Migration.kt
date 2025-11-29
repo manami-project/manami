@@ -135,10 +135,14 @@ internal fun Migration(viewModel: MigrationViewModel = MigrationViewModel.instan
                 Box(modifier = Modifier.fillMaxSize()) {
                     LazyColumn(
                         state = viewModel.listState,
-                        modifier = Modifier.fillMaxSize().padding(16.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(80.dp)
                     ) {
                         items(items = entries.value, key = { "${it.animeEntry.link}-${it.animeEntry.title}" }) { entry ->
-                            MigrationSelectionEntry(entry)
+                            when (entry.possibleMappings.isEmpty()) {
+                                true -> AnimeListEntriesWithoutMapping(entry)
+                                false -> MigrationSelectionEntry(entry)
+                            }
                         }
                     }
                     VerticalScrollbar(

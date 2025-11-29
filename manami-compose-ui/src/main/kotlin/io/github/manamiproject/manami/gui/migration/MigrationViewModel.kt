@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.AnimeEntry
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.app.lists.LinkEntry
+import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -70,8 +72,8 @@ internal class MigrationViewModel(private val app: Manami = Manami.instance) {
                 initialValue = false,
             )
 
-    private val _manualSelections = MutableStateFlow<Map<AnimeEntry, Link>>(emptyMap())
-    val manualSelections: StateFlow<Map<AnimeEntry, Link>> = _manualSelections
+    private val _manualSelections = MutableStateFlow<Map<AnimeEntry, LinkEntry>>(emptyMap())
+    val manualSelections: StateFlow<Map<AnimeEntry, LinkEntry>> = _manualSelections
 
     val entries: StateFlow<List<MigrationSelectionEntry>>
         get() = app.metaDataProviderMigrationState
@@ -79,22 +81,28 @@ internal class MigrationViewModel(private val app: Manami = Manami.instance) {
                 val animeList = event.animeListEntriesMultipleMappings.map { (key, value) ->
                     MigrationSelectionEntry(
                         animeEntry = key,
-                        possibleMappings = value
+                        possibleMappings = value,
                     )
                 }
                 val watchList = event.watchListEntriesMultipleMappings.map { (key, value) ->
                     MigrationSelectionEntry(
                         animeEntry = key,
-                        possibleMappings = value
+                        possibleMappings = value,
                     )
                 }
                 val ignoreList = event.ignoreListEntriesMultipleMappings.map { (key, value) ->
                     MigrationSelectionEntry(
                         animeEntry = key,
-                        possibleMappings = value
+                        possibleMappings = value,
                     )
                 }
-                animeList.union(watchList).union(ignoreList).toList()
+                val animeListWithoutMapping = event.animeListEntriesWithoutMapping.map {
+                    MigrationSelectionEntry(
+                        animeEntry = it,
+                        possibleMappings = emptySet(),
+                    )
+                }
+                animeList.union(watchList).union(ignoreList).union(animeListWithoutMapping).toList()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -113,14 +121,14 @@ internal class MigrationViewModel(private val app: Manami = Manami.instance) {
     fun migrate() {
         viewModelScope.launch {
             app.removeUnmapped(
-                animeListEntriesWithoutMapping = emptyList(),
+                animeListEntriesWithoutMapping = _manualSelections.value.filter { (key, value) -> key is AnimeListEntry && value is NoLink }.keys.map { it as AnimeListEntry },
                 watchListEntriesWithoutMapping = app.metaDataProviderMigrationState.value.watchListEntriesWithoutMapping,
                 ignoreListEntriesWithoutMapping = app.metaDataProviderMigrationState.value.ignoreListEntriesWithoutMapping,
             )
             app.migrate(
-                animeListMappings = app.metaDataProviderMigrationState.value.animeListMappings + _manualSelections.value.filter { (key, _) -> key is AnimeListEntry }.map { (key, value) -> key as AnimeListEntry to  value},
-                watchListMappings = app.metaDataProviderMigrationState.value.watchListMappings + _manualSelections.value.filter { (key, _) -> key is WatchListEntry }.map { (key, value) -> key as WatchListEntry to  value},
-                ignoreListMappings = app.metaDataProviderMigrationState.value.ignoreListMappings + _manualSelections.value.filter { (key, _) -> key is IgnoreListEntry }.map { (key, value) -> key as IgnoreListEntry to  value},
+                animeListMappings = app.metaDataProviderMigrationState.value.animeListMappings + _manualSelections.value.filter { (key, _) -> key is AnimeListEntry }.map { (key, value) -> key as AnimeListEntry to  value.asLink()},
+                watchListMappings = app.metaDataProviderMigrationState.value.watchListMappings + _manualSelections.value.filter { (key, _) -> key is WatchListEntry }.map { (key, value) -> key as WatchListEntry to  value.asLink()},
+                ignoreListMappings = app.metaDataProviderMigrationState.value.ignoreListMappings + _manualSelections.value.filter { (key, _) -> key is IgnoreListEntry }.map { (key, value) -> key as IgnoreListEntry to  value.asLink()},
             )
         }
     }
@@ -134,9 +142,15 @@ internal class MigrationViewModel(private val app: Manami = Manami.instance) {
         listState.scrollToItem(lastIndex, lastOffset)
     }
 
-    fun selectMapping(entry: AnimeEntry, link: Link) {
+    fun selectMapping(entry: AnimeEntry, link: LinkEntry) {
         _manualSelections.update { current ->
             current + (entry to link)
+        }
+    }
+
+    fun removeMapping(animeEntry: AnimeEntry) {
+        _manualSelections.update { current ->
+            current - animeEntry
         }
     }
 
