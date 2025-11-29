@@ -9,6 +9,7 @@ plugins {
 }
 
 val githubUsername = "manami-project"
+val version = project.findProperty("release.version") as String? ?: "4.0.0"
 val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2 // most recent stable kotlin version for language and std lib
 
 repositories {
@@ -73,13 +74,13 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(
-                TargetFormat.Deb,
                 TargetFormat.Dmg,
                 TargetFormat.Exe,
                 TargetFormat.Rpm,
+                TargetFormat.Deb,
             )
             packageName = "manami"
-            packageVersion = "4.0.0"
+            packageVersion = version
 
             macOS {
                 jvmArgs += "-Dapple.awt.application.appearance=system"
