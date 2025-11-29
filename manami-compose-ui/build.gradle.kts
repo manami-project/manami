@@ -9,7 +9,7 @@ plugins {
 }
 
 val githubUsername = "manami-project"
-val version = project.findProperty("release.version") as String? ?: "4.0.0"
+val version = project.findProperty("release.version") as String? ?: "1.0.0"
 val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2 // most recent stable kotlin version for language and std lib
 
 repositories {
@@ -79,7 +79,7 @@ compose.desktop {
                 TargetFormat.Rpm,
                 TargetFormat.Deb,
             )
-            packageName = "manami"
+            packageName = "manami-${version}"
             packageVersion = version
 
             macOS {

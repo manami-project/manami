@@ -6,48 +6,74 @@ on:
       - published
 
 jobs:
-  release:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Extract release version
-        run: echo "RELEASE_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: 21
       - name: Set executable flag on gradlew
         run: chmod +x gradlew
       - name: Execute tests
         env:
           GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
-        run: ./gradlew test -Prelease.version=$RELEASE_VERSION
-      - name: Set version
-        run: echo $RELEASE_VERSION > manami-app/src/main/resources/manami.version
-      - name: Build executable fatJar
-        env:
-          GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
-        run: ./gradlew shadowJar -Prelease.version=$RELEASE_VERSION
-      - name: Upload file to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: manami-gui/build/libs/manami.jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - id: fetch-latest-release
-        name: Fetch latest release tag
-        run: |
-          version=$(git tag --sort=creatordate | tail -2 | head -1)
-          echo "PREVIOUS_VERSION=$version" >> $GITHUB_OUTPUT
-      - name: Delete outdated release assets
-        uses: mknejp/delete-release-assets@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.fetch-latest-release.outputs.PREVIOUS_VERSION }}
-          assets: manami.jar
-          fail-if-no-release: false
-          fail-if-no-assets: false
+        run: ./gradlew test
+
+  build:
+    needs: tests
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            gradleTask: packageExe
+            ext: exe
+          - os: macos-latest
+            gradleTask: packageDmg
+            ext: dmg
+          - os: ubuntu-latest
+            gradleTask: packageRpm
+            ext: rpm
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: "zulu"
+        java-version: 21
+    - name: Set executable flag on gradlew
+      run: chmod +x gradlew
+    - name: Extract release version
+      run: echo "RELEASE_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+    - name: Set version
+      run: echo $RELEASE_VERSION > manami-app/src/main/resources/manami.version
+    - name: Build artifact
+      env:
+        GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+      run: ./gradlew ${{ matrix.gradleTask }} -Prelease.version=$RELEASE_VERSION
+    - name: Upload file to release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: manami-gui/build/**/*.${{ matrix.ext }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - id: fetch-latest-release
+      name: Fetch latest release tag
+      run: |
+        version=$(git tag --sort=creatordate | tail -2 | head -1)
+        echo "PREVIOUS_VERSION=$version" >> $GITHUB_OUTPUT
+    - name: Delete outdated release assets
+      uses: mknejp/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ steps.fetch-latest-release.outputs.PREVIOUS_VERSION }}
+        assets: "*.${{ matrix.ext }}"
+        fail-if-no-release: false
+        fail-if-no-assets: false
