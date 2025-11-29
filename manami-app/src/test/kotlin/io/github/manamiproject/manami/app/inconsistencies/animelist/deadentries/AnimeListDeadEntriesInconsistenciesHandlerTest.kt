@@ -32,7 +32,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
     inner class ExecuteTests {
 
         @Test
-        fun `ignore entry if link is empty`() {
+        fun `include entry if link is empty`() {
             runBlocking {
                 // given
                 val testState = object: State by TestState {
@@ -63,7 +63,16 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
                 val result = inconsistencyHandler.execute()
 
                 // then
-                assertThat(result).isEmpty()
+                assertThat(result).containsExactly(
+                    AnimeListEntry(
+                        link = NoLink,
+                        title = "No Link Entry",
+                        type = TV,
+                        episodes = 64,
+                        thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
+                        location = Path("."),
+                    )
+                )
             }
         }
 
@@ -77,16 +86,7 @@ internal class AnimeListDeadEntriesInconsistenciesHandlerTest {
 
                 val testState = object: State by TestState {
                     override fun animeList(): List<AnimeListEntry> {
-                        return listOf(
-                            AnimeListEntry(
-                                link = NoLink,
-                                title = "No Link Entry",
-                                type = TV,
-                                episodes = 64,
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                                location = Path("."),
-                            ),
-                        )
+                        return emptyList()
                     }
                 }
 

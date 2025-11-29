@@ -82,7 +82,42 @@ internal class DefaultFileWriterTest {
             // then
             val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                  {"version":"3.0.0","animeListEntries":[{"link":"https://myanimelist.net/anime/11235","title":"Amagami SS+ Plus","thumbnail":"https://cdn.myanimelist.net/images/anime/13/33359.jpg","episodes":"13","type":"TV","location":"some/relative/path/amagami_ss+_plus"},{"title":"H2O: Footprints in the Sand","thumbnail":"https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png","episodes":"4","type":"SPECIAL","location":"some/relative/path/h2o_-_footprints_in_the_sand_special"},{"link":"https://myanimelist.net/anime/248","title":"Ichigo 100%","thumbnail":"https://cdn.myanimelist.net/images/anime/5/20036.jpg","episodes":"12","type":"TV","location":"some/relative/path/ichigo_100%"}],"watchListEntries":["https://myanimelist.net/anime/1535","https://myanimelist.net/anime/5114"],"ignoreListEntries":["https://myanimelist.net/anime/37989","https://myanimelist.net/anime/40059"]}
+                {
+                  "version": "3.0.0",
+                  "animeListEntries": [
+                    {
+                      "link": "https://myanimelist.net/anime/11235",
+                      "title": "Amagami SS+ Plus",
+                      "thumbnail": "https://cdn.myanimelist.net/images/anime/13/33359.jpg",
+                      "episodes": "13",
+                      "type": "TV",
+                      "location": "some/relative/path/amagami_ss+_plus"
+                    },
+                    {
+                      "title": "H2O: Footprints in the Sand",
+                      "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
+                      "episodes": "4",
+                      "type": "SPECIAL",
+                      "location": "some/relative/path/h2o_-_footprints_in_the_sand_special"
+                    },
+                    {
+                      "link": "https://myanimelist.net/anime/248",
+                      "title": "Ichigo 100%",
+                      "thumbnail": "https://cdn.myanimelist.net/images/anime/5/20036.jpg",
+                      "episodes": "12",
+                      "type": "TV",
+                      "location": "some/relative/path/ichigo_100%"
+                    }
+                  ],
+                  "watchListEntries": [
+                    "https://myanimelist.net/anime/1535",
+                    "https://myanimelist.net/anime/5114"
+                  ],
+                  "ignoreListEntries": [
+                    "https://myanimelist.net/anime/37989",
+                    "https://myanimelist.net/anime/40059"
+                  ]
+                }
             """.trimIndent())
         }
     }
@@ -105,7 +140,12 @@ internal class DefaultFileWriterTest {
             // then
             val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                {"version":"3.0.0","animeListEntries":[],"watchListEntries":[],"ignoreListEntries":[]}
+                {
+                  "version": "3.0.0",
+                  "animeListEntries": [],
+                  "watchListEntries": [],
+                  "ignoreListEntries": []
+                }
             """.trimIndent())
         }
     }
@@ -135,7 +175,12 @@ internal class DefaultFileWriterTest {
             // then
             val content = tempDir.resolve("test.json").readFile()
             assertThat(content).isEqualTo("""
-                {"version":"3.1.0","animeListEntries":[],"watchListEntries":[],"ignoreListEntries":[]}
+                {
+                  "version": "3.1.0",
+                  "animeListEntries": [],
+                  "watchListEntries": [],
+                  "ignoreListEntries": []
+                }
             """.trimIndent())
         }
     }
