@@ -56,7 +56,7 @@ internal class DefaultSearchHandler(
             && watchListResults.map { it.link }.none { it.uri.toString() == searchString }
             && ignoreListResults.map { it.link }.none { it.uri.toString() == searchString }
         ) {
-            cache.fetch(URI("https://myanimelist.net/anime/62907"))
+            cache.fetch(URI(searchString))
         }
 
         val entriesInLists: Set<URI> = state.animeList()
