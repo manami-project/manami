@@ -35,6 +35,7 @@ kotlin {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    dependsOn("generateBuildConfig")
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
         apiVersion.set(kotlinVersion)
@@ -61,4 +62,31 @@ fun parameter(name: String, default: String = ""): String {
     }
 
     return default
+}
+
+// The following code is needed to generate the build version in the code and make it available at runtime
+val generatedDir = layout.projectDirectory.dir("src/gen/kotlin")
+
+tasks.register("generateBuildConfig") {
+    val outputDir = generatedDir.dir("io/github/manamiproject/manami/app/versioning").asFile
+    outputs.dir(outputDir)
+
+    doLast {
+        val version = project.findProperty("release.version") ?: throw IllegalStateException("Release version not set")
+        val file = File(outputDir, "BuildVersion.kt")
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package io.github.manamiproject.manami.app.versioning
+
+            internal object BuildVersion {
+                const val VERSION = "$version"
+            }
+            """.trimIndent()
+        )
+    }
+}
+
+sourceSets.main {
+    kotlin.srcDir(generatedDir)
 }

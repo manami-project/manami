@@ -79,7 +79,7 @@ compose.desktop {
                 TargetFormat.Rpm,
                 TargetFormat.Deb,
             )
-            packageName = "manami-${version}"
+            packageName = "manami"
             packageVersion = version
 
             macOS {

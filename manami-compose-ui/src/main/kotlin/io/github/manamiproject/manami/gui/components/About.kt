@@ -13,21 +13,21 @@ import androidx.compose.ui.window.rememberDialogState
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
 import io.github.manamiproject.manami.gui.theme.ThemeState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 
 @Composable
 internal fun About(onCloseRequest: () -> Unit) {
-    var licenseLink by remember { mutableStateOf("AGPL-3.0") }
-    CoroutineScope(Dispatchers.IO).async {
-        licenseLink = "https://github.com/manami-project/manami/blob/${ResourceBasedVersionProvider.version().version}/LICENSE"
+    var licenseLink by remember { mutableStateOf("<<loading>>") }
+    var currentVersion by remember { mutableStateOf("???") }
+
+    LaunchedEffect(Unit) {
+        currentVersion = ResourceBasedVersionProvider.version().version
+        licenseLink = "https://github.com/manami-project/manami/blob/${currentVersion}/LICENSE"
     }
 
     DialogWindow(
         onCloseRequest = onCloseRequest,
         title = "About",
-        state = rememberDialogState(width = 800.dp, height = 300.dp),
+        state = rememberDialogState(width = 800.dp, height = 350.dp),
     ) {
         ManamiTheme {
             Box( // unable to modify the background of the main window so painting a custom one is necessary
@@ -38,6 +38,7 @@ internal fun About(onCloseRequest: () -> Unit) {
                 Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
                     Text(
                         """
+                        Manami $currentVersion
                         Free non-commercial software. (AGPLv3.0)
         
                         Project / Source code: https://github.com/manami-project/manami

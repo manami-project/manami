@@ -57,7 +57,7 @@ jobs:
     - name: Build artifact
       env:
         GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
-      run: ./gradlew ${{ matrix.gradleTask }} -Prelease.version=$RELEASE_VERSION
+      run: ./gradlew compileKotlin ${{ matrix.gradleTask }} -Prelease.version=$RELEASE_VERSION
     - name: Upload file to release
       uses: softprops/action-gh-release@v2
       with:

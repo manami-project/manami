@@ -7,13 +7,13 @@ import kotlin.test.Test
 internal class ResourceBasedVersionProviderTest {
 
     @Test
-    fun `default version is 3-0-0 - the version is overwritten during release build`() {
+    fun `default version is 0-0-0 - the version is overwritten during release build`() {
         runBlocking {
             // when
             val result = ResourceBasedVersionProvider.version()
 
             // then
-            assertThat(result.toString()).isEqualTo("3.0.0")
+            assertThat(result.toString()).isEqualTo("0.0.0")
         }
     }
 }
