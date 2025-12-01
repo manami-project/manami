@@ -49,7 +49,8 @@ class Manami(
 
     init {
         log.info {"Starting manami" }
-        CoroutineScope(IO).launch {
+
+        CoroutineScope(IO).apply {
             launch { DefaultLatestVersionChecker().checkLatestVersion() }
             launch { AnimeCachePopulator().populate(DefaultAnimeCache.instance) }
             launch { DeadEntriesCachePopulator(config = AnidbConfig, url = URI("$DEAD_ENTRIES_BASE_URL/anidb-minified.json.zst").toURL()).populate(DefaultAnimeCache.instance) }

@@ -50,7 +50,7 @@ internal class DeadEntriesCachePopulator(
         log.info { "Populating cache with dead entries from [${config.hostname()}]" }
 
         val deadEntries = if (useLocalFiles) {
-            val file = Path("${config.hostname()}.zst")
+            val file = appDataDir(Path("${config.hostname()}.zst"))
 
             val isDownloadFile = if (!file.regularFileExists()) {
                 true

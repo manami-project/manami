@@ -54,7 +54,7 @@ internal class AnimeCachePopulator(
         eventBus.dashboardState.update { current -> current.copy(isAnimeCachePopulatorRunning = true) }
 
         val animeFlow = if (useLocalFiles) {
-            val file = Path(fileName)
+            val file = appDataDir(Path(fileName))
 
             val isDownloadFile = if (!file.regularFileExists()) {
                 true

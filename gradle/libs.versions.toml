@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.2.21"
-kotlinx-coroutines-core-jvm = "1.10.2"
+kotlinx-coroutines-core = "1.10.2"
 modb-core = "19.0.4"
 modb-serde = "6.1.0"
 modb-anidb = "7.0.7"
@@ -26,7 +26,7 @@ jetbrains-compose-material-icons-extended-desktop = "1.7.3"
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
-kotlinx-coroutines-core-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines-core-jvm" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 modb-core = { module = "io.github.manamiproject:modb-core", version.ref = "modb-core" }
 modb-serde = { module = "io.github.manamiproject:modb-serde", version.ref = "modb-serde" }
 modb-anidb = { module = "io.github.manamiproject:modb-anidb", version.ref = "modb-anidb" }
@@ -57,7 +57,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin = [
     "kotlin-stdlib",
     "kotlin-reflect",
-    "kotlinx-coroutines-core-jvm",
+    "kotlinx-coroutines-core",
 ]
 modb = [
     "modb-core",
