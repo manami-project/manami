@@ -21,6 +21,7 @@ import io.github.manamiproject.manami.app.search.SearchHandler
 import io.github.manamiproject.manami.app.versioning.DefaultLatestVersionChecker
 import io.github.manamiproject.modb.anidb.AnidbConfig
 import io.github.manamiproject.modb.anilist.AnilistConfig
+import io.github.manamiproject.modb.core.coverage.KoverIgnore
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.kitsu.KitsuConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 import java.net.URI
 import kotlin.system.exitProcess
 
+@KoverIgnore
 class Manami(
     private val fileHandler: FileHandler = DefaultFileHandler(),
     private val searchHandler: SearchHandler = DefaultSearchHandler(),
