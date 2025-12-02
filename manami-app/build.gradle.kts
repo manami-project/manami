@@ -50,6 +50,16 @@ tasks.withType<Test> {
     maxParallelForks = rootProject.extra["maxParallelForks"] as Int
 }
 
+kover {
+    reports {
+        filters {
+            excludes {
+                annotatedBy("io.github.manamiproject.modb.core.coverage.KoverIgnore")
+            }
+        }
+    }
+}
+
 fun parameter(name: String, default: String = ""): String {
     val env = System.getenv(name) ?: ""
     if (env.isNotBlank()) {
