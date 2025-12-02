@@ -8,18 +8,18 @@ Manami creates an index file for the anime that you already watched and stored o
 * Categorize anime in watched, plan to watch/watching, ignore
 * Automatically fill out anime data upon adding a new entry
   * supports multiple meta data providers using data from [anime-offline-database](https://github.com/manami-project/anime-offline-database)
-* Find anime by tags
+* Find anime by title, url or a combination of various meta data 
 * Browse anime seasons
-* Find related anime for all entries in your anime list
-* Find similar anime based on tags
+* Find related anime for a specific entry (search for franchise) or all entries of your anime list or watch list
 * Suggestions to ignore anime
+* Find similar anime based on tags
 * Migrate entries from one meta data provider to another
 * Find inconsistencies
-  * Find updated meta data in animelist/watchlist/ignorelist entries and automatically fix them
-  * Find dead entries in animelist
-  * Find dead entries in watchlist/ignorelist and automatically remove them
+  * Find updated meta data in your anime list entries and automatically fix them
+  * Find dead entries in your anime list
+  * Automatically updates meta data for watch list and ignore list entries and automatically removes dead entries
   * Check if number of files equals number of expected episodes
-* No lock-in. The data is persisted as XML file and therefore can be converted and migrated very easily
+* No lock-in. The data is persisted as JSON and therefore can be converted and migrated very easily
 * No need to provide username or password
 * No installer, it's portable
 
@@ -30,9 +30,7 @@ Manami creates an index file for the anime that you already watched and stored o
 * I created this tool for my personal needs to support my workflow.
 
 ## Installation
-* Requires JDK 21
-* Download the *.jar file of the latest release
-* No installation or additional setup needed. Just Download the `*.jar` and start it by double click or via console `java -jar manami.jar`.
+* No installation or additional setup needed. Just Download the file for your OS and start it.
 
 ## Configuration
 
