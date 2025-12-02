@@ -72,7 +72,7 @@ tasks.register("generateBuildConfig") {
     outputs.dir(outputDir)
 
     doLast {
-        val version = project.findProperty("release.version") ?: throw IllegalStateException("Release version not set")
+        val version = project.findProperty("release.version") ?: "0.0.0"
         val file = File(outputDir, "BuildVersion.kt")
         file.parentFile.mkdirs()
         file.writeText(

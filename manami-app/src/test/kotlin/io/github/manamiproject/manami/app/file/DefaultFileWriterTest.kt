@@ -74,7 +74,14 @@ internal class DefaultFileWriterTest {
                 override fun ignoreList(): Set<IgnoreListEntry> = setOf(ignoreListEntry1, ignoreListEntry2)
             }
 
-            val fileWriter = DefaultFileWriter(state = testState)
+            val testVersionProvider = object: VersionProvider by TestVersionProvider {
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.0.0")
+            }
+
+            val fileWriter = DefaultFileWriter(
+                state = testState,
+                versionProvider = testVersionProvider,
+            )
 
             // when
             fileWriter.writeTo(tempDir.resolve("test.json"))
@@ -132,7 +139,14 @@ internal class DefaultFileWriterTest {
                 override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
             }
 
-            val fileWriter = DefaultFileWriter(state = testState)
+            val testVersionProvider = object: VersionProvider by TestVersionProvider {
+                override suspend fun version(): SemanticVersion = SemanticVersion("3.0.0")
+            }
+
+            val fileWriter = DefaultFileWriter(
+                state = testState,
+                versionProvider = testVersionProvider,
+            )
 
             // when
             fileWriter.writeTo(tempDir.resolve("test.json"))
