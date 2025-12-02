@@ -29,12 +29,33 @@ jobs:
       matrix:
         include:
           - os: windows-latest
+            osCleanName: windows
+            arch: x64
+            gradleTask: packageExe
+            ext: exe
+          - os: windows-11-arm
+            osCleanName: windows
+            arch: arm64
             gradleTask: packageExe
             ext: exe
           - os: macos-latest
+            osCleanName: macos
+            arch: arm64
+            gradleTask: packageDmg
+            ext: dmg
+          - os: macos-15-intel
+            osCleanName: macos
+            arch: intel
             gradleTask: packageDmg
             ext: dmg
           - os: ubuntu-latest
+            osCleanName: linux
+            arch: x64
+            gradleTask: packageRpm
+            ext: rpm
+          - os: ubuntu-24.04-arm
+            arch: arm64
+            osCleanName: linux
             gradleTask: packageRpm
             ext: rpm
     runs-on: ${{ matrix.os }}
@@ -57,7 +78,7 @@ jobs:
     - name: Build artifact
       env:
         GH_PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
-      run: ./gradlew compileKotlin ${{ matrix.gradleTask }} -Prelease.version=$RELEASE_VERSION
+      run: ./gradlew compileKotlin ${{ matrix.gradleTask }} -Pmanami.release.version=$RELEASE_VERSION -Pmanami.build.os=${{ matrix.osCleanName }} -Pmanami.build.arch=${{ matrix.osCleanName }}
     - name: Upload file to release
       uses: softprops/action-gh-release@v2
       with:

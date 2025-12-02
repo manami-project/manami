@@ -9,7 +9,6 @@ plugins {
 }
 
 val githubUsername = "manami-project"
-val version = project.findProperty("release.version") as String? ?: "1.0.0"
 val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2 // most recent stable kotlin version for language and std lib
 
 repositories {
@@ -32,7 +31,6 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(libs.jetbrains.compose.material3.desktop)
     implementation(libs.jetbrains.compose.material.icons.extended.desktop)
-    implementation("org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:1.9.1")
 }
 
 kotlin {
@@ -61,7 +59,7 @@ fun parameter(name: String, default: String = ""): String {
     }
 
     val property = project.findProperty(name) as String? ?: ""
-    if (property.isNotEmpty()) {
+    if (property.isNotBlank()) {
         return property
     }
 
@@ -79,8 +77,8 @@ compose.desktop {
                 TargetFormat.Rpm,
                 TargetFormat.Deb,
             )
-            packageName = "manami"
-            packageVersion = version
+            packageName = "manami-${parameter("manami.build.os", "undefined-os")}-${parameter("manami.build.arch", "undefined-arch")}"
+            packageVersion = parameter("manami.release.version", "1.0.0")
 
             macOS {
                 jvmArgs += "-Dapple.awt.application.appearance=system"

@@ -57,7 +57,7 @@ fun parameter(name: String, default: String = ""): String {
     }
 
     val property = project.findProperty(name) as String? ?: ""
-    if (property.isNotEmpty()) {
+    if (property.isNotBlank()) {
         return property
     }
 
@@ -72,7 +72,7 @@ tasks.register("generateBuildConfig") {
     outputs.dir(outputDir)
 
     doLast {
-        val version = project.findProperty("release.version") ?: "0.0.0"
+        val version = parameter("manami.release.version", "0.0.0")
         val file = File(outputDir, "BuildVersion.kt")
         file.parentFile.mkdirs()
         file.writeText(
