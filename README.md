@@ -7,7 +7,7 @@ Manami creates an index file for the anime that you already watched and stored o
 ## All features at a glance
 * Categorize anime in watched, plan to watch/watching, ignore
 * Automatically fill out anime data upon adding a new entry
-  * supports multiple meta data providers using data from [anime-offline-database](https://github.com/manami-project/anime-offline-database)
+  * Supports multiple meta data providers using data from [anime-offline-database](https://github.com/manami-project/anime-offline-database), but can add single entries independently
 * Find anime by title, url or a combination of various meta data 
 * Browse anime seasons
 * Find related anime for a specific entry (search for franchise) or all entries of your anime list or watch list
