@@ -2,7 +2,7 @@
 kotlin = "2.2.21"
 kotlinx-coroutines-core = "1.10.2"
 modb-core = "19.0.6"
-modb-serde = "6.1.1"
+modb-serde = "6.1.2"
 modb-anidb = "7.0.8"
 modb-anilist = "7.2.9"
 modb-animeplanet = "6.3.9"
