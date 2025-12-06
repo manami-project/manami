@@ -165,7 +165,7 @@ internal class DefaultFileWriterTest {
     }
 
     @Test
-    fun `dynamically fetch version from build file and use it in dtd file name and in xml attribute`() {
+    fun `dynamically fetch version from build file`() {
         tempDirectory {
             // given
             val testState = object: State by TestState {
