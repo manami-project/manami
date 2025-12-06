@@ -18,7 +18,7 @@ import kotlin.io.path.Path
 internal class CmdOpenFileTest {
 
     @Test
-    fun `clears state, clears command history, closes file, adds entries from parsed file to state and stes opened file`() {
+    fun `clears state, clears command history, closes file, adds entries from parsed file to state and sets opened file`() {
         // given
         var hasCloseFileBeenCalled = false
         var hasClearStateBeenCalled = false
@@ -41,7 +41,7 @@ internal class CmdOpenFileTest {
             override fun clear() { hasClearHistoryBeenCalled = true }
         }
 
-        val notExistingTestFile = Path(".").resolve("test.xml")
+        val notExistingTestFile = Path(".").resolve("test.json")
 
         val parsedFile = ManamiFile(
             animeListEntries = setOf(

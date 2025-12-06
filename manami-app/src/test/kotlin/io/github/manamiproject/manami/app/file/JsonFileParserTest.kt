@@ -102,7 +102,7 @@ internal class JsonFileParserTest {
                 versionProvider = TestVersionProvider,
             )
 
-            val file = tempDir.resolve("test.xml").createFile()
+            val file = tempDir.resolve("test.txt").createFile()
 
             // when
             val result = assertThrows<IllegalArgumentException> {
@@ -176,7 +176,7 @@ internal class JsonFileParserTest {
             }
 
             // then
-            assertThat(result).hasMessage("Unable to parse manami file older than 3.0.0")
+            assertThat(result).hasMessage("Unable to parse manami file older than 4.0.0")
         }
     }
 

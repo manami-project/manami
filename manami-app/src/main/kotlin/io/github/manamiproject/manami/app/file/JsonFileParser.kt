@@ -94,7 +94,7 @@ internal class JsonFileParser(
 
     companion object {
         private val log by LoggerDelegate()
-        private val minVersion = SemanticVersion("3.0.0") // TODO: set to 4.0.0 in 4.1.0
+        private val minVersion = SemanticVersion("4.0.0")
 
         /**
          * Singleton of [JsonFileParser]
