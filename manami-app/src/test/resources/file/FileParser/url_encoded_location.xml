@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?xml-stylesheet type="text/xml" href="animelist_transform.xsl"?><!DOCTYPE manami SYSTEM "src/test/resources/file/FileParser/animelist.dtd">
-<manami version="3.0.0">
-  <animeList>
-    <animeListEntry link="https://myanimelist.net/anime/11235" title="Amagami SS+ Plus" thumbnail="https://cdn.myanimelist.net/images/anime/13/33359.jpg" type="TV" episodes="13" location="some/relative/path/amagami_ss+_plus"/>
-    <animeListEntry link="https://myanimelist.net/anime/248" title="Ichigo 100%" thumbnail="https://cdn.myanimelist.net/images/anime/5/20036.jpg" type="TV" episodes="12" location="some/relative/path/ichigo_100%25"/>
-  </animeList>
-</manami>

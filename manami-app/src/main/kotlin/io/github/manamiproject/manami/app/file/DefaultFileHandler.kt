@@ -17,7 +17,6 @@ import kotlin.io.path.createFile
 internal class DefaultFileHandler(
     private val state: State = InternalState,
     private val commandHistory: CommandHistory = DefaultCommandHistory,
-    private val xmlParser: Parser<ManamiFile> = XmlFileParser(),
     private val jsonParser: Parser<ManamiFile> = JsonFileParser.instance,
     private val fileWriter: FileWriter = DefaultFileWriter(),
     private val eventBus: EventBus = CoroutinesFlowEventBus,
@@ -48,7 +47,6 @@ internal class DefaultFileHandler(
         eventBus.generalAppState.update { current -> current.copy(isOpeningFileRunning = true) }
 
         val parsedFile = when (file.fileSuffix()) {
-            "xml" -> xmlParser.parse(file)
             "json" -> jsonParser.parse(file)
             else -> throw IllegalStateException("Cannot parse [${file.fileSuffix()}] format.")
         }
