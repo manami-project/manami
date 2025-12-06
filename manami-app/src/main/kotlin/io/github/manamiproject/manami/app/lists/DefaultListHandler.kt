@@ -47,10 +47,15 @@ internal class DefaultListHandler(
                 current.copy(addAnimeEntryData = null)
             }
             eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
-            eventBus.findByTitleState.update { FindByTitleState() }
             eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
             eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
             eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link == entry.link } ) }
+            eventBus.findByTitleState.update { current -> current.copy(
+                animeListResults = current.animeListResults.filterNot { it.link == entry.link },
+                watchListResults = current.watchListResults.filterNot { it.link == entry.link },
+                ignoreListResults = current.ignoreListResults.filterNot { it.link == entry.link },
+                unlistedResults = current.unlistedResults.filterNot { it.link == entry.link },
+            )}
         }
     }
 
@@ -129,10 +134,15 @@ internal class DefaultListHandler(
                         )
                     ).execute()) {
                         eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
-                        eventBus.findByTitleState.update { FindByTitleState() }
                         eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTitleState.update { current -> current.copy(
+                            animeListResults = current.animeListResults.filterNot { it.link.asLink().uri == uri },
+                            watchListResults = current.watchListResults.filterNot { it.link.asLink().uri == uri },
+                            ignoreListResults = current.ignoreListResults.filterNot { it.link.asLink().uri == uri },
+                            unlistedResults = current.unlistedResults.filterNot { it.link.asLink().uri == uri },
+                        )}
                     }
                 }
             }
@@ -173,10 +183,15 @@ internal class DefaultListHandler(
                         )
                     ).execute()) {
                         eventBus.findRelatedAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
-                        eventBus.findByTitleState.update { FindByTitleState() }
                         eventBus.findSeasonState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findByCriertiaState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
                         eventBus.findSimilarAnimeState.update { current -> current.copy(entries = current.entries.filterNot { it.link.uri == uri } ) }
+                        eventBus.findByTitleState.update { current -> current.copy(
+                            animeListResults = current.animeListResults.filterNot { it.link.asLink().uri == uri },
+                            watchListResults = current.watchListResults.filterNot { it.link.asLink().uri == uri },
+                            ignoreListResults = current.ignoreListResults.filterNot { it.link.asLink().uri == uri },
+                            unlistedResults = current.unlistedResults.filterNot { it.link.asLink().uri == uri },
+                        )}
                     }
                 }
             }
