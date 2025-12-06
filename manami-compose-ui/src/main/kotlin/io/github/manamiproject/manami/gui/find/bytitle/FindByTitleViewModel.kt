@@ -30,11 +30,20 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
     val isShowUnlistResults: State<Boolean>
         get() = derivedStateOf { _isShowUnlistResults }
 
+    val isRunning: StateFlow<Boolean>
+        get() = app.findByTitleState
+            .map { it.isRunning }
+            .stateIn(
+                scope = viewModelScope,
+                started = Eagerly,
+                initialValue = false,
+            )
+
     val numberOfAnimeListResults: StateFlow<Int>
         get() = app.findByTitleState
             .map { event ->
                 event.animeListResults.size.also {
-                    if (it > 0) _isShowAnimeListResults = true
+                    if (it > 0 && !_isShowWatchListResults && !_isShowIgnoreListResults && !_isShowUnlistResults) _isShowAnimeListResults = true
                 }
             }
             .stateIn(
@@ -47,7 +56,7 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
         get() = app.findByTitleState
             .map { event ->
                 event.watchListResults.size.also {
-                    if (!_isShowAnimeListResults && it > 0) _isShowWatchListResults = true
+                    if (it > 0 && !_isShowAnimeListResults && !_isShowIgnoreListResults && !_isShowUnlistResults) _isShowWatchListResults = true
                 }
             }
             .stateIn(
@@ -60,7 +69,7 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
         get() = app.findByTitleState
             .map { event ->
                 event.ignoreListResults.size.also {
-                    if (!_isShowAnimeListResults && !_isShowWatchListResults && it > 0) _isShowIgnoreListResults = true
+                    if (it > 0 && !_isShowAnimeListResults && !_isShowWatchListResults && !_isShowUnlistResults) _isShowIgnoreListResults = true
                 }
             }
             .stateIn(
@@ -73,7 +82,7 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
         get() = app.findByTitleState
             .map { event ->
                 event.unlistedResults.size.also {
-                    if (!_isShowAnimeListResults && !_isShowWatchListResults && !_isShowIgnoreListResults && it > 0) _isShowUnlistResults = true
+                    if (it > 0 && !_isShowAnimeListResults && !_isShowWatchListResults && !_isShowIgnoreListResults) _isShowUnlistResults = true
                 }
             }
             .stateIn(
@@ -108,6 +117,13 @@ internal class FindByTitleViewModel(private val app: Manami = Manami.instance) {
         _isShowWatchListResults = false
         _isShowIgnoreListResults = false
         _isShowUnlistResults = true
+    }
+
+    fun reset() {
+        _isShowAnimeListResults = false
+        _isShowWatchListResults = false
+        _isShowIgnoreListResults = false
+        _isShowUnlistResults = false
     }
 
     internal companion object {
