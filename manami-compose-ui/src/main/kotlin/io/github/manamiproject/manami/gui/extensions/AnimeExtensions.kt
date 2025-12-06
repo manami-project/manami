@@ -26,7 +26,7 @@ fun Anime.toMap(): Map<String, String> {
         "score" to formattedScore,
         "synonyms" to synonyms.sorted().joinToString("\n"),
         "studios" to studios.sorted().joinToString("\n"),
-        "producers" to synonyms.sorted().joinToString("\n"),
+        "producers" to producers.sorted().joinToString("\n"),
         "tags" to tags.sorted().joinToString("\n"),
     )
 }
