@@ -53,8 +53,9 @@ internal class DashboardViewModel(
                     val numberOfWatchListEntries = watchListEntries.count { it.link.uri.host == key }
                     val numberOfIgnoreListEntries = ignoreListEntries.count { it.link.uri.host == key }
                     val sumOfEntries = numberOfAnimeListEntries + numberOfWatchListEntries + numberOfIgnoreListEntries
+                    val remaining = value - sumOfEntries
                     val percent = round(sumOfEntries.toDouble()/value.toDouble() * 100.00)
-                    val detailed = "$value | Anime List: $numberOfAnimeListEntries | Watch List: $numberOfWatchListEntries | Ignore List: $numberOfIgnoreListEntries | $percent %"
+                    val detailed = "$value | Anime List: $numberOfAnimeListEntries | Watch List: $numberOfWatchListEntries | Ignore List: $numberOfIgnoreListEntries | $value - $sumOfEntries = $remaining ($percent %)"
 
                     key to if (sumOfEntries > 0) detailed else value.toString()
                 }
