@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.manamiproject.manami.app.Manami
 import io.github.manamiproject.manami.app.lists.Link
+import io.github.manamiproject.manami.gui.find.bytitle.FindByTitleViewModel
 import io.github.manamiproject.manami.gui.tabs.TabBarViewModel
 import io.github.manamiproject.manami.gui.tabs.Tabs.FIND_BY_TITLE
 import io.github.manamiproject.modb.core.anime.Title
@@ -25,6 +26,7 @@ import kotlin.math.round
 internal class DashboardViewModel(
     private val app: Manami = Manami.instance,
     private val tabBarViewModel: TabBarViewModel = TabBarViewModel.instance,
+    private val findByTitleViewModel: FindByTitleViewModel = FindByTitleViewModel.instance
 ) {
 
     private val viewModelScope = CoroutineScope(Default + SupervisorJob())
@@ -90,6 +92,7 @@ internal class DashboardViewModel(
             app.findByTitle(metaDataProvider, title.trim())
         }
 
+        findByTitleViewModel.reset()
         tabBarViewModel.openOrActivate(FIND_BY_TITLE)
     }
 
