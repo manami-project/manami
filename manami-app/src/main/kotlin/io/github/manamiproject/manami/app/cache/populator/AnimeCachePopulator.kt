@@ -17,7 +17,7 @@ import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonLinesInputStreamDeserializer
+import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonInputStreamDeserializer
 import io.github.manamiproject.modb.serde.json.deserializer.Deserializer
 import io.github.manamiproject.modb.serde.json.deserializer.FromRegularFileDeserializer
 import io.github.manamiproject.modb.serde.json.deserializer.FromUrlDeserializer
@@ -35,10 +35,10 @@ import kotlin.io.path.Path
 import kotlin.io.path.deleteIfExists
 
 internal class AnimeCachePopulator(
-    private val fileName: String = "anime-offline-database.jsonl.zst",
+    private val fileName: String = "anime-offline-database-minified.json.zst",
     private val uri: URI = URI("https://github.com/manami-project/anime-offline-database/releases/download/latest/$fileName"),
-    private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
-    private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonLinesInputStreamDeserializer.instance),
+    private val fileDeserializer: Deserializer<RegularFile, Flow<Anime>> = FromRegularFileDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance),
+    private val urlDeserializer: Deserializer<URL, Flow<Anime>> = FromUrlDeserializer(deserializer = AnimeFromJsonInputStreamDeserializer.instance),
     private val eventBus: EventBus = CoroutinesFlowEventBus,
     private val httpClient: HttpClient = DefaultHttpClient(useCustomRedirectInterceptor = true),
     configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
