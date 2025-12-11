@@ -308,12 +308,6 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             )
             assertThat((testCache.fetch(URI("https://myanimelist.net/anime/1535")) as PresentValue).value).isEqualTo(expectedMalEntry)
 
-            val expectedNotifyEntry = expectedAnime.copy(
-                sources = hashSetOf(URI("https://notify.moe/anime/0-A-5Fimg")),
-                relatedAnime = hashSetOf(URI("https://notify.moe/anime/DBBU5Kimg")),
-            )
-            assertThat((testCache.fetch(URI("https://notify.moe/anime/0-A-5Fimg")) as PresentValue).value).isEqualTo(expectedNotifyEntry)
-
             val expectedSimklEntry = expectedAnime.copy(
                 sources = hashSetOf(URI("https://simkl.com/anime/40190")),
                 relatedAnime = hashSetOf(
@@ -333,12 +327,10 @@ internal class AnimeCachePopulatorTest: MockServerTestCase<WireMockServer> by Wi
             assertThat(receivedEvents.last().entries["anilist.co"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["anime-planet.com"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["animecountdown.com"]).isEqualTo(1)
-            assertThat(receivedEvents.last().entries["animenewsnetwork.com"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["anisearch.com"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["kitsu.app"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["livechart.me"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["myanimelist.net"]).isEqualTo(1)
-            assertThat(receivedEvents.last().entries["notify.moe"]).isEqualTo(1)
             assertThat(receivedEvents.last().entries["simkl.com"]).isEqualTo(1)
             assertThat(CoroutinesFlowEventBus.dashboardState.value).isEqualTo(receivedEvents.last())
         }
