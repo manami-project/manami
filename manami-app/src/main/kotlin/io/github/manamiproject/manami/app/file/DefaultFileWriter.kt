@@ -1,6 +1,5 @@
 package io.github.manamiproject.manami.app.file
 
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.state.InternalState
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.versioning.ResourceBasedVersionProvider

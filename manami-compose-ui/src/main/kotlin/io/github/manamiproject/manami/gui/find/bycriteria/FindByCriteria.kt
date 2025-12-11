@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -16,12 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
 import io.github.manamiproject.manami.gui.components.DualPaneMultiSelect
 import io.github.manamiproject.manami.gui.components.RangeSelector
 import io.github.manamiproject.manami.gui.extensions.capitalize
 import io.github.manamiproject.manami.gui.theme.ManamiTheme
-import io.github.manamiproject.modb.core.anime.*
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeStatus
+import io.github.manamiproject.modb.core.anime.AnimeType
+import io.github.manamiproject.modb.core.anime.Duration
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
 
@@ -318,7 +319,7 @@ internal fun FindByCriteria(viewModel: FindByCriteriaViewModel = FindByCriteriaV
 
                 Row {
                     Button(
-                        modifier = Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp,),
+                        modifier = Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp),
                         onClick = { viewModel.reset() },
                     ) {
                         Text("Reset")

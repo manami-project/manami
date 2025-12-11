@@ -17,7 +17,7 @@ fun Anime.toMap(): Map<String, String> {
 
     return mapOf(
         "title" to title,
-        "sources" to sources.sorted().joinToString(" | ").toString(),
+        "sources" to sources.sorted().joinToString(" | "),
         "type" to type.toString(),
         "episodes" to episodes.toString(),
         "status" to status.toString(),

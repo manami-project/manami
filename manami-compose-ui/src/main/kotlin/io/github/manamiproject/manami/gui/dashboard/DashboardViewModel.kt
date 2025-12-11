@@ -51,7 +51,7 @@ internal class DashboardViewModel(
                 .sortedByDescending { it.second }
                 .toMap()
                 .map { (key, value) ->
-                    val numberOfAnimeListEntries = animeListEntries.filter { it.link is Link }.count { it.link.asLink().uri.host == key }
+                    val numberOfAnimeListEntries = animeListEntries.count { it.link.asLink().uri.host == key }
                     val numberOfWatchListEntries = watchListEntries.count { it.link.uri.host == key }
                     val numberOfIgnoreListEntries = ignoreListEntries.count { it.link.uri.host == key }
                     val sumOfEntries = numberOfAnimeListEntries + numberOfWatchListEntries + numberOfIgnoreListEntries
@@ -63,7 +63,7 @@ internal class DashboardViewModel(
                 }
                 .toMap()
 
-        }.stateIn(viewModelScope, Eagerly, emptyMap<String, String>())
+        }.stateIn(viewModelScope, Eagerly, emptyMap())
 
     val metaDataProviders: StateFlow<List<Hostname>>
         get() = app.dashboardState
