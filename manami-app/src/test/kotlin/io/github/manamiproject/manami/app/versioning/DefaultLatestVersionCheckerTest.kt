@@ -9,11 +9,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 internal class DefaultLatestVersionCheckerTest {
 

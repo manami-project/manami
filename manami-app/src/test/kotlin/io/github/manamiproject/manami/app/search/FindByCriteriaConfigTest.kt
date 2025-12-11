@@ -1,7 +1,8 @@
 package io.github.manamiproject.manami.app.search
 
 import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.ScoreType.*
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.*
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.OR
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

@@ -2,8 +2,8 @@ package io.github.manamiproject.manami.app.commands.history
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
 
 internal class SimpleEventStreamTest {
 

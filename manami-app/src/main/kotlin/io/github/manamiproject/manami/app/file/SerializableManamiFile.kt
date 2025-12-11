@@ -8,7 +8,7 @@ data class SerializableManamiFile(
 )
 
 data class SerializableAnimeListEntry(
-    val link: String?,
+    val link: String,
     val title: String,
     val thumbnail: String,
     val episodes: String,

@@ -6,20 +6,17 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.ScoreType.*
-import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.*
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.ScoreType.ARITHMETIC_GEOMETRIC_MEAN
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.AND
+import io.github.manamiproject.manami.app.search.FindByCriteriaConfig.SearchConjunction.OR
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.anime.AnimeStatus.*
 import io.github.manamiproject.modb.core.anime.AnimeStatus.UNKNOWN
 import io.github.manamiproject.modb.core.anime.AnimeType.*
-import io.github.manamiproject.modb.core.anime.Duration
 import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
-import io.github.manamiproject.modb.core.anime.NoScore
-import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.serde.json.deserializer.AnimeFromJsonInputStreamDeserializer
@@ -5090,12 +5087,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5147,12 +5146,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "someTESThere",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5202,12 +5203,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5257,12 +5260,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5312,12 +5317,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5365,12 +5372,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "taste of lemon",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5418,12 +5427,14 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,
@@ -5472,18 +5483,21 @@ internal class DefaultSearchHandlerTest {
                     }
 
                     val matching1 = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/1"),
                         title = "test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val matching2 = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/2"),
                         title = "another test",
                         episodes = 1,
                         type = MOVIE,
                         location = Path("."),
                     )
                     val notMatching = AnimeListEntry(
+                        link = Link("https://myanimelist.net/anime/3"),
                         title = "other",
                         episodes = 1,
                         type = MOVIE,

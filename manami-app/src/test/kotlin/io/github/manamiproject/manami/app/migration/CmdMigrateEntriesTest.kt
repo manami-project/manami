@@ -8,9 +8,9 @@ import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
 import java.nio.file.Paths
+import kotlin.test.Test
 
 internal class CmdMigrateEntriesTest {
 

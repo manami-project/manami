@@ -1,17 +1,13 @@
 package io.github.manamiproject.manami.app.cache
 
 import io.github.manamiproject.manami.app.cache.loader.CacheLoader
+import io.github.manamiproject.modb.core.anime.*
 import io.github.manamiproject.modb.core.config.*
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
 import io.github.manamiproject.modb.core.httpclient.RequestBody
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeRaw
-import io.github.manamiproject.modb.core.anime.Producer
-import io.github.manamiproject.modb.core.anime.Studio
-import io.github.manamiproject.modb.core.anime.Tag
 import io.github.manamiproject.modb.core.httpclient.RetryCase
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import java.net.URI

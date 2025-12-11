@@ -3,10 +3,6 @@ package io.github.manamiproject.manami.app.cache.populator
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.github.manamiproject.manami.app.cache.*
-import io.github.manamiproject.manami.app.cache.DefaultAnimeCache
-import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
-import io.github.manamiproject.manami.app.cache.TestCacheLoader
-import io.github.manamiproject.manami.app.cache.TestConfigRegistry
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.ConfigRegistry
 import io.github.manamiproject.modb.core.config.Hostname
@@ -15,8 +11,8 @@ import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
+import kotlin.test.Test
 
 internal class DeadEntriesCachePopulatorTest: MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 

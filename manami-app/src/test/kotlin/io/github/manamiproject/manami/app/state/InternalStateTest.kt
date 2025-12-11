@@ -19,12 +19,12 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.io.path.createFile
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 internal class InternalStateTest {
 
@@ -250,6 +250,7 @@ internal class InternalStateTest {
                 delay(100)
 
                 val entry1 = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/3299"),
                     title = "H2O: Footprints in the Sand",
                     episodes = 4,
                     type = SPECIAL,
@@ -580,6 +581,7 @@ internal class InternalStateTest {
                 InternalState.addAllAnimeListEntries(
                     setOf(
                         AnimeListEntry(
+                            link = Link("https://myanimelist.net/anime/3299"),
                             title = "H2O: Footprints in the Sand",
                             episodes = 4,
                             type = SPECIAL,

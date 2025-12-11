@@ -5,11 +5,11 @@ import io.github.manamiproject.manami.app.state.*
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
+import kotlin.test.Test
 
 internal class CmdAddAnimeListEntryTest {
 

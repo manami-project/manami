@@ -10,7 +10,6 @@ import io.github.manamiproject.manami.app.commands.history.CommandHistory
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.MetaDataProviderMigrationState
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -92,65 +91,6 @@ internal class DefaultMetaDataProviderMigrationHandlerTest {
 
             // then
             assertThat(result).hasMessage("MetaDataProvider [kitsu.app] is not supported.")
-        }
-
-        @Test
-        fun `any AnimeListEntry without a link is being ignored`() {
-            runBlocking {
-                // given
-                val receivedEvents = mutableListOf<MetaDataProviderMigrationState>()
-                val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
-                delay(100)
-
-                val testCache = object: AnimeCache by TestAnimeCache {
-                    override val availableMetaDataProvider: Set<Hostname>
-                        get() = setOf(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-                }
-
-                val testState = object: State by TestState {
-                    override fun animeList(): List<AnimeListEntry> = listOf(
-                        AnimeListEntry(
-                            link = NoLink,
-                            title = "Beck",
-                            thumbnail = URI("https://cdn.myanimelist.net/images/anime/11/11636t.jpg"),
-                            episodes = 26,
-                            type = TV,
-                            location = Paths.get("."),
-                        ),
-                    )
-                    override fun watchList(): Set<WatchListEntry> = emptySet()
-                    override fun ignoreList(): Set<IgnoreListEntry> = emptySet()
-                }
-
-                val defaultMetaDataProviderMigrationHandler = DefaultMetaDataProviderMigrationHandler(
-                    cache = testCache,
-                    eventBus = CoroutinesFlowEventBus,
-                    commandHistory = TestCommandHistory,
-                    state = testState,
-                )
-
-                // when
-                defaultMetaDataProviderMigrationHandler.checkMigration(MyanimelistConfig.hostname(), KitsuConfig.hostname())
-
-                // then
-                delay(500)
-                eventCollector.cancelAndJoin()
-                assertThat(receivedEvents).hasSize(3) // initial, start, result
-                assertThat(receivedEvents.last()).isEqualTo(
-                    MetaDataProviderMigrationState(
-                        isRunning = false,
-                        animeListEntriesWithoutMapping = emptyList(),
-                        animeListEntriesMultipleMappings = emptyMap(),
-                        animeListMappings = emptyMap(),
-                        watchListEntriesWithoutMapping = emptyList(),
-                        watchListEntriesMultipleMappings = emptyMap(),
-                        watchListMappings = emptyMap(),
-                        ignoreListEntriesWithoutMapping = emptyList(),
-                        ignoreListEntriesMultipleMappings = emptyMap(),
-                        ignoreListMappings = emptyMap(),
-                    )
-                )
-            }
         }
 
         @Test
@@ -1011,12 +951,12 @@ internal class DefaultMetaDataProviderMigrationHandlerTest {
                 val eventCollector = launch { CoroutinesFlowEventBus.metaDataProviderMigrationState.collect { event -> receivedEvents.add(event)} }
                 delay(100)
 
-                var removeAnimeListEntryInvoked = false // TODO
+                var removeAnimeListEntryInvoked = false
                 var removeWatchListEntryInvoked = false
                 var removeIgnoreListEntryInvoked = false
                 val testState = object: State by TestState {
                     override fun removeAnimeListEntry(entry: AnimeListEntry) {
-                        removeAnimeListEntryInvoked = true // TODO
+                        removeAnimeListEntryInvoked = true
                     }
                     override fun removeWatchListEntry(entry: WatchListEntry) {
                         removeWatchListEntryInvoked = true
@@ -1052,7 +992,7 @@ internal class DefaultMetaDataProviderMigrationHandlerTest {
                 // then
                 delay(100)
                 eventCollector.cancelAndJoin()
-                //assert(removeAnimeListEntryInvoked) // TODO
+                assert(removeAnimeListEntryInvoked)
                 assert(removeWatchListEntryInvoked)
                 assert(removeIgnoreListEntryInvoked)
                 assertThat(receivedEvents).hasSize(3) // initial, start, result

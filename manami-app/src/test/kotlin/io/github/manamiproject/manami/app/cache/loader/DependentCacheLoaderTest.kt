@@ -4,18 +4,18 @@ import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestAnimeConverter
 import io.github.manamiproject.manami.app.cache.TestDownloader
 import io.github.manamiproject.manami.app.cache.TestHttpClient
+import io.github.manamiproject.modb.core.anime.Anime
+import io.github.manamiproject.modb.core.anime.AnimeSeason
+import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SUMMER
+import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeType.TV
+import io.github.manamiproject.modb.core.anime.Duration
+import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
-import io.github.manamiproject.modb.core.anime.Anime
-import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
-import io.github.manamiproject.modb.core.anime.AnimeType.TV
-import io.github.manamiproject.modb.core.anime.AnimeSeason
-import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SUMMER
-import io.github.manamiproject.modb.core.anime.Duration
-import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
-import io.github.manamiproject.modb.core.anime.ScoreValue
 import io.github.manamiproject.modb.notify.NotifyAnimeConverter
 import io.github.manamiproject.modb.notify.NotifyConfig
 import io.github.manamiproject.modb.notify.NotifyDownloader
@@ -24,9 +24,9 @@ import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
 import java.net.URL
+import kotlin.test.Test
 
 internal class DependentCacheLoaderTest {
 

@@ -3,14 +3,12 @@ package io.github.manamiproject.manami.app.inconsistencies.animelist.episodes
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.InconsistenciesState
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import io.github.manamiproject.modb.core.anime.AnimeType.OVA
-import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.test.tempDirectory
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
@@ -18,12 +16,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 import kotlin.io.path.createFile
 import kotlin.test.AfterTest
+import kotlin.test.Test
 
 internal class AnimeListEpisodesInconsistenciesHandlerTest {
 
@@ -36,41 +34,6 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
     inner class ExecuteTests {
 
         @Test
-        fun `exclude entries without link`() {
-            tempDirectory {
-                // given
-                val testOpenedFile = tempDir.resolve("test-file.json").createFile()
-
-                val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
-                val testState = object : State by TestState {
-                    override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
-                    override fun animeList(): List<AnimeListEntry> {
-                        return listOf(
-                            AnimeListEntry(
-                                link = NoLink,
-                                title = "No Link Entry",
-                                type = TV,
-                                episodes = 12,
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                                location = testLocation,
-                            ),
-                        )
-                    }
-                }
-
-                val handler = AnimeListEpisodesInconsistenciesHandler(
-                    state = testState,
-                )
-
-                // when
-                val result = handler.execute()
-
-                // then
-                assertThat(result).isEmpty()
-            }
-        }
-
-        @Test
         fun `don't update state if there is nothing to report`() {
             runBlocking {
                 tempDirectory {
@@ -81,20 +44,10 @@ internal class AnimeListEpisodesInconsistenciesHandlerTest {
 
                     val testOpenedFile = tempDir.resolve("test-file.json").createFile()
 
-                    val testLocation = tempDir.resolve("test").createDirectory().toAbsolutePath()
                     val testState = object : State by TestState {
                         override fun openedFile(): OpenedFile = CurrentFile(testOpenedFile)
                         override fun animeList(): List<AnimeListEntry> {
-                            return listOf(
-                                AnimeListEntry(
-                                    link = NoLink,
-                                    title = "No Link Entry",
-                                    type = TV,
-                                    episodes = 12,
-                                    thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                                    location = testLocation,
-                                ),
-                            )
+                            return emptyList()
                         }
                     }
 
