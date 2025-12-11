@@ -2,7 +2,6 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -11,7 +10,6 @@ import io.github.manamiproject.manami.app.versioning.SemanticVersion
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE
-import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE_THUMBNAIL
 import io.github.manamiproject.modb.core.anime.AnimeType
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.extensions.RegularFile
@@ -44,18 +42,10 @@ internal class JsonFileParser(
 
         val animeList = serializableManamiFile.animeListEntries
             .map {
-                // TODO: remove the migration from small images to larger images in 4.1.0
-                val thumbnail = if (it.link != null) {
-                    when (val cacheEntry: CacheEntry<Anime> = cache.fetch(URI(it.link))) {
-                        is DeadEntry<*> -> NO_PICTURE
-                        is PresentValue<*> -> (cacheEntry as PresentValue<Anime>).value.picture
-                    }
-                } else if (URI(it.thumbnail) == NO_PICTURE_THUMBNAIL) {
-                    NO_PICTURE
-                } else {
-                    URI(it.thumbnail)
+                val thumbnail = when (val cacheEntry: CacheEntry<Anime> = cache.fetch(URI(it.link))) {
+                    is DeadEntry<*> -> NO_PICTURE
+                    is PresentValue<*> -> (cacheEntry as PresentValue<Anime>).value.picture
                 }
-                // ^------- Remove
 
                 val checkedEpisodes = if (it.episodes.toIntOrNull() == null || it.episodes.toInt() < 0) {
                     throw IllegalStateException("Episodes value [${it.episodes}] for [${it.title} - ${it.link}] is either not numeric or invalid.")
@@ -64,7 +54,7 @@ internal class JsonFileParser(
                 }
 
                 AnimeListEntry(
-                    link = if (it.link == null) NoLink else Link(URI(it.link)),
+                    link = Link(URI(it.link)),
                     title = it.title,
                     thumbnail = thumbnail,
                     episodes = checkedEpisodes,

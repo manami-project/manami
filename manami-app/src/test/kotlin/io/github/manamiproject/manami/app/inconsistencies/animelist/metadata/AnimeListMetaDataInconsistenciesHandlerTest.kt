@@ -1,10 +1,12 @@
 package io.github.manamiproject.manami.app.inconsistencies.animelist.metadata
 
-import io.github.manamiproject.manami.app.cache.*
+import io.github.manamiproject.manami.app.cache.Cache
+import io.github.manamiproject.manami.app.cache.CacheEntry
+import io.github.manamiproject.manami.app.cache.PresentValue
+import io.github.manamiproject.manami.app.cache.TestAnimeCache
 import io.github.manamiproject.manami.app.events.CoroutinesFlowEventBus
 import io.github.manamiproject.manami.app.events.InconsistenciesState
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
@@ -17,10 +19,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.test.AfterTest
+import kotlin.test.Test
 
 internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
@@ -31,42 +33,6 @@ internal class AnimeListMetaDataInconsistenciesHandlerTest {
 
     @Nested
     inner class ExecuteTests {
-
-        @Test
-        fun `ignore entry if link is empty`() {
-            runBlocking {
-                // given
-                val testState = object: State by TestState {
-                    override fun animeList(): List<AnimeListEntry> {
-                        return listOf(
-                            AnimeListEntry(
-                                link = NoLink,
-                                title = "No Link Entry",
-                                type = TV,
-                                episodes = 64,
-                                thumbnail = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png"),
-                                location = Path("."),
-                            ),
-                        )
-                    }
-                }
-
-                val testCache = object: Cache<URI, CacheEntry<Anime>> by TestAnimeCache {
-                    override suspend fun fetch(key: URI): CacheEntry<Anime> = DeadEntry()
-                }
-
-                val inconsistencyHandler = AnimeListMetaDataInconsistenciesHandler(
-                    state = testState,
-                    cache = testCache,
-                )
-
-                // when
-                val result = inconsistencyHandler.execute()
-
-                // then
-                assertThat(result).isEmpty()
-            }
-        }
 
         @Test
         fun `don't include anime if anime list entry and entry from cache are equal`() {

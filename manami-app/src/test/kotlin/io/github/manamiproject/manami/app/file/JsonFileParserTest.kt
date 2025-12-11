@@ -2,8 +2,6 @@ package io.github.manamiproject.manami.app.file
 
 import io.github.manamiproject.manami.app.cache.*
 import io.github.manamiproject.manami.app.lists.Link
-import io.github.manamiproject.manami.app.lists.LinkEntry
-import io.github.manamiproject.manami.app.lists.NoLink
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
@@ -12,29 +10,23 @@ import io.github.manamiproject.manami.app.versioning.TestVersionProvider
 import io.github.manamiproject.manami.app.versioning.VersionProvider
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE
-import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE_THUMBNAIL
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.FALL
 import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
-import io.github.manamiproject.modb.core.anime.AnimeType
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
-import io.github.manamiproject.modb.core.anime.Episodes
-import io.github.manamiproject.modb.core.anime.Title
 import io.github.manamiproject.modb.core.extensions.writeToFile
-import io.github.manamiproject.modb.core.json.Json
 import io.github.manamiproject.modb.test.exceptionExpected
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.net.URI
-import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createFile
+import kotlin.test.Test
 
 internal class JsonFileParserTest {
 
@@ -599,112 +591,6 @@ internal class JsonFileParserTest {
     }
 
     @Test
-    fun `migrates NO_PICTURE_THUMBNAIL to NO_PICTURE for animeListEntries if they don't have a link`() {
-        tempDirectory {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = NoLink,
-                title = "Death Note",
-                thumbnail = NO_PICTURE,
-                episodes = 37,
-                type = TV,
-                location = Path("./anime"),
-            )
-
-            val testVersionProvider = object: VersionProvider by TestVersionProvider {
-                override suspend fun version(): SemanticVersion = SemanticVersion("4.0.0")
-            }
-
-            val parser = JsonFileParser(
-                cache = TestAnimeCache,
-                versionProvider = testVersionProvider,
-            )
-
-            val file = tempDir.resolve("test.json").createFile()
-            """
-                {
-                    "version": "4.0.0",
-                    "animeListEntries": [
-                        {
-                            "title": "Death Note",
-                            "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png",
-                            "episodes": 37,
-                            "type": "TV",
-                            "location": "./anime"
-                        }
-                    ],
-                    "watchListEntries": [],
-                    "ignoreListEntries": []
-                }
-            """.trimIndent().writeToFile(file)
-
-            // when
-            val result = parser.parse(file)
-
-            // then
-            assertThat(result.version).isEqualTo(SemanticVersion("4.0.0"))
-            assertThat(result.animeListEntries).containsExactly(
-                testAnimeListEntry,
-            )
-            assertThat(result.watchListEntries).isEmpty()
-            assertThat(result.ignoreListEntries).isEmpty()
-        }
-    }
-
-    @Test
-    fun `doesn't migrate images for animeListEntries if they don't have a link and the image is neither NO_PICTURE nor NO_PICTURE_THUMBNAIL`() {
-        tempDirectory {
-            // given
-            val testAnimeListEntry = AnimeListEntry(
-                link = NoLink,
-                title = "Death Note",
-                thumbnail = URI("https://cdn.example.org/images/1.png"),
-                episodes = 37,
-                type = TV,
-                location = Path("./anime"),
-            )
-
-            val testVersionProvider = object: VersionProvider by TestVersionProvider {
-                override suspend fun version(): SemanticVersion = SemanticVersion("4.0.0")
-            }
-
-            val parser = JsonFileParser(
-                cache = TestAnimeCache,
-                versionProvider = testVersionProvider,
-            )
-
-            val file = tempDir.resolve("test.json").createFile()
-            """
-                {
-                    "version": "4.0.0",
-                    "animeListEntries": [
-                        {
-                            "title": "Death Note",
-                            "thumbnail": "https://cdn.example.org/images/1.png",
-                            "episodes": 37,
-                            "type": "TV",
-                            "location": "./anime"
-                        }
-                    ],
-                    "watchListEntries": [],
-                    "ignoreListEntries": []
-                }
-            """.trimIndent().writeToFile(file)
-
-            // when
-            val result = parser.parse(file)
-
-            // then
-            assertThat(result.version).isEqualTo(SemanticVersion("4.0.0"))
-            assertThat(result.animeListEntries).containsExactly(
-                testAnimeListEntry,
-            )
-            assertThat(result.watchListEntries).isEmpty()
-            assertThat(result.ignoreListEntries).isEmpty()
-        }
-    }
-
-    @Test
     fun `migrates the thumbnail of every animeListEntries with a link to the respective picture from the cache of an entry is present`() {
         tempDirectory {
             // given
@@ -1001,8 +887,25 @@ internal class JsonFileParserTest {
                 override suspend fun version(): SemanticVersion = SemanticVersion("4.0.0")
             }
 
+            val testAnimeListEntry = Anime(
+                sources = hashSetOf(URI("https://myanimelist.net/anime/1535")),
+                title = "Death Note",
+                thumbnail = URI("https://cdn.myanimelist.net/images/anime/9/9453.jpg"),
+                episodes = 37,
+                type = TV,
+            )
+
+            val testCache = object: AnimeCache by TestAnimeCache {
+                override suspend fun fetch(key: URI): CacheEntry<Anime> {
+                    return when(key) {
+                        testAnimeListEntry.sources.first() -> PresentValue(testAnimeListEntry)
+                        else -> shouldNotBeInvoked()
+                    }
+                }
+            }
+
             val parser = JsonFileParser(
-                cache = TestAnimeCache,
+                cache = testCache,
                 versionProvider = testVersionProvider,
             )
 
@@ -1012,6 +915,7 @@ internal class JsonFileParserTest {
                     "version": "4.0.0",
                     "animeListEntries": [
                         {
+                            "link": "https://myanimelist.net/anime/1535",
                             "title": "Death Note",
                             "thumbnail": "https://cdn.example.org/images/1.png",
                             "episodes": "$value",
@@ -1030,7 +934,7 @@ internal class JsonFileParserTest {
             }
 
             // then
-            assertThat(result).hasMessage("Episodes value [$value] for [Death Note - null] is either not numeric or invalid.")
+            assertThat(result).hasMessage("Episodes value [$value] for [Death Note - https://myanimelist.net/anime/1535] is either not numeric or invalid.")
         }
     }
 

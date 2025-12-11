@@ -5,9 +5,9 @@ import io.github.manamiproject.manami.app.lists.ignorelist.IgnoreListEntry
 import io.github.manamiproject.manami.app.lists.watchlist.WatchListEntry
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
+import kotlin.test.Test
 
 internal class CollectionExtensionsKtTest {
 

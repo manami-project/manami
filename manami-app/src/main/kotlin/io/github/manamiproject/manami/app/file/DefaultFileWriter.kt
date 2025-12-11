@@ -20,7 +20,7 @@ internal class DefaultFileWriter(
             version = versionProvider.version().toString(),
             animeListEntries = state.animeList().map {
                 SerializableAnimeListEntry(
-                    link = if (it.link is NoLink) null else it.link.toString(),
+                    link = it.link.toString(),
                     title = it.title,
                     thumbnail = it.thumbnail.toString(),
                     episodes = it.episodes.toString(),

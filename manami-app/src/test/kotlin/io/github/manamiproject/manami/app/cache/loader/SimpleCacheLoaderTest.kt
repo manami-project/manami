@@ -13,8 +13,8 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
+import kotlin.test.Test
 
 internal class SimpleCacheLoaderTest {
 

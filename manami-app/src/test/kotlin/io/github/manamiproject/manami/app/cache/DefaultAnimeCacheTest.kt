@@ -14,8 +14,8 @@ import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
+import kotlin.test.Test
 
 internal class DefaultAnimeCacheTest {
 

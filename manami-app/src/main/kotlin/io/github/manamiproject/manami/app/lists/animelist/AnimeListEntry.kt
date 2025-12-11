@@ -1,8 +1,7 @@
 package io.github.manamiproject.manami.app.lists.animelist
 
 import io.github.manamiproject.manami.app.lists.AnimeEntry
-import io.github.manamiproject.manami.app.lists.LinkEntry
-import io.github.manamiproject.manami.app.lists.NoLink
+import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.OpenedFile
 import io.github.manamiproject.modb.core.anime.AnimeMedia.NO_PICTURE
@@ -15,7 +14,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 
 data class AnimeListEntry(
-    override val link: LinkEntry = NoLink, // TODO: 4.1.0: AnimeListEntries must must have a valid link. Change LinkEntry to Link
+    override val link: Link,
     override val title: Title,
     override val thumbnail: URI = NO_PICTURE,
     val episodes: Episodes,

@@ -4,8 +4,8 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.manami.app.state.TestState
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
 import java.net.URI
+import kotlin.test.Test
 
 internal class CmdRemoveIgnoreListEntryTest {
 

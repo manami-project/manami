@@ -27,10 +27,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
 import kotlin.test.AfterTest
+import kotlin.test.Test
 
 internal class DefaultListHandlerTest {
 
@@ -46,6 +46,7 @@ internal class DefaultListHandlerTest {
         fun `return the list of anime list entries from state`() {
             // given
             val entry1 = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/3299"),
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
                 type = SPECIAL,
@@ -397,6 +398,7 @@ internal class DefaultListHandlerTest {
                 delay(100)
 
                 val animeEntry = AnimeListEntry(
+                    link = Link("https://myanimelist.net/anime/3299"),
                     title = "H2O: Footprints in the Sand",
                     episodes = 4,
                     type = SPECIAL,

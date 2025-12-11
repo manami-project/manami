@@ -15,9 +15,9 @@ import io.github.manamiproject.modb.core.extensions.readFile
 import io.github.manamiproject.modb.test.tempDirectory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.Path
+import kotlin.test.Test
 
 internal class DefaultFileWriterTest {
 
@@ -26,6 +26,7 @@ internal class DefaultFileWriterTest {
         tempDirectory {
             // given
             val animeListEntry1 = AnimeListEntry(
+                link = Link("https://myanimelist.net/anime/3299"),
                 title = "H2O: Footprints in the Sand",
                 episodes = 4,
                 type = SPECIAL,
@@ -101,6 +102,7 @@ internal class DefaultFileWriterTest {
                       "location": "some/relative/path/amagami_ss+_plus"
                     },
                     {
+                      "link": "https://myanimelist.net/anime/3299",
                       "title": "H2O: Footprints in the Sand",
                       "thumbnail": "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png",
                       "episodes": "4",

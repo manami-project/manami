@@ -27,10 +27,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
-import kotlin.test.Test
 import java.net.URI
 import kotlin.io.path.createDirectory
 import kotlin.test.AfterTest
+import kotlin.test.Test
 
 internal class DefaultRelatedAnimeHandlerTest {
 

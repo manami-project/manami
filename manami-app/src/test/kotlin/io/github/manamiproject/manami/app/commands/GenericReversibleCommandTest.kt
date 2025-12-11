@@ -15,10 +15,10 @@ import io.github.manamiproject.modb.core.anime.AnimeType.SPECIAL
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import kotlin.io.path.Path
+import kotlin.test.Test
 
 internal class GenericReversibleCommandTest {
 
