@@ -11,7 +11,6 @@ modb-anisearch = "4.2.11"
 modb-kitsu = "7.1.12"
 modb-livechart = "4.2.10"
 modb-myanimelist = "7.2.10"
-modb-notify = "6.2.10"
 modb-simkl = "1.2.10"
 modb-test = "1.8.3"
 commons-text = "1.15.0"
@@ -37,7 +36,6 @@ modb-anisearch = { module = "io.github.manamiproject:modb-anisearch", version.re
 modb-kitsu = { module = "io.github.manamiproject:modb-kitsu", version.ref = "modb-kitsu" }
 modb-livechart = { module = "io.github.manamiproject:modb-livechart", version.ref = "modb-livechart" }
 modb-myanimelist = { module = "io.github.manamiproject:modb-myanimelist", version.ref = "modb-myanimelist" }
-modb-notify = { module = "io.github.manamiproject:modb-notify", version.ref = "modb-notify" }
 modb-simkl = { module = "io.github.manamiproject:modb-simkl", version.ref = "modb-simkl" }
 modb-test = { module = "io.github.manamiproject:modb-test", version.ref = "modb-test" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
@@ -70,7 +68,6 @@ modb = [
     "modb-kitsu",
     "modb-livechart",
     "modb-myanimelist",
-    "modb-notify",
     "modb-simkl",
 ]
 apache-commons = [

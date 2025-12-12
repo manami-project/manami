@@ -4,10 +4,14 @@ import io.github.manamiproject.manami.app.cache.MetaDataProviderTestConfig
 import io.github.manamiproject.manami.app.cache.TestAnimeConverter
 import io.github.manamiproject.manami.app.cache.TestDownloader
 import io.github.manamiproject.manami.app.cache.TestHttpClient
+import io.github.manamiproject.modb.anisearch.AnisearchAnimeConverter
+import io.github.manamiproject.modb.anisearch.AnisearchConfig
+import io.github.manamiproject.modb.anisearch.AnisearchDownloader
+import io.github.manamiproject.modb.anisearch.AnisearchRelationsConfig
 import io.github.manamiproject.modb.core.anime.Anime
 import io.github.manamiproject.modb.core.anime.AnimeSeason
 import io.github.manamiproject.modb.core.anime.AnimeSeason.Season.SUMMER
-import io.github.manamiproject.modb.core.anime.AnimeStatus.ONGOING
+import io.github.manamiproject.modb.core.anime.AnimeStatus.FINISHED
 import io.github.manamiproject.modb.core.anime.AnimeType.TV
 import io.github.manamiproject.modb.core.anime.Duration
 import io.github.manamiproject.modb.core.anime.Duration.TimeUnit.MINUTES
@@ -16,10 +20,6 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpResponse
-import io.github.manamiproject.modb.notify.NotifyAnimeConverter
-import io.github.manamiproject.modb.notify.NotifyConfig
-import io.github.manamiproject.modb.notify.NotifyDownloader
-import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import io.github.manamiproject.modb.test.tempDirectory
@@ -59,49 +59,67 @@ internal class DependentCacheLoaderTest {
         tempDirectory {
             // given
             val expectedAnime = Anime(
-                title = "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
+                title = "Yahari Ore no Seishun Lovecome wa Machigatte Iru. Kan",
                 type = TV,
                 episodes = 12,
-                status = ONGOING,
+                status = FINISHED,
                 animeSeason = AnimeSeason(
                     season = SUMMER,
                     year = 2020,
                 ),
-                picture = URI("https://media.notify.moe/images/anime/large/3lack4eiR.jpg"),
-                thumbnail = URI("https://media.notify.moe/images/anime/small/3lack4eiR.jpg"),
+                picture = URI("https://cdn.anisearch.com/images/anime/cover/14/14263_600.webp"),
+                thumbnail = URI("https://cdn.anisearch.com/images/anime/cover/14/14263_300.webp"),
                 duration = Duration(24, MINUTES),
                 score = ScoreValue(
-                    arithmeticGeometricMean = 7.5,
-                    arithmeticMean = 7.5,
-                    median = 7.5,
+                    arithmeticGeometricMean = 8.346938775510203,
+                    arithmeticMean = 8.346938775510203,
+                    median = 8.346938775510203,
                 ),
                 sources = hashSetOf(
-                    URI("https://notify.moe/anime/3lack4eiR"),
+                    URI("https://anisearch.com/anime/14263"),
                 ),
                 synonyms = hashSetOf(
-                    "My Teen Romantic Comedy SNAFU 3",
-                    "My youth romantic comedy is wrong as I expected 3",
+                    "My Teen Romantic Comedy SNAFU : Climax",
+                    "My Teen Romantic Comedy SNAFU: Climax",
+                    "My Teen Romantic Comedy SNAFU: Climax!",
+                    "My Teen Romantic Comedy: SNAFU Climax!",
+                    "My Teenage RomCom SNAFU 3",
+                    "My Youth Romantic Comedy Is Wrong as I Expected 3",
                     "Oregairu 3",
-                    "Yahari Ore no Seishun Love Comedy wa Machigatteiru. 3rd Season",
-                    "やはり俺の青春ラブコメはまちがっている。第3期",
+                    "Yahari Ore no Seishun Love Comedy wa Machigatteiru. Kan",
+                    "やはり俺の青春ラブコメはまちがっている。完",
                 ),
                 relatedAnime = hashSetOf(
-                    URI("https://notify.moe/anime/Pk0AtFmmg"),
+                    URI("https://anisearch.com/anime/15934"),
+                    URI("https://anisearch.com/anime/9606"),
+                ),
+                studios = hashSetOf(
+                    "feel.",
                 ),
                 tags = hashSetOf(
+                    "club",
                     "comedy",
+                    "coming of age",
+                    "delinquent",
                     "drama",
+                    "genius",
+                    "hero of strong character",
+                    "high school",
+                    "present",
                     "romance",
                     "school",
                     "slice of life",
+                    "slice of life drama",
+                    "tsundere",
+                    "verbal comedy",
                 )
             )
 
             val testHttpClient = object: HttpClient by TestHttpClient {
                 override suspend fun get(url: URL, headers: Map<String, Collection<String>>): HttpResponse {
                     val response = when(url.toString()) {
-                        "https://notify.moe/api/anime/3lack4eiR" -> loadTestResource<String>("cache_tests/loader/notify/3lack4eiR.json")
-                        "https://notify.moe/api/animerelations/3lack4eiR" -> loadTestResource<String>("cache_tests/loader/notify/3lack4eiR_relations.json")
+                        "https://anisearch.com/anime/14263" -> loadTestResource<String>("cache_tests/loader/dependent/14263.html")
+                        "https://anisearch.com/anime/14263/relations" -> loadTestResource<String>("cache_tests/loader/dependent/14263_relations.html")
                         else -> shouldNotBeInvoked()
                     }
 
@@ -110,21 +128,21 @@ internal class DependentCacheLoaderTest {
             }
 
             val cacheLoader = DependentCacheLoader(
-                config = NotifyConfig,
-                animeDownloader = NotifyDownloader(
-                    metaDataProviderConfig = NotifyConfig,
+                config = AnisearchConfig,
+                animeDownloader = AnisearchDownloader(
+                    metaDataProviderConfig = AnisearchConfig,
                     httpClient = testHttpClient,
                 ),
-                relationsDownloader = NotifyDownloader(
-                    metaDataProviderConfig = NotifyRelationsConfig,
+                relationsDownloader = AnisearchDownloader(
+                    metaDataProviderConfig = AnisearchRelationsConfig,
                     httpClient = testHttpClient,
                 ),
-                converter = NotifyAnimeConverter(relationsDir = tempDir),
+                converter = AnisearchAnimeConverter(relationsDir = tempDir),
                 relationsDir = tempDir,
             )
 
             // when
-            val result = cacheLoader.loadAnime(URI("https://notify.moe/anime/3lack4eiR"))
+            val result = cacheLoader.loadAnime(URI("https://anisearch.com/anime/14263"))
 
             // then
             assertThat(result).isEqualTo(expectedAnime)

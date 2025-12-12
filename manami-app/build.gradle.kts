@@ -89,7 +89,7 @@ tasks.register("generateBuildConfig") {
             """
             package io.github.manamiproject.manami.app.versioning
 
-            import io.github.manamiproject.modb.core.coverage.KoverIgnore            
+            import io.github.manamiproject.modb.core.coverage.KoverIgnore
 
             @KoverIgnore
             internal object BuildVersion {
