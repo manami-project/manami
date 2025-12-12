@@ -36,10 +36,6 @@ import io.github.manamiproject.modb.livechart.LivechartDownloader
 import io.github.manamiproject.modb.myanimelist.MyanimelistAnimeConverter
 import io.github.manamiproject.modb.myanimelist.MyanimelistConfig
 import io.github.manamiproject.modb.myanimelist.MyanimelistDownloader
-import io.github.manamiproject.modb.notify.NotifyAnimeConverter
-import io.github.manamiproject.modb.notify.NotifyConfig
-import io.github.manamiproject.modb.notify.NotifyDownloader
-import io.github.manamiproject.modb.notify.NotifyRelationsConfig
 import io.github.manamiproject.modb.simkl.SimklAnimeConverter
 import io.github.manamiproject.modb.simkl.SimklConfig
 import io.github.manamiproject.modb.simkl.SimklDownloader
@@ -49,7 +45,6 @@ import kotlin.io.path.createDirectory
 import kotlin.io.path.createTempDirectory
 
 private val anisearchRelationsDir = createTempDirectory("manami-anisearch_").resolve("relations").createDirectory()
-private val notifyRelationsDir = createTempDirectory("manami-notify_").resolve("relations").createDirectory()
 
 internal class DefaultAnimeCache(
     private val cacheLoader: List<CacheLoader> = listOf(
@@ -76,13 +71,6 @@ internal class DefaultAnimeCache(
             converter = LivechartAnimeConverter(),
         ),
         SimpleCacheLoader(MyanimelistConfig, MyanimelistDownloader.instance, MyanimelistAnimeConverter.instance),
-        DependentCacheLoader(
-            config = NotifyConfig,
-            animeDownloader = NotifyDownloader(metaDataProviderConfig = NotifyConfig),
-            relationsDownloader = NotifyDownloader(metaDataProviderConfig = NotifyRelationsConfig),
-            relationsDir = notifyRelationsDir,
-            converter = NotifyAnimeConverter(relationsDir = notifyRelationsDir),
-        ),
         SimpleCacheLoader(SimklConfig, SimklDownloader.instance, SimklAnimeConverter.instance),
     ),
 ) : AnimeCache {
