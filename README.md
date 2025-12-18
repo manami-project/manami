@@ -1,4 +1,4 @@
-[![Tests](https://github.com/manami-project/manami/actions/workflows/tests.yml/badge.svg)](https://github.com/manami-project/manami/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/manami-project/manami/graph/badge.svg?token=DkoslLUvTn)](https://codecov.io/gh/manami-project/manami) ![jdk21](https://img.shields.io/badge/jdk-21-informational)
+[![Tests](https://github.com/manami-project/manami/actions/workflows/tests.yml/badge.svg)](https://github.com/manami-project/manami/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/manami-project/manami/graph/badge.svg?token=DkoslLUvTn)](https://codecov.io/gh/manami-project/manami) ![jdk25](https://img.shields.io/badge/jdk-25-informational)
 # Manami
 
 ## What does it do?
