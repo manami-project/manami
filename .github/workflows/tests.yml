@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 21 ]
+        java: [ 25 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -47,11 +47,11 @@ jobs:
           files: |
             /github/workspace/**/build/test-results/**/*.xml
       - name: Generate coverage
-        if: ${{ matrix.java == 21 }}
+        if: ${{ matrix.java == 25 }}
         run: ./gradlew koverXmlReportJvm
       - name: Upload coverage
         uses: codecov/codecov-action@v5.5.2
-        if: ${{ matrix.java == 21 }}
+        if: ${{ matrix.java == 25 }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: manami-app/build/reports/kover/reportJvm.xml

@@ -7,7 +7,7 @@ plugins {
 }
 
 val githubUsername = "manami-project"
-val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2 // most recent stable kotlin version for language and std lib
+val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3 // most recent stable kotlin version for language and std lib
 
 repositories {
     mavenCentral()
@@ -31,13 +31,13 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(JavaVersion.VERSION_21.toString().toInt())
+    jvmToolchain(JavaVersion.VERSION_25.toString().toInt())
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     dependsOn("generateBuildConfig")
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_25)
         apiVersion.set(kotlinVersion)
         languageVersion.set(kotlinVersion)
     }
