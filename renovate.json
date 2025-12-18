@@ -22,10 +22,18 @@
       "automerge": true
     },
     {
+      "description": "Create a single PR (monorepo style) for dependencies of the same group id.",
       "matchManagers": [
-        "maven"
+        "gradle"
       ],
+      "matchFileNames": [
+        "gradle/libs.versions.toml"
+      ],
+      "groupName": "kotlin monorepo",
+      "groupSlug": "kotlin-monorepo",
+      "separateMultipleMajor": false,
       "matchPackageNames": [
+        "/^org\\.jetbrains\\.kotlin/",
         "/^io\\.github\\.manamiproject/"
       ]
     }
