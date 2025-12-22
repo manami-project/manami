@@ -26,7 +26,6 @@ internal class AnimeListMetaDataInconsistenciesHandler(
         log.info { "Starting check for meta data inconsistencies in AnimeList." }
 
         val result = state.animeList()
-            .filter { it.link is Link }
             .map { it to cache.fetch(it.link.asLink().uri) }
             .filter { it.second is PresentValue }
             .map { toAnimeListEntry(currentEntry = it.first, anime = (it.second as PresentValue).value) }

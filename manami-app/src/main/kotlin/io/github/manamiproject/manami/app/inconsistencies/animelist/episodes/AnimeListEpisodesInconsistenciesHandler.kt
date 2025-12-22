@@ -23,7 +23,6 @@ internal class AnimeListEpisodesInconsistenciesHandler(
         log.info { "Starting check for differing episodes in AnimeList." }
 
         val results = state.animeList()
-            .filter { it.link is Link }
             .map { it to fetchNumberOfEpisodes(it) }
             .filter { it.first.episodes != it.second }
             .map {

@@ -316,7 +316,6 @@ internal class DefaultListHandlerTest {
                         URI("https://anime-planet.com/anime/fruits-basket-the-final"),
                         URI("https://kitsu.app/anime/43578"),
                         URI("https://myanimelist.net/anime/42938"),
-                        URI("https://notify.moe/anime/YiySZ9OMg"),
                     ),
                     title = "Fruits Basket: The Final",
                     type = TV,

@@ -37,7 +37,7 @@ internal class DefaultMetaDataProviderMigrationHandler(
         eventBus.metaDataProviderMigrationState.update { MetaDataProviderMigrationState(isRunning = true); }
         yield()
 
-        val animeList = state.animeList().filter { it.link is Link }.filter { it.link.asLink().uri.host == metaDataProviderFrom }
+        val animeList = state.animeList().filter { it.link.asLink().uri.host == metaDataProviderFrom }
         val watchList = state.watchList().filter { it.link.asLink().uri.host == metaDataProviderFrom }
         val ignoreList = state.ignoreList().filter { it.link.asLink().uri.host == metaDataProviderFrom }
 

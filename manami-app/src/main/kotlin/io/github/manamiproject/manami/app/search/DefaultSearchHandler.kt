@@ -34,7 +34,7 @@ internal class DefaultSearchHandler(
         yield()
 
         val animeListResults = state.animeList()
-            .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link is Link && it.link.uri.toString() == searchString) }
+            .filter { isEntryMatchingSearchString(it.title, searchString) || (it.link.uri.toString() == searchString) }
 
         eventBus.findByTitleState.update { current -> current.copy(animeListResults = animeListResults) }
         yield()
@@ -260,7 +260,7 @@ internal class DefaultSearchHandler(
             }
         }
 
-        val animeListEntries = state.animeList().filter { it.link is Link }.map { it.link.asLink().uri }
+        val animeListEntries = state.animeList().map { it.link.asLink().uri }
         val watchListEntries = state.watchList().map { it.link.asLink().uri }
         val ignoreListEntries = state.ignoreList().map { it.link.asLink().uri }
         val entriesToRemove = animeListEntries.union(watchListEntries).union(ignoreListEntries)
