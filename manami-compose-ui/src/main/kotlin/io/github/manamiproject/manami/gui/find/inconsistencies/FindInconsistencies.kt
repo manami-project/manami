@@ -22,10 +22,6 @@ internal fun FindInconsistencies(viewModel: FindInconsistenciesViewModel = FindI
     val numberOfEpisodesDiffs = viewModel.numberOfEpisodesDiffs.collectAsState()
     val numberOfDeadEntries = viewModel.numberOfDeadEntries.collectAsState()
 
-    LaunchedEffect(true) {
-        viewModel.findInconsistencies()
-    }
-
     ManamiTheme {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -39,12 +35,18 @@ internal fun FindInconsistencies(viewModel: FindInconsistenciesViewModel = FindI
                     }
                 }
             } else {
-                IconButton(
-                    icon = Icons.Filled.Refresh,
-                    size = 40.dp,
-                    description = "Find inconsistencies",
-                    onClick = { viewModel.findInconsistencies() },
-                )
+                if (numberOfMetaDataDiffs.value > 0 || numberOfEpisodesDiffs.value > 0 || numberOfDeadEntries.value > 0) {
+                    IconButton(
+                        icon = Icons.Filled.Refresh,
+                        size = 40.dp,
+                        description = "Find inconsistencies",
+                        onClick = { viewModel.findInconsistencies() },
+                    )
+                } else {
+                    Button(onClick = { viewModel.findInconsistencies() }) {
+                        Text("Start")
+                    }
+                }
 
                 if (numberOfMetaDataDiffs.value > 0) {
                     Button(
