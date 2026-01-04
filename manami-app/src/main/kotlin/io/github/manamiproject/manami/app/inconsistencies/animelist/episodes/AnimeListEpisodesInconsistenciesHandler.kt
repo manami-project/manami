@@ -7,6 +7,7 @@ import io.github.manamiproject.manami.app.lists.Link
 import io.github.manamiproject.manami.app.lists.animelist.AnimeListEntry
 import io.github.manamiproject.manami.app.state.CurrentFile
 import io.github.manamiproject.manami.app.state.InternalState
+import io.github.manamiproject.manami.app.state.NoFile
 import io.github.manamiproject.manami.app.state.State
 import io.github.manamiproject.modb.core.extensions.directoryExists
 import io.github.manamiproject.modb.core.extensions.regularFileExists
@@ -43,7 +44,10 @@ internal class AnimeListEpisodesInconsistenciesHandler(
     }
 
     private fun fetchNumberOfEpisodes(entry: AnimeListEntry): Int {
-        val folder = (state.openedFile() as CurrentFile).regularFile.parent.resolve(entry.location.toString())
+        val folder = when (val openedFile = state.openedFile()) {
+            is CurrentFile -> openedFile.regularFile.parent.resolve(entry.location.toString())
+            NoFile -> entry.location
+        }
 
         if (!folder.directoryExists()) {
             return 0

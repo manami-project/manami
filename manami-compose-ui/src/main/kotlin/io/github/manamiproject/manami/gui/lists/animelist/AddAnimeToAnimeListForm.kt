@@ -27,9 +27,7 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
     var link by remember { mutableStateOf(EMPTY) }
     var title by remember { mutableStateOf(EMPTY) }
     var episodes by remember { mutableStateOf(0) }
-    var typeSelectExpanded by remember { mutableStateOf(false) }
-    val types = AnimeType.entries.map { it.toString().capitalize(Locale.current) }
-    val typeSelectState = rememberTextFieldState(types.last())
+    var type by remember { mutableStateOf(EMPTY) }
     var thumbnail by remember { mutableStateOf(EMPTY) }
     var location by remember { mutableStateOf(EMPTY) }
 
@@ -37,7 +35,7 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
         link = animeDetails.value?.sources?.first()?.toString() ?: EMPTY
         title = animeDetails.value?.title ?: EMPTY
         episodes = animeDetails.value?.episodes ?: 0
-        typeSelectState.setTextAndPlaceCursorAtEnd(animeDetails.value?.type?.toString() ?: EMPTY)
+        type = animeDetails.value?.type?.toString() ?: EMPTY
         thumbnail = animeDetails.value?.picture?.toString() ?: NO_PICTURE.toString()
         location = EMPTY
     }
@@ -70,6 +68,7 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
                     onValueChange = { title = it },
                     label = { Text("Title") },
                     modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
                 )
 
                 OutlinedTextField(
@@ -81,40 +80,23 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
                     },
                     label = { Text("Episodes") },
                     modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
                 )
 
-                ExposedDropdownMenuBox(
-                    expanded = typeSelectExpanded,
-                    onExpandedChange = { typeSelectExpanded = it },
-                ) {
-                    TextField(
-                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                        state = typeSelectState,
-                        readOnly = true,
-                        lineLimits = TextFieldLineLimits.SingleLine,
-                        label = { Text("MetaDataProvider") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeSelectExpanded) },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    )
-                    ExposedDropdownMenu(expanded = typeSelectExpanded, onDismissRequest = { typeSelectExpanded = false }) {
-                        types.forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
-                                onClick = {
-                                    typeSelectState.setTextAndPlaceCursorAtEnd(option)
-                                    typeSelectExpanded = false
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                            )
-                        }
-                    }
-                }
+                OutlinedTextField(
+                    value = type,
+                    onValueChange = { type = it },
+                    label = { Text("Type") },
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
+                )
 
                 OutlinedTextField(
                     value = thumbnail,
                     onValueChange = { thumbnail = it },
                     label = { Text("Link to thumbnail") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
                 )
 
                 Row(
@@ -151,7 +133,7 @@ internal fun AddAnimeToAnimeListForm(addAnimeToAnimeListFormViewModel: AddAnimeT
                             link,
                             title,
                             episodes,
-                            typeSelectState.text.toString(),
+                            type,
                             thumbnail,
                             location,
                         )
