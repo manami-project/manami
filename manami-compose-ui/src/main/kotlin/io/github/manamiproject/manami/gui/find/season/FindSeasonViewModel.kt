@@ -58,7 +58,7 @@ internal class FindSeasonViewModel(private val app: Manami = Manami.instance): D
 
     override fun delete(anime: SearchResultAnimeEntry) = throw UnsupportedOperationException()
 
-    fun yearRange(): List<Year> = (YEAR_OF_THE_FIRST_ANIME..LocalDate.now().year + 5).toList().reversed()
+    fun yearRange(): List<Year> = (YEAR_OF_THE_FIRST_ANIME..LocalDate.now().year + 1).toList().reversed()
 
     fun seasons() = listOf("Spring", "Summer", "Fall", "Winter")
 
