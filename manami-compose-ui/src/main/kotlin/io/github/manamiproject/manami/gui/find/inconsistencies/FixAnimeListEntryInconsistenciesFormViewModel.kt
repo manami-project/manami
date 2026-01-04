@@ -55,7 +55,7 @@ internal class FixAnimeListEntryInconsistenciesFormViewModel(private val app: Ma
 
     val episodesReplacementValue: StateFlow<String>
         get() = app.fixAnimeListInconsistencyModificationState
-            .map { it?.currentEntry?.episodes?.toString() ?: "0" }
+            .map { it?.replacementEntry?.episodes?.toString() ?: "0" }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
@@ -76,7 +76,7 @@ internal class FixAnimeListEntryInconsistenciesFormViewModel(private val app: Ma
 
     val typeReplacementValue: StateFlow<String>
         get() = app.fixAnimeListInconsistencyModificationState
-            .map { it?.currentEntry?.type?.toString() ?: EMPTY }
+            .map { it?.replacementEntry?.type?.toString() ?: EMPTY }
             .stateIn(
                 scope = viewModelScope,
                 started = Eagerly,
