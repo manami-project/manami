@@ -29,8 +29,8 @@
       "matchFileNames": [
         "gradle/libs.versions.toml"
       ],
-      "groupName": "kotlin monorepo",
-      "groupSlug": "kotlin-monorepo",
+      "groupName": "grouped dependencies",
+      "groupSlug": "grouped-dependencies",
       "separateMultipleMajor": false,
       "matchPackageNames": [
         "/^org\\.jetbrains\\.compose/",
