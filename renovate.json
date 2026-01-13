@@ -33,6 +33,7 @@
       "groupSlug": "kotlin-monorepo",
       "separateMultipleMajor": false,
       "matchPackageNames": [
+        "/^org\\.jetbrains\\.compose/",
         "/^org\\.jetbrains\\.kotlin/",
         "/^io\\.github\\.manamiproject/"
       ]
