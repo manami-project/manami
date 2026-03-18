@@ -50,7 +50,7 @@ jobs:
         if: ${{ matrix.java == 25 }}
         run: ./gradlew koverXmlReportJvm
       - name: Upload coverage
-        uses: codecov/codecov-action@v5.5.2
+        uses: codecov/codecov-action@v5.5.3
         if: ${{ matrix.java == 25 }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
