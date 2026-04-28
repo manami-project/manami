@@ -78,7 +78,7 @@ jobs:
       run: ./gradlew compileKotlin ${{ matrix.gradleTask }} -Pmanami.release.version=${{ github.event.release.tag_name }} -Pmanami.build.os=${{ matrix.osCleanName }} -Pmanami.build.arch=${{ matrix.arch }}
       shell: bash
     - name: Upload file to release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         files: manami-compose-ui/build/**/*.${{ matrix.ext }}
       env:
