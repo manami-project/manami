@@ -3,10 +3,9 @@ name: CodeQL
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches:
-      - master
+      - main
+    paths:
+      - "**/src/main/kotlin/**/*"
 
 jobs:
   analyze:
