@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 kotlinx-coroutines-core = "1.11.0"
 modb-core = "19.1.0"
 modb-serde = "6.2.0"
