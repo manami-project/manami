@@ -9,7 +9,7 @@ plugins {
 }
 
 val githubUsername = "manami-project"
-val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3 // most recent stable kotlin version for language and std lib
+val kotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_4 // most recent stable kotlin version for language and std lib
 
 repositories {
     google()
